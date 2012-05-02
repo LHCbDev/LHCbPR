@@ -1,0 +1,10 @@
+p {color:red;text-align:center;}
+table, td, th
+{
+border:1px solid green;
+}
+th
+{
+background-color:green;
+color:white;
+}

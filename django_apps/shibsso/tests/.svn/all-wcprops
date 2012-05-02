@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/reps/elfmsdjango/!svn/ver/12/shibsso/trunk/shibsso/tests
+END
+test_logout.py
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/reps/elfmsdjango/!svn/ver/12/shibsso/trunk/shibsso/tests/test_logout.py
+END
+test_middleware.py
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/reps/elfmsdjango/!svn/ver/12/shibsso/trunk/shibsso/tests/test_middleware.py
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/reps/elfmsdjango/!svn/ver/12/shibsso/trunk/shibsso/tests/views.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/reps/elfmsdjango/!svn/ver/12/shibsso/trunk/shibsso/tests/__init__.py
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/reps/elfmsdjango/!svn/ver/12/shibsso/trunk/shibsso/tests/urls.py
+END
+test_admin.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/reps/elfmsdjango/!svn/ver/12/shibsso/trunk/shibsso/tests/test_admin.py
+END
+test_login.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/reps/elfmsdjango/!svn/ver/12/shibsso/trunk/shibsso/tests/test_login.py
+END

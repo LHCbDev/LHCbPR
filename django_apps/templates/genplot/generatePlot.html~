@@ -1,0 +1,273 @@
+<html>
+<script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script>
+<script type="text/javascript">
+function dropdown(gaussVersion,pythiaVersion,eventType,gaussVersionREF,pythiaVersionREF,eventTypeREF)
+{
+	var mygaussVersion, mypythiaVersion,myeventType,mygaussVersionREF,mypythiaVersionREF,myeventTypeREF;	
+	mygaussVersion = gaussVersion.options[gaussVersion.selectedIndex].value;
+	mypythiaVersion = pythiaVersion.options[pythiaVersion.selectedIndex].value;
+	myeventType = eventType.options[eventType.selectedIndex].value;
+	mygaussVersionREF = gaussVersionREF.options[gaussVersionREF.selectedIndex].value;
+	mypythiaVersionREF = pythiaVersionREF.options[pythiaVersionREF.selectedIndex].value;
+	myeventTypeREF = eventTypeREF.options[eventTypeREF.selectedIndex].value;
+	
+	if(mygaussVersion == "" || mypythiaVersion == "" || myeventType == "" || mygaussVersionREF == "" || mypythiaVersionREF == "" || myeventTypeREF == "" ){
+		alert("All fields must be filled!!");
+		return false;
+	}
+	else{
+		return true;
+	}
+}
+function initializeList(list,str){
+
+	var len = list.options.length;
+   	for (i=0; i<len; i++) {
+       	list.remove(0); //It is 0 (zero) intentionally
+    }
+
+	var opt = document.createElement("option");
+	list.options.add(opt);
+	opt.value = "";
+	opt.text = str;
+	list.disabled = true;
+}
+function updatePythiaVersions(id,val)
+{
+	var optID;
+	var optID2;
+	//fix the id of the option list which will be changed
+	if (id == "currentG"){
+		optID = "currentP"
+		optID2 = "currentEV"
+	}
+	else{
+		optID = "referenceP"
+		optID2 = "referenceEV"
+	}
+	//if the value is null disable the options list and remove the values
+	if(val == ""){
+			
+			list1 = document.getElementById(optID)
+			list2 = document.getElementById(optID2)
+
+			initializeList(list1,"Select pythia");
+			initializeList(list2,"Select eventType");
+
+		return;
+	}
+	
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function(){
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+
+			// find the option list which will be changed
+			var optionList = document.getElementById(optID);
+			var optionList2 = document.getElementById(optID2);
+			
+			//initialize the lists before update them
+			initializeList(optionList,"Select pythia");
+			initializeList(optionList2,"Select eventType");
+			optionList.disabled = false;
+	
+			//parse the server response
+			//var jsondata = JSON.parse(xmlhttp.responseText);
+			var pythias = jsondata.pythiaVersions;
+			
+			//loop over the array which contains the versions
+			for(var i = 0; i < pythias.length; i++){
+				var opt = document.createElement("option");
+				optionList.options.add(opt);
+				opt.value = pythias[i];
+				opt.text = pythias[i];
+			}
+    	}
+  	}
+
+	if(val == ""){
+		//todo
+	}
+	else{
+			// send the request the to server
+			xmlhttp.open("GET","/genplot/service?service=pythia&key="+val,true);
+			xmlhttp.send();
+		}
+	
+}
+function updateEventTypes(id,val)
+{
+	var optID;
+	var optID2; // gaussVersion
+	//fix the id of the option list which will be changed
+	if (id == "currentP"){
+		optID = "currentEV";
+		optID2 = "currentG";
+	}
+	else{
+		optID = "referenceEV";
+		optID2 = "referenceG";
+	}
+
+	//if the value is null disable the options list and remove the values
+	if(val == ""){			
+			list = document.getElementById(optID)
+			initializeList(list,"Select eventType");
+
+		return;
+	}
+	
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function(){
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+
+			// find the option list which will be changed
+			var optionList = document.getElementById(optID);
+			
+			//initialize the lists before update them
+			initializeList(optionList,"Select eventType");
+			optionList.disabled = false;
+	
+			//parse the server response
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			var events = jsondata.eventTypes;
+			
+			//loop over the array which contains the versions
+			for(var i = 0; i < events.length; i++){
+				var opt = document.createElement("option");
+				optionList.options.add(opt);
+				opt.value = events[i];
+				opt.text = events[i];
+			}
+    	}
+  	}
+
+	if(val == ""){
+		//todo
+	}
+	else{
+			// send the request the to server
+			var gaussV = document.getElementById(optID2);
+			gaussVer = gaussV.options[gaussV.selectedIndex].value;
+			xmlhttp.open("GET","/genplot/service?service=eventType&gaussVersion="+gaussVer+"&pythiaVersion="+val,true);
+			xmlhttp.send();
+		}
+	
+}
+</script>
+
+<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/css/lhcb.css" type="text/css" media="screen">
+<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css.css" type="text/css" media="screen">
+<title>One generator plot example</title>
+</HEAD>
+<BODY>
+<div class="ctitle">
+<TABLE id="pagetitle">
+<TBODY>
+<TR>
+<TD class=iconspace>
+<A href="http://cern.ch/lhcb-comp">
+<IMG id=lhcblogo  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
+</A>
+</TD>
+<TD vAlign=middle align=center>
+<H1><a href="/genplot" >Generator Plot test</a></H1></TD>
+</TR>
+</TBODY>
+</TABLE>
+</div>
+<div class=pagebody>
+<div id=manifest>
+<p>Press the button the compare the two jobs</p>
+</div>
+<h2>Just press the button</h2>
+
+<FORM 
+     ACTION="/genplot/results/" 
+     METHOD="POST" 
+	 onSubmit="return dropdown(this.gaussVersion,this.pythiaVersion,this.eventType,this.gaussVersionREF,this.pythiaVersionREF,this.eventTypeREF)">
+{% csrf_token %}
+<TABLE>
+<TR><TD></TD><TD>Gauss Version</TD><TD>Pythia Version</TD><TD>EventType</TD></TR>
+<TR>
+<TD><div class=firstcell>Current</div></TD>
+<TD>
+<!-- AP == application -->
+<SELECT ID="currentG" NAME="gaussVersion" onchange="updatePythiaVersions(this.id,this.value)">
+<OPTION  VALUE="">Select gauss
+{% for gauss in gaussVersions %}
+<OPTION VALUE="{{ gauss }}">{{ gauss }}
+{% endfor %}
+</SELECT>
+</TD>
+<TD>
+<!-- P == Pythia -->
+<SELECT ID="currentP" NAME="pythiaVersion" onchange="updateEventTypes(this.id,this.value)" disabled="true">
+<OPTION  VALUE="">Select pythia
+</SELECT>
+</TD>
+<TD>
+<!-- EV == EventType -->
+<SELECT ID="currentEV" NAME="eventType" disabled="true">
+<OPTION  VALUE="">Select eventType
+</SELECT>
+</TD>
+</TR>
+
+<TR>
+<TD><div class=firstcell style=background-color:red>Reference</div></TD>
+<TD>
+<!-- AP == application -->
+<SELECT ID="referenceG" NAME="gaussVersionREF" onchange="updatePythiaVersions(this.id,this.value)">
+<OPTION  VALUE="">Select gauss
+{% for gauss in gaussVersions %}
+<OPTION VALUE="{{ gauss }}">{{ gauss }}
+{% endfor %}
+</SELECT>
+</TD>
+<TD>
+<!-- P == Pythia -->
+<SELECT ID="referenceP" NAME="pythiaVersionREF" onchange="updateEventTypes(this.id,this.value)" disabled="true" >
+<OPTION  VALUE="">Select pythia
+</SELECT>
+</TD>
+<TD>
+<!-- EV == EventType -->
+<SELECT ID="referenceEV" NAME="eventTypeREF" disabled="true">
+<OPTION  VALUE="">Select eventType
+</SELECT>
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+<TD>
+<INPUT TYPE=SUBMIT VALUE="Compare" >
+</TD>
+<TD></TD><TD></TD>
+</TR>
+</TABLE>
+</FORM>
+
+</BODY>
+</HTML>

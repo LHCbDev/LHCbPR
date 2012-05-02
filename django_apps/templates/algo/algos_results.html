@@ -1,0 +1,108 @@
+<html>
+<SCRIPT TYPE="text/javascript">
+function dropdown(current,refenrence)
+{
+	var myCurrent, myReference;
+	myCurrent = current.options[current.selectedIndex].value;
+	myReference = refenrence.options[refenrence.selectedIndex].value;
+	if(myCurrent == "" || myReference == ""){
+		alert("Both options must be filled!");
+		return false;
+	}
+
+	if(myCurrent == myReference){
+		alert("The current and the reference cannot be the same");
+		return false;
+	}
+	else {
+		return true;
+	}
+
+}
+</SCRIPT>
+
+<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/css/lhcb.css" type="text/css" media="screen">
+<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css.css" type="text/css" media="screen">
+<title>Algorithm comparing</title>
+</HEAD>
+<BODY>
+<div class="ctitle">
+<TABLE id="pagetitle">
+<TBODY>
+<TR>
+<TD class=iconspace>
+<A href="http://cern.ch/lhcb-comp">
+<IMG id=lhcblogo  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
+</A>
+</TD>
+<TD vAlign=middle align=center>
+<H1><a href="/algos" >Algorithms testing comparison</a></H1></TD>
+</TR>
+</TBODY>
+</TABLE>
+</div>
+<div class=pagebody>
+<div id=manifest>
+<p>Choose and compare your own algorithm</p>
+</div>
+<H2><a href="/algos/history" >History</a></H2>
+<h2>Make your choice</h2>
+
+<FORM 
+     ACTION="/algos/results" 
+     METHOD="POST"  onSubmit="return dropdown(this.current,this.reference)">
+{% csrf_token %}
+<TABLE>
+<TR><TD></TD><TD>Algorithms</TD></TR>
+<TR>
+<TD><div class=firstcell>Current</div></TD>
+<TD>
+<SELECT NAME="current">
+<OPTION VALUE="">Choose an algorithm...
+{% for algo in algorithms %}
+<OPTION VALUE="{{ algo.alg }}">{{ algo.alg }}
+{% endfor %}
+</SELECT>
+</TD>
+</TR>
+
+<TR>
+<TD><div class=firstcell style=background-color:red>Reference</div></TD>
+<TD>
+<SELECT NAME="reference">
+<OPTION VALUE="">Choose a reference...
+{% for algo in algorithms %}
+<OPTION VALUE="{{ algo.alg }}">{{ algo.alg }}
+{% endfor %}
+</SELECT>
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+<TD>
+<INPUT TYPE=SUBMIT VALUE="Compare">
+</TD>
+</TR>
+</TABLE>
+</FORM>
+
+<!-- Table with the comparing results -->
+<H2>{{ current.alg }} vs {{ reference.alg }}</H2>
+<TABLE>
+<TR><TD></TD>
+<TD><div class=firstcell>Current</div></TD>
+<TD><div class=firstcell style=background-color:red>Reference</div></TD>
+<TD>Difference</TD></TR>
+<TR><TD>Algorithm</TD><TD>{{ current.alg }}</TD><TD>{{ reference.alg }}</TD><TD></TD></TR>
+<TR><TD>Avg_user</TD><TD>{{ current.avg_user }}</TD><TD>{{ reference.avg_user }}</TD><TD>{{ diffs.avg_user }}</TD></TR>
+<TR><TD>Avg_clock</TD><TD>{{ current.avg_clock }}</TD><TD>{{ reference.avg_clock }}</TD><TD>{{ diffs.avg_clock }}</TD></TR>
+<TR><TD>Min</TD><TD>{{ current.minn }}</TD><TD>{{ reference.minn }}</TD><TD>{{ diffs.minn }}</TD></TR>
+<TR><TD>Max</TD><TD>{{ current.maxn }}</TD><TD>{{ reference.maxn }}</TD><TD>{{ diffs.maxn }}</TD></TR>
+<TR><TD>Count</TD><TD>{{ current.count }}</TD><TD>{{ reference.count }}</TD><TD>{{ diffs.count }}</TD></TR>
+<TR><TD>Total</TD><TD>{{ current.total }}</TD><TD>{{ reference.total }}</TD><TD>{{ diffs.total }}</TD></TR>
+</TABLE>
+
+</BODY>
+</HTML>
