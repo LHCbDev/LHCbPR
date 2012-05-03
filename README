@@ -1,0 +1,22 @@
+Django applications :
+	algo : It's just an example-testing app to test the way django works,
+				its just comparing some algoritms initialized from the inputs/results.xml
+
+	genplot : A  demo of how the final infrastructure going to be. It produces the same result as : http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/generator/validation/index.html
+				example output : http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/generator/validation/Gauss_30000000_v39r0_v37r8_Pythia_6.424_6.418/page.html
+				
+				the database schema for this app is static (to be avoided) 
+
+	
+	generic : the same functionality with genplot app but the database schema will be generic(wanted)
+				(under construction)
+
+Other folders:
+		static : folders to save the static files (images,css files etc), apache will use this folder to serve the static files
+
+		inputs : contains some files which are used as input to provide initial data for the database in order to test the apps
+
+ 		templates : contains the templates which the apps return as HttpResponses to the user
+		
+
+	(more documentation will come soon with a more stable and representative version of LHCbPR)
