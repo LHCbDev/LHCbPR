@@ -17,7 +17,7 @@ def index(request):
                   context_instance=RequestContext(request))
     
 def choose(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         cDict = {}
         current = Job.objects.get(gaussVersion__exact=request.POST['gaussVersion'],pythiaVersion__exact=request.POST['pythiaVersion'],eventType__exact=request.POST['eventType'])
         current_histos = Histos.objects.all().filter(job__exact=current)

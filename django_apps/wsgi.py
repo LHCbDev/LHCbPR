@@ -1,10 +1,9 @@
 import os, sys
-#import configs
-sys.path.append('/afs/cern.ch/user/e/ekiagias/workspace/database_test/')
-sys.path.append('/afs/cern.ch/user/e/ekiagias/workspace/database_test/database_test/')
-#sys.path.append("/home/database_test/")
-#sys.path.append("/home/database_test/database_test/")
-os.environ['DJANGO_SETTINGS_MODULE'] = 'database_test.settings'
+sys.path.append('/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/')
+sys.path.append('/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/django_apps/')
+#sys.path.append("/home/LHCbPR/")
+#sys.path.append("/home/LHCbPR/django_apps/")
+os.environ['DJANGO_SETTINGS_MODULE'] = 'django_apps.settings'
 
 import django.core.handlers.wsgi
 
