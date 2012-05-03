@@ -2,7 +2,7 @@ from algo.models import Algorithm
 from django.views.decorators.csrf import csrf_exempt    
 from xml.etree.ElementTree import ElementTree
 from django.core.management.base import BaseCommand, CommandError
-from database_test.algo.models import Algorithm
+from django_apps.algo.models import Algorithm
 from xml.parsers.expat import ExpatError
 
 class Command(BaseCommand):

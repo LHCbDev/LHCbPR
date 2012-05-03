@@ -5,7 +5,7 @@
 #  python GeneratorReferencePlots.py -v -r GaussHistos_REF_30000000.root -f GaussOutput.txt -l GaussOutput.txt -s GaussHistos_24142001.root -i
 #################################################################################
 
-from ROOT import TFile, TCanvas, TH1D
+from ROOT import TFile, TCanvas, TH1D, gROOT
 from ROOT import gDirectory, gPad, gStyle
 from optparse import OptionParser
 import re, sys, os, shutil, base64, json, cPickle
@@ -125,6 +125,8 @@ class GeneratorLogFile:
       myDataDict['generatorLevelCutEfficiency'] = self.generatorLevelCutEfficiency()
       myDataDict['timePerEvent'] = self.timePerEvent()
       myDataDict['histograms'] = histosDict
+      #keep the ROOT version
+      myDataDict['ROOT_Version']= gROOT.GetVersion()
       
       f = open(name,'w')
       f.write(json.dumps(myDataDict))
