@@ -134,7 +134,7 @@ class GeneratorLogFile:
 #################################################################################  
 
 # Read command line options
-def main():
+def main():    
   usage = "usage: %prog [options]"
   parser = OptionParser(usage)
   parser.add_option( "-s" , "--histo" , action="store", type="string" , 

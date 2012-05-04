@@ -4,7 +4,7 @@
 #  Exemple: 
 #  python GeneratorReferencePlots.py -v -r GaussHistos_REF_30000000.root -f GaussOutput.txt -l GaussOutput.txt -s GaussHistos_24142001.root -i
 #################################################################################
-from ROOT import TFile, TCanvas, TH1D
+from ROOT import TFile, TCanvas, TH1D, gROOT
 from ROOT import gDirectory, gPad, gStyle
 from optparse import OptionParser
 import re, sys, os, shutil, json , cPickle, configs
@@ -25,11 +25,11 @@ class GeneratorHisto:
   def title(self):
     return self.HistTitle
   def refFileName(self):
-    return "Reference"+self.FileName+".eps"
+    return "Reference"+self.FileName+".png"
   def fileName(self):
-    return self.FileName+".eps"
+    return self.FileName+".png"
   def compFileName(self):
-    return "Comp"+self.FileName+".jpg"    
+    return "Comp"+self.FileName+".png"    
     
   def plot(self):
     self.referenceHisto.GetXaxis().SetTitle( self.XTitle) 
@@ -71,6 +71,9 @@ class GeneratorHisto:
 
 # Read command line options
 def main():
+  #run ROOT in batch mode
+  gROOT.SetBatch(True)
+  
   usage = "usage: %prog [options]"
   parser = OptionParser(usage)
   parser.add_option( "-f" , "--fileinput" , action="store", type="string" , 

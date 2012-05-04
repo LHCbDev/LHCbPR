@@ -3,33 +3,51 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
 from django.template import RequestContext
-from genplot.models import Job, Histos
+from generic.models import App, AppDes, Attr, Blob, AppAtr
 import json, subprocess, sys, configs
 
 def index(request):
-    gaussVersions = Job.objects.values('gaussVersion').distinct('gaussVersion')
+    applications = App.objects.values('appName').distinct('appName')
     
-    gaussVersionsList = []
-    for dict in gaussVersions:  
-        gaussVersionsList.append(dict['gaussVersion'])
+    applicationsList = []
+    for dict in applications:  
+        applicationsList.append(dict['appName'])
 
-    return render_to_response('genplot/generatePlot.html',
-                    {'gaussVersions' : gaussVersionsList}, 
+    return render_to_response('generic/genericPlot.html',
+                    {'applications' : applicationsList}, 
                   context_instance=RequestContext(request))
     
 def choose(request):
-    if request.method == 'POST':
+    if request.method == 'POST':      
         cDict = {}
-        current = Job.objects.get(gaussVersion__exact=request.POST['gaussVersion'],pythiaVersion__exact=request.POST['pythiaVersion'],eventType__exact=request.POST['eventType'])
-        current_histos = Histos.objects.all().filter(job__exact=current)
+        currentApp = App.objects.get(appName__exact=request.POST['application'],appVersion__exact=request.POST['AppVersion'])
+        currentAppDes = AppDes.objects.get(app__exact=currentApp, options__exact=request.POST['Options'])
+        current_histos = Blob.objects.all().filter(appDes__exact=currentAppDes)
+        
+        attributesCurrent = AppAtr.objects.all().filter(appDes__exact=currentAppDes)
+        current = {}
+        for atr in attributesCurrent:
+            current[atr.attr.name]=atr.value
             
+        current['gaussVersion'] = currentApp.appVersion
+        
         for cur in current_histos:
             cDict[cur.name]=cur.data
             
-        rDict = {}
-        reference = Job.objects.get(gaussVersion__exact=request.POST['gaussVersionREF'],pythiaVersion__exact=request.POST['pythiaVersionREF'],eventType__exact=request.POST['eventTypeREF'])
-        reference_histos = Histos.objects.all().filter(job__exact=reference)
             
+            
+        rDict = {}
+        referenceApp = App.objects.get(appName__exact=request.POST['applicationREF'],appVersion__exact=request.POST['AppVersionREF'])
+        referenceAppDes = AppDes.objects.get(app__exact=referenceApp, options__exact=request.POST['OptionsREF'])
+        reference_histos = Blob.objects.all().filter(appDes__exact=referenceAppDes)
+         
+        attributesReference = AppAtr.objects.all().filter(appDes__exact=referenceAppDes)
+        reference = {}
+        for atr in attributesReference:
+            reference[atr.attr.name]=atr.value
+            
+        reference['gaussVersion'] = referenceApp.appVersion
+           
         for ref in reference_histos:
             rDict[ref.name]=ref.data
             
@@ -48,35 +66,37 @@ def choose(request):
         
         subprocess.call(['bash', pythonROOT, genplotpy, '-f', outputfile])
                 
-        return render_to_response('genplot/generatePlotResults.html',
+        return render_to_response('generic/genericPlotResults.html',
                       {'current' : current , 'reference' : reference}, 
                       context_instance=RequestContext(request))
 
 def handleService(request):
     if request.method == 'GET':
-        if request.GET['service'] == 'pythia':
+        if request.GET['service'] == 'version':
             querykey = request.GET['key']
-            pythiaVersions = Job.objects.filter(gaussVersion__exact=querykey).values('pythiaVersion').distinct('pythiaVersion')
+            appVersions = App.objects.filter(appName__exact=querykey).values('appVersion').distinct('appVersion')
             
-            pythiaVersionsList = []
-            for dict in pythiaVersions:  
-                pythiaVersionsList.append(dict['pythiaVersion'])
+            appVersionsList = []
+            for dict in appVersions:  
+                appVersionsList.append(dict['appVersion'])
             
             myDict = {}
-            myDict['pythiaVersions'] = pythiaVersionsList
+            myDict['appVersions'] = appVersionsList
 
             return HttpResponse(json.dumps(myDict))
         
-        if request.GET['service'] == 'eventType':
-            gaussVer = request.GET['gaussVersion'] 
-            pythiaVer = request.GET['pythiaVersion']
-            eventTypes = Job.objects.filter(gaussVersion__exact=gaussVer).filter(pythiaVersion__exact=pythiaVer).values('eventType').distinct('eventType')
+        if request.GET['service'] == 'options':
+            appl = request.GET['appl'] 
+            version = request.GET['version']
+            application = App.objects.get(appName__exact=appl,appVersion__exact=version)
             
-            eventTypesList = []
-            for dict in eventTypes:  
-                eventTypesList.append(dict['eventType'])
+            options = AppDes.objects.filter(app__exact=application).values('options').distinct('options')
+            
+            optionsList = []
+            for dict in options:  
+                optionsList.append(dict['options'])
             
             myDict = {}
-            myDict['eventTypes'] = eventTypesList
+            myDict['optionsList'] = optionsList
             print myDict
             return HttpResponse(json.dumps(myDict))

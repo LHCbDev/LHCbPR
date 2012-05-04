@@ -49,6 +49,9 @@ class Command(BaseCommand):
                     atr, created = Attr.objects.get_or_create(name=key, type='string')
                     appAtr = AppAtr(appDes = appDescription, attr=atr, value=value)
                     appAtr.save()
+            atr, created = Attr.objects.get_or_create(name='pythiaVersion', type='string')
+            appAtr = AppAtr(appDes = appDescription, attr=atr , value = pythia_version )
+            appAtr.save()
             
             histograms = {}
             histograms = myDataDict['histograms']
