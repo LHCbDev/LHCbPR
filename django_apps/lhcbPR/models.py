@@ -12,7 +12,6 @@ class Platform(models.Model):
     pass
 
     
-#Attr = Attribute
 class Application(models.Model):
     appName = models.CharField(max_length=50)
     appVersion = models.CharField(max_length=50)
@@ -23,11 +22,9 @@ class Application(models.Model):
     def __unicode__(self):
         return self.appName+' '+self.appVersion
 
-#Blob = Blob (captain obvious)
 class Options(models.Model):
     pass
 
-#AppAtr = Application Attributes 
 class JobDescription(models.Model):
     application = models.ForeignKey(Application)
     options = models.ForeignKey(Options) 
