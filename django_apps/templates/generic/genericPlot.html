@@ -176,15 +176,15 @@ function updateOptions(id,val)
 }
 </script>
 
-<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/css/lhcb.css" type="text/css" media="screen">
-<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen">
+<!-- link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/css/lhcb.css" type="text/css" media="screen" -->
+<!-- link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen" -->
+<link rel="stylesheet" href="https://alamages.cern.ch/test2.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css.css" type="text/css" media="screen">
 <title>One generator plot example</title>
 </HEAD>
 <BODY>
-<div class="ctitle">
+<div id="header-wrap">
 <TABLE id="pagetitle">
-<TBODY>
 <TR>
 <TD class=iconspace>
 <A href="http://cern.ch/lhcb-comp">
@@ -192,15 +192,13 @@ function updateOptions(id,val)
 </A>
 </TD>
 <TD vAlign=middle align=center>
-<H1><a href="/genplot" >Generator Plot test</a></H1></TD>
+<H1><p class="head"><a href="/genplot" >Generator Plot test</a></p></H1></TD>
+
 </TR>
-</TBODY>
 </TABLE>
 </div>
-<div class=pagebody>
-<div id=manifest>
-<p>Press the button the compare the two jobs</p>
-</div>
+
+<p class="mystyle">Press the button the compare the two jobs</p>
 <h2>Just press the button</h2>
 
 <FORM 
@@ -208,55 +206,68 @@ function updateOptions(id,val)
      METHOD="POST" 
 	 onSubmit="return dropdown(this.application,this.AppVersion,this.Options,this.applicationREF,this.AppVersionREF,this.OptionsREF)">
 {% csrf_token %}
-<TABLE>
-<TR><TD></TD><TD>Application</TD><TD>Version</TD><TD>Options(eventType)</TD></TR>
+<center>
+<TABLE class="sample">
+<TR><TD></TD><TD><p class="mystyle">Application</p></TD><TD><p class="mystyle">Version</p></TD><TD><p class="mystyle">Options(eventType)</p></TD></TR>
 <TR>
-<TD><div class=firstcell>Current</div></TD>
+<TD><p class="mystyle">Current</p></TD>
 <TD>
 <!-- App == application -->
+<div class="styled-select">
 <SELECT ID="currentApp" NAME="application" onchange="updateAppVersions(this.id,this.value)">
 <OPTION  VALUE="">Select application
 {% for app in applications %}
 <OPTION VALUE="{{ app }}">{{ app }}
 {% endfor %}
 </SELECT>
+</div>
 </TD>
 <TD>
 <!-- Ver == Version -->
+<div class="styled-select">
 <SELECT ID="currentVer" NAME="AppVersion" onchange="updateOptions(this.id,this.value)" disabled="true">
 <OPTION  VALUE="">Select version
 </SELECT>
+</div>
 </TD>
 <TD>
 <!-- Opt == Options -->
+<div class="styled-select">
 <SELECT ID="currentOpt" NAME="Options" disabled="true">
 <OPTION  VALUE="">Select option
 </SELECT>
+</div>
 </TD>
 </TR>
 
 <TR>
-<TD><div class=firstcell style=background-color:red>Reference</div></TD>
+<TD><p class="mystyle">Reference</p></TD>
 <TD>
 <!-- App == application -->
+<div class="styled-select">
 <SELECT ID="referenceApp" NAME="applicationREF" onchange="updateAppVersions(this.id,this.value)">
 <OPTION  VALUE="">Select application
 {% for app in applications %}
 <OPTION VALUE="{{ app }}">{{ app }}
 {% endfor %}
 </SELECT>
+</div>
 </TD>
 <TD>
 <!-- Ver == Version -->
+<div class="styled-select">
 <SELECT ID="referenceVer" NAME="AppVersionREF" onchange="updateOptions(this.id,this.value)" disabled="true">
 <OPTION  VALUE="">Select version
 </SELECT>
+</div>
 </TD>
 <TD>
 <!-- Opt == Options -->
+<div class="styled-select">
 <SELECT ID="referenceOpt" NAME="OptionsREF" disabled="true">
 <OPTION  VALUE="">Select option
 </SELECT>
+</div>
 </TD>
 </TR>
 
@@ -268,7 +279,7 @@ function updateOptions(id,val)
 <TD></TD><TD></TD>
 </TR>
 </TABLE>
+</center>
 </FORM>
-
 </BODY>
 </HTML>

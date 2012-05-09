@@ -1,6 +1,7 @@
 <html>
 <script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script>
 <script type="text/javascript">
+<!-- the names will be changed, still works , too much var--> 
 function dropdown(gaussVersion,pythiaVersion,eventType,gaussVersionREF,pythiaVersionREF,eventTypeREF)
 {
 	var mygaussVersion, mypythiaVersion,myeventType,mygaussVersionREF,mypythiaVersionREF,myeventTypeREF;	
@@ -32,18 +33,18 @@ function initializeList(list,str){
 	opt.text = str;
 	list.disabled = true;
 }
-function updatePythiaVersions(id,val)
+function updateAppVersions(id,val)
 {
 	var optID;
 	var optID2;
 	//fix the id of the option list which will be changed
-	if (id == "currentG"){
-		optID = "currentP"
-		optID2 = "currentEV"
+	if (id == "currentApp"){
+		optID = "currentVer"
+		optID2 = "currentOpt"
 	}
 	else{
-		optID = "referenceP"
-		optID2 = "referenceEV"
+		optID = "referenceVer"
+		optID2 = "referenceOpt"
 	}
 	//if the value is null disable the options list and remove the values
 	if(val == ""){
@@ -51,8 +52,8 @@ function updatePythiaVersions(id,val)
 			list1 = document.getElementById(optID)
 			list2 = document.getElementById(optID2)
 
-			initializeList(list1,"Select pythia");
-			initializeList(list2,"Select eventType");
+			initializeList(list1,"Select version");
+			initializeList(list2,"Select option");
 
 		return;
 	}
@@ -76,20 +77,20 @@ function updatePythiaVersions(id,val)
 			var optionList2 = document.getElementById(optID2);
 			
 			//initialize the lists before update them
-			initializeList(optionList,"Select pythia");
-			initializeList(optionList2,"Select eventType");
+			initializeList(optionList,"Select version");
+			initializeList(optionList2,"Select option");
 			optionList.disabled = false;
 	
 			//parse the server response
 			var jsondata = JSON.parse(xmlhttp.responseText);
-			var pythias = jsondata.pythiaVersions;
+			var apps = jsondata.appVersions;
 			
 			//loop over the array which contains the versions
-			for(var i = 0; i < pythias.length; i++){
+			for(var i = 0; i < apps.length; i++){
 				var opt = document.createElement("option");
 				optionList.options.add(opt);
-				opt.value = pythias[i];
-				opt.text = pythias[i];
+				opt.value = apps[i];
+				opt.text = apps[i];
 			}
     	}
   	}
@@ -99,29 +100,29 @@ function updatePythiaVersions(id,val)
 	}
 	else{
 			// send the request the to server
-			xmlhttp.open("GET","/genplot/service?service=pythia&key="+val,true);
+			xmlhttp.open("GET","/generic/service?service=version&key="+val,true);
 			xmlhttp.send();
 		}
 	
 }
-function updateEventTypes(id,val)
+function updateOptions(id,val)
 {
 	var optID;
 	var optID2; // gaussVersion
 	//fix the id of the option list which will be changed
-	if (id == "currentP"){
-		optID = "currentEV";
-		optID2 = "currentG";
+	if (id == "currentVer"){
+		optID = "currentOpt";
+		optID2 = "currentApp";
 	}
 	else{
-		optID = "referenceEV";
-		optID2 = "referenceG";
+		optID = "referenceOpt";
+		optID2 = "referenceApp";
 	}
 
 	//if the value is null disable the options list and remove the values
 	if(val == ""){			
 			list = document.getElementById(optID)
-			initializeList(list,"Select eventType");
+			initializeList(list,"Select option");
 
 		return;
 	}
@@ -144,12 +145,12 @@ function updateEventTypes(id,val)
 			var optionList = document.getElementById(optID);
 			
 			//initialize the lists before update them
-			initializeList(optionList,"Select eventType");
+			initializeList(optionList,"Select option");
 			optionList.disabled = false;
 	
 			//parse the server response
 			var jsondata = JSON.parse(xmlhttp.responseText);
-			var events = jsondata.eventTypes;
+			var events = jsondata.optionsList;
 			
 			//loop over the array which contains the versions
 			for(var i = 0; i < events.length; i++){
@@ -166,24 +167,24 @@ function updateEventTypes(id,val)
 	}
 	else{
 			// send the request the to server
-			var gaussV = document.getElementById(optID2);
-			gaussVer = gaussV.options[gaussV.selectedIndex].value;
-			xmlhttp.open("GET","/genplot/service?service=eventType&gaussVersion="+gaussVer+"&pythiaVersion="+val,true);
+			var App = document.getElementById(optID2);
+			app = App.options[App.selectedIndex].value;
+			xmlhttp.open("GET","/generic/service?service=options&appl="+app+"&version="+val,true);
 			xmlhttp.send();
 		}
 	
 }
 </script>
 
-<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/css/lhcb.css" type="text/css" media="screen">
-<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen">
+<!-- link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/css/lhcb.css" type="text/css" media="screen" -->
+<!-- link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen" -->
+<link rel="stylesheet" href="https://alamages.cern.ch/test2.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css.css" type="text/css" media="screen">
 <title>One generator plot example</title>
 </HEAD>
 <BODY>
-<div class="ctitle">
+<div id="header-wrap">
 <TABLE id="pagetitle">
-<TBODY>
 <TR>
 <TD class=iconspace>
 <A href="http://cern.ch/lhcb-comp">
@@ -191,71 +192,82 @@ function updateEventTypes(id,val)
 </A>
 </TD>
 <TD vAlign=middle align=center>
-<H1><a href="/genplot" >Generator Plot test</a></H1></TD>
+<H1><p class="mystyle"><a href="/genplot" >Generator Plot test</a></p></H1></TD>
+
 </TR>
-</TBODY>
 </TABLE>
 </div>
-<div class=pagebody>
-<div id=manifest>
-<p>Press the button the compare the two jobs</p>
-</div>
+
+<p class="mystyle">Press the button the compare the two jobs</p>
 <h2>Just press the button</h2>
 
 <FORM 
-     ACTION="/genplot/results/" 
+     ACTION="/generic/results/" 
      METHOD="POST" 
-	 onSubmit="return dropdown(this.gaussVersion,this.pythiaVersion,this.eventType,this.gaussVersionREF,this.pythiaVersionREF,this.eventTypeREF)">
+	 onSubmit="return dropdown(this.application,this.AppVersion,this.Options,this.applicationREF,this.AppVersionREF,this.OptionsREF)">
 {% csrf_token %}
-<TABLE>
-<TR><TD></TD><TD>Gauss Version</TD><TD>Pythia Version</TD><TD>EventType</TD></TR>
+<center>
+<TABLE class="sample">
+<TR><TD></TD><TD><p class="mystyle">Application</p></TD><TD><p class="mystyle">Version</p></TD><TD><p class="mystyle">Options(eventType)</p></TD></TR>
 <TR>
-<TD><div class=firstcell>Current</div></TD>
+<TD><p class="mystyle">Current</p></TD>
 <TD>
-<!-- AP == application -->
-<SELECT ID="currentG" NAME="gaussVersion" onchange="updatePythiaVersions(this.id,this.value)">
-<OPTION  VALUE="">Select gauss
-{% for gauss in gaussVersions %}
-<OPTION VALUE="{{ gauss }}">{{ gauss }}
+<!-- App == application -->
+<div class="styled-select">
+<SELECT ID="currentApp" NAME="application" onchange="updateAppVersions(this.id,this.value)">
+<OPTION  VALUE="">Select application
+{% for app in applications %}
+<OPTION VALUE="{{ app }}">{{ app }}
 {% endfor %}
 </SELECT>
+</div>
 </TD>
 <TD>
-<!-- P == Pythia -->
-<SELECT ID="currentP" NAME="pythiaVersion" onchange="updateEventTypes(this.id,this.value)" disabled="true">
-<OPTION  VALUE="">Select pythia
+<!-- Ver == Version -->
+<div class="styled-select">
+<SELECT ID="currentVer" NAME="AppVersion" onchange="updateOptions(this.id,this.value)" disabled="true">
+<OPTION  VALUE="">Select version
 </SELECT>
+</div>
 </TD>
 <TD>
-<!-- EV == EventType -->
-<SELECT ID="currentEV" NAME="eventType" disabled="true">
-<OPTION  VALUE="">Select eventType
+<!-- Opt == Options -->
+<div class="styled-select">
+<SELECT ID="currentOpt" NAME="Options" disabled="true">
+<OPTION  VALUE="">Select option
 </SELECT>
+</div>
 </TD>
 </TR>
 
 <TR>
-<TD><div class=firstcell style=background-color:red>Reference</div></TD>
+<TD><p class="mystyle">Reference</p></TD>
 <TD>
-<!-- AP == application -->
-<SELECT ID="referenceG" NAME="gaussVersionREF" onchange="updatePythiaVersions(this.id,this.value)">
-<OPTION  VALUE="">Select gauss
-{% for gauss in gaussVersions %}
-<OPTION VALUE="{{ gauss }}">{{ gauss }}
+<!-- App == application -->
+<div class="styled-select">
+<SELECT ID="referenceApp" NAME="applicationREF" onchange="updateAppVersions(this.id,this.value)">
+<OPTION  VALUE="">Select application
+{% for app in applications %}
+<OPTION VALUE="{{ app }}">{{ app }}
 {% endfor %}
 </SELECT>
+</div>
 </TD>
 <TD>
-<!-- P == Pythia -->
-<SELECT ID="referenceP" NAME="pythiaVersionREF" onchange="updateEventTypes(this.id,this.value)" disabled="true" >
-<OPTION  VALUE="">Select pythia
+<!-- Ver == Version -->
+<div class="styled-select">
+<SELECT ID="referenceVer" NAME="AppVersionREF" onchange="updateOptions(this.id,this.value)" disabled="true">
+<OPTION  VALUE="">Select version
 </SELECT>
+</div>
 </TD>
 <TD>
-<!-- EV == EventType -->
-<SELECT ID="referenceEV" NAME="eventTypeREF" disabled="true">
-<OPTION  VALUE="">Select eventType
+<!-- Opt == Options -->
+<div class="styled-select">
+<SELECT ID="referenceOpt" NAME="OptionsREF" disabled="true">
+<OPTION  VALUE="">Select option
 </SELECT>
+</div>
 </TD>
 </TR>
 
@@ -267,7 +279,7 @@ function updateEventTypes(id,val)
 <TD></TD><TD></TD>
 </TR>
 </TABLE>
+</center>
 </FORM>
-
 </BODY>
 </HTML>
