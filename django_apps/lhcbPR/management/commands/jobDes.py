@@ -4,6 +4,8 @@ from lhcbPR.models import Application, Options, JobDescription
 class Command(BaseCommand):
     """
     Just a test to initialize some demo jobDescriptions
+    pk=1(primarykey=1) for Brunel v42r0p1
+    and pk=2 for Gauss v41r2
     """
 
     def handle(self, *args, **options):
@@ -13,7 +15,7 @@ class Command(BaseCommand):
         app2, created = Application.objects.get_or_create(appName='Gauss',appVersion='v41r2')
         jobDescr2 = JobDescription.objects.get_or_create(application=app2)
         
-        print 'Test descriptions added.'
+        print 'Test job descriptions added.'
            
             
         

@@ -11,7 +11,7 @@ class Command(BaseCommand):
         Application.objects.all().delete()
         Options.objects.all().delete()
         
-        print 'Test descriptions deleted.'
+        print 'Test job descriptions deleted.'
            
             
         

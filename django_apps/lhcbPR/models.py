@@ -60,3 +60,11 @@ class ResultInt(JobResults):
 class ResultBinary(JobResults):
     root_version = models.CharField(max_length=20)
     data = models.TextField()
+    
+class Handler(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+    
+class JobHandler(models.Model):
+    jobDescription = models.ForeignKey(JobDescription)
+    handler = models.ForeignKey(Handler)
