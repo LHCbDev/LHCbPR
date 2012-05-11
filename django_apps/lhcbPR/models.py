@@ -51,8 +51,7 @@ class ResultString(JobResults):
     data = models.CharField(max_length=100)
     
 class ResultFloat(JobResults):
-    data = models.FloatField()
-    
+    data = models.FloatField()  
     
 class ResultInt(JobResults):
     data = models.IntegerField()
