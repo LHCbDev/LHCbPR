@@ -60,7 +60,15 @@ def getHandler(jobDesID):
 
     return result
     
- 
+def getImportCommand(jobDesID):
+    """
+    Makes the command(in string format) to import the proper
+    handler
+    """
+    myhandler = getHandler(jobDesID)
+
+    return 'from handlers import '+myhandler+' as handler'
+
 def main():
     #this is used for checking
     needed_options = 12
@@ -91,8 +99,9 @@ def main():
     dataDict = JobDictinary(options.hostname,options.startTime,options.endTime,
                        options.cmtconfig,options.jobDescription_id)
     
-    #get a specific handler depending on the jodDescription id 
-    myhandler = getHandler(options.jobDescription_id)
+    exec getImportCommand(options.jobDescription_id)
+    
+    print handler.parse(dataDict,options.results)
 
 if __name__ == '__main__':
     main()
