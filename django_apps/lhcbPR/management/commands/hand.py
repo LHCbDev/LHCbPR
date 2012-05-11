@@ -1,7 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
 from lhcbPR.models import Handler, JobHandler, JobDescription
-import json
-
 
 class Command(BaseCommand):
 
