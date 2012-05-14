@@ -108,19 +108,25 @@ class GeneratorLogFile:
       adds to the attribute's list the rest of the attributes and then 
       return the final json format
       """
+      gauss_version = ''
+      pythia_version = ''
+      if self.gaussVersion() == None:
+            gauss_version = 'v31r1'
+      if self.pythiaVersion() == None:
+            pythia_version = "6.424.2"
       
-      attributeslist.append(self.getAtrDict('eventType',self.eventType(),'Float',''))
-      attributeslist.append(self.getAtrDict('gaussVersion',self.gaussVersion(),'String',''))
-      attributeslist.append(self.getAtrDict('pythiaVersion',self.pythiaVersion(),'String',''))
-      attributeslist.append(self.getAtrDict('totalCrossSection',self.totalCrossSection(),'Float',''))
-      attributeslist.append(self.getAtrDict('bCrossSection',self.bCrossSection(),'Float',''))
-      attributeslist.append(self.getAtrDict('cCrossSection',self.cCrossSection(),'Float',''))
-      attributeslist.append(self.getAtrDict('promptCharmCrossSection',self.promptCharmCrossSection(),'Float',''))
-      attributeslist.append(self.getAtrDict('totalAcceptedEvents',self.totalAcceptedEvents(),'Float',''))
-      attributeslist.append(self.getAtrDict('signalProcessCrossSection',self.signalProcessCrossSection(),'Float',''))
-      attributeslist.append(self.getAtrDict('signalProcessFromBCrossSection',self.signalProcessFromBCrossSection(),'Float',''))
-      attributeslist.append(self.getAtrDict('generatorLevelCutEfficiency',self.generatorLevelCutEfficiency(),'Float',''))
-      attributeslist.append(self.getAtrDict('timePerEvent',self.timePerEvent(),'Float',''))
+      attributeslist.append(self.getAtrDict('eventType',self.eventType(),'Float','',''))
+      attributeslist.append(self.getAtrDict('gaussVersion',gauss_version,'String','',''))
+      attributeslist.append(self.getAtrDict('pythiaVersion',pythia_version,'String','',''))
+      attributeslist.append(self.getAtrDict('totalCrossSection',self.totalCrossSection(),'Float','',''))
+      attributeslist.append(self.getAtrDict('bCrossSection',self.bCrossSection(),'Float','',''))
+      attributeslist.append(self.getAtrDict('cCrossSection',self.cCrossSection(),'Float','',''))
+      attributeslist.append(self.getAtrDict('promptCharmCrossSection',self.promptCharmCrossSection(),'Float','',''))
+      attributeslist.append(self.getAtrDict('totalAcceptedEvents',self.totalAcceptedEvents(),'Float','',''))
+      attributeslist.append(self.getAtrDict('signalProcessCrossSection',self.signalProcessCrossSection(),'Float','',''))
+      attributeslist.append(self.getAtrDict('signalProcessFromBCrossSection',self.signalProcessFromBCrossSection(),'Float','',''))
+      attributeslist.append(self.getAtrDict('generatorLevelCutEfficiency',self.generatorLevelCutEfficiency(),'Float','',''))
+      attributeslist.append(self.getAtrDict('timePerEvent',self.timePerEvent(),'Float','',''))
       
       DataDict['JobAttributes'] = attributeslist
       
@@ -128,7 +134,7 @@ class GeneratorLogFile:
       f.write(json.dumps(DataDict))
        
   
-  def getAtrDict(self,atrName,atrValue,type,description):
+  def getAtrDict(self,atrName,atrValue,type,description,group):
       """
       Fix a dictionary in the needed format with the attributes of the
       GeneratorLogFile class
@@ -138,6 +144,7 @@ class GeneratorLogFile:
       atrDict['data'] = atrValue
       atrDict['type'] = type
       atrDict['description'] = description
+      atrDict['group'] = group
       
       return atrDict
 
@@ -146,15 +153,15 @@ def getRootList(HistoFile):
     ROOT_version = gROOT.GetVersion()
     dictList = []
     rootObjectDetails = [
-                  ['GenMonitorAlg/10','Int','ROOT_Blob',''],
-                  ['GenMonitorAlg/11','PrimaryVtxX','ROOT_Blob',''],
-                  ['GenMonitorAlg/12','PrimaryVtxY','ROOT_Blob',''],
-                  ['GenMonitorAlg/13','PrimaryVtxZ','ROOT_Blob',''],
-                  ['GenMonitorAlg/3','Multiplicity','ROOT_Blob',''],
-                  ['GenMonitorAlg/44','Pseudorap','ROOT_Blob',''],
-                  ['GenMonitorAlg/45','Pt','ROOT_Blob',''],
-                  ['GenMonitorAlg/5','Process','ROOT_Blob',''],
-                  ['GenMonitorAlg/4','MultInLHCb','ROOT_Blob',''],
+                  ['GenMonitorAlg/10','Int','ROOT_Blob','',''],
+                  ['GenMonitorAlg/11','PrimaryVtxX','ROOT_Blob','',''],
+                  ['GenMonitorAlg/12','PrimaryVtxY','ROOT_Blob','',''],
+                  ['GenMonitorAlg/13','PrimaryVtxZ','ROOT_Blob','',''],
+                  ['GenMonitorAlg/3','Multiplicity','ROOT_Blob','',''],
+                  ['GenMonitorAlg/44','Pseudorap','ROOT_Blob','',''],
+                  ['GenMonitorAlg/45','Pt','ROOT_Blob','',''],
+                  ['GenMonitorAlg/5','Process','ROOT_Blob','',''],
+                  ['GenMonitorAlg/4','MultInLHCb','ROOT_Blob','',''],
                 ]
    
     for obj in rootObjectDetails:
@@ -164,6 +171,7 @@ def getRootList(HistoFile):
         tempDict["ROOT_version"] = ROOT_version
         tempDict['name'] = obj[1]
         tempDict['description'] = obj[3]
+        tempDict['group'] = obj[4]
         
         dictList.append(tempDict)
       

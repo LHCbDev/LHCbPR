@@ -27,6 +27,7 @@ def parse(DataDict,resultslist):
             attributeTemp['name'] = parent.attrib.get("name")+'_'+child.tag 
             attributeTemp['data'] = child.text
             attributeTemp['description'] = ''
+            attributeTemp['group'] = ''
             if child.tag == 'count':
                attributeTemp['type'] = 'Integer' 
             else:
