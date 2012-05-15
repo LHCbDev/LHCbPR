@@ -1,0 +1,24 @@
+#!/bin/sh
+if [[ ${1} == *[!0-9]* ]]; then
+       	echo "'${1}' is not a number!"
+	exit 1
+fi
+
+export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.6/site-packages
+
+result="timing.xml"
+job="`pwd`/perf-test-1000.py"
+output="frafo.json"
+job_id="1"
+
+cd ~/workspace/LHCbPR/django_apps
+
+for (( counter=0; counter<${1}; counter+=1 ))
+do
+	echo "I HAVED RUNNED ${counter} TIMES"
+	start=`date +"%Y-%m-%d,%T"`
+	gaudirun.py ${job}
+	end=`date +"%Y-%m-%d,%T"`
+	python26 collectRunResults.py -s ${start} -e ${end} -r ${result}  -p `hostname` -c $CMTCONFIG -j ${job_id} > frafo.json
+	python26 manage.py pushToDB ${output}
+done
