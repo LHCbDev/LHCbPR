@@ -25,7 +25,7 @@ class MultipleOption(Option):
             Option.take_action(
                 self, action, dest, opt, value, values, parser)
 
-def JobDictinary(hostname,starttime,endtime,cmtconfig,jodDesId):
+def JobDictionary(hostname,starttime,endtime,cmtconfig,jodDesId):
     """
     For the time this method is needed to fill a dictionary,with some useful data,
     which will be passed to the subprocesses, is used for testing for the moment,
@@ -96,7 +96,7 @@ def main():
 
     options, args = parser.parse_args()
     
-    dataDict = JobDictinary(options.hostname,options.startTime,options.endTime,
+    dataDict = JobDictionary(options.hostname,options.startTime,options.endTime,
                        options.cmtconfig,options.jobDescription_id)
     
     exec getImportCommand(options.jobDescription_id)
