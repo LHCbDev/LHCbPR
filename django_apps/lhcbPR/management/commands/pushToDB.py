@@ -1,10 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
 from lhcbPR.models import CMTCONFIG, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription
+from django.db import transaction
 import json, re
-
 
 class Command(BaseCommand):
 
+    @transaction.commit_on_success
     def handle(self, *args, **options):
         """ 
         Pushes the data from the given json file inside the database
@@ -48,8 +49,9 @@ class Command(BaseCommand):
                                              )
             
             attributelist = myDataDict['JobAttributes']
-            
+            counter = 0
             for atr in attributelist:
+                print 'Saving: '+str(counter)
                 myAtr, created = JobAttribute.objects.get_or_create(
                                                                     name = atr['name'],
                                                                     type = atr['type'],
@@ -57,34 +59,32 @@ class Command(BaseCommand):
                                                                     group = atr['group']
                                                                     )
                 if atr['type'] == 'Float':
-                    finalAtr= ResultFloat(
+                    finalAtr= ResultFloat.objects.get_or_create(
                                                     job = myjob,
                                                     jobAttribute = myAtr,
                                                     data = atr['data']
                                                     ) 
-                    finalAtr.save()
                 elif atr['type'] == 'Integer':
-                    finalAtr = ResultInt(
+                    finalAtr = ResultInt.objects.get_or_create(
                                                     job = myjob,
                                                     jobAttribute = myAtr,
                                                     data = atr['data']
                                                     ) 
-                    finalAtr.save()
                 elif atr['type'] == 'String':
-                    finalAtr = ResultString(
+                    finalAtr = ResultString.objects.get_or_create(
                                                     job = myjob,
                                                     jobAttribute = myAtr,
                                                     data = atr['data']
                                                     ) 
-                    finalAtr.save()
                 elif atr['type'] == 'ROOT_Blob':
-                    finalAtr = ResultBinary(
+                    finalAtr, created = ResultBinary.objects.get_or_create(
                                                     job = myjob,
                                                     jobAttribute = myAtr,
                                                     data = atr['data'],
                                                     root_version = atr['ROOT_version']
                                                     ) 
-                    finalAtr.save()
+                
+                counter+=1
             
         except KeyError:
             self.stdout.write('Attributes given in json file are wrong, aborting...\n')
