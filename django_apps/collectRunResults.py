@@ -1,4 +1,4 @@
-import os, sys, subprocess
+import os, sys, subprocess, inspect
 from optparse import OptionParser
 from optparse import Option, OptionValueError
 
@@ -66,7 +66,7 @@ def getImportCommand(jobDesID):
     handler
     """
     myhandler = getHandler(jobDesID)
-
+    
     return 'from handlers import '+myhandler+' as handler'
 
 def main():
