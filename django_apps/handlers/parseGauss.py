@@ -1,17 +1,24 @@
 import subprocess, os, json, pickle
+from handlers import parseTiming
 
 def parse(DataDict,resultslist):
     path_to_save = os.getcwd()
     LogfileName = ''
     HistoFile = ''
+    xmlfile = ''
     
     if inputValid(resultslist):
         for result in resultslist:
           fileName, fileExtension = os.path.splitext(result)
           if fileExtension == '.root':
               HistoFile = result
+          elif fileExtension == '.xml':
+              xmlfile = result
           else:
               LogfileName = result
+        
+        #change later
+        DataDict['timingList'] = parseTiming.parse(xmlfile)
         
         f  = open(path_to_save+'/DataDict.json','w')
         f.write(json.dumps(DataDict))
@@ -34,7 +41,7 @@ def parse(DataDict,resultslist):
         return 'Wrong input was given!!'
     
 def inputValid(resultslist): 
-    if not len(resultslist) == 2:
+    if not len(resultslist) == 3:
         return False
     
     for result in resultslist:

@@ -115,6 +115,12 @@ class GeneratorLogFile:
       if self.pythiaVersion() == None:
             pythia_version = "6.424.2"
       
+      #to be changed later
+      timingList = DataDict['timingList']
+      del DataDict['timingList']
+      attributeslist.extend(timingList)
+      
+      
       attributeslist.append(self.getAtrDict('eventType',self.eventType(),'Float','',''))
       attributeslist.append(self.getAtrDict('gaussVersion',gauss_version,'String','',''))
       attributeslist.append(self.getAtrDict('pythiaVersion',pythia_version,'String','',''))
