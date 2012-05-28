@@ -1,0 +1,32 @@
+#!/bin/sh
+eventtype="10000000"
+if [[ ${1} != [0-9]\{8\} || ! -z ${1} ]]; then
+     echo "'Using default eventtype 10000000"
+else
+     echo "Using ${1} as eventtype" 
+     eventtype=${1}
+fi
+
+
+. /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh
+SetupProject Gauss v42r0
+
+export PYTHONPATH=/usr/lib/python2.6/site-packages:$PYTHONPATH
+
+job="perf-test-1000-Gauss.py"
+sed "s/@\[eventtype\]/${eventtype}/g" ${job} > tempperf.py 
+
+start=`date +"%Y-%m-%d,%T"`
+gaudirun.py tempperf.py > log${eventtype}
+end=`date +"%Y-%m-%d,%T"`
+rm tempperf.py
+
+result1="`pwd`/`ls ${oldpath} | grep "Gauss-${eventtype}.*\.root"`"
+result2="`pwd`/log${eventtype}"
+result3="`pwd`/timing.xml"
+job_id=3
+
+cd ~/workspace/LHCbPR/django_apps
+
+python collectRunResults.py -s ${start} -e ${end} -r ${result3} -r ${result1} -r ${result2}  -p `hostname` -c $CMTCONFIG -j ${job_id}
+#can be used ./runJob | python -mjson.tool > frafo.json to fix the output format
