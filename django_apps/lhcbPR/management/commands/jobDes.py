@@ -15,6 +15,9 @@ class Command(BaseCommand):
         app2, created = Application.objects.get_or_create(appName='Gauss',appVersion='v41r2')
         jobDescr2 = JobDescription.objects.get_or_create(application=app2)
         
+        app3, created = Application.objects.get_or_create(appName='Gauss',appVersion='v42r0')
+        jobDescr3 = JobDescription.objects.get_or_create(application=app3)
+        
         print 'Test job descriptions added.'
            
             

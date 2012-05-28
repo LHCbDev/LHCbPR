@@ -57,7 +57,6 @@ def getHandler(jobDesID):
     
     p = subprocess.Popen(argslist, stdout=subprocess.PIPE)
     result, err = p.communicate()
-
     return result
     
 def getImportCommand(jobDesID):

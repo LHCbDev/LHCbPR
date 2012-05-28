@@ -2,17 +2,15 @@ from xml.etree.ElementTree import ElementTree
 from xml.parsers.expat import ExpatError
 import json
 
-def parse(DataDict,resultslist):
+def parse(xmlfile):
     """ 
     Parses the timing.xml output of Brunel v41r0p1 and fixes the final
     dictionary containing the full job 
     """
     tree = ElementTree()
-    if not len(resultslist) == 1:
-        return 'Wrong resultslist...try again!'
     
     try:
-        tree.parse(resultslist[0])
+        tree.parse(xmlfile)
     except ExpatError:
         return 'Invalid xml file!Check your syntax'
     except IOError:
@@ -36,7 +34,4 @@ def parse(DataDict,resultslist):
             attributesList.append(attributeTemp)
         
     
-    DataDict['JobAttributes'] = attributesList
-    
-    #return the results in json format
-    return json.dumps(DataDict)
+    return attributesList
