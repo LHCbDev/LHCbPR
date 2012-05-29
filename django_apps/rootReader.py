@@ -8,7 +8,7 @@
 from ROOT import TFile, TCanvas, TH1D, gROOT
 from ROOT import gDirectory, gPad, gStyle
 from optparse import OptionParser
-import re, sys, os, shutil, base64, json, cPickle
+import re, sys, os, shutil, base64, json, cPickle, zlib
 
 #################################################################################
 def grepPattern(P,L):
@@ -182,17 +182,30 @@ def main():
   Process = gDirectory.Get( 'GenMonitorAlg/5' )
   MultInLHCb = gDirectory.Get( 'GenMonitorAlg/4' ) 
   
-  #encode TH1D objects
+  
+  #some compression test to the old generic app
   histosDict = {}
-  histosDict['Int']= cPickle.dumps(Int)
-  histosDict['PrimaryVtxX']= cPickle.dumps(PrimaryVtxX)
-  histosDict['PrimaryVtxY']= cPickle.dumps(PrimaryVtxY)
-  histosDict['PrimaryVtxZ']= cPickle.dumps(PrimaryVtxZ)
-  histosDict['Multiplicity']= cPickle.dumps(Multiplicity)
-  histosDict['Pseudorap']= cPickle.dumps(Pseudorap)
-  histosDict['Pt']= cPickle.dumps(Pt)
-  histosDict['Process']= cPickle.dumps(Process)
-  histosDict['MultInLHCb']= cPickle.dumps(MultInLHCb)
+  histosDict['Int']= base64.b64encode(zlib.compress(cPickle.dumps(Int)))
+  histosDict['PrimaryVtxX']= base64.b64encode(zlib.compress(cPickle.dumps(PrimaryVtxX)))
+  histosDict['PrimaryVtxY']= base64.b64encode(zlib.compress(cPickle.dumps(PrimaryVtxY)))
+  histosDict['PrimaryVtxZ']= base64.b64encode(zlib.compress(cPickle.dumps(PrimaryVtxZ)))
+  histosDict['Multiplicity']= base64.b64encode(zlib.compress(cPickle.dumps(Multiplicity)))
+  histosDict['Pseudorap']= base64.b64encode(zlib.compress(cPickle.dumps(Pseudorap)))
+  histosDict['Pt']= base64.b64encode(zlib.compress(cPickle.dumps(Pt)))
+  histosDict['Process']= base64.b64encode(zlib.compress(cPickle.dumps(Process)))
+  histosDict['MultInLHCb']= base64.b64encode(zlib.compress(cPickle.dumps(MultInLHCb)))
+  
+  ##encode TH1D objects
+  #histosDict = {}
+  #histosDict['Int']= cPickle.dumps(Int)
+  #histosDict['PrimaryVtxX']= cPickle.dumps(PrimaryVtxX)
+  #histosDict['PrimaryVtxY']= cPickle.dumps(PrimaryVtxY)
+  #histosDict['PrimaryVtxZ']= cPickle.dumps(PrimaryVtxZ)
+  #histosDict['Multiplicity']= cPickle.dumps(Multiplicity)
+  #histosDict['Pseudorap']= cPickle.dumps(Pseudorap)
+  #histosDict['Pt']= cPickle.dumps(Pt)
+  #histosDict['Process']= cPickle.dumps(Process)
+  #histosDict['MultInLHCb']= cPickle.dumps(MultInLHCb)
   
   TheLog.generateJsonOutput(options.outputfile,histosDict)
   aFile.Close()

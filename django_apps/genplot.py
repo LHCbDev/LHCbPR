@@ -7,7 +7,7 @@
 from ROOT import TFile, TCanvas, TH1D, gROOT
 from ROOT import gDirectory, gPad, gStyle
 from optparse import OptionParser
-import re, sys, os, shutil, json , cPickle, configs
+import re, sys, os, shutil, json , cPickle, configs,base64,zlib
 
 ################################################################################
 class GeneratorHisto:
@@ -88,29 +88,49 @@ def main():
   rDict={}
   rDict = gloDict['reference']
   
-  IntREF = cPickle.loads(str(rDict['Int']))
-  PrimaryVtxXREF = cPickle.loads(str(rDict['PrimaryVtxX']))
-  PrimaryVtxYREF = cPickle.loads(str(rDict['PrimaryVtxY']))
-  PrimaryVtxZREF = cPickle.loads(str(rDict['PrimaryVtxZ']))
-  MultiplicityREF = cPickle.loads(str(rDict['Multiplicity']))
-  PseudorapREF = cPickle.loads(str(rDict['Pseudorap']))
-  PtREF = cPickle.loads(str(rDict['Pt']))
-  ProcessREF = cPickle.loads(str(rDict['Process']))
-  MultInLHCbREF = cPickle.loads(str(rDict['MultInLHCb']))
+  IntREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Int']))))
+  PrimaryVtxXREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['PrimaryVtxX']))))
+  PrimaryVtxYREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['PrimaryVtxY']))))
+  PrimaryVtxZREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['PrimaryVtxZ']))))
+  MultiplicityREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Multiplicity']))))
+  PseudorapREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Pseudorap']))))
+  PtREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Pt']))))
+  ProcessREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Process']))))
+  MultInLHCbREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['MultInLHCb']))))
+  
+  #IntREF = cPickle.loads(str(rDict['Int']))
+  #PrimaryVtxXREF = cPickle.loads(str(rDict['PrimaryVtxX']))
+  #PrimaryVtxYREF = cPickle.loads(str(rDict['PrimaryVtxY']))
+  #PrimaryVtxZREF = cPickle.loads(str(rDict['PrimaryVtxZ']))
+  #MultiplicityREF = cPickle.loads(str(rDict['Multiplicity']))
+  #PseudorapREF = cPickle.loads(str(rDict['Pseudorap']))
+  #PtREF = cPickle.loads(str(rDict['Pt']))
+  #ProcessREF = cPickle.loads(str(rDict['Process']))
+  #MultInLHCbREF = cPickle.loads(str(rDict['MultInLHCb']))
   
   
   cDict={}
   cDict = gloDict['current']
   
-  Int = cPickle.loads(str(cDict['Int']))
-  PrimaryVtxX = cPickle.loads(str(cDict['PrimaryVtxX']))
-  PrimaryVtxY = cPickle.loads(str(cDict['PrimaryVtxY']))
-  PrimaryVtxZ = cPickle.loads(str(cDict['PrimaryVtxZ']))
-  Multiplicity = cPickle.loads(str(cDict['Multiplicity']))
-  Pseudorap = cPickle.loads(str(cDict['Pseudorap']))
-  Pt = cPickle.loads(str(cDict['Pt']))
-  Process = cPickle.loads(str(cDict['Process']))
-  MultInLHCb = cPickle.loads(str(cDict['MultInLHCb']))
+  Int = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Int']))))
+  PrimaryVtxX = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['PrimaryVtxX']))))
+  PrimaryVtxY = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['PrimaryVtxY']))))
+  PrimaryVtxZ = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['PrimaryVtxZ']))))
+  Multiplicity = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Multiplicity']))))
+  Pseudorap = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Pseudorap']))))
+  Pt = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Pt']))))
+  Process = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Process']))))
+  MultInLHCb = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['MultInLHCb']))))
+  
+  #Int = cPickle.loads(str(cDict['Int']))
+  #PrimaryVtxX = cPickle.loads(str(cDict['PrimaryVtxX']))
+  #PrimaryVtxY = cPickle.loads(str(cDict['PrimaryVtxY']))
+  #PrimaryVtxZ = cPickle.loads(str(cDict['PrimaryVtxZ']))
+  #Multiplicity = cPickle.loads(str(cDict['Multiplicity']))
+  #Pseudorap = cPickle.loads(str(cDict['Pseudorap']))
+  #Pt = cPickle.loads(str(cDict['Pt']))
+  #Process = cPickle.loads(str(cDict['Process']))
+  #MultInLHCb = cPickle.loads(str(cDict['MultInLHCb']))
   
   c1 = TCanvas( 'c1' , 'Gauss' , 200 , 10 , 800 , 800 ) 
   
