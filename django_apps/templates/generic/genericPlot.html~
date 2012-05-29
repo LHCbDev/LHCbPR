@@ -176,9 +176,8 @@ function updateOptions(id,val)
 }
 </script>
 
-<!-- link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/css/lhcb.css" type="text/css" media="screen" -->
-<!-- link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen" -->
-<link rel="stylesheet" href="https://alamages.cern.ch/test2.css" type="text/css" media="screen">
+
+<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css.css" type="text/css" media="screen">
 <title>One generator plot example</title>
 </HEAD>
@@ -192,7 +191,7 @@ function updateOptions(id,val)
 </A>
 </TD>
 <TD vAlign=middle align=center>
-<H1><p class="mystyle"><a href="/genplot" >Generator Plot test</a></p></H1></TD>
+<H1><p class="head"><a href="/genplot" >Generator Plot test</a></p></H1></TD>
 
 </TR>
 </TABLE>

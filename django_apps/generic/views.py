@@ -13,7 +13,7 @@ def index(request):
     for dict in applications:  
         applicationsList.append(dict['appName'])
 
-    return render_to_response('generic/genericPlot.html',
+    return render_to_response('generic/genericPlotOf.html',
                     {'applications' : applicationsList}, 
                   context_instance=RequestContext(request))
     
