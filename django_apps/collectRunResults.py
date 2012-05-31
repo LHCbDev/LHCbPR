@@ -50,8 +50,9 @@ def getHandler(jobDesID):
     Take as a parameter a job description id and returns the proper 
     handler for handling this job id
     """
+    real_path = os.path.dirname(inspect.getfile(inspect.currentframe()))
     python_used = 'python26'
-    manager = 'manage.py'
+    manager = real_path+'/'+'manage.py'
     command = 'getHandler'
     argslist =(python_used, manager, command, jobDesID )
     
@@ -59,14 +60,16 @@ def getHandler(jobDesID):
     result, err = p.communicate()
     return result
     
-def getImportCommand(jobDesID):
+def getHandlerModule(jobDesID):
     """
-    Makes the command(in string format) to import the proper
-    handler
+    return the correct handler module depending on the 
+    jod description id
     """
-    myhandler = getHandler(jobDesID)
+    moduleCommandList = ['handlers','.',getHandler(jobDesID)]
+    module = ''.join(moduleCommandList)
+    __import__(module)
     
-    return 'from handlers import '+myhandler+' as handler'
+    return sys.modules[module]
 
 def main():
     #this is used for checking
@@ -98,7 +101,7 @@ def main():
     dataDict = JobDictionary(options.hostname,options.startTime,options.endTime,
                        options.cmtconfig,options.jobDescription_id)
     
-    exec getImportCommand(options.jobDescription_id)
+    handler = getHandlerModule(options.jobDescription_id)
     
     print handler.parse(dataDict,options.results)
 

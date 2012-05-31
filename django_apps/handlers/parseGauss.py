@@ -1,5 +1,6 @@
-import subprocess, os, json, pickle
+import subprocess, os, json, pickle, inspect
 from handlers import parseTiming
+import configs
 
 def parse(DataDict,resultslist):
     path_to_save = os.getcwd()
@@ -24,9 +25,10 @@ def parse(DataDict,resultslist):
         f.write(json.dumps(DataDict))
         f.close()
         
+        real_path = configs.work_path
         outputfile = 'frafo.json'
-        python_used = 'pythonROOT'
-        parser = 'gaussRootReader.py'
+        python_used = real_path+'/'+'pythonROOT'
+        parser = real_path+'/'+'gaussRootReader.py'
         argslist =('bash', python_used, parser, 
                    '-s', HistoFile, 
                    '-f', LogfileName, 
