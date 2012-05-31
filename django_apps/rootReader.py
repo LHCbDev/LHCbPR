@@ -9,6 +9,7 @@ from ROOT import TFile, TCanvas, TH1D, gROOT
 from ROOT import gDirectory, gPad, gStyle
 from optparse import OptionParser
 import re, sys, os, shutil, base64, json, cPickle, zlib
+from tools import converter
 
 #################################################################################
 def grepPattern(P,L):
@@ -185,15 +186,15 @@ def main():
   
   #some compression test to the old generic app
   histosDict = {}
-  histosDict['Int']= base64.b64encode(zlib.compress(cPickle.dumps(Int)))
-  histosDict['PrimaryVtxX']= base64.b64encode(zlib.compress(cPickle.dumps(PrimaryVtxX)))
-  histosDict['PrimaryVtxY']= base64.b64encode(zlib.compress(cPickle.dumps(PrimaryVtxY)))
-  histosDict['PrimaryVtxZ']= base64.b64encode(zlib.compress(cPickle.dumps(PrimaryVtxZ)))
-  histosDict['Multiplicity']= base64.b64encode(zlib.compress(cPickle.dumps(Multiplicity)))
-  histosDict['Pseudorap']= base64.b64encode(zlib.compress(cPickle.dumps(Pseudorap)))
-  histosDict['Pt']= base64.b64encode(zlib.compress(cPickle.dumps(Pt)))
-  histosDict['Process']= base64.b64encode(zlib.compress(cPickle.dumps(Process)))
-  histosDict['MultInLHCb']= base64.b64encode(zlib.compress(cPickle.dumps(MultInLHCb)))
+  histosDict['Int']= converter.serialize(Int,'02')
+  histosDict['PrimaryVtxX']= converter.serialize(PrimaryVtxX,'03')
+  histosDict['PrimaryVtxY']= converter.serialize(PrimaryVtxY)
+  histosDict['PrimaryVtxZ']= converter.serialize(PrimaryVtxZ,'03')
+  histosDict['Multiplicity']= converter.serialize(Multiplicity,'02')
+  histosDict['Pseudorap']= converter.serialize(Pseudorap)
+  histosDict['Pt']= converter.serialize(Pt,'02')
+  histosDict['Process']= converter.serialize(Process)
+  histosDict['MultInLHCb']= converter.serialize(MultInLHCb)
   
   ##encode TH1D objects
   #histosDict = {}

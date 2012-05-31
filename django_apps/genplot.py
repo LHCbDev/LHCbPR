@@ -8,6 +8,7 @@ from ROOT import TFile, TCanvas, TH1D, gROOT
 from ROOT import gDirectory, gPad, gStyle
 from optparse import OptionParser
 import re, sys, os, shutil, json , cPickle, configs,base64,zlib
+from tools import converter
 
 ################################################################################
 class GeneratorHisto:
@@ -88,15 +89,15 @@ def main():
   rDict={}
   rDict = gloDict['reference']
   
-  IntREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Int']))))
-  PrimaryVtxXREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['PrimaryVtxX']))))
-  PrimaryVtxYREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['PrimaryVtxY']))))
-  PrimaryVtxZREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['PrimaryVtxZ']))))
-  MultiplicityREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Multiplicity']))))
-  PseudorapREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Pseudorap']))))
-  PtREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Pt']))))
-  ProcessREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['Process']))))
-  MultInLHCbREF = cPickle.loads(zlib.decompress(base64.b64decode(str(rDict['MultInLHCb']))))
+  IntREF = converter.deserialize(str(rDict['Int']))
+  PrimaryVtxXREF = converter.deserialize(str(rDict['PrimaryVtxX']))
+  PrimaryVtxYREF = converter.deserialize(str(rDict['PrimaryVtxY']))
+  PrimaryVtxZREF = converter.deserialize(str(rDict['PrimaryVtxZ']))
+  MultiplicityREF = converter.deserialize(str(rDict['Multiplicity']))
+  PseudorapREF = converter.deserialize(str(rDict['Pseudorap']))
+  PtREF = converter.deserialize(str(rDict['Pt']))
+  ProcessREF = converter.deserialize(str(rDict['Process']))
+  MultInLHCbREF = converter.deserialize(str(rDict['MultInLHCb']))
   
   #IntREF = cPickle.loads(str(rDict['Int']))
   #PrimaryVtxXREF = cPickle.loads(str(rDict['PrimaryVtxX']))
@@ -112,15 +113,15 @@ def main():
   cDict={}
   cDict = gloDict['current']
   
-  Int = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Int']))))
-  PrimaryVtxX = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['PrimaryVtxX']))))
-  PrimaryVtxY = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['PrimaryVtxY']))))
-  PrimaryVtxZ = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['PrimaryVtxZ']))))
-  Multiplicity = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Multiplicity']))))
-  Pseudorap = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Pseudorap']))))
-  Pt = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Pt']))))
-  Process = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['Process']))))
-  MultInLHCb = cPickle.loads(zlib.decompress(base64.b64decode(str(cDict['MultInLHCb']))))
+  Int = converter.deserialize(str(cDict['Int']))
+  PrimaryVtxX = converter.deserialize(str(cDict['PrimaryVtxX']))
+  PrimaryVtxY = converter.deserialize(str(cDict['PrimaryVtxY']))
+  PrimaryVtxZ = converter.deserialize(str(cDict['PrimaryVtxZ']))
+  Multiplicity = converter.deserialize(str(cDict['Multiplicity']))
+  Pseudorap = converter.deserialize(str(cDict['Pseudorap']))
+  Pt = converter.deserialize(str(cDict['Pt']))
+  Process = converter.deserialize(str(cDict['Process']))
+  MultInLHCb = converter.deserialize(str(cDict['MultInLHCb']))
   
   #Int = cPickle.loads(str(cDict['Int']))
   #PrimaryVtxX = cPickle.loads(str(cDict['PrimaryVtxX']))
