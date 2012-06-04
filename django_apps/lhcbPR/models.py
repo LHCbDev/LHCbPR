@@ -7,11 +7,7 @@ class Host(models.Model):
 
     def __unicode__(self):
         return self.hostname
-
-class CMTCONFIG(models.Model):
-    platform = models.CharField(max_length=100)
-
-    
+ 
 class Application(models.Model):
     appName = models.CharField(max_length=50)
     appVersion = models.CharField(max_length=50)
@@ -25,9 +21,20 @@ class Application(models.Model):
 class Options(models.Model):
     pass
 
+class SetupProject(models.Model):
+    name = models.CharField(max_length=100)
+    arguments = models.CharField(max_length=200)
+
 class JobDescription(models.Model):
     application = models.ForeignKey(Application)
     options = models.ForeignKey(Options,null=True) 
+
+class CMTCONFIG(models.Model):
+    platform = models.CharField(max_length=100)
+
+class RequestedCMTCONFIG(models.Model):
+    jobdescription = models.ForeignKey(JobDescription)
+    cmtconfig = models.ForeignKey(CMTCONFIG)
     
 class Job(models.Model):
     host = models.ForeignKey(Host,null=True)
@@ -36,6 +43,14 @@ class Job(models.Model):
     time_start = models.DateTimeField()
     time_end = models.DateTimeField()
     status = models.CharField(max_length=50)
+    
+class Handler(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+    
+class JobHandler(models.Model):
+    jobDescription = models.ForeignKey(JobDescription)
+    handler = models.ForeignKey(Handler)
  
 class JobAttribute(models.Model):
     name = models.CharField(max_length=50)
@@ -60,10 +75,7 @@ class ResultBinary(JobResults):
     root_version = models.CharField(max_length=20)
     data = models.TextField()
     
-class Handler(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
-    
-class JobHandler(models.Model):
-    jobDescription = models.ForeignKey(JobDescription)
+class HandlerResult(models.Model):
+    job = models.ForeignKey(Job)
     handler = models.ForeignKey(Handler)
+    success = models.BooleanField()
