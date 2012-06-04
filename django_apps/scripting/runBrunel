@@ -1,20 +1,15 @@
 #!/bin/sh
 . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh
-
 SetupProject Brunel v42r0p1
-
 export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.6/site-packages
 
 result="`pwd`/timing.xml"
 job="`pwd`/perf-test-1000-Brunel.py"
 output="frafo.json"
 job_id="1"
-
 start=`date +"%Y-%m-%d,%T"`
 gaudirun.py ${job}
 end=`date +"%Y-%m-%d,%T"`
 
-cd ~/workspace/LHCbPR/django_apps
-
-python collectRunResults.py -s ${start} -e ${end} -r ${result}  -p `hostname` -c $CMTCONFIG -j ${job_id} > frafo.json
-python manage.py pushToDB ${output}
+python ~/workspace/LHCbPR/django_apps/collectRunResults.py -s ${start} -e ${end} -r ${result}  -p `hostname` -c $CMTCONFIG -j ${job_id} > frafo.json
+python ~/workspace/LHCbPR/django_apps/manage.py pushToDB ${output}
