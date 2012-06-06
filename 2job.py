@@ -54,12 +54,12 @@ def main():
     logging.info('Using DECFILESROOT_OPTIONS: '+options.decfilesroot_options)
     logging.info('Using OUTPUT_PATH: '+options.output_path+'\n')
                 
-    decroot_options = os.listdir(options.decfilesroot_options)
-    latest_options = os.listdir(options.latestOptions)
+    decroot_optionsall = os.listdir(options.decfilesroot_options)
+    latest_optionsall = os.listdir(options.latestOptions)
 
     searchRegex = re.compile('[0-9]{8}')
-    decroot_options = filterPick(decroot_options,searchRegex)
-    latest_options = filterPick(latest_options,searchRegex)
+    decroot_options = filterPick(decroot_optionsall,searchRegex)
+    latest_options = filterPick(latest_optionsall,searchRegex)
 
     new_options = difference(decroot_options, latest_options)
     
