@@ -73,7 +73,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
-LOGIN_REDIRECT_URL = 'https://alamages.cern.ch/django/lhcbPR'
+#LOGIN_REDIRECT_URL = 'https://alamages.cern.ch/django/lhcbPR'
 SHIB_SSO_ADMIN = True
 SHIB_SSO_CREATE_ACTIVE = True
 SHIB_SSO_CREATE_STAFF = False
@@ -138,7 +138,6 @@ INSTALLED_APPS = (
     'shibsso',
     'generic',
     'lhcbPR',
-    'shibboleth',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

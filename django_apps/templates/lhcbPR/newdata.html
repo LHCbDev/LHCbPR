@@ -112,7 +112,7 @@ function updateCheckbox(myId, val)
 	}
 	else{
 			// send the request the to server
-			xmlhttp.open("GET","/lhcbPR/service?function="+myId+"&key="+val,true);
+			xmlhttp.open("GET","/django/lhcbPR/service?function="+myId+"&key="+val,true);
 			xmlhttp.send();
 		}
 	

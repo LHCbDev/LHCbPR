@@ -6,8 +6,10 @@ admin.autodiscover()
 urlpatterns = patterns('',
 #    url(r'^accounts/login/$', 'shibsso.views.login'),
 #    url(r'^accounts/logout/$', 'shibsso.views.logout'),
-    url(r'^login/$', 'shibsso.views.login'),
-    url(r'^logout/$', 'shibsso.views.logout'),
+#    url(r'^login/$', 'shibsso.views.login'),
+#    url(r'^logout/$', 'shibsso.views.logout'),
+    url(r'^lhcbPR/login/$', 'shibsso.views.login'),
+    url(r'^lhcbPR/logout/$', 'shibsso.views.logout'),
 )
 
 urlpatterns += patterns('lhcbPR.views',

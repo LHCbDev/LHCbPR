@@ -56,7 +56,7 @@ def login(request, redirect_field_name=REDIRECT_FIELD_NAME):
                                 settings.SHIB_LOGIN_PATH,
                                 path))
 
-#login = never_cache(login)
+login = never_cache(login)
 
 def logout(request, next_page=None, template_name='registration/logged_out.html',
            redirect_field_name=REDIRECT_FIELD_NAME):
@@ -85,4 +85,4 @@ def logout(request, next_page=None, template_name='registration/logged_out.html'
         # Redirect to this page until the session has been cleared.
         return HttpResponseRedirect(next_page or request.path)
 
-#logout = never_cache(logout)
+logout = never_cache(logout)

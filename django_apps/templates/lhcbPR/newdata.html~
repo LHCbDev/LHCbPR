@@ -21,11 +21,7 @@ function fixCommand(version){
 	command += document.getElementById("choosedApp").value+" ";
 	command += version;
 	
-	mali = document.createElement("li");
-	malabel = document.createElement("label");
-	malabel.appendChild(document.createTextNode(command));
-	mali.appendChild(malabel);
-	myUI.appendChild(mali);
+	myUI.appendChild(document.createTextNode(command));
 }
 
 function selectOnlyThis(myInput_id,myUl_id) {

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/reps/elfmsdjango/!svn/ver/13/shibsso/tags/0.1/shibsso
+END
+admin.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/reps/elfmsdjango/!svn/ver/13/shibsso/tags/0.1/shibsso/admin.py
+END
+backends.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/reps/elfmsdjango/!svn/ver/13/shibsso/tags/0.1/shibsso/backends.py
+END
+middleware.py
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/reps/elfmsdjango/!svn/ver/13/shibsso/tags/0.1/shibsso/middleware.py
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/reps/elfmsdjango/!svn/ver/13/shibsso/tags/0.1/shibsso/views.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/reps/elfmsdjango/!svn/ver/13/shibsso/tags/0.1/shibsso/__init__.py
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/reps/elfmsdjango/!svn/ver/13/shibsso/tags/0.1/shibsso/models.py
+END

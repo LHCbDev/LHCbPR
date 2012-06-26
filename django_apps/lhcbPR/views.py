@@ -24,7 +24,7 @@ def makeList(mylist,key):
 def index(request):
     return render_to_response('lhcbPR/index.html', 
                   context_instance=RequestContext(request))
-@login_required    
+@login_required(login_url="login")  
 def newdata(request):
     applications = Application.objects.values('appName').distinct('appName')
     
