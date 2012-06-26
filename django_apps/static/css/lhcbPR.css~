@@ -1,0 +1,395 @@
+/* Main Gaudi style sheet */
+/* the HTML tag are uppercased for clearer reading */
+/* Body of the page settings: prevents any margin */
+
+/* Colors legenda */
+/* #FFFFFF  white */
+/* #191970  midnightblue */
+/* #000080  navyblue */
+/* #000000  black */
+/* #436EEE  royalblue2 */
+/* #6495ED  cornflowerblue */
+/* #B0E0E6  powderblue */
+/* #CAE1FF  lightsteelblue1 */
+/* #BFEFFF  lightblue1 */
+/* #0000CD  mediumblue */
+/* #FFFF00  yellow */
+/* #00FF00  lime */
+/* #EE7600  darkorange2 */
+/* #483D8B  darkslateblue */
+/* #F0F8FF  aliceblue*/
+/* #FDFCDC  Ivory Tusk */
+/* #ECF1EF  Far Horizon */
+/* #FF0000  red */
+/* #FF4500  orangered */
+/* #FFFFCC  clear color */
+/* #7B68EE  mediumslateblue*/
+/* #FFA500  orange */
+
+#lhcblogo { 
+  border-style: none;
+  width: 98px;
+  height: 69px;
+}
+
+
+BODY { 
+  background-color: #FFFFFF;
+  position: relative; 
+  margin: 0; padding: 0;
+  font-family: "Arial",sans-serif;
+}
+
+P { 
+  text-align: justify;
+}
+
+/* Unique Gaudi manifest (on the main page) */
+#manifest { 
+  border-width: 1px;
+  border-color: #000000;
+  border-style: solid;
+  background-color: #436EEE;
+  color: #FFFFFF; /* color for the writing (white) */
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 2em;
+  padding: 15px 18px 15px 18px;
+  font-weight: bold;
+}
+
+/* Select an image inside the manifest */
+#manifest IMG {
+  margin-right: 1em;
+  float: left;
+}
+
+#manifest A:link { 
+  /* color: white; */
+  color: #FFFF00;
+} 
+
+#manifest A:visited { 
+  /* color: blue; */
+  color: #FFA500;
+}
+
+#manifest A:hover { 
+  color: #00FF00; 
+}
+#manifest A:active { 
+  color: #00FF00; 
+}
+
+/* general table settings */
+TABLE {
+  border-width: 0px 0px 0px 0px;
+  border-spacing: 0px 0px;
+  border-style: none none none none;
+  border-color: gray gray gray gray;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+
+TD { 
+  border-width: 1px 1px 1px 1px;
+  padding: 4px 8px 4px 8px;
+  border-style: solid solid solid solid;
+  border-color: #191970;
+  background-color: white;
+}
+
+/* default link settings */
+A {
+  text-decoration: none;
+}
+A:link { 
+  /* color: blue; */
+  color: #0000CD;
+} 
+A:visited { 
+  /* color: blue; */
+  color: #191970;
+}
+A:hover { 
+  color: #FFFF00; 
+}
+A:active { 
+  color: #00FF00; 
+}
+
+A#projecticon img { 
+  text-decoration: none;
+  border: 0px;
+}
+
+.ctitle TABLE { 
+  width: 100%;
+  border: 0px;
+}
+
+.ctitle TD{ 
+  font-variant: small-caps;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: #191970;
+  text-align: center;
+}
+
+.ctitle A:link { 
+  color: #FFFFFF;
+} 
+.ctitle A:visited { 
+  color: #FFFFFF;
+}
+.ctitle A:hover { 
+  color: #FFFF00;
+}
+.ctitle A:active { 
+  color: #00FF00;
+}
+
+.crtitle H1 { 
+  text-align: center;
+  background-color: #BFEFFF;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.crtitle A:link { 
+  color: #191970;
+}
+
+.crtitle A:hover { 
+  color: #EE7600;
+}
+
+.iconspace { 
+  width: 50px;
+}
+
+
+#relinks { 
+  width: 100%;
+}
+
+
+#relinks TD { 
+  text-align: center;
+  background-color: #BFEFFF;
+  border-color: #BFEFFF; 
+}
+
+.pagebody { 
+  position: relative;
+  width: 90%;
+  left: 5%;
+  
+}
+
+
+.pagebody A:link { 
+  color: #0000CD ;
+} 
+
+.pagebody A:visited { 
+  color: #483D8B ;
+}
+
+.pagebody A:hover { 
+  color: #EE7600 ;
+}
+
+.pagebody A:active { 
+  color: #00FF00;
+}
+
+.pagebody TABLE { 
+  margin-left:auto; 
+  margin-right:auto;
+}
+
+.pagebody H1 {
+  background-color: #FFFFFF;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.pagebody H2 {
+  color: #191970;
+  border-style: none none solid solid;
+  padding-left: 0.3em;
+  border-width: thin;
+  margin-top: 1.5em;
+}
+
+.firstcell { 
+  background-color: #191970;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+.firstcell A:link { 
+  color: #FFFFFF;
+} 
+.firstcell A:visited { 
+  color: #FFFFFF;
+}
+.firstcell A:hover { 
+  color: #FFFF00; 
+}
+.firstcell A:active { 
+  color: #00FF00;
+}
+
+TR.evenrow TD {
+  background-color: #FFFFCC ;
+}
+
+TR.oddrow TD {
+  background-color: #CCFFFF ;
+}
+
+
+#project_links A:hover{ 
+  color: #FFFF00;   
+}
+
+#requ { 
+  border-width: 1px;
+  border-color: #000000;
+  border-style: solid;
+  background-color: #FDFCDC;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  width: 80%;
+  padding: 15px 18px 15px 18px;
+}
+
+#code { 
+  border-width: 0px;
+  border-color: #000000;
+  border-style: solid;
+  background-color: #ECF1EF;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  width: 70%;
+  padding: 13px 18px 0px 18px;
+}
+#codecomment { 
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  background-color: #FFFFFF;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 0.0em;
+  margin-bottom: 3.0em;
+  width: 70%;
+  padding: 5px 18px 10px 18px;
+  font-size: 80%;
+}
+
+
+#ann {
+  border-width: 1px;
+  border-color: #191970;
+  border-style: solid;
+  background-color: #CAE1FF;
+  margin-right: 0;
+  margin-left: 1em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  padding: 15px 18px 5px 18px;
+  width: 20em;
+  float: right;
+  color: #000000;
+}
+
+#ann H2 { 
+  border-style: none none none none;
+  color: #191970;
+  margin-top: 0em;
+  text-align: center;
+}
+
+#obsolete {
+  background-color: #FF0000;
+  padding: 4px 8px 4px 8px;
+  border-width: 1px;
+}
+
+#production {
+  background-color: #FFFFCC;
+  padding: 4px 8px 4px 8px;
+  border-width: 1px;
+}
+
+#latest {
+  background-color: #add8e6;
+  padding: 4px 8px 4px 8px;
+  border-width: 1px;
+}
+
+.important { 
+  font-weight: bold;
+}
+
+table.sample {
+	border-width: 0px;
+	border-spacing: 3px;
+	border-style: hidden;
+	border-color: gray;
+	border-collapse: separate;
+	background-color: white;
+}
+table.sample th {
+	border-width: 0px;
+	padding: 3px;
+	border-style: hidden;
+	border-color: gray;
+	background-color: white;
+	-moz-border-radius: ;
+}
+table.sample td {
+	border-width: 0px;
+	padding: 13px;
+	border-style: hidden;
+	border-color: gray;
+	background-color: white;
+	-moz-border-radius: ;
+}
+
+b {
+	font-family: "sans-serif";
+}
+
+.checklist {
+    border: 1px solid #ccc;
+    list-style: none;
+    height: 8em;
+    overflow: auto;
+    width: 10em;
+}
+
+.checklistOver {
+    border: 1px solid #ccc;
+    list-style: none;
+    height: 6em;
+    overflow: auto;
+    width: 17em;
+}
+.checklist, .checklist li { margin: 0; padding: 0; }
+
+.checklist label {
+    display: block;
+    padding-left: 25px;
+    text-indent: -25px;
+}
+
+#.checklist label:hover { background: #777; color: #fff; }

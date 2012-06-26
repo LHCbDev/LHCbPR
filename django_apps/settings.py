@@ -73,6 +73,18 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
+LOGIN_REDIRECT_URL = 'https://alamages.cern.ch/django/lhcbPR'
+SHIB_SSO_ADMIN = True
+SHIB_SSO_CREATE_ACTIVE = True
+SHIB_SSO_CREATE_STAFF = False
+SHIB_SSO_CREATE_SUPERUSER = False
+SHIB_LOGIN_PATH = '/Shibboleth.sso/?target='
+SHIB_LOGOUT_URL = 'https://login.cern.ch/adfs/ls/?wa=wsignout1.0&returnurl='
+META_EMAIL = 'ADFS_EMAIL'
+META_FIRSTNAME = 'ADFS_FIRSTNAME'
+META_GROUP = 'ADFS_GROUP'
+META_LASTNAME = 'ADFS_LASTNAME'
+META_USERNAME = 'ADFS_LOGIN'
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -93,20 +105,17 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    #'algo.middleWareUpload.UploadMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'shibsso.middleware.ShibSSOMiddleware'
+    'shibsso.middleware.ShibSSOMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-
-######################################################################################
-#AUTHENTICATION_BACKENDS = (
-#        'shibsso.backends.ShibSSOBackend',
-#    )
+AUTHENTICATION_BACKENDS = (
+        'shibsso.backends.ShibSSOBackend',
+)
 
 ROOT_URLCONF = 'django_apps.urls'
 
@@ -126,12 +135,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
+    'shibsso',
     'generic',
     'lhcbPR',
+    'shibboleth',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
-
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error.

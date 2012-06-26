@@ -1,0 +1,201 @@
+<html>
+<!--<script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script> -->
+<script type="text/javascript">
+function removeAllChilds(myId){
+	var node= document.getElementById(myId);		
+	if ( node.hasChildNodes() ){
+   		while ( node.childNodes.length >= 1 ){
+       			node.removeChild( node.firstChild );       
+    	} 
+	}	
+}
+
+function fixCommand(version){
+	myUI = document.getElementById("Overview");
+	removeAllChilds("Overview");
+	
+	if (document.getElementById("choosedApp").value == "")
+			return;
+	
+	var command = "SetupProject ";
+	command += document.getElementById("choosedApp").value+" ";
+	command += version;
+	
+	myUI.appendChild(document.createTextNode(command));
+}
+
+function selectOnlyThis(myInput_id,myUl_id) {
+	    myUl = document.getElementById(myUl_id);
+		var inputs = myUl.getElementsByTagName("input");
+		
+		var wasClicked = false;
+
+		myInput = document.getElementById(myInput_id);
+		if(!myInput.checked)
+    		wasClicked = true;
+
+        for (i = 0; i < inputs.length; i++) {
+				var myLabel = inputs[i];            
+				myLabel.checked = false;  
+        }
+		
+		if(wasClicked)	{
+			myInput.checked = false;
+			fixCommand("");
+		}
+		else{
+			myInput.checked = true;
+			fixCommand(myInput.value);
+		}
+}
+
+function updateLists(myId, val){
+	updateCheckbox("Version",val);
+	fixCommand("");
+}
+
+function updateCheckbox(myId, val)
+{
+	if(val == ""){
+		removeAllChilds(myId);
+		return;
+	}
+
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function()
+	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			
+			// find the option list which will be changed
+			var versions= document.getElementById(myId);
+			
+			removeAllChilds(myId);  
+
+			//parse the server response
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			var apps = jsondata.appVersions;
+			
+			//loop over the array which contains the versions
+			for(var i = 0; i < apps.length; i++)
+			{
+				var inputObj = document.createElement("input");
+				var labelObj = document.createElement("label");			
+				var liObj = document.createElement("li");
+
+				labelObj.appendChild(inputObj); 
+				labelObj.appendChild(document.createTextNode(apps[i]));			
+				liObj.appendChild(labelObj)				
+				versions.appendChild(liObj)
+
+				inputObj.id = myId+i+""+i;
+				inputObj.type = "checkbox" ;
+				inputObj.value =  apps[i];
+				inputObj.setAttribute('onclick', 'selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)');
+		
+				labelObj.id = myId+i;				
+			}
+    	}
+  	}
+	if(val == ""){
+		//todo
+	}
+	else{
+			// send the request the to server
+			xmlhttp.open("GET","/lhcbPR/service?function="+myId+"&key="+val,true);
+			xmlhttp.send();
+		}
+	
+}
+</script>
+<link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
+<!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
+<link rel="stylesheet" href="css.css" type="text/css" media="screen">
+<title>One generator plot example</title>
+</HEAD>
+<BODY>
+<div class="ctitle">
+<TABLE id="pagetitle">
+<TBODY>
+<TR>
+<TD class=iconspace>
+<A href="http://cern.ch/lhcb-comp">
+<IMG id=lhcblogo  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
+</A>
+</TD>
+<TD vAlign=middle align=center>
+<H1><a href="/lhcbPR" >LHCb Perfomance & Regression</a></H1></TD>
+</TR>
+</TBODY>
+</TABLE>
+</div>
+<div class=pagebody>
+<div id=manifest>
+<p>Define your job description</p>
+</div>
+<h2>Make your choices</h2>
+<form action="#" method="get">
+<table class="sample">
+<tr>
+<td><u><b>Application</b></u></td>
+<td>
+<SELECT ID="choosedApp" NAME="AppName" onchange="updateLists(this.id,this.value)" >
+<OPTION  VALUE="">Select application
+{% for app in applications %}
+<OPTION VALUE="{{ app }}">{{ app }}
+{% endfor %}
+</SELECT>
+</td>
+<tr>
+</table>
+<table class="sample">
+<tr>
+<td><u><b>Version</b></u></td>
+<td><u><b>SetupProject</b></u></td>
+<td><u><b>Options</b></u></td>
+<td><u><b>CMTCONFIG</b></u></td>
+</tr>
+<tr>
+<td>
+    <ul id="Version" name="Version" class="checklist">
+    </ul>
+</td>
+<td>
+    <ul id="SetupProject" name="SetupProject" class="checklist">
+    </ul>
+</td>
+<td>
+    <ul id="Options" name="Options" class="checklist">
+    </ul>
+</td>
+<td>
+    <ul id="CMTCONFIG" name="CMTCONFIG" class="checklist">
+		<!-- <li><label id="CMTCONFIG1"><input id="CMTCONFIG11"  type="checkbox" value="" onclick="selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)" > Test</label></li> -->
+    </ul>
+</td>
+</tr>
+</table>
+<table class="sample">
+<tr>
+<td><b>Overview</b></td>
+</tr>
+<tr>
+<td>
+	<ul id="Overview" name="Overview" class="checklistOver">
+    </ul>
+</td>
+</tr>
+</table>
+</form>
+</BODY>
+</HTML>
