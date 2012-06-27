@@ -19,27 +19,28 @@ class Application(models.Model):
         return self.appName+' '+self.appVersion
 
 class Options(models.Model):
-    pass
+    content = models.CharField(max_length=200)
+    description = models.CharField(max_length=300)
 
 class SetupProject(models.Model):
-    name = models.CharField(max_length=100)
-    arguments = models.CharField(max_length=200)
+    content = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
 
 class JobDescription(models.Model):
     application = models.ForeignKey(Application)
     options = models.ForeignKey(Options,null=True) 
 
-class CMTCONFIG(models.Model):
-    platform = models.CharField(max_length=100)
+class Platform(models.Model):
+    cmtconfig = models.CharField(max_length=100)
 
 class RequestedCMTCONFIG(models.Model):
     jobdescription = models.ForeignKey(JobDescription)
-    cmtconfig = models.ForeignKey(CMTCONFIG)
+    cmtconfig = models.ForeignKey(Platform)
     
 class Job(models.Model):
     host = models.ForeignKey(Host,null=True)
     jobDescription = models.ForeignKey(JobDescription)
-    platform = models.ForeignKey(CMTCONFIG,null=True)
+    platform = models.ForeignKey(Platform,null=True)
     time_start = models.DateTimeField()
     time_end = models.DateTimeField()
     status = models.CharField(max_length=50)

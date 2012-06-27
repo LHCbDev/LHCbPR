@@ -382,7 +382,7 @@ b {
     list-style: none;
     height: 6em;
     overflow: auto;
-    width: 17em;
+    width: 22em;
 }
 .checklist, .checklist li { margin: 0; padding: 0; }
 
@@ -393,3 +393,29 @@ b {
 }
 
 #.checklist label:hover { background: #777; color: #fff; }
+
+
+table.sample2 {
+	border-width: 0px;
+	border-spacing: 3px;
+	border-style: hidden;
+	border-color: gray;
+	border-collapse: separate;
+	background-color: white;
+}
+table.sample2 th {
+	border-width: 0px;
+	padding: 3px;
+	border-style: hidden;
+	border-color: gray;
+	background-color: white;
+	-moz-border-radius: ;
+}
+table.sample2 td {
+	border-width: 0px;
+	padding: 5px;
+	border-style: hidden;
+	border-color: gray;
+	background-color: white;
+	-moz-border-radius: ;
+}

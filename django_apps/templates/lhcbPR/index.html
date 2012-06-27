@@ -1,5 +1,5 @@
 <html>
-<script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script>
+<!-- <script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script> -->
 <script type="text/javascript">
 function myMessage()
 {
@@ -8,8 +8,8 @@ function myMessage()
 </script>
 <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/css/lhcb.css" type="text/css" media="screen">
 <!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
-<link rel="stylesheet" href="css.css" type="text/css" media="screen">
-<title>One generator plot example</title>
+<!-- <link rel="stylesheet" href="css.css" type="text/css" media="screen"> -->
+<title>Home page</title>
 </HEAD>
 <BODY>
 <div class="ctitle">
@@ -22,7 +22,16 @@ function myMessage()
 </A>
 </TD>
 <TD vAlign=middle align=center>
-<H1><a href="/lhcbPR" >LHCb Perfomance & Regression</a></H1></TD>
+<H1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></H1>
+
+<div style="float: right;">
+{% if myauth %}
+<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
+{% else %}
+<a href="/django/lhcbPR/login"> Login</a>
+{% endif %}
+</div>
+</TD>
 </TR>
 </TBODY>
 </TABLE>

@@ -112,7 +112,7 @@ function updateCheckbox(myId, val)
 	}
 	else{
 			// send the request the to server
-			xmlhttp.open("GET","/lhcbPR/service?function="+myId+"&key="+val,true);
+			xmlhttp.open("GET","/django/lhcbPR/service?function="+myId+"&key="+val,true);
 			xmlhttp.send();
 		}
 	
@@ -120,8 +120,8 @@ function updateCheckbox(myId, val)
 </script>
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
 <!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
-<link rel="stylesheet" href="css.css" type="text/css" media="screen">
-<title>One generator plot example</title>
+<!-- <link rel="stylesheet" href="css.css" type="text/css" media="screen"> -->
+<title>Add new data</title>
 </HEAD>
 <BODY>
 <div class="ctitle">
@@ -134,7 +134,12 @@ function updateCheckbox(myId, val)
 </A>
 </TD>
 <TD vAlign=middle align=center>
-<H1><a href="/lhcbPR" >LHCb Perfomance & Regression</a></H1></TD>
+<H1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></H1>
+
+<div style="float: right;">
+<a href="/django/lhcbPR/login"> Login</a>
+<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a><div>
+</TD>
 </TR>
 </TBODY>
 </TABLE>
@@ -197,5 +202,11 @@ function updateCheckbox(myId, val)
 </tr>
 </table>
 </form>
+
+<br><br><br>
+<input type="submit" name="toaddnew" onclick="location.href='/django/lhcbPR' " value="Go back" style="font-size: 15px;"/>
+<br><br>
+<input type="submit" name="toaddnew" onclick="location.href='addnew' " value="Add new jobDescription ids" style="font-size: 15px;"/>
+
 </BODY>
 </HTML>

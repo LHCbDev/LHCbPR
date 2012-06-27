@@ -10,9 +10,10 @@ import json, subprocess, sys, configs
 #***********************************************
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import BACKEND_SESSION_KEY
+
 def test(request):
-    
-    return HttpResponse(request.session.get(BACKEND_SESSION_KEY))
+    #groups = request.META.get('ADFS_GROUP').split(';') 
+    return HttpResponse(request.user.is_authenticated())
  
 def makeList(mylist,key):
     List = []
@@ -22,8 +23,19 @@ def makeList(mylist,key):
     return List
        
 def index(request):
-    return render_to_response('lhcbPR/index.html', 
+    myauth = request.user.is_authenticated()
+    myDict = { 'myauth' : myauth, 'user' : request.user}
+    return render_to_response('lhcbPR/index.html', myDict,
                   context_instance=RequestContext(request))
+
+@login_required(login_url="login")      
+def addnew(request):
+    myauth = request.user.is_authenticated()
+    myDict = { 'myauth' : myauth, 'user' : request.user}
+    
+    return render_to_response('lhcbPR/addnew.html', myDict,
+                  context_instance=RequestContext(request))
+    
 @login_required(login_url="login")  
 def newdata(request):
     applications = Application.objects.values('appName').distinct('appName')
@@ -31,9 +43,11 @@ def newdata(request):
     applicationsList = []
     for dict in applications:  
         applicationsList.append(dict['appName'])
-        
+    myauth = request.user.is_authenticated()
+    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
+      
     return render_to_response('lhcbPR/newdata.html', 
-                  { 'applications' : applicationsList },
+                  myDict,
                   context_instance=RequestContext(request))
 
 def handleRequest(request):
@@ -48,34 +62,3 @@ def handleRequest(request):
         
         if request.GET['function'] == 'Options':
             pass
-        
-def handleService(request):
-    if request.method == 'GET':
-        if request.GET['service'] == 'version':
-            querykey = request.GET['key']
-            appVersions = App.objects.filter(appName__exact=querykey).values('appVersion').distinct('appVersion')
-            
-            appVersionsList = []
-            for dict in appVersions:  
-                appVersionsList.append(dict['appVersion'])
-            
-            myDict = {}
-            myDict['appVersions'] = appVersionsList
-
-            return HttpResponse(json.dumps(myDict))
-        
-        if request.GET['service'] == 'options':
-            appl = request.GET['appl'] 
-            version = request.GET['version']
-            application = App.objects.get(appName__exact=appl,appVersion__exact=version)
-            
-            options = AppDes.objects.filter(app__exact=application).values('options').distinct('options')
-            
-            optionsList = []
-            for dict in options:  
-                optionsList.append(dict['options'])
-            
-            myDict = {}
-            myDict['optionsList'] = optionsList
-            print myDict
-            return HttpResponse(json.dumps(myDict))

@@ -14,9 +14,10 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('lhcbPR.views',
     url(r'^lhcbPR/$', 'index'),
-    url(r'lhcbPR/newdata', 'newdata'),
-    url(r'lhcbPR/service', 'handleRequest'),
-    url(r'lhcbPR/test', 'test')
+    url(r'^lhcbPR/newdata', 'newdata'),
+    url(r'^lhcbPR/service', 'handleRequest'),
+    url(r'^lhcbPR/test', 'test'),
+    url(r'^lhcbPR/addnew', 'addnew')
 )
 
 urlpatterns += patterns('generic.views',

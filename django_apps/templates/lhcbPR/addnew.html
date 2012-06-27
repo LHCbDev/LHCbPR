@@ -1,0 +1,156 @@
+<html>
+<!--<script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script> -->
+<script type="text/javascript">
+function extras(){
+	extrasDiv = document.getElementById("extras");
+	mybutton = document.getElementById("showThem");
+	if (extrasDiv.style.visibility == "hidden"){
+		extrasDiv.style.visibility = "visible";
+		mybutton.value= "Hide available options";
+	}
+	else if(extrasDiv.style.visibility == "visible"){
+		extrasDiv.style.visibility = "hidden";
+		mybutton.value= "More available actions";
+	}
+}
+</script>
+<link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
+<!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
+<!-- <link rel="stylesheet" href="css.css" type="text/css" media="screen"> -->
+<title>Add new descriptions</title>
+</HEAD>
+<BODY>
+<div class="ctitle">
+<TABLE id="pagetitle">
+<TBODY>
+<TR>
+<TD class=iconspace>
+<A href="http://cern.ch/lhcb-comp">
+<IMG id=lhcblogo  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
+</A>
+</TD>
+<TD vAlign=middle align=center>
+<H1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></H1>
+
+<div style="float: right;">
+{% if myauth %}
+<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
+{% else %}
+<a href="/django/lhcbPR/login"> Login</a>
+{% endif %}
+</div>
+
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</div>
+<div class=pagebody>
+<div id=manifest>
+<p>Make your choices below</p>
+</div>
+<h2>Add a Job Description</h2>
+
+<table class="sample2">
+<form 
+	action="" 
+    method="POST" 
+	onSubmit="">
+<tr>
+<td>
+Application:
+</td>
+<td><input type="text" name="application" /></td>
+<td></td><td></td>
+<tr>
+<td>
+Version: 
+</td>
+<td><input type="text" name="version" /></td>
+<td></td><td></td>
+<tr>
+<td>
+SetupProject: 
+</td>
+<td><input type="text" name="setupproject_name" /></td>
+<td>Arguments:*</td><td><input type="text" name="setupproject_arguments" /></td>
+<tr>
+<td>
+Options:</td>
+<td><input type="text" name="options" /></td>
+<td>Description: *</td><td><input type="text" name="options_description" /></td>
+<tr><td></td>
+<tr><td></td><td></td><td></td>
+<td><input type="submit" name="mysubmit" value="Add" style="font-size: 15px;"/></td>
+</form>
+</table>
+
+<br><br><br>
+<input type="submit" name="toaddnew" onclick="location.href='newdata' " value="Go back" style="font-size: 15px;"/>
+<br><br>
+<input type="submit" id="showThem" value="More available actions" onclick="extras()" style="font-size: 15px;"/>
+
+<div id="extras" style="visibility: hidden;">
+<h2>Add Application</h2>
+<table class="sample2">
+<form action="" method="POST" onSubmit="">
+<tr>
+<td>
+Application:
+</td>
+<td><input type="text" name="applicationOnly" /></td>
+<td></td><td></td>
+<tr>
+<td>
+Version: 
+</td>
+<td><input type="text" name="versionOnly" /></td>
+<td></td><td></td>
+<tr><td></td><td></td><td></td>
+<td><input type="submit" name="mysubmit" value="Add" style="font-size: 15px;"/></td>
+</form>
+</table>
+
+<h2>Add SetupProject</h2>
+<table class="sample2">
+<form action="" method="POST" onSubmit="">
+<td>
+SetupProject: 
+</td>
+<td><input type="text" name="setupproject_nameOnly" /></td>
+<td>Arguments:*</td><td><input type="text" name="setupproject_argumentsOnly" /></td>
+<td></td><td></td>
+<tr><td></td><td></td><td></td>
+<td><input type="submit" name="mysubmit" value="Add" style="font-size: 15px;"/></td>
+</form>
+</table>
+
+<h2>Add Options</h2>
+<table class="sample2">
+<td>
+Options:</td>
+<td><input type="text" name="optionsOnly" /></td>
+<td>Description: *</td><td><input type="text" name="options_descriptionOnly" /></td>
+<tr><td></td>
+<tr><td></td><td></td><td></td>
+<td><input type="submit" name="mysubmit" value="Add" style="font-size: 15px;"/></td>
+</form>
+</table>
+
+<h2>Add CMTCONFIG</h2>
+<table class="sample2">
+<form action="" method="POST" onSubmit="">
+<td>
+Platform: 
+</td>
+<td><input type="text" name="cmtconfigOnly" /></td>
+<tr><td></td><td></td><td></td>
+<td><input type="submit" name="mysubmit" value="Add" style="font-size: 15px;"/></td>
+</form>
+</table>
+
+<h2>Add Handler</h2>
+<div>
+
+</BODY>
+</HTML>

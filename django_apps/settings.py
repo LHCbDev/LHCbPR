@@ -7,14 +7,16 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+#'ENGINE': 'django.db.backends.sqlite3',
+#'NAME': '/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/database.db',
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/database.db',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.oracle', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'devdb11',                      # Or path to database file if using sqlite3.
+        'USER': 'LHCB_PR',                      # Not used with sqlite3.
+        'PASSWORD': 'Xe_masi31',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -73,7 +75,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
-#LOGIN_REDIRECT_URL = 'https://alamages.cern.ch/django/lhcbPR'
+LOGIN_REDIRECT_URL = 'https://alamages.cern.ch/django/lhcbPR'
 SHIB_SSO_ADMIN = True
 SHIB_SSO_CREATE_ACTIVE = True
 SHIB_SSO_CREATE_STAFF = False
@@ -133,11 +135,10 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     'shibsso',
-    'generic',
     'lhcbPR',
+    #'generic',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
