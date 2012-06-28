@@ -18,16 +18,26 @@ def difference(a, b):
     """ show whats in list b which isn't in list a """
     return list(set(b).difference(set(a))) 
 
-def filterPick(list,regex):
-    """ Filters the elements of the given list with the given regex """
-    return [ m.group(0) for l in list for m in [regex.search(l)] if m ]
+
+def getSplitted(version):
+    """Takes a version and tranforms it like v41r0 ----> ['v', 41, 'r', '0']"""
+    split_regex = re.compile('\d+|[^\d\s]+')
+    splittedElement = []
+    for v in re.findall(split_regex, version):
+        if v.isdigit():
+            splittedElement.append(int(v))
+        else:
+            splittedElement.append(v)
+       
+    return splittedElement
 
 def getLatestVersion(path):
-    searchRegex = re.compile('v[0-9]+r[0-9]+.*')
-    versions = filterPick(os.listdir(path),searchRegex)
-    versions.sort()
-    
-    return versions[-1]
+    """Takes a path(path with the versions), returns the latest"""
+    listFolders = os.listdir(path)
+    search_regex = re.compile('v(\d+)r(\d+)(?:p(\d+))?') 
+    versions = [ m.group(0) for l in listFolders for m in [search_regex.search(l)] if m ]
+        
+    return sorted(versions, key = getSplitted )[-1]
 
 decfilesrootpath = ''
 try:
@@ -38,7 +48,7 @@ except KeyError:
      
 DECFILESROOT_OPTIONS = decfilesrootpath+'/options'
 ALL_VERSIONS = os.environ['LHCBRELEASES']+'/DBASE/Gen/DecFiles'
-LATEST_VERSION_OPTIONS = ALL_VERSIONS+'/'+getLatestVersion(ALL_VERSIONS)+'/options'
+LATEST_VERSION_OPTIONS = ALL_VERSIONS+os.sep+getLatestVersion(ALL_VERSIONS)+'/options'
 WRITE_OUTPUT_FILE = decfilesrootpath+'/doc/newdecfiles.txt'   
 
 
