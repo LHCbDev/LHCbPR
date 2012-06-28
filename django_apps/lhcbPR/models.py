@@ -28,12 +28,13 @@ class SetupProject(models.Model):
 
 class JobDescription(models.Model):
     application = models.ForeignKey(Application)
-    options = models.ForeignKey(Options,null=True) 
+    options = models.ForeignKey(Options,null=True)
+    setup_project = models.ForeignKey(SetupProject) 
 
 class Platform(models.Model):
     cmtconfig = models.CharField(max_length=100)
 
-class RequestedCMTCONFIG(models.Model):
+class Requested_platform(models.Model):
     jobdescription = models.ForeignKey(JobDescription)
     cmtconfig = models.ForeignKey(Platform)
     
