@@ -18,6 +18,9 @@ def difference(a, b):
     """ show whats in list b which isn't in list a """
     return list(set(b).difference(set(a))) 
 
+def filterPick(list,regex):
+    """ Filters the elements of the given list with the given regex """
+    return [ m.group(0) for l in list for m in [regex.search(l)] if m ]
 
 def getSplitted(version):
     """Takes a version and tranforms it like v41r0 ----> ['v', 41, 'r', '0']"""
@@ -35,7 +38,7 @@ def getLatestVersion(path):
     """Takes a path(path with the versions), returns the latest"""
     listFolders = os.listdir(path)
     search_regex = re.compile('v(\d+)r(\d+)(?:p(\d+))?') 
-    versions = [ m.group(0) for l in listFolders for m in [search_regex.search(l)] if m ]
+    versions = filterPick(listFolders, search_regex)
         
     return sorted(versions, key = getSplitted )[-1]
 

@@ -1,0 +1,9 @@
+<html>
+<body>
+
+{% for j in jobs %}
+ {{ j.appName }}  ,  {{ j.appVersion }} ,  {{ j.options }}/{{ j.optionsD }} , {{ j.cmtconfig }} ,
+{% endfor %}
+
+</body>
+</html>
