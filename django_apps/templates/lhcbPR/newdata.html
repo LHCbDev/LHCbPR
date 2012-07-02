@@ -1,6 +1,21 @@
 <html>
 <!--<script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script> -->
+
 <script type="text/javascript">
+function appearOrNot(button_id,box_id){
+
+	box = document.getElementById(box_id);
+	mybutton = document.getElementById(button_id);
+	
+	if (box.style.display == "none"){
+		box.style.display = "block";
+		mybutton.value= "hide";
+	}
+	else if(box.style.display == "block"){
+		box.style.display = "none";
+		mybutton.value= "show";
+	}
+}
 function removeAllChilds(myId){
 	var node= document.getElementById(myId);		
 	if ( node.hasChildNodes() ){
@@ -41,23 +56,51 @@ function selectOnlyThis(myInput_id,myUl_id) {
 		
 		if(wasClicked)	{
 			myInput.checked = false;
-			fixCommand("");
+			//fixCommand("");
 		}
 		else{
 			myInput.checked = true;
-			fixCommand(myInput.value);
+			//fixCommand(myInput.value);
 		}
 }
 
 function updateLists(myId, val){
-	updateCheckbox("Version",val);
-	fixCommand("");
+	updateCheckbox("i_love_cookies",val);
+
+	//fixCommand("");
+}
+
+function addElements(myId,box,apps){
+	//loop over the array which contains the versions
+	for(var i = 0; i < apps.length; i++)
+	{
+		var inputObj = document.createElement("input");
+		var labelObj = document.createElement("label");			
+		var liObj = document.createElement("li");
+
+		labelObj.appendChild(inputObj); 
+		labelObj.appendChild(document.createTextNode(apps[i]));			
+		liObj.appendChild(labelObj)				
+		box.appendChild(liObj)
+
+		inputObj.id = myId+i+""+i;
+		inputObj.type = "checkbox" ;
+		inputObj.value =  apps[i];
+		//inputObj.setAttribute('onclick', 'selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)');
+		inputObj.setAttribute('onchange', 'doFilter()');
+		
+		labelObj.id = myId+i;				
+	}
 }
 
 function updateCheckbox(myId, val)
 {
 	if(val == ""){
-		removeAllChilds(myId);
+		removeAllChilds("Version"); 
+		removeAllChilds("Options"); 
+		removeAllChilds("CMTCONFIG"); 
+		removeAllChilds("SetupProject"); 
+		removeAllChilds("Jobs");
 		return;
 	}
 
@@ -78,44 +121,114 @@ function updateCheckbox(myId, val)
 		{
 			
 			// find the option list which will be changed
-			var versions= document.getElementById(myId);
-			
-			removeAllChilds(myId);  
+			var versions= document.getElementById("Version");
+			var options= document.getElementById("Options");
+			var cmtconfig= document.getElementById("CMTCONFIG");		
+			var setupproject= document.getElementById("SetupProject");	
 
+			removeAllChilds("Version"); 
+			removeAllChilds("Options"); 
+			removeAllChilds("CMTCONFIG"); 
+			removeAllChilds("SetupProject"); 
+			removeAllChilds("Jobs"); 
+	
 			//parse the server response
 			var jsondata = JSON.parse(xmlhttp.responseText);
-			var apps = jsondata.appVersions;
 			
-			//loop over the array which contains the versions
-			for(var i = 0; i < apps.length; i++)
-			{
-				var inputObj = document.createElement("input");
-				var labelObj = document.createElement("label");			
-				var liObj = document.createElement("li");
+			var vers = jsondata.appVersions;
+			var ops = jsondata.options;
+			var setups = jsondata.setupProject;
+			var cmts = jsondata.cmtconfigs;			
 
-				labelObj.appendChild(inputObj); 
-				labelObj.appendChild(document.createTextNode(apps[i]));			
-				liObj.appendChild(labelObj)				
-				versions.appendChild(liObj)
+			addElements("Version",versions,vers);
+			addElements("Options",options,ops);
+			addElements("CMTCONFIG",cmtconfig,cmts);
+			addElements("SetupProject",setupproject,setups);
 
-				inputObj.id = myId+i+""+i;
-				inputObj.type = "checkbox" ;
-				inputObj.value =  apps[i];
-				inputObj.setAttribute('onclick', 'selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)');
-		
-				labelObj.id = myId+i;				
-			}
+			doFilter();
     	}
   	}
 	if(val == ""){
 		//todo
 	}
 	else{
-			// send the request the to server
-			xmlhttp.open("GET","/django/lhcbPR/service?function="+myId+"&key="+val,true);
+			// send the request the to server //django/lhcbPR/service?function=
+			xmlhttp.open("GET","service?function="+myId+"&key="+val,true);
 			xmlhttp.send();
 		}
 	
+}
+function getSelectedChilds(id){
+	nodes= document.getElementById(id).childNodes;
+	
+	var sdValues = [];
+	for(i=0; i<nodes.length; i+=1) {
+    	if (nodes[i].firstChild.firstChild.checked == true){
+			sdValues.push(nodes[i].firstChild.firstChild.value);
+		}
+	}
+	
+	return sdValues;
+}
+
+function addJobs(myId,box,apps){
+	//loop over the array which contains the versions
+	for(var i = 0; i < apps.length; i++)
+	{
+		var inputObj = document.createElement("input");
+		var labelObj = document.createElement("label");			
+		var liObj = document.createElement("li");
+
+		labelObj.appendChild(inputObj); 
+		labelObj.appendChild(document.createTextNode(apps[i]));			
+		liObj.appendChild(labelObj)
+		box.appendChild(liObj)
+
+		inputObj.id = myId+i+""+i;
+		inputObj.type = "checkbox" ;
+		inputObj.value = apps[i];
+		//inputObj.value =  apps[i].appName+"   "+apps[i].appVersion+"   "+apps[i].setupproject+"   "+apps[i].options+"   "+apps[i].cmtcomfig;
+		inputObj.setAttribute('onclick', 'selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)');
+		//inputObj.setAttribute('onchange', 'doFilter()');
+		
+		labelObj.id = myId+i;				
+	}
+}
+
+function doFilter(){
+	box = document.getElementById("Jobs");
+
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function()
+	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			var jobs = jsondata.jobs;
+			
+			removeAllChilds("Jobs"); 
+			addJobs("Jobs",box,jobs);
+    	}
+  	}
+	
+	var appVersions = getSelectedChilds("Version");
+	var setupprojects = getSelectedChilds("SetupProject");
+	var options = getSelectedChilds("Options");
+	var cmts = getSelectedChilds("CMTCONFIG");	
+
+	// send the request the to server
+	xmlhttp.open("GET", "getFilters?app="+document.getElementById("choosedApp").value+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&cmtconfigs="+escape(cmts.join(",")), true);
+	xmlhttp.send();
 }
 </script>
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
@@ -154,10 +267,14 @@ function updateCheckbox(myId, val)
 <p>Define your job description</p>
 </div>
 <h2>Make your choices</h2>
-<form action="#" method="get">
+
+<div id="myfilter" style="float : left;">
+<!-- <form name="filtering" id="filtering" action="/lhcbPR/getFilters" method="post"> -->
+{% csrf_token %}
 <table class="sample">
+<!-- <tr><td><b>Filtering</b></td> -->
 <tr>
-<td><u><b>Application</b></u></td>
+<td><b>Application</b></td>
 <td>
 <SELECT ID="choosedApp" NAME="AppName" onchange="updateLists(this.id,this.value)" >
 <OPTION  VALUE="">Select application
@@ -170,48 +287,57 @@ function updateCheckbox(myId, val)
 </table>
 <table class="sample">
 <tr>
-<td><u><b>Version</b></u></td>
-<td><u><b>SetupProject</b></u></td>
-<td><u><b>Options</b></u></td>
-<td><u><b>CMTCONFIG</b></u></td>
-</tr>
+<td><b>Version</b> <!-- <input type="submit" id="VersionB" onclick="appearOrNot(this.id,VersionSpan.id)" value="show"/></td> -->
 <tr>
 <td>
-    <ul id="Version" name="Version" class="checklist">
+    <ul id="Version" name="Version" class="checklist"  >
     </ul>
 </td>
+<tr>
+<td><b>SetupProject</b> <!-- <input type="submit" id="setupProjectB" onclick="appearOrNot(this.id,SetupProject.id)" value="show"/></td> -->
+<tr>
 <td>
-    <ul id="SetupProject" name="SetupProject" class="checklist">
+    <ul id="SetupProject" name="SetupProject" class="checklist" >
     </ul>
 </td>
-<td>
-    <ul id="Options" name="Options" class="checklist">
-    </ul>
-</td>
-<td>
-    <ul id="CMTCONFIG" name="CMTCONFIG" class="checklist">
-		<!-- <li><label id="CMTCONFIG1"><input id="CMTCONFIG11"  type="checkbox" value="" onclick="selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)" > Test</label></li> -->
-    </ul>
-</td>
-</tr>
 </table>
-<table class="sample">
-<tr>
-<td><b>Overview</b></td>
-</tr>
-<tr>
-<td>
-	<ul id="Overview" name="Overview" class="checklistOver">
-    </ul>
-</td>
-</tr>
-</table>
-</form>
 
 <br><br><br>
 <input type="submit" name="toaddnew" onclick="location.href='/django/lhcbPR' " value="Go back" style="font-size: 15px;"/>
 <br><br>
 <input type="submit" name="toaddnew" onclick="location.href='addnew' " value="Add new jobDescription ids" style="font-size: 15px;"/>
+
+</div>
+<div style="float : right; margin-top : 37px;">
+<table class="sample">
+<tr>
+<td><b>Options</b><!--  <input type="submit" id="OptionsB" onclick="appearOrNot(this.id,Options.id)" value="show"/></td> -->
+<tr>
+<td>
+    <ul id="Options" name="Options" class="checklist" >
+    </ul>
+</td>
+<tr>
+<td><b>CMTCONFIG</b> <!-- <input type="submit" id="CMTCONFIGB" onclick="appearOrNot(this.id,CMTCONFIG.id)" value="show"/></td> -->
+<tr>
+<td>
+    <ul id="CMTCONFIG" name="CMTCONFIG" class="checklist">
+		<!-- <li><label id="CMTCONFIG1"><input id="CMTCONFIG11"  type="checkbox" value="" onclick="selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)" > Test</label></li> -->
+    </ul>
+</td>
+</table>
+<!-- </form> -->
+</div>
+
+<!-- <table class="sample"><tr><td><b>Overview</b></td></tr><tr><td><ul id="Overview" name="Overview" class="checklistOver"></ul></td></tr></table> -->
+
+<center>
+<div >
+<H1>Job Descriptions</H1>
+<ul id="Jobs" name="Jobs" class="checklistJobs">
+<ul>
+</div>
+</center>
 
 </BODY>
 </HTML>

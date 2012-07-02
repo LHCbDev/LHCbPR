@@ -358,7 +358,7 @@ table.sample th {
 }
 table.sample td {
 	border-width: 0px;
-	padding: 13px;
+	padding: 5px;
 	border-style: hidden;
 	border-color: gray;
 	background-color: white;
@@ -372,9 +372,9 @@ b {
 .checklist {
     border: 1px solid #ccc;
     list-style: none;
-    height: 8em;
+    height: 15em;
     overflow: auto;
-    width: 10em;
+    width: 16em;
 }
 
 .checklistOver {
@@ -384,6 +384,15 @@ b {
     overflow: auto;
     width: 22em;
 }
+
+.checklistJobs {
+    border: 1px solid #ccc;
+    list-style: none;
+    height: 40em;
+    overflow: auto;
+    width: 45em;
+}
+
 .checklist, .checklist li { margin: 0; padding: 0; }
 
 .checklist label {

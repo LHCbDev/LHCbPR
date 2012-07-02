@@ -2,7 +2,7 @@
 <body>
 
 {% for j in jobs %}
- {{ j.appName }}  ,  {{ j.appVersion }} ,  {{ j.options }}/{{ j.optionsD }} , {{ j.cmtconfig }} <br>
+ <input type="checkbox" name="demo" value="one" />{{ j.appName }}   {{ j.appVersion }}   {{ j.setupproject }}   {{ j.options }}   {{ j.cmtconfig }}<br>
 {% endfor %}
 
 </body>

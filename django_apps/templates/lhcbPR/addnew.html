@@ -2,14 +2,17 @@
 <!--<script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script> -->
 <script type="text/javascript">
 function extras(){
-	extrasDiv = document.getElementById("extras");
+	
+	extrasDiv = document.getElementById("extra");
 	mybutton = document.getElementById("showThem");
-	if (extrasDiv.style.visibility == "hidden"){
-		extrasDiv.style.visibility = "visible";
+	
+	
+	if (extrasDiv.style.display == "none"){
+		extrasDiv.style.display = "block";
 		mybutton.value= "Hide available options";
 	}
-	else if(extrasDiv.style.visibility == "visible"){
-		extrasDiv.style.visibility = "hidden";
+	else if(extrasDiv.style.display == "block"){
+		extrasDiv.style.display = "none";
 		mybutton.value= "More available actions";
 	}
 }
@@ -90,7 +93,10 @@ Options:</td>
 <br><br>
 <input type="submit" id="showThem" value="More available actions" onclick="extras()" style="font-size: 15px;"/>
 
-<div id="extras" style="visibility: hidden;">
+<!-- --------------------------------------------------------------------------------------------------------------------------------------------------------->
+<!-- --------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<span id="extra" style="display: none;">
 <h2>Add Application</h2>
 <table class="sample2">
 <form action="" method="POST" onSubmit="">
@@ -150,7 +156,7 @@ Platform:
 </table>
 
 <h2>Add Handler</h2>
-<div>
+</span>
 
 </BODY>
 </HTML>
