@@ -82,9 +82,10 @@ def test(request):
                 myobjectlist.append(myDict)
             
             
-        return render_to_response('lhcbPR/jobs.html', 
-                                { 'jobs' :  myobjectlist },
-                      context_instance=RequestContext(request))
+        #return render_to_response('lhcbPR/jobs.html', 
+                              #  { 'jobs' :  myobjectlist },
+                      #context_instance=RequestContext(request))
+        return HttpResponse(json.dumps({ 'jobs' :  myobjectlist }))
  
 def makeList(mylist,key):
     List = []
@@ -99,7 +100,7 @@ def index(request):
     return render_to_response('lhcbPR/index.html', myDict,
                   context_instance=RequestContext(request))
 
-#@login_required(login_url="login")      
+@login_required(login_url="login")      
 def addnew(request):
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user}
@@ -107,7 +108,7 @@ def addnew(request):
     return render_to_response('lhcbPR/addnew.html', myDict,
                   context_instance=RequestContext(request))
     
-#@login_required(login_url="login")  
+@login_required(login_url="login")  
 def newdata(request):
     applications = Application.objects.values('appName').distinct('appName')
     
@@ -120,7 +121,7 @@ def newdata(request):
     return render_to_response('lhcbPR/newdata.html', 
                   myDict,
                   context_instance=RequestContext(request))
-
+@login_required(login_url="login")      
 def handleRequest(request):
     if request.method == 'GET':
         if request.GET['function'] == 'i_love_cookies':
@@ -144,6 +145,7 @@ def handleRequest(request):
         
         if request.GET['function'] == 'Options':
             pass
+@login_required(login_url="login")      
 def getFilters(request):
         if request.method == 'GET':
         
@@ -169,7 +171,8 @@ def getFilters(request):
             
             myobjectlist = []
             for j in jobDes:
-                myDict={ 'appName' : j.application.appName,
+                myDict={ 'pk' : j.id,   
+                         'appName' : j.application.appName,
                          'appVersion' : j.application.appVersion,
                          'options' : j.options.content,
                          'optionsD' : j.options.description,
