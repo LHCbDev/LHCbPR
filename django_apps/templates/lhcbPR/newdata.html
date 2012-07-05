@@ -1,20 +1,32 @@
 <html>
 <!--<script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script> -->
-
+<script type="text/javascript"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+    </script>
 <script type="text/javascript">
-function appearOrNot(button_id,box_id){
+//hide some elements on startup
+$(document).ready(function () {
+    $("#Platform").hide();
+	$("#PlatformButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
+	$("#SetupProject").hide();
+	$("#SetupProjectButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
+});
 
-	box = document.getElementById(box_id);
-	mybutton = document.getElementById(button_id);
-	
-	if (box.style.display == "none"){
-		box.style.display = "block";
-		mybutton.value= "hide";
-	}
-	else if(box.style.display == "block"){
-		box.style.display = "none";
-		mybutton.value= "show";
-	}
+
+function showHide( button_id, box_id )
+{
+     $(document).ready(function() {
+		// check visibility
+		if ($(document.getElementById(box_id)).is(":hidden")) {
+			// it's hidden - show it
+				$(document.getElementById(box_id)).show("normal");
+				$(document.getElementById(button_id)).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right.png)');
+		} else {
+			// it's not hidden - slide it down
+				$(document.getElementById(box_id)).hide("normal");
+				$(document.getElementById(button_id)).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
+			}
+		});
 }
 function removeAllChilds(myId){
 	var node= document.getElementById(myId);		
@@ -98,7 +110,7 @@ function updateCheckbox(myId, val)
 	if(val == ""){
 		removeAllChilds("Version"); 
 		removeAllChilds("Options"); 
-		removeAllChilds("CMTCONFIG"); 
+		removeAllChilds("Platform"); 
 		removeAllChilds("SetupProject"); 
 		removeAllChilds("Jobs");
 		return;
@@ -123,12 +135,12 @@ function updateCheckbox(myId, val)
 			// find the option list which will be changed
 			var versions= document.getElementById("Version");
 			var options= document.getElementById("Options");
-			var cmtconfig= document.getElementById("CMTCONFIG");		
+			var cmtconfig= document.getElementById("Platform");		
 			var setupproject= document.getElementById("SetupProject");	
 
 			removeAllChilds("Version"); 
 			removeAllChilds("Options"); 
-			removeAllChilds("CMTCONFIG"); 
+			removeAllChilds("Platform"); 
 			removeAllChilds("SetupProject"); 
 			removeAllChilds("Jobs"); 
 	
@@ -142,7 +154,7 @@ function updateCheckbox(myId, val)
 
 			addElements("Version",versions,vers);
 			addElements("Options",options,ops);
-			addElements("CMTCONFIG",cmtconfig,cmts);
+			addElements("Platform",cmtconfig,cmts);
 			addElements("SetupProject",setupproject,setups);
 
 			doFilter();
@@ -225,7 +237,7 @@ function doFilter(){
 	var appVersions = getSelectedChilds("Version");
 	var setupprojects = getSelectedChilds("SetupProject");
 	var options = getSelectedChilds("Options");
-	var cmts = getSelectedChilds("CMTCONFIG");	
+	var cmts = getSelectedChilds("Platform");	
 
 	// send the request the to server
 	xmlhttp.open("GET", "getFilters?app="+document.getElementById("choosedApp").value+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&cmtconfigs="+escape(cmts.join(",")), true);
@@ -288,59 +300,53 @@ function doFilter(){
 </table>
 <table class="sample">
 <tr>
-<td><b>Version</b> <!-- <input type="submit" id="VersionB" onclick="appearOrNot(this.id,VersionSpan.id)" value="show"/></td> -->
+<td><a id="VersionButton" href="#"  class="bf_button" onclick='showHide(this.id,"Version")'><span>Version</span> </a></td>
 <tr>
 <td>
     <ul id="Version" name="Version" class="checklist"  >
     </ul>
 </td>
 <tr>
-<td><b>SetupProject</b> <!-- <input type="submit" id="setupProjectB" onclick="appearOrNot(this.id,SetupProject.id)" value="show"/></td> -->
-<tr>
-<td>
-    <ul id="SetupProject" name="SetupProject" class="checklist" >
-    </ul>
-</td>
-</table>
-
-<br><br><br>
-<input type="submit" name="toaddnew" onclick="location.href='/django/lhcbPR' " value="Go back" style="font-size: 15px;"/>
-<br><br>
-<input type="submit" name="toaddnew" onclick="location.href='addnew' " value="Add new jobDescription ids" style="font-size: 15px;"/>
-
-</div>
-<div style="float : right; margin-top : 37px;">
-<table class="sample">
-<tr>
-<td><b>Options</b><!--  <input type="submit" id="OptionsB" onclick="appearOrNot(this.id,Options.id)" value="show"/></td> -->
+<td><a id="OptionsButton" href="#"  class="bf_button" onclick='showHide(this.id,"Options")'><span>Options</span> </a></td>
 <tr>
 <td>
     <ul id="Options" name="Options" class="checklist" >
     </ul>
 </td>
 <tr>
-<td><b>CMTCONFIG</b> <!-- <input type="submit" id="CMTCONFIGB" onclick="appearOrNot(this.id,CMTCONFIG.id)" value="show"/></td> -->
+<td><a id="SetupProjectButton" href="#"  class="bf_button" onclick='showHide(this.id,"SetupProject")'><span>SetupProject</span> </a></td>
 <tr>
 <td>
-    <ul id="CMTCONFIG" name="CMTCONFIG" class="checklist">
+    <ul id="SetupProject" name="SetupProject" class="checklist" >
+    </ul>
+</td>
+<tr>
+<td><a id="PlatformButton" href="#"  class="bf_button" onclick='showHide(this.id,"Platform")'><span>Platform</span> </a></td>
+
+<tr>
+<td>
+    <ul id="Platform" name="Platform" class="checklist">
 		<!-- <li><label id="CMTCONFIG1"><input id="CMTCONFIG11"  type="checkbox" value="" onclick="selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)" > Test</label></li> -->
     </ul>
 </td>
 </table>
-<!-- </form> -->
 </div>
+
+<!-- <br><br><br><input type="submit" name="toaddnew" onclick="location.href='/django/lhcbPR' " value="Go back" style="font-size: 15px;"/><br><br> -->
+<!-- <input type="submit" name="toaddnew" onclick="location.href='addnew' " value="Add new jobDescription ids" style="font-size: 15px;"/> -->
 
 <!-- <table class="sample"><tr><td><b>Overview</b></td></tr><tr><td><ul id="Overview" name="Overview" class="checklistOver"></ul></td></tr></table> -->
 
-<center>
-<div >
+
+<div style="float : middle;">
 <H1>Job Descriptions</H1>
 <table style="sample">
 <ul id="Jobs" name="Jobs" class="checklistJobs">
 <ul>
 </table>
 </div>
-</center>
+
+
 
 </BODY>
 </HTML>

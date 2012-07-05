@@ -11,7 +11,7 @@ function extras(){
 		extrasDiv.style.display = "block";
 		mybutton.value= "Hide available options";
 	}
-	else if(extrasDiv.style.visibility == "block"){
+	else if(extrasDiv.style.display == "block"){
 		extrasDiv.style.display = "none";
 		mybutton.value= "More available actions";
 	}

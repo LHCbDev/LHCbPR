@@ -358,7 +358,7 @@ table.sample th {
 }
 table.sample td {
 	border-width: 0px;
-	padding: 5px;
+	padding: 3px;
 	border-style: hidden;
 	border-color: gray;
 	background-color: white;
@@ -374,7 +374,7 @@ b {
     list-style: none;
     height: 15em;
     overflow: auto;
-    width: 16em;
+    width: 13em;
 }
 
 .checklistOver {
@@ -428,3 +428,30 @@ table.sample2 td {
 	background-color: white;
 	-moz-border-radius: ;
 }
+
+
+.bf_button {  
+  display:block; 
+  background: url('https://alamages.cern.ch/bf_button_fon_right.png') no-repeat 100%; 
+  float: left; 
+  outline: none; 
+  padding-right: 24px; 
+  text-decoration: none; 
+ } 
+
+.bf_button:hover {  
+  text-decoration: none; 
+} 
+
+.bf_button span{  
+  display:block; 
+  background: url('https://alamages.cern.ch/bf_button_fon_left.png') no-repeat;  
+  white-space: nowrap; 
+  line-height: 27px; 
+  padding: 0 5 0 16px; 
+  font-family: Verdana, Arial; 
+  font-size: 17px; 
+  font-weight: normal;  
+  color: rgb(50,49,49);  
+  text-transform: none;  
+ }
