@@ -268,18 +268,31 @@ function doFilter(){
 {% else %}
 <a href="/django/lhcbPR/login"> Login</a>
 {% endif %}
-</div>
+</div><!-- closing div ^^-->
 
 </TD>
 </TR>
 </TBODY>
 </TABLE>
-</div>
+</div><!-- closing div class="ctitle"-->
 <div class=pagebody>
 <div id=manifest>
 <p>Define your job description</p>
+</div><!-- closing div id=manifest-->
+
+<!-- <h2>Make your choices</h2> -->
+<br>
+<div id="header">
+<ul>
+	<li><a href="#">Home</a></li>
+	<li id="selected"><a href="#">GAUSS</a></li>
+	<li><a href="#">DAVINCI</a></li>
+	<li><a href="#">BRUNEL</a></li>
+</ul>
+
 </div>
-<h2>Make your choices</h2>
+
+<div id="content">
 
 <div id="myfilter" style="float : left;">
 <!-- <form name="filtering" id="filtering" action="/lhcbPR/getFilters" method="post"> -->
@@ -330,7 +343,7 @@ function doFilter(){
     </ul>
 </td>
 </table>
-</div>
+</div><!-- closing div id=myfilter -->
 
 <!-- <br><br><br><input type="submit" name="toaddnew" onclick="location.href='/django/lhcbPR' " value="Go back" style="font-size: 15px;"/><br><br> -->
 <!-- <input type="submit" name="toaddnew" onclick="location.href='addnew' " value="Add new jobDescription ids" style="font-size: 15px;"/> -->
@@ -344,9 +357,11 @@ function doFilter(){
 <ul id="Jobs" name="Jobs" class="checklistJobs">
 <ul>
 </table>
-</div>
+</div><!-- closing div ^^ -->
 
+</div><!-- closing div id=content-->
 
+</div> <!-- closing div class=pagebody-->
 
 </BODY>
 </HTML>

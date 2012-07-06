@@ -8,17 +8,21 @@ urlpatterns = patterns('',
 #    url(r'^accounts/logout/$', 'shibsso.views.logout'),
 #    url(r'^login/$', 'shibsso.views.login'),
 #    url(r'^logout/$', 'shibsso.views.logout'),
-    url(r'^lhcbPR/login/$', 'shibsso.views.login'),
-    url(r'^lhcbPR/logout/$', 'shibsso.views.logout'),
+    url(r'^login/$', 'shibsso.views.login'),
+    url(r'^logout/$', 'shibsso.views.logout'),
 )
 
 urlpatterns += patterns('lhcbPR.views',
     url(r'^lhcbPR/$', 'index'),
-    url(r'^lhcbPR/newdata', 'newdata'),
-    url(r'^lhcbPR/service', 'handleRequest'),
+    url(r'^lhcbPR/jobDescriptions/$', 'jobDescriptionsHome'),
+    url(r'^lhcbPR/jobDescriptions/(?P<app_name>\w+)/$', 'jobDescriptions'),
+    url(r'^lhcbPR/getFilters', 'getFilters'),
     url(r'^lhcbPR/test', 'test'),
-    url(r'^lhcbPR/addnew', 'addnew'),
-    url(r'^lhcbPR/getFilters', 'getFilters')
+    url(r'^lhcbPR/addnew/', 'addnew'),
+    #url(r'^lhcbPR/newdata/$', 'newdata'),
+    #url(r'^lhcbPR/newdata/service', 'handleRequest'),
+    #url(r'^lhcbPR/newdata/getFilters', 'getFilters'),
+    
 )
 
 urlpatterns += patterns('generic.views',

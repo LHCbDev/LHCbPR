@@ -1,0 +1,62 @@
+<html>
+<script type="text/javascript"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+    </script>
+<script type="text/javascript">
+<!-- forever alone script tag, no scripts included, maybe laterz-->
+</script>
+<link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
+<!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
+<!-- <link rel="stylesheet" href="css.css" type="text/css" media="screen"> -->
+<title>Add new data</title>
+</HEAD>
+<BODY>
+<div class="ctitle">
+<TABLE id="pagetitle">
+<TBODY>
+<TR>
+<TD class=iconspace>
+<A href="http://cern.ch/lhcb-comp">
+<IMG id=lhcblogo  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
+</A>
+</TD>
+<TD vAlign=middle align=center>
+<H1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></H1>
+
+<div style="float: right;">
+{% if myauth %}
+<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
+{% else %}
+<a href="/django/lhcbPR/login"> Login</a>
+{% endif %}
+</div><!-- closing div ^^-->
+
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</div><!-- closing div class="ctitle"-->
+<div class=pagebody>
+<div id=manifest>
+<p>Define your job description</p>
+</div><!-- closing div id=manifest-->
+
+<!-- <h2>Make your choices</h2> -->
+<br>
+<div id="header">
+<ul>
+	<li><a name="hometab" id="selected" href="/django/lhcbPR/jobDescriptions">Home</a></li>
+	{% for app in applications %}
+	<li name="{{ app }}tab"><a href="/django/lhcbPR/jobDescriptions/{{ app }}">{{ app }}</a></li>
+	{% endfor %}
+</ul>
+
+</div>
+
+<div id="content">
+<p>Under construction...</p>
+
+</div> <!-- closing div class=pagebody-->
+
+</BODY>
+</HTML>

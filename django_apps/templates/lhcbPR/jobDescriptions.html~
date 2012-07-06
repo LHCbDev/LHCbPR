@@ -10,8 +10,9 @@ $(document).ready(function () {
 	$("#PlatformButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$("#SetupProject").hide();
 	$("#SetupProjectButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
+	$(document.getElementsByName("{{ active_tab }}tab")).attr('id',   'selected');
+	doFilter();
 });
-
 
 function showHide( button_id, box_id )
 {
@@ -35,20 +36,6 @@ function removeAllChilds(myId){
        			node.removeChild( node.firstChild );       
     	} 
 	}	
-}
-
-function fixCommand(version){
-	myUI = document.getElementById("Overview");
-	removeAllChilds("Overview");
-	
-	if (document.getElementById("choosedApp").value == "")
-			return;
-	
-	var command = "SetupProject ";
-	command += document.getElementById("choosedApp").value+" ";
-	command += version;
-	
-	myUI.appendChild(document.createTextNode(command));
 }
 
 function selectOnlyThis(myInput_id,myUl_id) {
@@ -76,107 +63,14 @@ function selectOnlyThis(myInput_id,myUl_id) {
 		}
 }
 
-function updateLists(myId, val){
-	updateCheckbox("i_love_cookies",val);
-
-	//fixCommand("");
-}
-
-function addElements(myId,box,apps){
-	//loop over the array which contains the versions
-	for(var i = 0; i < apps.length; i++)
-	{
-		var inputObj = document.createElement("input");
-		var labelObj = document.createElement("label");			
-		var liObj = document.createElement("li");
-
-		labelObj.appendChild(inputObj); 
-		labelObj.appendChild(document.createTextNode(apps[i]));			
-		liObj.appendChild(labelObj)				
-		box.appendChild(liObj)
-
-		inputObj.id = myId+i+""+i;
-		inputObj.type = "checkbox" ;
-		inputObj.value =  apps[i];
-		//inputObj.setAttribute('onclick', 'selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)');
-		inputObj.setAttribute('onchange', 'doFilter()');
-		
-		labelObj.id = myId+i;				
-	}
-}
-
-function updateCheckbox(myId, val)
-{
-	if(val == ""){
-		removeAllChilds("Version"); 
-		removeAllChilds("Options"); 
-		removeAllChilds("Platform"); 
-		removeAllChilds("SetupProject"); 
-		removeAllChilds("Jobs");
-		return;
-	}
-
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			
-			// find the option list which will be changed
-			var versions= document.getElementById("Version");
-			var options= document.getElementById("Options");
-			var cmtconfig= document.getElementById("Platform");		
-			var setupproject= document.getElementById("SetupProject");	
-
-			removeAllChilds("Version"); 
-			removeAllChilds("Options"); 
-			removeAllChilds("Platform"); 
-			removeAllChilds("SetupProject"); 
-			removeAllChilds("Jobs"); 
-	
-			//parse the server response
-			var jsondata = JSON.parse(xmlhttp.responseText);
-			
-			var vers = jsondata.appVersions;
-			var ops = jsondata.options;
-			var setups = jsondata.setupProject;
-			var cmts = jsondata.cmtconfigs;			
-
-			addElements("Version",versions,vers);
-			addElements("Options",options,ops);
-			addElements("Platform",cmtconfig,cmts);
-			addElements("SetupProject",setupproject,setups);
-
-			doFilter();
-    	}
-  	}
-	if(val == ""){
-		//todo
-	}
-	else{
-			// send the request the to server //django/lhcbPR/service?function=
-			xmlhttp.open("GET","service?function="+myId+"&key="+val,true);
-			xmlhttp.send();
-		}
-	
-}
 function getSelectedChilds(id){
-	nodes= document.getElementById(id).childNodes;
+	nodes = document.getElementById(id).children;
+	
 	
 	var sdValues = [];
 	for(i=0; i<nodes.length; i+=1) {
-    	if (nodes[i].firstChild.firstChild.checked == true){
-			sdValues.push(nodes[i].firstChild.firstChild.value);
+    	if (nodes[i].children[0].children[0].checked == true){
+			sdValues.push(nodes[i].children[0].children[0].value);
 		}
 	}
 	
@@ -233,14 +127,14 @@ function doFilter(){
 			addJobs("Jobs",box,jobs);
     	}
   	}
-	
-	var appVersions = getSelectedChilds("Version");
 	var setupprojects = getSelectedChilds("SetupProject");
+	var appVersions = getSelectedChilds("Version");
+	
 	var options = getSelectedChilds("Options");
 	var cmts = getSelectedChilds("Platform");	
 
 	// send the request the to server
-	xmlhttp.open("GET", "getFilters?app="+document.getElementById("choosedApp").value+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&cmtconfigs="+escape(cmts.join(",")), true);
+	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getFilters?app={{ active_tab }}"+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&cmtconfigs="+escape(cmts.join(",")), true);
 	xmlhttp.send();
 }
 </script>
@@ -277,47 +171,41 @@ function doFilter(){
 </div><!-- closing div class="ctitle"-->
 <div class=pagebody>
 <div id=manifest>
-<H1><a href="/django/lhcbPR" >GAUSS</a></H1>
-<!-- <p>Define your job description</p> -->
+<p>Define your job description</p>
 </div><!-- closing div id=manifest-->
 
 <!-- <h2>Make your choices</h2> -->
 <br>
 <div id="header">
 <ul>
-	<li><a href="#">Home</a></li>
-	<li id="selected"><a href="#">GAUSS</a></li>
-	<li><a href="#">DAVINCI</a></li>
-	<li><a href="#">BRUNEL</a></li>
+	<li><a name="hometab" href="/django/lhcbPR/jobDescriptions">Home</a></li>
+	{% for app in applications %}
+	<li name="{{ app }}tab"><a href="/django/lhcbPR/jobDescriptions/{{ app }}">{{ app }}</a></li>
+	{% endfor %}
 </ul>
 
 </div>
 
 <div id="content">
+<div style="overflow: auto;">
 
 <div id="myfilter" style="float : left;">
 <!-- <form name="filtering" id="filtering" action="/lhcbPR/getFilters" method="post"> -->
-{% csrf_token %}
-<table class="sample">
-<!-- <tr><td><b>Filtering</b></td> -->
-<tr>
-<td><b>Application</b></td>
-<td>
-<SELECT ID="choosedApp" NAME="AppName" onchange="updateLists(this.id,this.value)" >
-<OPTION  VALUE="">Select application
-{% for app in applications %}
-<OPTION VALUE="{{ app }}">{{ app }}
-{% endfor %}
-</SELECT>
-</td>
-<tr>
-</table>
+<!-- {% csrf_token %} -->
 <table class="sample">
 <tr>
 <td><a id="VersionButton" href="#"  class="bf_button" onclick='showHide(this.id,"Version")'><span>Version</span> </a></td>
 <tr>
 <td>
     <ul id="Version" name="Version" class="checklist"  >
+	{% for ver in appVersions %}
+		<li>
+				<label id="Version{{ forloop.counter }}">
+					<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver }}" onchange="doFilter()">
+						{{ ver }}
+				 </label>
+		</li>
+	{% endfor %}
     </ul>
 </td>
 <tr>
@@ -325,13 +213,28 @@ function doFilter(){
 <tr>
 <td>
     <ul id="Options" name="Options" class="checklist" >
-    </ul>
+		{% for opt in options %}
+		<li>
+				<label id="Options{{ forloop.counter }}">
+					<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt }}" onchange="doFilter()">
+						{{ opt }}
+				 </label>
+		</li>
+	{% endfor %}
 </td>
 <tr>
 <td><a id="SetupProjectButton" href="#"  class="bf_button" onclick='showHide(this.id,"SetupProject")'><span>SetupProject</span> </a></td>
 <tr>
 <td>
     <ul id="SetupProject" name="SetupProject" class="checklist" >
+	{% for setup in setupProject %}
+		<li>
+				<label id="SetupProject{{ forloop.counter }}">
+					<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup }}" onchange="doFilter()">
+						{{ setup }}
+				 </label>
+		</li>
+	{% endfor %}
     </ul>
 </td>
 <tr>
@@ -340,10 +243,18 @@ function doFilter(){
 <tr>
 <td>
     <ul id="Platform" name="Platform" class="checklist">
-		<!-- <li><label id="CMTCONFIG1"><input id="CMTCONFIG11"  type="checkbox" value="" onclick="selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)" > Test</label></li> -->
+	{% for plat in platforms %}
+		<li>
+				<label id="Platform{{ forloop.counter }}">
+					<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat }}" onchange="doFilter()">
+						{{ plat }}
+				 </label>
+		</li>
+	{% endfor %}
     </ul>
 </td>
 </table>
+
 </div><!-- closing div id=myfilter -->
 
 <!-- <br><br><br><input type="submit" name="toaddnew" onclick="location.href='/django/lhcbPR' " value="Go back" style="font-size: 15px;"/><br><br> -->
@@ -352,13 +263,13 @@ function doFilter(){
 <!-- <table class="sample"><tr><td><b>Overview</b></td></tr><tr><td><ul id="Overview" name="Overview" class="checklistOver"></ul></td></tr></table> -->
 
 
-<div style="float : middle;">
-<H1>Job Descriptions</H1>
-<table style="sample">
+<div style="float : middle; padding : 0 0 0 10px;">
+<span style="float : middle; font-family : Verdana;font-size: 20px;font-weight: bold;padding:2em">Job Descriptions </span>
+<!-- <H1>Job Descriptions</H1> -->
 <ul id="Jobs" name="Jobs" class="checklistJobs">
 <ul>
-</table>
 </div><!-- closing div ^^ -->
+</div><!-- closing the scrollable div -->
 
 </div><!-- closing div id=content-->
 

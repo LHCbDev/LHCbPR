@@ -340,6 +340,7 @@ TR.oddrow TD {
   font-weight: bold;
 }
 
+/* the "hidden" tables i use to fix the layout */
 table.sample {
 	border-width: 0px;
 	border-spacing: 3px;
@@ -369,6 +370,7 @@ b {
 	font-family: "sans-serif";
 }
 
+/* css for the checklists */
 .checklist {
     border: 1px solid #ccc;
     list-style: none;
@@ -401,8 +403,6 @@ b {
     text-indent: -25px;
 }
 
-#.checklist label:hover { background: #777; color: #fff; }
-
 
 table.sample2 {
 	border-width: 0px;
@@ -429,7 +429,7 @@ table.sample2 td {
 	-moz-border-radius: ;
 }
 
-
+/* This is css for styling the show/hide buttons */
 .bf_button {  
   display:block; 
   background: url('https://alamages.cern.ch/bf_button_fon_right.png') no-repeat 100%; 
@@ -455,3 +455,36 @@ table.sample2 td {
   color: rgb(50,49,49);  
   text-transform: none;  
  }
+/* end of styling the buttons */
+
+
+/* css for the tabs */
+
+#header ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+	
+#header li {
+	display: inline;
+	border: 1px solid;
+	border-bottom-width: 0;
+	margin: 0 0.5em 0 4;
+}
+	
+#header li a {
+	padding: 0 1em;
+	font-size: 16x;
+	font-family : Verdana;
+}
+	
+#header #selected {
+	padding-bottom: 1px;
+	background: white;
+}
+	
+#content {
+	border: 0.5px solid;
+	padding : 1.5em;
+}

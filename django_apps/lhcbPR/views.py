@@ -100,15 +100,61 @@ def index(request):
     return render_to_response('lhcbPR/index.html', myDict,
                   context_instance=RequestContext(request))
 
-@login_required(login_url="login")      
+@login_required     
 def addnew(request):
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user}
     
     return render_to_response('lhcbPR/addnew.html', myDict,
                   context_instance=RequestContext(request))
+
+@login_required  #login_url="login"
+def jobDescriptions(request, app_name):
     
-@login_required(login_url="login")  
+    applications = Application.objects.values('appName').distinct('appName')
+    applicationsList = makeList(applications, 'appName')
+        
+    myauth = request.user.is_authenticated()
+    
+    appVersions = JobDescription.objects.filter(application__appName__exact=app_name).values('application__appVersion').distinct('application__appVersion')
+    options = Options.objects.all().values('content').distinct('content')
+    platforms = Requested_platform.objects.filter(jobdescription__application__appName__exact=app_name).values('cmtconfig__cmtconfig').distinct('cmtconfig__cmtconfig')
+    setupProject = SetupProject.objects.all().values('content').distinct('content')
+    
+    appVersionsList = makeList(appVersions,'application__appVersion') 
+    optionsList = makeList(options,'content')   
+    cmtconfigsList = makeList(platforms,'cmtconfig__cmtconfig')
+    setupProjectList = makeList(setupProject,'content')
+    
+    dataDict = { 'appVersions' : appVersionsList,
+               'options' : optionsList,
+               'platforms' : cmtconfigsList,
+               'setupProject' : setupProjectList,
+               'active_tab' : app_name ,
+               'myauth' : myauth, 
+               'user' : request.user, 
+               'applications' : applicationsList
+               }
+      
+    return render_to_response('lhcbPR/jobDescriptions.html', 
+                  dataDict,
+                  context_instance=RequestContext(request))
+   
+@login_required 
+def jobDescriptionsHome(request):
+    applications = Application.objects.values('appName').distinct('appName')
+    
+    applicationsList = []
+    for dict in applications:  
+        applicationsList.append(dict['appName'])
+    myauth = request.user.is_authenticated()
+    myDict = { 'active_tab' : 'home' ,'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
+      
+    return render_to_response('lhcbPR/jobDescriptionsHome.html', 
+                  myDict,
+                  context_instance=RequestContext(request))
+
+@login_required 
 def newdata(request):
     applications = Application.objects.values('appName').distinct('appName')
     
@@ -116,12 +162,14 @@ def newdata(request):
     for dict in applications:  
         applicationsList.append(dict['appName'])
     myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
+    myDict = { 'active_tab' : 'home' ,'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
       
     return render_to_response('lhcbPR/newdata.html', 
                   myDict,
                   context_instance=RequestContext(request))
-@login_required(login_url="login")      
+
+    
+@login_required     
 def handleRequest(request):
     if request.method == 'GET':
         if request.GET['function'] == 'i_love_cookies':
@@ -145,7 +193,8 @@ def handleRequest(request):
         
         if request.GET['function'] == 'Options':
             pass
-@login_required(login_url="login")      
+
+@login_required
 def getFilters(request):
         if request.method == 'GET':
         
