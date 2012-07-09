@@ -9,7 +9,7 @@ urlpatterns = patterns('',
 #    url(r'^login/$', 'shibsso.views.login'),
 #    url(r'^logout/$', 'shibsso.views.logout'),
     url(r'^login/$', 'shibsso.views.login'),
-    url(r'^logout/$', 'shibsso.views.logout'),
+    url(r'^lhcbPR/logout/$', 'shibsso.views.logout'),
 )
 
 urlpatterns += patterns('lhcbPR.views',

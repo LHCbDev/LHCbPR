@@ -11,7 +11,7 @@ $(document).ready(function () {
 	$("#SetupProject").hide();
 	$("#SetupProjectButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$(document.getElementsByName("{{ active_tab }}tab")).attr('id',   'selected');
-	doFilter();
+	doFilter(1);
 });
 
 function showHide( button_id, box_id )
@@ -37,32 +37,6 @@ function removeAllChilds(myId){
     	} 
 	}	
 }
-
-function selectOnlyThis(myInput_id,myUl_id) {
-	    myUl = document.getElementById(myUl_id);
-		var inputs = myUl.getElementsByTagName("input");
-		
-		var wasClicked = false;
-
-		myInput = document.getElementById(myInput_id);
-		if(!myInput.checked)
-    		wasClicked = true;
-
-        for (i = 0; i < inputs.length; i++) {
-				var myLabel = inputs[i];            
-				myLabel.checked = false;  
-        }
-		
-		if(wasClicked)	{
-			myInput.checked = false;
-			//fixCommand("");
-		}
-		else{
-			myInput.checked = true;
-			//fixCommand(myInput.value);
-		}
-}
-
 function getSelectedChilds(id){
 	nodes = document.getElementById(id).children;
 	
@@ -76,34 +50,38 @@ function getSelectedChilds(id){
 	
 	return sdValues;
 }
-
+function clearCheckBox(id){
+	nodes = document.getElementById(id).children;
+	for(i=0; i<nodes.length; i+=1) {
+    	if (nodes[i].children[0].children[0].checked == true){
+			nodes[i].children[0].children[0].checked = false;
+		}
+	}
+	//call again the filters
+	doFilter(1);
+}
 function addJobs(myId,box,apps){
 	//loop over the array which contains the versions
 	for(var i = 0; i < apps.length; i++)
 	{
-		var inputObj = document.createElement("input");
-		var labelObj = document.createElement("label");			
+		var hrefObj = document.createElement("a");		
 		var liObj = document.createElement("li");
 		
-		labelObj.appendChild(inputObj); 
-		labelObj.appendChild(document.createTextNode(apps[i]));
+		hrefObj.appendChild(document.createTextNode(apps[i].appName+" "+apps[i].appVersion+" "+apps[i].setupproject+" "+apps[i].options));
 	
-		liObj.appendChild(labelObj);
+		liObj.appendChild(hrefObj);
+
+		hrefObj.setAttribute('href','javascript:;');
+		hrefObj.setAttribute('id', apps[i].pk);		
+
 		box.appendChild(liObj);
 
-		inputObj.id = myId+i+""+i;
-		inputObj.type = "checkbox" ;
-		
-		inputObj.value = apps[i];
-	
 		//inputObj.value =  app["appName"]+"   "+app["appVersion"]+"   "+app["setupproject"]+"   "+app["options"]+"   "+app["cmtcomfig"];
-		inputObj.setAttribute('onclick', 'selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)');
+		//inputObj.setAttribute('onclick', 'selectOnlyThis(this.id,this.parentNode.parentNode.parentNode.id)');
 		
-		labelObj.id = myId+i;		
 	}
 }
-
-function doFilter(){
+function doFilter(requested_page){
 	box = document.getElementById("Jobs");
 
 	var xmlhttp;    
@@ -123,8 +101,34 @@ function doFilter(){
 		{
 			var jsondata = JSON.parse(xmlhttp.responseText);
 			var jobs = jsondata.jobs;
+			var pageInfo = jsondata.page_info;
 			removeAllChilds("Jobs"); 
 			addJobs("Jobs",box,jobs);
+			
+			removeAllChilds("pages");
+			removeAllChilds("nextprevious");
+			document.getElementById("pages").appendChild(document.createTextNode("Page "+pageInfo.current_page+" of "+pageInfo.num_of_pages));
+			nextPrevious = document.getElementById("nextprevious");
+			
+			if (pageInfo.current_page > 1){
+				Aprevious = document.createElement("a");
+				Aprevious.setAttribute('href','javascript:;');
+				var functionFilter = "doFilter("+(pageInfo.current_page-1)+")";
+				Aprevious.setAttribute('onclick', functionFilter);
+				Aprevious.appendChild(document.createTextNode("previous"));
+				nextPrevious.appendChild(Aprevious);
+				nextPrevious.appendChild(document.createTextNode(" | "));
+			}
+			if ( pageInfo.current_page < pageInfo.num_of_pages ){
+				if (pageInfo.current_page <= 1)
+					nextPrevious.appendChild(document.createTextNode(" | "));
+				Anext = document.createElement("a");
+				Anext.setAttribute('href','javascript:;');
+				var functionFilter = "doFilter("+(pageInfo.current_page+1)+")";
+				Anext.setAttribute('onclick', functionFilter);
+				Anext.appendChild(document.createTextNode("next"));
+				nextPrevious.appendChild(Anext);	
+			}
     	}
   	}
 	var setupprojects = getSelectedChilds("SetupProject");
@@ -134,7 +138,7 @@ function doFilter(){
 	var cmts = getSelectedChilds("Platform");	
 
 	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getFilters?app={{ active_tab }}"+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&cmtconfigs="+escape(cmts.join(",")), true);
+	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getFilters?page="+requested_page+"&app={{ active_tab }}"+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&cmtconfigs="+escape(cmts.join(",")), true);
 	xmlhttp.send();
 }
 </script>
@@ -194,14 +198,15 @@ function doFilter(){
 <!-- {% csrf_token %} -->
 <table class="sample">
 <tr>
-<td><a id="VersionButton" href="#"  class="bf_button" onclick='showHide(this.id,"Version")'><span>Version</span> </a></td>
+<td><a id="VersionButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Version")'><span>Version</span> </a>
+<a href="javascript:;" onclick='clearCheckBox("Version")' style="margin-left: 1em;">clear</a></td>
 <tr>
 <td>
     <ul id="Version" name="Version" class="checklist"  >
 	{% for ver in appVersions %}
 		<li>
 				<label id="Version{{ forloop.counter }}">
-					<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver }}" onchange="doFilter()">
+					<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver }}" onchange="doFilter(1)">
 						{{ ver }}
 				 </label>
 		</li>
@@ -209,28 +214,30 @@ function doFilter(){
     </ul>
 </td>
 <tr>
-<td><a id="OptionsButton" href="#"  class="bf_button" onclick='showHide(this.id,"Options")'><span>Options</span> </a></td>
+<td><a id="OptionsButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Options")'><span>Options</span> </a>
+<a href="javascript:;" onclick='clearCheckBox("Options")' style="margin-left: 1em;">clear</a></td>
 <tr>
 <td>
     <ul id="Options" name="Options" class="checklist" >
 		{% for opt in options %}
 		<li>
 				<label id="Options{{ forloop.counter }}">
-					<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt }}" onchange="doFilter()">
+					<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt }}" onchange="doFilter(1)">
 						{{ opt }}
 				 </label>
 		</li>
 	{% endfor %}
 </td>
 <tr>
-<td><a id="SetupProjectButton" href="#"  class="bf_button" onclick='showHide(this.id,"SetupProject")'><span>SetupProject</span> </a></td>
+<td><a id="SetupProjectButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"SetupProject")'><span>SetupProject</span> </a>
+<a href="javascript:;" onclick='clearCheckBox("SetupProject")' style="margin-left: 1em;">clear</a></td>
 <tr>
 <td>
     <ul id="SetupProject" name="SetupProject" class="checklist" >
 	{% for setup in setupProject %}
 		<li>
 				<label id="SetupProject{{ forloop.counter }}">
-					<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup }}" onchange="doFilter()">
+					<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup }}" onchange="doFilter(1)">
 						{{ setup }}
 				 </label>
 		</li>
@@ -238,15 +245,15 @@ function doFilter(){
     </ul>
 </td>
 <tr>
-<td><a id="PlatformButton" href="#"  class="bf_button" onclick='showHide(this.id,"Platform")'><span>Platform</span> </a></td>
-
+<td><a id="PlatformButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Platform")'><span>Platform</span> </a>
+<a href="javascript:;" onclick='clearCheckBox("Platform")' style="margin-left: 1em;">clear</a></td>
 <tr>
 <td>
     <ul id="Platform" name="Platform" class="checklist">
 	{% for plat in platforms %}
 		<li>
 				<label id="Platform{{ forloop.counter }}">
-					<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat }}" onchange="doFilter()">
+					<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat }}" onchange="doFilter(1)">
 						{{ plat }}
 				 </label>
 		</li>
@@ -263,12 +270,17 @@ function doFilter(){
 <!-- <table class="sample"><tr><td><b>Overview</b></td></tr><tr><td><ul id="Overview" name="Overview" class="checklistOver"></ul></td></tr></table> -->
 
 
-<div style="float : middle; padding : 0 0 0 10px;">
-<span style="float : middle; font-family : Verdana;font-size: 20px;font-weight: bold;padding:2em">Job Descriptions </span>
+<div style="float : middle; padding : 0 0 0em 16em;">
+<span style="float : middle; font-family : cursive; font-size: 22px;padding:0 0 0 5em;">Job Descriptions </span> <br><br>
+<div id="button">
 <!-- <H1>Job Descriptions</H1> -->
-<ul id="Jobs" name="Jobs" class="checklistJobs">
+<ul id="Jobs">
 <ul>
-</div><!-- closing div ^^ -->
+</div><!-- closing button div ^^ -->
+<span id="pages" style="font-family: Verdana;"></span><br> <!--  Page 1 of 1  -->
+<span id="nextprevious"> </span> <!-- <a href="#">previous</a> | <a href="#" > next </a>  --> 
+</div> <!-- same here -->
+
 </div><!-- closing the scrollable div -->
 
 </div><!-- closing div id=content-->

@@ -11,6 +11,7 @@ import json, subprocess, sys, configs, re, copy
 #***********************************************
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import BACKEND_SESSION_KEY
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def combineStatements(StatementsDict, operator):
     """Takes a dictionary with statements, combines them depending on the
@@ -32,60 +33,62 @@ def makeQuery(statement,arguments,operator):
 def test(request):
     if request.method == 'GET':
         
-        #return HttpResponse(request.GET['appVersions'])
-        querylist = []
-        
-        if request.GET['app']:
-            querylist.append(makeQuery('application__appName__exact', request.GET['app'].split(','), Q.OR))
-        if request.GET['appVersions']:
-            querylist.append(makeQuery('application__appVersion__exact', request.GET['appVersions'].split(','), Q.OR))
-        if request.GET['Options']:
-            querylist.append(makeQuery('options__content__exact',request.GET['Options'].split(','), Q.OR))
-        if request.GET['SetupProjects']:
-            querylist.append(makeQuery('setup_project__content__exact',request.GET['SetupProjects'].split(','), Q.OR))
-        
-        final_query = Q()
-        for q in querylist:
-           final_query &= q 
-        
-        jobDes = JobDescription.objects.filter(final_query)
-        Qplatform = None
-        if request.GET['cmtconfigs']:
-           Qplatform = makeQuery('cmtconfig__cmtconfig__exact', request.GET['cmtconfigs'].split(','), Q.OR)
-        
-        myobjectlist = []
-        for j in jobDes:
-            myDict={ 'appName' : j.application.appName,
-                     'appVersion' : j.application.appVersion,
-                     'options' : j.options.content,
-                     'optionsD' : j.options.description,
-                     } 
-            try:
-                myDict['setupproject'] = j.setup_project.content
-            except Exception:
-                myDict['setupproject'] = ""
+            querylist = []
             
-            platforms = None
-            if Qplatform:
-                platforms = Requested_platform.objects.filter(jobdescription__exact=j).filter(Qplatform)
-            else: 
-                platforms = Requested_platform.objects.filter(jobdescription__exact=j) 
-
-            if platforms:
-                for p in platforms:
-                    DictTemp = {}
-                    DictTemp.update(myDict)
-                    DictTemp['cmtconfig'] = p.cmtconfig.cmtconfig
-                    myobjectlist.append(DictTemp)
-            else:
-                myDict['cmtconfig'] = ""
+            if request.GET['app']:
+                querylist.append(makeQuery('application__appName__exact', request.GET['app'].split(','), Q.OR))
+            if request.GET['appVersions']:
+                querylist.append(makeQuery('application__appVersion__exact', request.GET['appVersions'].split(','), Q.OR))
+            if request.GET['Options']:
+                querylist.append(makeQuery('options__content__exact',request.GET['Options'].split(','), Q.OR))
+            if request.GET['SetupProjects']:
+                querylist.append(makeQuery('setup_project__content__exact',request.GET['SetupProjects'].split(','), Q.OR))
+            
+            final_query = Q()
+            for q in querylist:
+               final_query &= q 
+            
+            jobDesTemp = JobDescription.objects.filter(final_query)
+            Qplatform = None
+            if request.GET['cmtconfigs']:
+               Qplatform = makeQuery('cmtconfig__cmtconfig__exact', request.GET['cmtconfigs'].split(','), Q.OR)
+            
+            paginator = Paginator(jobDesTemp, 10)
+            jobDes = paginator.page(3)
+            
+            myobjectlist = []
+            
+            #this has changed in Django 1.4 is jobDes not .object_list
+            for j in jobDes.object_list:
+                myDict={ 'pk' : j.id,   
+                         'appName' : j.application.appName,
+                         'appVersion' : j.application.appVersion,
+                         'options' : j.options.content,
+                         'optionsD' : j.options.description,
+                         } 
+                try:
+                    myDict['setupproject'] = j.setup_project.content
+                except Exception:
+                    myDict['setupproject'] = ""
+                
+                fixed_description = myDict['appName']+"   "+myDict['appVersion']+"  "+myDict["setupproject"]
+                fixed_description += "  "+myDict['options']
+                
+                platforms = None
+                if Qplatform:
+                    platforms = Requested_platform.objects.filter(jobdescription__exact=j).filter(Qplatform)
+                else: 
+                    platforms = Requested_platform.objects.filter(jobdescription__exact=j) 
+                    
                 myobjectlist.append(myDict)
-            
-            
-        #return render_to_response('lhcbPR/jobs.html', 
-                              #  { 'jobs' :  myobjectlist },
-                      #context_instance=RequestContext(request))
-        return HttpResponse(json.dumps({ 'jobs' :  myobjectlist }))
+                
+            pageIngo = {
+                        'num_of_pages' : paginator.num_pages,
+                        'current_page' : jobDes.number,
+                        'page_range' : paginator.page_range
+                        }
+                
+            return HttpResponse(json.dumps({ 'jobs' :  myobjectlist , 'page_info' : pageIngo }))
  
 def makeList(mylist,key):
     List = []
@@ -196,63 +199,83 @@ def handleRequest(request):
 
 @login_required
 def getFilters(request):
-        if request.method == 'GET':
-        
-            querylist = []
-            
-            if request.GET['app']:
-                querylist.append(makeQuery('application__appName__exact', request.GET['app'].split(','), Q.OR))
-            if request.GET['appVersions']:
-                querylist.append(makeQuery('application__appVersion__exact', request.GET['appVersions'].split(','), Q.OR))
-            if request.GET['Options']:
-                querylist.append(makeQuery('options__content__exact',request.GET['Options'].split(','), Q.OR))
-            if request.GET['SetupProjects']:
-                querylist.append(makeQuery('setup_project__content__exact',request.GET['SetupProjects'].split(','), Q.OR))
-            
-            final_query = Q()
-            for q in querylist:
-               final_query &= q 
-            
-            jobDes = JobDescription.objects.filter(final_query)
-            Qplatform = None
-            if request.GET['cmtconfigs']:
-               Qplatform = makeQuery('cmtconfig__cmtconfig__exact', request.GET['cmtconfigs'].split(','), Q.OR)
-            
-            myobjectlist = []
-            for j in jobDes:
-                myDict={ 'pk' : j.id,   
-                         'appName' : j.application.appName,
-                         'appVersion' : j.application.appVersion,
-                         'options' : j.options.content,
-                         'optionsD' : j.options.description,
-                         } 
-                try:
-                    myDict['setupproject'] = j.setup_project.content
-                except Exception:
-                    myDict['setupproject'] = ""
-                
-                fixed_description = myDict['appName']+"   "+myDict['appVersion']+"  "+myDict["setupproject"]
-                fixed_description += "  "+myDict['options']
-                
-                platforms = None
-                if Qplatform:
-                    platforms = Requested_platform.objects.filter(jobdescription__exact=j).filter(Qplatform)
-                else: 
-                    platforms = Requested_platform.objects.filter(jobdescription__exact=j) 
+    #requested_page = 2
+    results_per_page = 15
+    if request.method == 'GET':
     
-                if platforms:
-                    for p in platforms:
-                        DictTemp = {}
-                        DictTemp.update(myDict)
-                        DictTemp['cmtconfig'] = p.cmtconfig.cmtconfig
-                        fixed_temp = c = copy.copy(fixed_description)
-                        fixed_temp += "  "+DictTemp['cmtconfig']
-                        myobjectlist.append(fixed_temp)
-                        #myobjectlist.append(DictTemp)
-                else:
-                    myDict['cmtconfig'] = ""
-                    myobjectlist.append(fixed_description)
-                    #myobjectlist.append(myDict)
-                
-                
-            return HttpResponse(json.dumps({ 'jobs' :  myobjectlist }))
+        querylist = []
+        
+        if request.GET['app']:
+            querylist.append(makeQuery('application__appName__exact', request.GET['app'].split(','), Q.OR))
+        if request.GET['appVersions']:
+            querylist.append(makeQuery('application__appVersion__exact', request.GET['appVersions'].split(','), Q.OR))
+        if request.GET['Options']:
+            querylist.append(makeQuery('options__content__exact',request.GET['Options'].split(','), Q.OR))
+        if request.GET['SetupProjects']:
+            querylist.append(makeQuery('setup_project__content__exact',request.GET['SetupProjects'].split(','), Q.OR))
+        
+        final_query = Q()
+        for q in querylist:
+           final_query &= q 
+        
+        jobDesTemp = JobDescription.objects.filter(final_query)
+        Qplatform = None
+        if request.GET['cmtconfigs']:
+           Qplatform = makeQuery('cmtconfig__cmtconfig__exact', request.GET['cmtconfigs'].split(','), Q.OR)
+        
+        paginator = Paginator(jobDesTemp,results_per_page)
+        requested_page = request.GET['page']
+        
+        try:
+            jobDes = paginator.page(requested_page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            jobDes = paginator.page(1)
+        except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+            jobDes = paginator.page(paginator.num_pages)
+        
+        myobjectlist = []
+        for j in jobDes.object_list :#jobDesTemp 
+            myDict={ 'pk' : j.id,   
+                     'appName' : j.application.appName,
+                     'appVersion' : j.application.appVersion,
+                     'options' : j.options.content,
+                     'optionsD' : j.options.description,
+                     } 
+            try:
+                myDict['setupproject'] = j.setup_project.content
+            except Exception:
+                myDict['setupproject'] = ""
+            
+            fixed_description = myDict['appName']+"   "+myDict['appVersion']+"  "+myDict["setupproject"]
+            fixed_description += "  "+myDict['options']
+            
+            #platforms = None
+            #if Qplatform:
+            #    platforms = Requested_platform.objects.filter(jobdescription__exact=j).filter(Qplatform)
+            #else: 
+            #    platforms = Requested_platform.objects.filter(jobdescription__exact=j) 
+
+            #if platforms:
+            #    for p in platforms:
+            #        DictTemp = {}
+            #        DictTemp.update(myDict)
+            #        DictTemp['cmtconfig'] = p.cmtconfig.cmtconfig
+            #        fixed_temp = c = copy.copy(fixed_description)
+            #        fixed_temp += "  "+DictTemp['cmtconfig']
+            #        myobjectlist.append(fixed_temp)
+                    #myobjectlist.append(DictTemp)
+            #else:
+            #    myDict['cmtconfig'] = ""
+            #    myobjectlist.append(fixed_description)
+                #myobjectlist.append(myDict)
+            #myobjectlist.append(fixed_description)
+            myobjectlist.append(myDict)
+            
+        pageIngo = {
+                    'num_of_pages' : paginator.num_pages,
+                    'current_page' : jobDes.number
+                    }
+        #'page_info' : pageInfo, 'peos' : 'eimai ena arxidi'    
+        return HttpResponse(json.dumps({ 'jobs' :  myobjectlist, 'page_info' : pageIngo }))
