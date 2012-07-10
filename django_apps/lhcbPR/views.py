@@ -1,6 +1,6 @@
 # Create your views here.
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
 from django.template import RequestContext
@@ -31,64 +31,7 @@ def makeQuery(statement,arguments,operator):
     return combineStatements(dataDict, operator)
     
 def test(request):
-    if request.method == 'GET':
-        
-            querylist = []
-            
-            if request.GET['app']:
-                querylist.append(makeQuery('application__appName__exact', request.GET['app'].split(','), Q.OR))
-            if request.GET['appVersions']:
-                querylist.append(makeQuery('application__appVersion__exact', request.GET['appVersions'].split(','), Q.OR))
-            if request.GET['Options']:
-                querylist.append(makeQuery('options__content__exact',request.GET['Options'].split(','), Q.OR))
-            if request.GET['SetupProjects']:
-                querylist.append(makeQuery('setup_project__content__exact',request.GET['SetupProjects'].split(','), Q.OR))
-            
-            final_query = Q()
-            for q in querylist:
-               final_query &= q 
-            
-            jobDesTemp = JobDescription.objects.filter(final_query)
-            Qplatform = None
-            if request.GET['cmtconfigs']:
-               Qplatform = makeQuery('cmtconfig__cmtconfig__exact', request.GET['cmtconfigs'].split(','), Q.OR)
-            
-            paginator = Paginator(jobDesTemp, 10)
-            jobDes = paginator.page(3)
-            
-            myobjectlist = []
-            
-            #this has changed in Django 1.4 is jobDes not .object_list
-            for j in jobDes.object_list:
-                myDict={ 'pk' : j.id,   
-                         'appName' : j.application.appName,
-                         'appVersion' : j.application.appVersion,
-                         'options' : j.options.content,
-                         'optionsD' : j.options.description,
-                         } 
-                try:
-                    myDict['setupproject'] = j.setup_project.content
-                except Exception:
-                    myDict['setupproject'] = ""
-                
-                fixed_description = myDict['appName']+"   "+myDict['appVersion']+"  "+myDict["setupproject"]
-                fixed_description += "  "+myDict['options']
-                
-                platforms = None
-                if Qplatform:
-                    platforms = Requested_platform.objects.filter(jobdescription__exact=j).filter(Qplatform)
-                else: 
-                    platforms = Requested_platform.objects.filter(jobdescription__exact=j) 
-                    
-                myobjectlist.append(myDict)
-                
-            pageIngo = {
-                        'num_of_pages' : paginator.num_pages,
-                        'current_page' : jobDes.number,
-                        'page_range' : paginator.page_range
-                        }
-                
-            return HttpResponse(json.dumps({ 'jobs' :  myobjectlist , 'page_info' : pageIngo }))
+    pass
  
 def makeList(mylist,key):
     List = []
@@ -96,7 +39,15 @@ def makeList(mylist,key):
         List.append(dict[key])
     
     return List
-       
+def makeListChecked(mylist,key,are_checked = []):
+    List = []
+    for dict in mylist:
+        if dict[key] in are_checked:
+            List.append({'value' : dict[key], 'checked' : True})
+        else:
+            List.append({'value' : dict[key], 'checked' : False})
+    return List
+      
 def index(request):
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user}
@@ -120,14 +71,34 @@ def jobDescriptions(request, app_name):
     myauth = request.user.is_authenticated()
     
     appVersions = JobDescription.objects.filter(application__appName__exact=app_name).values('application__appVersion').distinct('application__appVersion')
+    
+    if not appVersions:
+        return HttpResponseNotFound("<h3>Page was not found</h3>")
+    
     options = Options.objects.all().values('content').distinct('content')
     platforms = Requested_platform.objects.filter(jobdescription__application__appName__exact=app_name).values('cmtconfig__cmtconfig').distinct('cmtconfig__cmtconfig')
     setupProject = SetupProject.objects.all().values('content').distinct('content')
     
-    appVersionsList = makeList(appVersions,'application__appVersion') 
-    optionsList = makeList(options,'content')   
-    cmtconfigsList = makeList(platforms,'cmtconfig__cmtconfig')
-    setupProjectList = makeList(setupProject,'content')
+    if 'appVersions' in request.GET:
+        appVersionsList = makeListChecked(appVersions,'application__appVersion',request.GET['appVersions'].split(','))
+    else:
+        appVersionsList = makeListChecked(appVersions,'application__appVersion')
+    if 'platforms' in request.GET:
+        cmtconfigsList = makeListChecked(platforms,'cmtconfig__cmtconfig',request.GET['platforms'].split(','))
+    else:
+        cmtconfigsList = makeListChecked(platforms,'cmtconfig__cmtconfig')
+    if 'SetupProjects' in request.GET:
+        setupProjectList = makeListChecked(setupProject,'content',request.GET['SetupProjects'].split(','))
+    else:
+        setupProjectList = makeListChecked(setupProject,'content')
+    if 'Options' in request.GET:
+        optionsList = makeListChecked(options,'content',request.GET['Options'].split(','))
+    else:
+        optionsList = makeListChecked(options,'content')
+    if 'page' in request.GET:
+        requested_page = request.GET['page']
+    else:
+        requested_page = 1
     
     dataDict = { 'appVersions' : appVersionsList,
                'options' : optionsList,
@@ -136,7 +107,8 @@ def jobDescriptions(request, app_name):
                'active_tab' : app_name ,
                'myauth' : myauth, 
                'user' : request.user, 
-               'applications' : applicationsList
+               'applications' : applicationsList,
+               'current_page' : requested_page
                }
       
     return render_to_response('lhcbPR/jobDescriptions.html', 
@@ -199,7 +171,6 @@ def handleRequest(request):
 
 @login_required
 def getFilters(request):
-    #requested_page = 2
     results_per_page = 15
     if request.method == 'GET':
     
@@ -220,8 +191,8 @@ def getFilters(request):
         
         jobDesTemp = JobDescription.objects.filter(final_query)
         Qplatform = None
-        if request.GET['cmtconfigs']:
-           Qplatform = makeQuery('cmtconfig__cmtconfig__exact', request.GET['cmtconfigs'].split(','), Q.OR)
+        if request.GET['platforms']:
+           Qplatform = makeQuery('cmtconfig__cmtconfig__exact', request.GET['platforms'].split(','), Q.OR)
         
         paginator = Paginator(jobDesTemp,results_per_page)
         requested_page = request.GET['page']
@@ -251,31 +222,13 @@ def getFilters(request):
             fixed_description = myDict['appName']+"   "+myDict['appVersion']+"  "+myDict["setupproject"]
             fixed_description += "  "+myDict['options']
             
-            #platforms = None
-            #if Qplatform:
-            #    platforms = Requested_platform.objects.filter(jobdescription__exact=j).filter(Qplatform)
-            #else: 
-            #    platforms = Requested_platform.objects.filter(jobdescription__exact=j) 
-
-            #if platforms:
-            #    for p in platforms:
-            #        DictTemp = {}
-            #        DictTemp.update(myDict)
-            #        DictTemp['cmtconfig'] = p.cmtconfig.cmtconfig
-            #        fixed_temp = c = copy.copy(fixed_description)
-            #        fixed_temp += "  "+DictTemp['cmtconfig']
-            #        myobjectlist.append(fixed_temp)
-                    #myobjectlist.append(DictTemp)
-            #else:
-            #    myDict['cmtconfig'] = ""
-            #    myobjectlist.append(fixed_description)
-                #myobjectlist.append(myDict)
-            #myobjectlist.append(fixed_description)
+            #old missing part
+            
             myobjectlist.append(myDict)
             
         pageIngo = {
                     'num_of_pages' : paginator.num_pages,
                     'current_page' : jobDes.number
                     }
-        #'page_info' : pageInfo, 'peos' : 'eimai ena arxidi'    
+        
         return HttpResponse(json.dumps({ 'jobs' :  myobjectlist, 'page_info' : pageIngo }))

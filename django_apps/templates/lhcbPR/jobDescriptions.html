@@ -1,30 +1,30 @@
 <html>
 <!--<script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script> -->
-<script type="text/javascript"
-            src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
-    </script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<!-- copy to client's clipboard plugin -->
+<script type="text/javascript" src="http://www.steamdev.com/zclip/js/jquery.zclip.js"></script>
 <script type="text/javascript">
 //hide some elements on startup
+var myCurrent_page;
 $(document).ready(function () {
     $("#Platform").hide();
 	$("#PlatformButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$("#SetupProject").hide();
 	$("#SetupProjectButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$(document.getElementsByName("{{ active_tab }}tab")).attr('id',   'selected');
-	doFilter(1);
+	doFilter({{ current_page}});
 });
-
 function showHide( button_id, box_id )
 {
      $(document).ready(function() {
 		// check visibility
 		if ($(document.getElementById(box_id)).is(":hidden")) {
 			// it's hidden - show it
-				$(document.getElementById(box_id)).show("normal");
+				$(document.getElementById(box_id)).slideDown("slow");
 				$(document.getElementById(button_id)).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right.png)');
 		} else {
 			// it's not hidden - slide it down
-				$(document.getElementById(box_id)).hide("normal");
+				$(document.getElementById(box_id)).slideUp("slow");
 				$(document.getElementById(button_id)).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 			}
 		});
@@ -36,6 +36,7 @@ function removeAllChilds(myId){
        			node.removeChild( node.firstChild );       
     	} 
 	}	
+	return;
 }
 function getSelectedChilds(id){
 	nodes = document.getElementById(id).children;
@@ -56,6 +57,7 @@ function clearCheckBox(id){
 	}
 	//call again the filters
 	doFilter(1);
+	return;
 }
 function addJobs(myId,box,apps){
 	//loop over the array which contains the versions
@@ -71,6 +73,7 @@ function addJobs(myId,box,apps){
 		hrefObj.setAttribute('id', apps[i].pk);
 		box.appendChild(liObj);
 	}
+	return;
 }
 function doFilter(requested_page){
 	box = document.getElementById("Jobs");
@@ -98,6 +101,7 @@ function doFilter(requested_page){
 			
 			removeAllChilds("pages");
 			removeAllChilds("nextprevious");
+			myCurrent_page = pageInfo.current_page;
 			document.getElementById("pages").appendChild(document.createTextNode("Page "+pageInfo.current_page+" of "+pageInfo.num_of_pages));
 			nextPrevious = document.getElementById("nextprevious");
 			
@@ -120,7 +124,10 @@ function doFilter(requested_page){
 				Anext.appendChild(document.createTextNode("next"));
 				nextPrevious.appendChild(Anext);	
 			}
-    	}
+			
+			//fix the permalink
+			permalink();
+    	}	
   	}
 	var setupprojects = getSelectedChilds("SetupProject");
 	var appVersions = getSelectedChilds("Version");
@@ -129,8 +136,31 @@ function doFilter(requested_page){
 	var cmts = getSelectedChilds("Platform");	
 
 	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getFilters?page="+requested_page+"&app={{ active_tab }}"+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&cmtconfigs="+escape(cmts.join(",")), true);
+	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getFilters?page="+requested_page+"&app={{ active_tab }}"+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&platforms="+escape(cmts.join(",")), true);
 	xmlhttp.send();
+	
+	return;
+}
+function permalink(){
+	var setupprojects = getSelectedChilds("SetupProject");
+	var appVersions = getSelectedChilds("Version");
+	var options = getSelectedChilds("Options");
+	var cmts = getSelectedChilds("Platform");	
+
+	mypermalink = "?page="+myCurrent_page;
+	if (appVersions.length >= 1)
+		mypermalink+= "&appVersions="+escape(appVersions.join(","));
+	if (setupprojects.length >=1)
+		mypermalink+= "&SetupProjects="+escape(setupprojects.join(","));
+	if (options.length >= 1)
+		mypermalink+= "&Options="+escape(options.join(","));
+	if (cmts.length >= 1)
+		 mypermalink+= "&platforms="+escape(cmts.join(","));
+	
+	//location.hash = mypermalink;
+	document.getElementById("mypermalink").href = window.location.href.split("?")[0]+mypermalink;
+	
+	return;
 }
 </script>
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
@@ -164,16 +194,16 @@ function doFilter(requested_page){
 </TBODY>
 </TABLE>
 </div><!-- closing div class="ctitle"-->
-<div class=pagebody>
+<div class=pagebody >
 <div id=manifest>
-<p>Define your job description</p>
+<p> Job Descriptions </p>
 </div><!-- closing div id=manifest-->
 
 <!-- <h2>Make your choices</h2> -->
 <br>
 <div id="header">
 <ul>
-	<li><a name="hometab" href="/django/lhcbPR/jobDescriptions">Home</a></li>
+	<!-- <li><a name="hometab" href="/django/lhcbPR/jobDescriptions">Home</a></li> -->
 	{% for app in applications %}
 	<li name="{{ app }}tab"><a href="/django/lhcbPR/jobDescriptions/{{ app }}">{{ app }}</a></li>
 	{% endfor %}
@@ -183,22 +213,22 @@ function doFilter(requested_page){
 
 <div id="content">
 <div style="overflow: auto;">
-
+<a  id="mypermalink" href="" style="float : right; font-family: fantasy;" title="permalink" target="_blank"> Link to selection </a>
 <div id="myfilter" style="float : left;">
 <!-- <form name="filtering" id="filtering" action="/lhcbPR/getFilters" method="post"> -->
 <!-- {% csrf_token %} -->
 <table class="sample">
 <tr>
 <td><a id="VersionButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Version")'><span>Version</span> </a>
-<a href="javascript:;" onclick='clearCheckBox("Version")' style="margin-left: 1em;">clear</a></td>
+<img id="erase_button" onclick='clearCheckBox("Version")' src="https://alamages.cern.ch/eraser2.png" title="clear checkbox" style="width: 20px; height: 20px;margin: 0 0 0 0.5em;cursor:pointer;"/></td>
 <tr>
 <td>
     <ul id="Version" name="Version" class="checklist"  >
 	{% for ver in appVersions %}
 		<li>
 				<label id="Version{{ forloop.counter }}">
-					<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver }}" onchange="doFilter(1)">
-						{{ ver }}
+					<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver.value }}" onchange="doFilter(1)" {% if ver.checked %} checked="checked" {% endif %}>
+						{{ ver.value }}
 				 </label>
 		</li>
 	{% endfor %}
@@ -206,30 +236,31 @@ function doFilter(requested_page){
 </td>
 <tr>
 <td><a id="OptionsButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Options")'><span>Options</span> </a>
-<a href="javascript:;" onclick='clearCheckBox("Options")' style="margin-left: 1em;">clear</a></td>
+<img id="erase_button" onclick='clearCheckBox("Options")' src="https://alamages.cern.ch/eraser2.png" title="clear checkbox" style="width: 20px; height: 20px;margin: 0 0 0 0.5em;cursor:pointer;"/></td>
 <tr>
 <td>
     <ul id="Options" name="Options" class="checklist" >
 		{% for opt in options %}
 		<li>
 				<label id="Options{{ forloop.counter }}">
-					<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt }}" onchange="doFilter(1)">
-						{{ opt }}
+					<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt.value }}" onchange="doFilter(1)" {% if opt.checked %} checked="checked"  {% endif %}>
+						{{ opt.value }}
 				 </label>
 		</li>
 	{% endfor %}
 </td>
 <tr>
 <td><a id="SetupProjectButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"SetupProject")'><span>SetupProject</span> </a>
-<a href="javascript:;" onclick='clearCheckBox("SetupProject")' style="margin-left: 1em;">clear</a></td>
+<!-- <img id="erase_button" onclick='clearCheckBox("SetupProject")' src="https://alamages.cern.ch/eraser.png" title="clear checkbox" style="margin:0.5em 0em 0 1em;cursor:pointer;"/> --> 
+<img id="erase_button" onclick='clearCheckBox("SetupProject")' src="https://alamages.cern.ch/eraser2.png" title="clear checkbox" style="width: 20px; height: 20px;margin: 0 0 0 0.5em;cursor:pointer;"/></td> 
 <tr>
 <td>
     <ul id="SetupProject" name="SetupProject" class="checklist" >
 	{% for setup in setupProject %}
 		<li>
 				<label id="SetupProject{{ forloop.counter }}">
-					<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup }}" onchange="doFilter(1)">
-						{{ setup }}
+					<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup.value }}" onchange="doFilter(1)" {% if setup.checked %} checked="checked" {% endif %}>
+						{{ setup.value }}
 				 </label>
 		</li>
 	{% endfor %}
@@ -237,15 +268,15 @@ function doFilter(requested_page){
 </td>
 <tr>
 <td><a id="PlatformButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Platform")'><span>Platform</span> </a>
-<a href="javascript:;" onclick='clearCheckBox("Platform")' style="margin-left: 1em;">clear</a></td>
+<img id="erase_button" onclick='clearCheckBox("Platform")' src="https://alamages.cern.ch/eraser2.png" title="clear checkbox" style="width: 20px; height: 20px;margin: 0 0 0 0.5em;cursor:pointer;"/></td>
 <tr>
 <td>
     <ul id="Platform" name="Platform" class="checklist">
 	{% for plat in platforms %}
 		<li>
 				<label id="Platform{{ forloop.counter }}">
-					<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat }}" onchange="doFilter(1)">
-						{{ plat }}
+					<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.value }}" onchange="doFilter(1)" {% if plat.checked %} checked="checked"  {% endif %}>
+						{{ plat.value }}
 				 </label>
 		</li>
 	{% endfor %}
@@ -261,8 +292,8 @@ function doFilter(requested_page){
 <!-- <table class="sample"><tr><td><b>Overview</b></td></tr><tr><td><ul id="Overview" name="Overview" class="checklistOver"></ul></td></tr></table> -->
 
 
-<div style="float : middle; padding : 0 0 0em 16em;">
-<span style="float : middle; font-family : cursive; font-size: 22px;padding:0 0 0 5em;">Job Descriptions </span> <br><br>
+<div style="float : middle; padding : 2em 0 0 15em;">
+<!-- <div style="float : middle;border: solid 1px;border-radius: 1em; width: 21.5em; height: 1.5em;font-family : cursive; font-size: 22px;padding:0;">Job Descriptions </div> <br>  -->
 <div id="button">
 <!-- <H1>Job Descriptions</H1> -->
 <ul id="Jobs">
@@ -270,6 +301,7 @@ function doFilter(requested_page){
 </div><!-- closing button div ^^ -->
 <span id="pages" style="font-family: Verdana;"></span><br> <!--  Page 1 of 1  -->
 <span id="nextprevious"> </span> <!-- <a href="#">previous</a> | <a href="#" > next </a>  --> 
+
 </div> <!-- same here -->
 
 </div><!-- closing the scrollable div -->

@@ -343,7 +343,7 @@ TR.oddrow TD {
 /* the "hidden" tables i use to fix the layout */
 table.sample {
 	border-width: 0px;
-	border-spacing: 3px;
+	border-spacing: 0px;
 	border-style: hidden;
 	border-color: gray;
 	border-collapse: separate;
@@ -359,7 +359,7 @@ table.sample th {
 }
 table.sample td {
 	border-width: 0px;
-	padding: 3px;
+	padding: 1px;
 	border-style: hidden;
 	border-color: gray;
 	background-color: white;
@@ -373,6 +373,7 @@ b {
 /* css for the checklists */
 .checklist {
     border: 1px solid #ccc;
+	border-radius: 1em 1em 1em 1em;
     list-style: none;
     height: 15em;
     overflow: auto;
@@ -403,35 +404,12 @@ b {
     text-indent: -25px;
 }
 
-
-table.sample2 {
-	border-width: 0px;
-	border-spacing: 3px;
-	border-style: hidden;
-	border-color: gray;
-	border-collapse: separate;
-	background-color: white;
-}
-table.sample2 th {
-	border-width: 0px;
-	padding: 1px;
-	border-style: hidden;
-	border-color: gray;
-	background-color: white;
-	-moz-border-radius: ;
-}
-table.sample2 td {
-	border-width: 0px;
-	padding: 5px;
-	border-style: hidden;
-	border-color: gray;
-	background-color: white;
-	-moz-border-radius: ;
-}
-
 /* This is css for styling the show/hide buttons */
 .bf_button {  
-  display:block; 
+  display:block;
+  width: 10em; 
+  //border: 1px solid #ccc;
+  //border-radius: 0.5em;
   background: url('https://alamages.cern.ch/bf_button_fon_right.png') no-repeat 100%; 
   float: left; 
   outline: none; 
@@ -469,23 +447,26 @@ table.sample2 td {
 #header li {
 	display: inline;
 	border: 1px solid;
+	border-radius: 1em 1em 0 0;
 	border-bottom-width: 0;
-	margin: 0 0.5em 0 4;
+	margin-left: 1em;
 }
 	
 #header li a {
-	padding: 0 1em;
+	padding: 0 1em 1em 1em;
 	font-size: 16x;
-	font-family : Verdana;
+	font-family : Arial;
 }
 	
 #header #selected {
 	padding-bottom: 1px;
 	background: white;
+	
 }
 	
 #content {
-	border: 0.5px solid;
+	border: 1px solid;
+	border-radius: 1em 1em 1em 1em;
 	padding : 1.5em;
 }
 
@@ -494,6 +475,7 @@ table.sample2 td {
 #button {
 	width: 30em;
 	border-right: 1px solid #000;
+	border-radius: 1em 1em 1em 1em;
 	padding: 0 0 0.5em 0;
 	margin-bottom: 1em;
 	font-family: 'Trebuchet MS', 'Lucida Grande',
@@ -512,6 +494,7 @@ table.sample2 td {
 		
 #button li {
 		border-bottom: 1px solid #90bade;
+		border-radius: 1em 1em 1em 1em;
 		margin: 0;
 }
 
@@ -520,7 +503,8 @@ table.sample2 td {
 		padding: 5px 5px 5px 0.5em;
 		border-left: 10px solid #1958b7;
 		border-right: 10px solid #508fc4;
-		background-color: white;//#2175bc;
+		border-radius: 0.5em 0.5em 0.5em 0.5em;
+		background-color: #2175bc;
 		color: #fff;
 		text-decoration: none;
 		width: 100%;
@@ -533,6 +517,7 @@ html>body #button li a {
 #button li a:hover {
 		border-left: 10px solid #1c64d1;
 		border-right: 10px solid #5ba3e0;
+		border-radius: 1em 1em 1em 1em;
 		background-color: #2586d7;
 		color: #fff;
 }
