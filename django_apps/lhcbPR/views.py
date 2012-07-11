@@ -232,3 +232,34 @@ def getFilters(request):
                     }
         
         return HttpResponse(json.dumps({ 'jobs' :  myobjectlist, 'page_info' : pageIngo }))
+
+@login_required
+def getJobDetails(request):
+    if not 'job_id' in request.GET:
+        return HttpResponseNotFound()
+    
+    myJob = JobDescription.objects.get(pk=request.GET['job_id'])
+
+    platforms = Requested_platform.objects.filter(jobdescription__exact=myJob)
+    platformsList = []
+    if platforms:
+        for p in platforms:
+            platformsList.append(p.cmtconfig.cmtconfig)
+    
+    dataDict = {
+                'pk' : myJob.id,   
+                'appName' : myJob.application.appName,
+                'appVersion' : myJob.application.appVersion,
+                'options' : myJob.options.content,
+                'optionsD' : myJob.options.description,
+                'platforms' : platformsList
+                }
+    try:
+        dataDict['setupProject'] = myJob.setup_project.content
+        dataDict['setupProjectD'] = myJob.setup_project.description
+    except:
+        dataDict['setupProject'] = ''
+        dataDict['setupProjectD'] = ''
+        
+    return HttpResponse(json.dumps(dataDict))
+    

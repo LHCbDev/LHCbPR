@@ -26,10 +26,11 @@ function myMessage()
 
 <div style="float: right;">
 {% if myauth %}
-<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}<div>
+<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
 {% else %}
 <a href="/django/lhcbPR/login"> Login</a>
 {% endif %}
+</div>
 </TD>
 </TR>
 </TBODY>
@@ -41,6 +42,6 @@ function myMessage()
 </div>
 <h2>Choose your action</h2>
 <button type="button" onclick="myMessage()">Analyze</button> 
-<button type="button" onclick="location.href='newdata' ">New Data</button> 
+<button type="button" onclick="location.href='jobDescriptionHome' ">New Data</button> 
 </BODY>
 </HTML>

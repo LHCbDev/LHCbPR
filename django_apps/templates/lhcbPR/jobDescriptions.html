@@ -1,8 +1,11 @@
 <html>
-<!--<script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script> -->
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<!-- copy to client's clipboard plugin -->
-<script type="text/javascript" src="http://www.steamdev.com/zclip/js/jquery.zclip.js"></script>
+<!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> -->
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+
+
 <script type="text/javascript">
 //hide some elements on startup
 var myCurrent_page;
@@ -14,6 +17,7 @@ $(document).ready(function () {
 	$(document.getElementsByName("{{ active_tab }}tab")).attr('id',   'selected');
 	doFilter({{ current_page}});
 });
+
 function showHide( button_id, box_id )
 {
      $(document).ready(function() {
@@ -49,14 +53,17 @@ function getSelectedChilds(id){
 	return sdValues;
 }
 function clearCheckBox(id){
+	var checked_existed;
 	nodes = document.getElementById(id).children;
 	for(i=0; i<nodes.length; i+=1) {
     	if (nodes[i].children[0].children[0].checked == true){
 			nodes[i].children[0].children[0].checked = false;
+			checked_existed = true;
 		}
 	}
 	//call again the filters
-	doFilter(1);
+	if (checked_existed)
+		doFilter(1);
 	return;
 }
 function addJobs(myId,box,apps){
@@ -71,6 +78,9 @@ function addJobs(myId,box,apps){
 
 		hrefObj.setAttribute('href','javascript:;');
 		hrefObj.setAttribute('id', apps[i].pk);
+			
+		//extra function click
+		hrefObj.setAttribute('onclick','openWindow(this.id)');
 		box.appendChild(liObj);
 	}
 	return;
@@ -162,11 +172,70 @@ function permalink(){
 	
 	return;
 }
+
+function openWindow(job_id){
+	box = document.getElementById("Jobs");
+
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function()
+	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			mydialog = document.getElementById("dialog");
+			mydialog.title=jsondata.appName+" job description details";
+			removeAllChilds("dialog");		
+	
+			line = document.createElement("hr");
+
+			mydialog.appendChild(document.createTextNode("Application: "+jsondata.appName));
+			mydialog.appendChild(document.createElement("br"));
+			mydialog.appendChild(document.createTextNode("Version: "+jsondata.appVersion));
+			mydialog.appendChild(document.createElement("br"));
+			mydialog.appendChild(document.createElement("br"));
+			mydialog.appendChild(document.createTextNode("Options: "+jsondata.options));
+			mydialog.appendChild(document.createElement("br"));
+			mydialog.appendChild(document.createTextNode("Description: "+jsondata.optionsD));
+			mydialog.appendChild(document.createElement("br"));
+			mydialog.appendChild(document.createElement("br"));
+			mydialog.appendChild(document.createTextNode("SetupProject: "+jsondata.setupProject));
+			mydialog.appendChild(document.createElement("br"));
+			mydialog.appendChild(document.createTextNode("Description: "+jsondata.setupProjectD));
+			mydialog.appendChild(document.createElement("br"));
+			mydialog.appendChild(document.createElement("br"));			
+			
+			mydialog.appendChild(document.createTextNode("Platforms requested:"));
+			for(var i = 0; i < jsondata.platforms.length; i++){
+				mydialog.appendChild(document.createElement("br"));
+				mydialog.appendChild(document.createTextNode(jsondata.platforms[i]));	
+			}
+			
+			 $("#dialog").dialog({ width: 350 });
+    	}	
+  	}
+	// send the request the to server
+	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id, true);
+	xmlhttp.send();
+	
+	return;
+}
+
 </script>
+
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
 <!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
 <!-- <link rel="stylesheet" href="css.css" type="text/css" media="screen"> -->
-<title>Add new data</title>
+<title>{{ active_tab }} job descriptions</title>
 </HEAD>
 <BODY>
 <div class="ctitle">
@@ -309,6 +378,7 @@ function permalink(){
 </div><!-- closing div id=content-->
 
 </div> <!-- closing div class=pagebody-->
+<div id="dialog" title="" style="display:none;font-family: fantasy;"></div>
 
 </BODY>
 </HTML>

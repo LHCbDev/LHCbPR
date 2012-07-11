@@ -43,7 +43,7 @@
 
 <!-- <h2>Make your choices</h2> -->
 <br>
-<div id="header" style="overflow-x: auto;">
+<div id="header">
 <ul>
 	{% for app in applications %}
 	<li name="{{ app }}tab"><a href="/django/lhcbPR/jobDescriptions/{{ app }}">{{ app }}</a></li>
