@@ -2,6 +2,7 @@
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script src="https://alamages.cern.ch/ComboBox.js"></script>
 <script type="text/javascript">
 //hide some elements on startup
 var myCurrent_page;
@@ -18,8 +19,8 @@ $(document).ready(function () {
 	$("#dialogClose").click(function () {$("#dialog").dialog("close");});
 	$("#dialogCloneClose").click(function () { $("#cloneDialog").dialog("close"); });
 	$("#goBackToDialog").click(function () { 
-				$("#cloneDialog").dialog("close");
 				openWindow(myChoosedJob_id); 	
+				$("#cloneDialog").dialog("close");
 			});
 	$("#RunInDialog").click(function () { run(); });
 	$("#UploadResultsInDialog").click(function () { uploadResults(); });
@@ -271,7 +272,7 @@ function openCloneWindow(job_id){
 			document.getElementById("VersionClone").value = jsondata.appVersion;
 			document.getElementById("OptionsClone").value = jsondata.options;
 			document.getElementById("OptionsDClone").value = jsondata.optionsD;
-			document.getElementById("SetupProjectClone").value = jsondata.setupProject;
+			//document.getElementById("SetupProjectClone").value = jsondata.setupProject;
 			document.getElementById("SetupProjectDClone").value = jsondata.setupProjectD;		
 			
 			removeAllChilds("platformsClone");	
@@ -310,6 +311,7 @@ function uploadResults(){
 </script>
 
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
+<link rel="stylesheet" href="https://alamages.cern.ch/ComboBox.css" media="screen">
 <!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
 <!-- <link rel="stylesheet" href="css.css" type="text/css" media="screen"> -->
 <title>{{ active_tab }} job descriptions</title>
