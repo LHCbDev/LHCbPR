@@ -521,3 +521,7 @@ html>body #button li a {
 		background-color: #2586d7;
 		color: #fff;
 }
+/* dialog buttons */
+#button dialog {
+	padding : 10px;
+}

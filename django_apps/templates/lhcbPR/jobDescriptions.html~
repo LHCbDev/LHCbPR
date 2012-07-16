@@ -1,21 +1,30 @@
 <html>
-<!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> -->
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-
-
-
 <script type="text/javascript">
 //hide some elements on startup
 var myCurrent_page;
+var myChoosedJob_id = "";
 $(document).ready(function () {
     $("#Platform").hide();
 	$("#PlatformButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$("#SetupProject").hide();
 	$("#SetupProjectButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$(document.getElementsByName("{{ active_tab }}tab")).attr('id',   'selected');
+	$("#dialog").hide();
+	$("#cloneDialog").hide();
 	doFilter({{ current_page}});
+	$("#dialogClose").click(function () {$("#dialog").dialog("close");});
+	$("#dialogCloneClose").click(function () { $("#cloneDialog").dialog("close"); });
+	$("#goBackToDialog").click(function () { 
+				$("#cloneDialog").dialog("close");
+				openWindow(myChoosedJob_id); 	
+			});
+	$("#RunInDialog").click(function () { run(); });
+	$("#UploadResultsInDialog").click(function () { uploadResults(); });
+	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); });
+	$("#commitClone").click(function () { alert("Commit new jobDescription id under construction..."); });
 });
 
 function showHide( button_id, box_id )
@@ -194,33 +203,34 @@ function openWindow(job_id){
 			var jsondata = JSON.parse(xmlhttp.responseText);
 			mydialog = document.getElementById("dialog");
 			mydialog.title=jsondata.appName+" job description details";
-			removeAllChilds("dialog");		
+					
+			document.getElementById("ApplicationDetails").value = jsondata.appName;
+			document.getElementById("VersionDetails").value = jsondata.appVersion;
+			document.getElementById("OptionsDetails").value = jsondata.options;
+			document.getElementById("OptionsDDetails").value = jsondata.optionsD;
+			document.getElementById("SetupProjectDetails").value = jsondata.setupProject;
+			document.getElementById("SetupProjectDDetails").value = jsondata.setupProjectD;		
+			
+			removeAllChilds("platformsDetails");	
+			mybox = document.getElementById("platformsDetails");
 	
-			line = document.createElement("hr");
-
-			mydialog.appendChild(document.createTextNode("Application: "+jsondata.appName));
-			mydialog.appendChild(document.createElement("br"));
-			mydialog.appendChild(document.createTextNode("Version: "+jsondata.appVersion));
-			mydialog.appendChild(document.createElement("br"));
-			mydialog.appendChild(document.createElement("br"));
-			mydialog.appendChild(document.createTextNode("Options: "+jsondata.options));
-			mydialog.appendChild(document.createElement("br"));
-			mydialog.appendChild(document.createTextNode("Description: "+jsondata.optionsD));
-			mydialog.appendChild(document.createElement("br"));
-			mydialog.appendChild(document.createElement("br"));
-			mydialog.appendChild(document.createTextNode("SetupProject: "+jsondata.setupProject));
-			mydialog.appendChild(document.createElement("br"));
-			mydialog.appendChild(document.createTextNode("Description: "+jsondata.setupProjectD));
-			mydialog.appendChild(document.createElement("br"));
-			mydialog.appendChild(document.createElement("br"));			
-			
-			mydialog.appendChild(document.createTextNode("Platforms requested:"));
 			for(var i = 0; i < jsondata.platforms.length; i++){
-				mydialog.appendChild(document.createElement("br"));
-				mydialog.appendChild(document.createTextNode("    "+plat));	
+					myInput = document.createElement("input");
+					myInput.type = "checkbox";	
+					myInput.value = jsondata.platforms[i];
+					myInput.setAttribute('readOnly','readonly');
+					mybox.appendChild(myInput);
+					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
+					mybox.appendChild(document.createElement("br"));
+					
 			}
-			
-			 $("#dialog").dialog({ width: 350 });
+			myChoosedJob_id = job_id;
+				$("#dialog").dialog({
+    				resizable: false,
+    				height: 700,
+    				width: 950,
+   					modal: true
+				});
     	}	
   	}
 	// send the request the to server
@@ -230,6 +240,73 @@ function openWindow(job_id){
 	return;
 }
 
+function openCloneWindow(job_id){
+	box = document.getElementById("Jobs");
+
+	if (job_id == "")
+		return;
+
+	$("#dialog").dialog("close");
+
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function()
+	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			mydialog = document.getElementById("cloneDialog");
+			mydialog.title="Add new "+jsondata.appName+" job description";
+					
+			document.getElementById("ApplicationClone").value = jsondata.appName;
+			document.getElementById("VersionClone").value = jsondata.appVersion;
+			document.getElementById("OptionsClone").value = jsondata.options;
+			document.getElementById("OptionsDClone").value = jsondata.optionsD;
+			document.getElementById("SetupProjectClone").value = jsondata.setupProject;
+			document.getElementById("SetupProjectDClone").value = jsondata.setupProjectD;		
+			
+			removeAllChilds("platformsClone");	
+			mybox = document.getElementById("platformsClone");
+	
+			for(var i = 0; i < jsondata.platforms.length; i++){
+					myInput = document.createElement("input");
+					myInput.type = "checkbox";	
+					myInput.value = jsondata.platforms[i];
+					
+					mybox.appendChild(myInput);
+					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
+					mybox.appendChild(document.createElement("br"));
+					
+			}
+				$("#cloneDialog").dialog({
+    				resizable: false,
+    				height: 700,
+    				width: 600,
+   					modal: true
+				});
+    	}	
+  	}
+	// send the request the to server
+	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id, true);
+	xmlhttp.send();
+	
+	return;
+}
+function run(){
+	alert("Run function, under construction...");
+}
+function uploadResults(){
+	alert("Upload results function, under construction...");
+}
 </script>
 
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
@@ -284,8 +361,6 @@ function openWindow(job_id){
 <div style="overflow: auto;">
 <a  id="mypermalink" href="" style="float : right; font-family: fantasy;" title="permalink" target="_blank"> Link to selection </a>
 <div id="myfilter" style="float : left;">
-<!-- <form name="filtering" id="filtering" action="/lhcbPR/getFilters" method="post"> -->
-<!-- {% csrf_token %} -->
 <table class="sample">
 <tr>
 <td><a id="VersionButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Version")'><span>Version</span> </a>
@@ -320,7 +395,6 @@ function openWindow(job_id){
 </td>
 <tr>
 <td><a id="SetupProjectButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"SetupProject")'><span>SetupProject</span> </a>
-<!-- <img id="erase_button" onclick='clearCheckBox("SetupProject")' src="https://alamages.cern.ch/eraser.png" title="clear checkbox" style="margin:0.5em 0em 0 1em;cursor:pointer;"/> --> 
 <img id="erase_button" onclick='clearCheckBox("SetupProject")' src="https://alamages.cern.ch/eraser2.png" title="clear checkbox" style="width: 20px; height: 20px;margin: 0 0 0 0.5em;cursor:pointer;"/></td> 
 <tr>
 <td>
@@ -355,30 +429,92 @@ function openWindow(job_id){
 
 </div><!-- closing div id=myfilter -->
 
-<!-- <br><br><br><input type="submit" name="toaddnew" onclick="location.href='/django/lhcbPR' " value="Go back" style="font-size: 15px;"/><br><br> -->
-<!-- <input type="submit" name="toaddnew" onclick="location.href='addnew' " value="Add new jobDescription ids" style="font-size: 15px;"/> -->
-
-<!-- <table class="sample"><tr><td><b>Overview</b></td></tr><tr><td><ul id="Overview" name="Overview" class="checklistOver"></ul></td></tr></table> -->
-
-
 <div style="float : middle; padding : 2em 0 0 15em;">
-<!-- <div style="float : middle;border: solid 1px;border-radius: 1em; width: 21.5em; height: 1.5em;font-family : cursive; font-size: 22px;padding:0;">Job Descriptions </div> <br>  -->
 <div id="button">
-<!-- <H1>Job Descriptions</H1> -->
 <ul id="Jobs">
 <ul>
 </div><!-- closing button div ^^ -->
 <span id="pages" style="font-family: Verdana;"></span><br> <!--  Page 1 of 1  -->
 <span id="nextprevious"> </span> <!-- <a href="#">previous</a> | <a href="#" > next </a>  --> 
-
 </div> <!-- same here -->
-
 </div><!-- closing the scrollable div -->
-
 </div><!-- closing div id=content-->
-
 </div> <!-- closing div class=pagebody-->
-<div id="dialog" title="" style="display:none;font-family: fantasy;"></div>
+
+
+<div id="dialog" title="" style="font-family:fantasy;">
+
+<div id="JobDescriptionDetails" style="margin-top:0.5em;float:left;width:20em;height:25em;border-width: 1px;border-style: solid;border-radius: 1em; padding:2em;">
+<table class="sample"><tr>
+<td style="text-align:right;padding:0.5em;">Application:</td>
+<td><input id="ApplicationDetails" type="text" value=""  readOnly="readonly" /></td><tr>
+<td style="text-align:right;padding:0.5em;">Version:</td>
+<td><input id="VersionDetails" type="text" value="" readOnly="readonly"/></td>
+</table><br>
+<table class="sample"><tr>
+<td style="text-align:right;padding:0.5em;">Options:</td>
+<td><input id="OptionsDetails"type="text" value="" readOnly="readonly" /></td><tr>
+<td style="text-align:right;padding:0.5em;">Description:</td>
+<td><input id="OptionsDDetails" type="text" value="" readOnly="readonly" /></td>
+</table><br>
+<table class="sample"><tr>
+<td style="text-align:right;padding:0.5em;">SetupProject:</td>
+<td><input id="SetupProjectDetails" type="text" value="" readOnly="readonly"/></td><tr>
+<td style="text-align:right;padding:0.5em;">Description:</td>
+<td><input id="SetupProjectDDetails" type="text" value="" readOnly="readonly"/></td>
+</table><br>
+<span>Requested platforms: </span>
+<p id="platformsDetails" 
+		style="width:14em;height:6.5em;margin-left:2em;">
+</p>
+</span>
+</div> <!-- closing the JobDescriptionDetails-->
+
+<br>
+<!-- <span 
+style="margin-left:1em;margin-top:10px;font-family:fantasy;font-size:20px;border-style:solid;border-width:1px;border-radius:1em;padding:10px;">Possible actions
+</span><br><br> -->
+<br><br>
+<span style="margin-left:1.5em;"><button id="RunInDialog" type="button" style="padding: 10px">Run</button></span><br><br>
+<span style="margin-left:1.5em;"><button id="CloneInDialog" type="button" style="padding: 10px">Clone</button></span><br><br>
+<span style="margin-left:1.5em;"><button id="EditInDialog" type="button" style="padding: 10px">Edit</button></span><br><br>
+<span style="margin-left:1.5em;"><button id="UploadResultsInDialog" type="button" style="padding: 10px">Upload results</button></span><br><br>
+<span style="padding:2em;position:absolute;bottom:0;right:0;"><button id="dialogClose" type="button" style="padding: 10px;"
+onclick="">Close</button></span>
+</div> <!-- closing the  dialog -->
+
+
+<div id="cloneDialog">
+<div id="JobDescriptionClone" style="float:left;width:20em;height:25em;border-width: 1px;border-style: solid;border-radius: 1em; padding:2em;">
+<table class="sample"><tr>
+<td style="text-align:right;padding:0.5em;">Application:</td>
+<td><input id="ApplicationClone" type="text" value=""  readOnly="readonly" /></td><tr>
+<td style="text-align:right;padding:0.5em;">Version:</td>
+<td><input id="VersionClone" type="text" value="" /></td>
+</table><br>
+<table class="sample"><tr>
+<td style="text-align:right;padding:0.5em;">Options:</td>
+<td><input id="OptionsClone"type="text" value="" /></td><tr>
+<td style="text-align:right;padding:0.5em;">Description:</td>
+<td><input id="OptionsDClone" type="text" value=""  /></td>
+</table><br>
+<table class="sample"><tr>
+<td style="text-align:right;padding:0.5em;">SetupProject:</td>
+<td><input id="SetupProjectClone" type="text" value="" /></td><tr>
+<td style="text-align:right;padding:0.5em;">Description:</td>
+<td><input id="SetupProjectDClone" type="text" value="" /></td>
+</table><br>
+<span>Requested platforms: </span>
+<p id="platformsClone" 
+		style="width:14em;height:6.5em;margin-left:2em;"><!-- border-style:solid;border-radius: 1em; border-width: 1px;-->
+</p>
+</span>
+</div> <!-- closing the JobDescriptionDetails-->
+<br>
+<span style="margin-left: 1.5em;"><button id="commitClone" type="button" style="padding:10px;">Commit</button>
+<span style="padding:2em;position:absolute;bottom:0;left:0;"><button id="goBackToDialog" type="button" style="padding: 10px;">Go back</button></span>
+<span style="padding:2em;position:absolute;bottom:0;right:0;"><button id="dialogCloneClose" type="button" style="padding: 10px;">Close</button></span>
+</div> <!-- /cloneDialog -->
 
 </BODY>
 </HTML>

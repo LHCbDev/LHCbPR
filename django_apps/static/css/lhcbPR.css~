@@ -185,7 +185,7 @@ A#projecticon img {
   position: relative;
   width: 90%;
   left: 5%;
-  
+  overflow: auto;
 }
 
 
@@ -520,4 +520,8 @@ html>body #button li a {
 		border-radius: 1em 1em 1em 1em;
 		background-color: #2586d7;
 		color: #fff;
+}
+/* dialog buttons */
+button.dialog {
+	padding : 10px;
 }
