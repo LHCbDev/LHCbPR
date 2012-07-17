@@ -1,14 +1,13 @@
 <html>
-<script type="text/javascript"
-            src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
-    </script>
-<script type="text/javascript">
-<!-- forever alone script tag, no scripts included, maybe laterz-->
-</script>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://alamages.cern.ch/bubble-tooltip.js"></script>
+<!-- <script type="text/javascript" src="https://alamages.cern.ch/JobDescriptionFunctions.js"></script> -->
+
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
-<!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
-<!-- <link rel="stylesheet" href="css.css" type="text/css" media="screen"> -->
-<title>Add new data</title>
+<link rel="stylesheet" href="https://alamages.cern.ch/ComboBox.css" media="screen">
+<title>Job descriptions</title>
 </HEAD>
 <BODY>
 <div class="ctitle">
@@ -36,13 +35,16 @@
 </TBODY>
 </TABLE>
 </div><!-- closing div class="ctitle"-->
-<div class=pagebody>
-<div id=manifest>
-<p>Define your job description</p>
-</div><!-- closing div id=manifest-->
+<div class=pagebody >
+<ol id="toc">
+    <li><a href="javascript:;">Home</a></li>
 
-<!-- <h2>Make your choices</h2> -->
-<br>
+    <li class="current"><a href="javascript:;">Job Descriptions</a></li>
+    <li><a href="/django/lhcbPR/analyse">Analyse</a></li>
+</ol>
+
+
+<div class="content">
 <div id="header">
 <ul>
 	{% for app in applications %}
@@ -51,11 +53,10 @@
 </ul>
 
 </div>
-
 <div id="content">
-<p>Under construction...</p>
-
+<p>Choose one the applications(select one the tabs)</p>
+</div><!-- closing div id=content-->
+</div><!-- /class=content(main tabs)-->
 </div> <!-- closing div class=pagebody-->
-
 </BODY>
 </HTML>

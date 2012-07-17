@@ -2,99 +2,13 @@
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<script src="https://alamages.cern.ch/ComboBox.js"></script>
+<script type="text/javascript" src="https://alamages.cern.ch/bubble-tooltip.js"></script>
+<script type="text/javascript" src="https://alamages.cern.ch/JobDescriptionFunctions.js"></script>
 <script type="text/javascript">
-//hide some elements on startup
-var myCurrent_page;
-var myChoosedJob_id = "";
 $(document).ready(function () {
-    $("#Platform").hide();
-	$("#PlatformButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
-	$("#SetupProject").hide();
-	$("#SetupProjectButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
-	$(document.getElementsByName("{{ active_tab }}tab")).attr('id',   'selected');
-	$("#dialog").hide();
-	$("#cloneDialog").hide();
-	doFilter({{ current_page}});
-	$("#dialogClose").click(function () {$("#dialog").dialog("close");});
-	$("#dialogCloneClose").click(function () { $("#cloneDialog").dialog("close"); });
-	$("#goBackToDialog").click(function () { 
-				openWindow(myChoosedJob_id); 	
-				$("#cloneDialog").dialog("close");
-			});
-	$("#RunInDialog").click(function () { run(); });
-	$("#UploadResultsInDialog").click(function () { uploadResults(); });
-	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); });
-	$("#commitClone").click(function () { alert("Commit new jobDescription id under construction..."); });
+ 	$(document.getElementsByName("{{ active_tab }}tab")).attr('id',   'selected');
+   	doFilter({{ current_page}});
 });
-
-function showHide( button_id, box_id )
-{
-     $(document).ready(function() {
-		// check visibility
-		if ($(document.getElementById(box_id)).is(":hidden")) {
-			// it's hidden - show it
-				$(document.getElementById(box_id)).slideDown("slow");
-				$(document.getElementById(button_id)).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right.png)');
-		} else {
-			// it's not hidden - slide it down
-				$(document.getElementById(box_id)).slideUp("slow");
-				$(document.getElementById(button_id)).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
-			}
-		});
-}
-function removeAllChilds(myId){
-	var node= document.getElementById(myId);		
-	if ( node.hasChildNodes() ){
-   		while ( node.childNodes.length >= 1 ){
-       			node.removeChild( node.firstChild );       
-    	} 
-	}	
-	return;
-}
-function getSelectedChilds(id){
-	nodes = document.getElementById(id).children;
-	var sdValues = [];
-	for(i=0; i<nodes.length; i+=1) {
-    	if (nodes[i].children[0].children[0].checked == true){
-			sdValues.push(nodes[i].children[0].children[0].value);
-		}
-	}
-	return sdValues;
-}
-function clearCheckBox(id){
-	var checked_existed;
-	nodes = document.getElementById(id).children;
-	for(i=0; i<nodes.length; i+=1) {
-    	if (nodes[i].children[0].children[0].checked == true){
-			nodes[i].children[0].children[0].checked = false;
-			checked_existed = true;
-		}
-	}
-	//call again the filters
-	if (checked_existed)
-		doFilter(1);
-	return;
-}
-function addJobs(myId,box,apps){
-	//loop over the array which contains the versions
-	for(var i = 0; i < apps.length; i++)
-	{
-		var hrefObj = document.createElement("a");		
-		var liObj = document.createElement("li");
-		
-		hrefObj.appendChild(document.createTextNode(apps[i].appName+" "+apps[i].appVersion+" "+apps[i].setupproject+" "+apps[i].options));
-		liObj.appendChild(hrefObj);
-
-		hrefObj.setAttribute('href','javascript:;');
-		hrefObj.setAttribute('id', apps[i].pk);
-			
-		//extra function click
-		hrefObj.setAttribute('onclick','openWindow(this.id)');
-		box.appendChild(liObj);
-	}
-	return;
-}
 function doFilter(requested_page){
 	box = document.getElementById("Jobs");
 
@@ -161,159 +75,10 @@ function doFilter(requested_page){
 	
 	return;
 }
-function permalink(){
-	var setupprojects = getSelectedChilds("SetupProject");
-	var appVersions = getSelectedChilds("Version");
-	var options = getSelectedChilds("Options");
-	var cmts = getSelectedChilds("Platform");	
-
-	mypermalink = "?page="+myCurrent_page;
-	if (appVersions.length >= 1)
-		mypermalink+= "&appVersions="+escape(appVersions.join(","));
-	if (setupprojects.length >=1)
-		mypermalink+= "&SetupProjects="+escape(setupprojects.join(","));
-	if (options.length >= 1)
-		mypermalink+= "&Options="+escape(options.join(","));
-	if (cmts.length >= 1)
-		 mypermalink+= "&platforms="+escape(cmts.join(","));
-	
-	//location.hash = mypermalink;
-	document.getElementById("mypermalink").href = window.location.href.split("?")[0]+mypermalink;
-	
-	return;
-}
-
-function openWindow(job_id){
-	box = document.getElementById("Jobs");
-
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
-			mydialog = document.getElementById("dialog");
-			mydialog.title=jsondata.appName+" job description details";
-					
-			document.getElementById("ApplicationDetails").value = jsondata.appName;
-			document.getElementById("VersionDetails").value = jsondata.appVersion;
-			document.getElementById("OptionsDetails").value = jsondata.options;
-			document.getElementById("OptionsDDetails").value = jsondata.optionsD;
-			document.getElementById("SetupProjectDetails").value = jsondata.setupProject;
-			document.getElementById("SetupProjectDDetails").value = jsondata.setupProjectD;		
-			
-			removeAllChilds("platformsDetails");	
-			mybox = document.getElementById("platformsDetails");
-	
-			for(var i = 0; i < jsondata.platforms.length; i++){
-					myInput = document.createElement("input");
-					myInput.type = "checkbox";	
-					myInput.value = jsondata.platforms[i];
-					myInput.setAttribute('readOnly','readonly');
-					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
-					mybox.appendChild(document.createElement("br"));
-					
-			}
-			myChoosedJob_id = job_id;
-				$("#dialog").dialog({
-    				resizable: false,
-    				height: 700,
-    				width: 950,
-   					modal: true
-				});
-    	}	
-  	}
-	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id, true);
-	xmlhttp.send();
-	
-	return;
-}
-
-function openCloneWindow(job_id){
-	box = document.getElementById("Jobs");
-
-	if (job_id == "")
-		return;
-
-	$("#dialog").dialog("close");
-
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
-			mydialog = document.getElementById("cloneDialog");
-			mydialog.title="Add new "+jsondata.appName+" job description";
-					
-			document.getElementById("ApplicationClone").value = jsondata.appName;
-			document.getElementById("VersionClone").value = jsondata.appVersion;
-			document.getElementById("OptionsClone").value = jsondata.options;
-			document.getElementById("OptionsDClone").value = jsondata.optionsD;
-			//document.getElementById("SetupProjectClone").value = jsondata.setupProject;
-			document.getElementById("SetupProjectDClone").value = jsondata.setupProjectD;		
-			
-			removeAllChilds("platformsClone");	
-			mybox = document.getElementById("platformsClone");
-	
-			for(var i = 0; i < jsondata.platforms.length; i++){
-					myInput = document.createElement("input");
-					myInput.type = "checkbox";	
-					myInput.value = jsondata.platforms[i];
-					
-					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
-					mybox.appendChild(document.createElement("br"));
-					
-			}
-				$("#cloneDialog").dialog({
-    				resizable: false,
-    				height: 700,
-    				width: 600,
-   					modal: true
-				});
-    	}	
-  	}
-	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id, true);
-	xmlhttp.send();
-	
-	return;
-}
-function run(){
-	alert("Run function, under construction...");
-}
-function uploadResults(){
-	alert("Upload results function, under construction...");
-}
 </script>
 
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
 <link rel="stylesheet" href="https://alamages.cern.ch/ComboBox.css" media="screen">
-<!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
-<!-- <link rel="stylesheet" href="css.css" type="text/css" media="screen"> -->
 <title>{{ active_tab }} job descriptions</title>
 </HEAD>
 <BODY>
@@ -343,15 +108,26 @@ function uploadResults(){
 </TABLE>
 </div><!-- closing div class="ctitle"-->
 <div class=pagebody >
-<div id=manifest>
-<p> Job Descriptions </p>
-</div><!-- closing div id=manifest-->
+<ol id="toc">
+    <li><a href="/django/lhcbPR">Home</a></li>
 
-<!-- <h2>Make your choices</h2> -->
+    <li class="current"><a href="javascript:;">Job Descriptions</a></li>
+    <li><a href="/django/lhcbPR/analyse">Analyse</a></li>
+</ol>
+
+
+<div class="content">
+<div id="help">
+<p> That's some help text about the page </p>
+</div><!-- closing div id=help-->
+<span id="helpButton" style="cursor:pointer;">
+<img id="helpImage" style="width:11px;height:11px;" src="https://alamages.cern.ch/arrow-downHelp.png" title="show help message"/>
+<a href="javascript:;" style="font-family: Palatino;" >help</a>
+</span>
+<br>
 <br>
 <div id="header">
 <ul>
-	<!-- <li><a name="hometab" href="/django/lhcbPR/jobDescriptions">Home</a></li> -->
 	{% for app in applications %}
 	<li name="{{ app }}tab"><a href="/django/lhcbPR/jobDescriptions/{{ app }}">{{ app }}</a></li>
 	{% endfor %}
@@ -361,7 +137,8 @@ function uploadResults(){
 
 <div id="content">
 <div style="overflow: auto;">
-<a  id="mypermalink" href="" style="float : right; font-family: fantasy;" title="permalink" target="_blank"> Link to selection </a>
+<a  id="mypermalink" href="" style="float : right; font-family: fantasy;" target="_blank"
+onmouseover="showToolTip(event,'This works as permalink to save the current selection(opens new tab)');return false" onmouseout="hideToolTip()"> Permalink to selection </a>
 <div id="myfilter" style="float : left;">
 <table class="sample">
 <tr>
@@ -437,10 +214,11 @@ function uploadResults(){
 <ul>
 </div><!-- closing button div ^^ -->
 <span id="pages" style="font-family: Verdana;"></span><br> <!--  Page 1 of 1  -->
-<span id="nextprevious"> </span> <!-- <a href="#">previous</a> | <a href="#" > next </a>  --> 
+<span id="nextprevious" style="font-family: Palatino;"> </span> <!-- <a href="#">previous</a> | <a href="#" > next </a>  --> 
 </div> <!-- same here -->
 </div><!-- closing the scrollable div -->
 </div><!-- closing div id=content-->
+</div><!-- /class=content(main tabs)-->
 </div> <!-- closing div class=pagebody-->
 
 
@@ -492,7 +270,9 @@ onclick="">Close</button></span>
 <td style="text-align:right;padding:0.5em;">Application:</td>
 <td><input id="ApplicationClone" type="text" value=""  readOnly="readonly" /></td><tr>
 <td style="text-align:right;padding:0.5em;">Version:</td>
-<td><input id="VersionClone" type="text" value="" /></td>
+<!-- <td><input id="VersionClone" type="text" value="" /></td> -->
+<td><input id="VersionClone" type="text" value="" ></td>
+
 </table><br>
 <table class="sample"><tr>
 <td style="text-align:right;padding:0.5em;">Options:</td>
@@ -517,6 +297,17 @@ onclick="">Close</button></span>
 <span style="padding:2em;position:absolute;bottom:0;left:0;"><button id="goBackToDialog" type="button" style="padding: 10px;">Go back</button></span>
 <span style="padding:2em;position:absolute;bottom:0;right:0;"><button id="dialogCloneClose" type="button" style="padding: 10px;">Close</button></span>
 </div> <!-- /cloneDialog -->
+
+<!-- bubble pop for help -->
+<div id="bubble_tooltip" style="display: none; left: 221px; top: 404px;">
+<div class="bubble_top">
+<span></span>
+</div>
+<div class="bubble_middle">
+<span id="bubble_tooltip_content">If typing the adress seems impossible you can always try and pinpoint something on map.</span>
+</div>
+<div class="bubble_bottom"></div>
+</div>
 
 </BODY>
 </HTML>

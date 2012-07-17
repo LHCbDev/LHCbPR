@@ -1,15 +1,13 @@
 <html>
-<!-- <script type="text/javascript" charset="utf-8" src="/js/JSON2.js"></script> -->
-<script type="text/javascript">
-function myMessage()
-{
-	alert("Under construction, coming soon");
-}
-</script>
-<link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/css/lhcb.css" type="text/css" media="screen">
-<!-- <link rel="stylesheet" href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/css/css.css" type="text/css" media="screen"> -->
-<!-- <link rel="stylesheet" href="css.css" type="text/css" media="screen"> -->
-<title>Home page</title>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://alamages.cern.ch/bubble-tooltip.js"></script>
+<!-- <script type="text/javascript" src="https://alamages.cern.ch/JobDescriptionFunctions.js"></script> -->
+
+<link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
+<link rel="stylesheet" href="https://alamages.cern.ch/ComboBox.css" media="screen">
+<title>Home</title>
 </HEAD>
 <BODY>
 <div class="ctitle">
@@ -30,18 +28,27 @@ function myMessage()
 {% else %}
 <a href="/django/lhcbPR/login"> Login</a>
 {% endif %}
-</div>
+</div><!-- closing div ^^-->
+
 </TD>
 </TR>
 </TBODY>
 </TABLE>
-</div>
-<div class=pagebody>
-<div id=manifest>
-<p>Choose between analyze existing jobs or submit a new one(new data)</p>
-</div>
-<h2>Choose your action</h2>
-<button type="button" onclick="myMessage()">Analyze</button> 
-<button type="button" onclick="location.href='jobDescriptionHome' ">New Data</button> 
+</div><!-- closing div class="ctitle"-->
+<div class=pagebody >
+<ol id="toc">
+    <li class="current"><a href="javascript:;">Home</a></li>
+
+    <li><a href="/django/lhcbPR/jobDescriptions">Job Descriptions</a></li>
+    <li ><a href="/django/lhcbPR/analyse">Analyse</a></li>
+</ol>
+
+
+<div class="content">
+<p>Welcome to the lhcb perfomance and regression.</p>
+<p>Choose one of the tabs(job descriptions or analyse) to go the corresponding action.</p>
+
+</div><!-- /class=content(main tabs)-->
+</div> <!-- closing div class=pagebody-->
 </BODY>
 </HTML>

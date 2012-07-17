@@ -128,6 +128,14 @@ def jobDescriptionsHome(request):
     return render_to_response('lhcbPR/jobDescriptionsHome.html', 
                   myDict,
                   context_instance=RequestContext(request))
+@login_required 
+def analyseHome(request):
+    myauth = request.user.is_authenticated()
+    myDict = { 'myauth' : myauth, 'user' : request.user }
+      
+    return render_to_response('lhcbPR/analyseHome.html', 
+                  myDict,
+                  context_instance=RequestContext(request))
 
 @login_required 
 def newdata(request):
@@ -148,15 +156,10 @@ def newdata(request):
 def handleRequest(request):
     if request.method == 'GET':
         if request.GET['function'] == 'i_love_cookies':
-            appVersions = JobDescription.objects.filter(application__appName__exact=request.GET['key']).values('application__appVersion').distinct('application__appVersion')
-            options = Options.objects.all().values('content').distinct('content')
-            cmtconfigs = Requested_platform.objects.filter(jobdescription__application__appName__exact=request.GET['key']).values('cmtconfig__cmtconfig').distinct('cmtconfig__cmtconfig')
-            setupProject = SetupProject.objects.all().values('content').distinct('content')
-            
-            appVersionsList = makeList(appVersions,'application__appVersion') 
-            optionsList = makeList(options,'content')   
-            cmtconfigsList = makeList(cmtconfigs,'cmtconfig__cmtconfig')
-            setupProjectList = makeList(setupProject,'content')
+            appVersionsList = makeList(JobDescription.objects.filter(application__appName__exact=request.GET['key']).values('application__appVersion').distinct('application__appVersion'),'application__appVersion') 
+            optionsList = makeList(Options.objects.all().values('content').distinct('content'),'content')   
+            cmtconfigsList = makeList(Requested_platform.objects.filter(jobdescription__application__appName__exact=request.GET['key']).values('cmtconfig__cmtconfig').distinct('cmtconfig__cmtconfig'),'cmtconfig__cmtconfig')
+            setupProjectList = makeList(SetupProject.objects.all().values('content').distinct('content'),'content')
             
             myDict = { 'appVersions' : appVersionsList,
                        'options' : optionsList,
@@ -260,6 +263,13 @@ def getJobDetails(request):
     except:
         dataDict['setupProject'] = ''
         dataDict['setupProjectD'] = ''
+    
+    if 'cloneRequest' in request.GET:
+        dataDict['versionsClone'] = makeList(Application.objects.filter(appName__exact=myJob.application.appName).values('appVersion').distinct('appVersion'),'appVersion')
+        dataDict['optionsClone'] = makeList(Options.objects.all().values('content').distinct('content'),'content')
+        dataDict['optionsDClone'] = makeList(Options.objects.all().values('description').distinct('description'),'description')
+        dataDict['setupClone'] = makeList(SetupProject.objects.all().values('content').distinct('content'),'content')
+        dataDict['setupDClone'] = makeList(SetupProject.objects.all().values('description').distinct('description'),'description')
         
     return HttpResponse(json.dumps(dataDict))
     

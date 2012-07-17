@@ -6,7 +6,6 @@ $(document).ready(function () {
 	$("#PlatformButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$("#SetupProject").hide();
 	$("#SetupProjectButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
-	$(document.getElementsByName("{{ active_tab }}tab")).attr('id',   'selected');
 	$("#dialog").hide();
 	$("#cloneDialog").hide();
 	$("#dialogClose").click(function () {$("#dialog").dialog("close");});
@@ -19,6 +18,19 @@ $(document).ready(function () {
 	$("#UploadResultsInDialog").click(function () { uploadResults(); });
 	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); });
 	$("#commitClone").click(function () { alert("Commit new jobDescription id under construction..."); });
+	$("#help").hide();
+	$("#helpButton").click(function () {
+		// check visibility
+		if ($("#help").is(":hidden")) {
+		// it's hidden - show it
+				$("#help").slideDown("normal");
+				$("#helpImage").attr('src','https://alamages.cern.ch/arrow_upHelp.gif');
+		} else {
+			// it's not hidden - slide it down
+				$("#help").slideUp("normal");
+				$("#helpImage").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
+			}
+		});
 });
 
 function showHide( button_id, box_id )
@@ -36,6 +48,7 @@ function showHide( button_id, box_id )
 			}
 		});
 }
+
 function removeAllChilds(myId){
 	var node= document.getElementById(myId);		
 	if ( node.hasChildNodes() ){
@@ -45,6 +58,7 @@ function removeAllChilds(myId){
 	}	
 	return;
 }
+
 function getSelectedChilds(id){
 	nodes = document.getElementById(id).children;
 	var sdValues = [];
@@ -55,6 +69,7 @@ function getSelectedChilds(id){
 	}
 	return sdValues;
 }
+
 function clearCheckBox(id){
 	var checked_existed;
 	nodes = document.getElementById(id).children;
@@ -69,6 +84,7 @@ function clearCheckBox(id){
 		doFilter(1);
 	return;
 }
+
 function addJobs(myId,box,apps){
 	//loop over the array which contains the versions
 	for(var i = 0; i < apps.length; i++)
@@ -88,72 +104,7 @@ function addJobs(myId,box,apps){
 	}
 	return;
 }
-function doFilter(requested_page){
-	box = document.getElementById("Jobs");
 
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
-			var jobs = jsondata.jobs;
-			var pageInfo = jsondata.page_info;
-			removeAllChilds("Jobs"); 
-			addJobs("Jobs",box,jobs);
-			
-			removeAllChilds("pages");
-			removeAllChilds("nextprevious");
-			myCurrent_page = pageInfo.current_page;
-			document.getElementById("pages").appendChild(document.createTextNode("Page "+pageInfo.current_page+" of "+pageInfo.num_of_pages));
-			nextPrevious = document.getElementById("nextprevious");
-			
-			if (pageInfo.current_page > 1){
-				Aprevious = document.createElement("a");
-				Aprevious.setAttribute('href','javascript:;');
-				var functionFilter = "doFilter("+(pageInfo.current_page-1)+")";
-				Aprevious.setAttribute('onclick', functionFilter);
-				Aprevious.appendChild(document.createTextNode("previous"));
-				nextPrevious.appendChild(Aprevious);
-				nextPrevious.appendChild(document.createTextNode(" | "));
-			}
-			if ( pageInfo.current_page < pageInfo.num_of_pages ){
-				if (pageInfo.current_page <= 1)
-					nextPrevious.appendChild(document.createTextNode(" | "));
-				Anext = document.createElement("a");
-				Anext.setAttribute('href','javascript:;');
-				var functionFilter = "doFilter("+(pageInfo.current_page+1)+")";
-				Anext.setAttribute('onclick', functionFilter);
-				Anext.appendChild(document.createTextNode("next"));
-				nextPrevious.appendChild(Anext);	
-			}
-			
-			//fix the permalink
-			permalink();
-    	}	
-  	}
-	var setupprojects = getSelectedChilds("SetupProject");
-	var appVersions = getSelectedChilds("Version");
-	
-	var options = getSelectedChilds("Options");
-	var cmts = getSelectedChilds("Platform");	
-
-	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getFilters?page="+requested_page+"&app={{ active_tab }}"+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&platforms="+escape(cmts.join(",")), true);
-	xmlhttp.send();
-	
-	return;
-}
 function permalink(){
 	var setupprojects = getSelectedChilds("SetupProject");
 	var appVersions = getSelectedChilds("Version");
@@ -240,8 +191,6 @@ function openCloneWindow(job_id){
 	if (job_id == "")
 		return;
 
-	$("#dialog").dialog("close");
-
 	var xmlhttp;    
 	if (window.XMLHttpRequest){
 		// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -278,23 +227,66 @@ function openCloneWindow(job_id){
 					
 					mybox.appendChild(myInput);
 					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
-					mybox.appendChild(document.createElement("br"));
-					
+					mybox.appendChild(document.createElement("br"));		
 			}
-				$("#cloneDialog").dialog({
-    				resizable: false,
-    				height: 700,
-    				width: 600,
-   					modal: true
-				});
+			$( "#VersionClone" ).autocomplete({
+				source: jsondata.versionsClone	
+			});
+			$( "#OptionsClone" ).autocomplete({
+				source: jsondata.optionsClone	
+			});
+			$( "#OptionsDClone" ).autocomplete({
+				source: jsondata.optionsDClone	
+			});
+			$( "#SetupProjectClone" ).autocomplete({
+				source: jsondata.setupClone	
+			});
+			$( "#SetupProjectDClone" ).autocomplete({
+				source: jsondata.setupDClone	
+			});
+			
+			$("#cloneDialog").dialog({
+    			resizable: false,
+    			height: 700,
+    			width: 600,
+   				modal: true
+			});
     	}	
   	}
 	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id, true);
+	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id+"&cloneRequest=", true);
+	xmlhttp.send();
+	$("#dialog").dialog("close");
+	return;
+}
+
+
+function commitJob(job_id){
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function()
+	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var jsondata = JSON.parse(xmlhttp.responseText);
+    	}	
+  	}
+	// send the request the to server
+	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/commitClone?", true);
 	xmlhttp.send();
 	
 	return;
 }
+
 function run(){
 	alert("Run function, under construction...");
 }
