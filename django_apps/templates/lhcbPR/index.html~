@@ -24,9 +24,9 @@
 
 <div style="float: right;">
 {% if myauth %}
-<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
+<a href="/django/lhcbPR/logout/?next=https://alamages.cern.ch"> Logout </a>| {{ user.username }}
 {% else %}
-<a href="/django/lhcbPR/login"> Login</a>
+<a href="https://alamages.cern.ch/django/login/"> Login</a>
 {% endif %}
 </div><!-- closing div ^^-->
 
@@ -46,7 +46,7 @@
 
 <div class="content">
 <p>Welcome to the lhcb perfomance and regression.</p>
-<p>Choose one of the tabs(job descriptions or analyse) to go the corresponding action.</p>
+<p>Choose one of the tabs(job descriptions or analyse) to go to the corresponding action.</p>
 
 </div><!-- /class=content(main tabs)-->
 </div> <!-- closing div class=pagebody-->

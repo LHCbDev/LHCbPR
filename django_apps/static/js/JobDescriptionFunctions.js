@@ -37,14 +37,14 @@ function showHide( button_id, box_id )
 {
      $(document).ready(function() {
 		// check visibility
-		if ($(document.getElementById(box_id)).is(":hidden")) {
+		if ($("#"+box_id).is(":hidden")) {
 			// it's hidden - show it
-				$(document.getElementById(box_id)).slideDown("slow");
-				$(document.getElementById(button_id)).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right.png)');
+				$("#"+box_id).slideDown("slow");
+				$("#"+button_id).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right.png)');
 		} else {
 			// it's not hidden - slide it down
-				$(document.getElementById(box_id)).slideUp("slow");
-				$(document.getElementById(button_id)).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
+				$("#"+box_id).slideUp("slow");
+				$("#"+button_id).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 			}
 		});
 }
@@ -57,6 +57,7 @@ function removeAllChilds(myId){
     	} 
 	}	
 	return;
+	//$("#"+myId).empty();
 }
 
 function getSelectedChilds(id){

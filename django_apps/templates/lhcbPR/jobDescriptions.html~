@@ -96,9 +96,9 @@ function doFilter(requested_page){
 
 <div style="float: right;">
 {% if myauth %}
-<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
+<a href="/django/lhcbPR/logout/?next=https://alamages.cern.ch"> Logout </a>| {{ user.username }}
 {% else %}
-<a href="/django/lhcbPR/login"> Login</a>
+<a href="https://alamages.cern.ch/django/login/"> Login</a>
 {% endif %}
 </div><!-- closing div ^^-->
 
@@ -109,7 +109,7 @@ function doFilter(requested_page){
 </div><!-- closing div class="ctitle"-->
 <div class=pagebody >
 <ol id="toc">
-    <li><a href="javascript:;">Home</a></li>
+    <li><a href="/django/lhcbPR">Home</a></li>
 
     <li class="current"><a href="javascript:;">Job Descriptions</a></li>
     <li><a href="/django/lhcbPR/analyse">Analyse</a></li>
@@ -138,7 +138,7 @@ function doFilter(requested_page){
 <div id="content">
 <div style="overflow: auto;">
 <a  id="mypermalink" href="" style="float : right; font-family: fantasy;" target="_blank"
-onmouseover="showToolTip(event,'This works as permalink to save the current selection(opens new tab)');return false" onmouseout="hideToolTip()"> Permalink to selection </a>
+onmouseover="showToolTip(event,'This saves the current selection as bookmark (opens new tab)');return false" onmouseout="hideToolTip()"> Permalink to selection </a>
 <div id="myfilter" style="float : left;">
 <table class="sample">
 <tr>

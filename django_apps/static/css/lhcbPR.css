@@ -515,11 +515,11 @@ html>body #button li a {
 }
 
 #button li a:hover {
-		border-left: 10px solid #1c64d1;
+		border-left: 10px solid #5ba3e0;//#1c64d1;
 		border-right: 10px solid #5ba3e0;
-		border-radius: 1em 1em 1em 1em;
-		background-color: #2586d7;
-		color: #fff;
+		border-radius: 1.5em 1.5em 1.5em 1.5em;
+		background-color: #BCDEFF;//#2586d7;
+		color: black;//#fff;
 }
 /* dialog buttons */
 #button dialog {

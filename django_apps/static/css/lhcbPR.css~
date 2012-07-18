@@ -515,11 +515,11 @@ html>body #button li a {
 }
 
 #button li a:hover {
-		border-left: 10px solid #1c64d1;
+		border-left: 10px solid #5ba3e0;//#1c64d1;
 		border-right: 10px solid #5ba3e0;
-		border-radius: 1em 1em 1em 1em;
-		background-color: #2586d7;
-		color: #fff;
+		border-radius: 1.5em 1.5em 1.5em 1.5em;
+		background-color: #BCDEFF;//#2586d7;
+		color: black;//#fff;
 }
 /* dialog buttons */
 #button dialog {
@@ -591,14 +591,14 @@ ol#toc li {
 	alignment-adjust:central;
 }
 #bubble_tooltip .bubble_top{
-	background-image: url('../images/bubble_top.gif');
+	background-image: url('https://alamages.cern.ch/bubble_top.gif');
 	background-repeat:no-repeat;
 	height:16px;	
 	color:#505160;
 		alignment-adjust:central;
 }
 #bubble_tooltip .bubble_middle{
-	background-image: url('../images/bubble_middle.gif');
+	background-image: url('https://alamages.cern.ch/bubble_middle.gif');
 	background-repeat:repeat-y;	
 	background-position:bottom left;
 	padding-left:7px;
@@ -615,7 +615,7 @@ ol#toc li {
 		alignment-adjust:central;
 }
 #bubble_tooltip .bubble_bottom{
-	background-image: url('../images/bubble_bottom.gif');
+	background-image: url('https://alamages.cern.ch/bubble_bottom.gif');
 	background-repeat:no-repeat;
 	background-repeat:no-repeat;	
 	height:44px;
