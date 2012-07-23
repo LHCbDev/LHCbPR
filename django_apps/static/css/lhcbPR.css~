@@ -380,22 +380,6 @@ b {
     width: 13em;
 }
 
-.checklistOver {
-    border: 1px solid #ccc;
-    list-style: none;
-    height: 6em;
-    overflow: auto;
-    width: 22em;
-}
-
-.checklistJobs {
-    border: 1px solid #ccc;
-    list-style: none;
-    height: 40em;
-    overflow: auto;
-    width: 45em;
-}
-
 .checklist, .checklist li { margin: 0; padding: 0; }
 
 .checklist label {

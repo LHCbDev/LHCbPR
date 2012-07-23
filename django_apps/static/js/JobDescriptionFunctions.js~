@@ -1,6 +1,10 @@
 //hide some elements on startup
 var myCurrent_page;
 var myChoosedJob_id = "";
+String.prototype.fulltrim=function(){
+	return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
+}
+
 $(document).ready(function () {
     $("#Platform").hide();
 	$("#PlatformButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
@@ -31,7 +35,48 @@ $(document).ready(function () {
 				$("#helpImage").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
 			}
 		});
+		
 });
+
+function fixInputs(father, child, func,real_name,event){
+		var myvalue = $("#"+father).val();
+		
+			if (window.XMLHttpRequest){
+				// code for IE7+, Firefox, Chrome, Opera, Safari
+  				xmlhttp=new XMLHttpRequest();
+  			}
+			else{
+				// code for IE6, IE5
+  				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  			}
+
+			// when the response comes do...
+			xmlhttp.onreadystatechange=function()
+			{
+  				if (xmlhttp.readyState==4 && xmlhttp.status==200)
+				{
+					var jsondata = JSON.parse(xmlhttp.responseText);
+					
+					if (jsondata.data != ""){
+						$("#"+child).val(jsondata.data);
+						if (event == "onkeyup")
+							$("#"+child).attr("readOnly","readonly");
+						else if (event == "onblur")
+							$("#"+father).attr("readOnly","readonly");
+					}
+					else{
+						if (event == "onkeyup"){
+							$("#"+child).removeAttr('readOnly');
+							$("#"+child).val("");
+						}
+					}
+					
+				}
+    		}	
+			// send the request the to server
+			xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/editRequests?key="+func.fulltrim()+"&value="+myvalue.fulltrim()+"&real_name="+real_name.fulltrim(), true);
+			xmlhttp.send();
+}
 
 function showHide( button_id, box_id )
 {
@@ -93,7 +138,7 @@ function addJobs(myId,box,apps){
 		var hrefObj = document.createElement("a");		
 		var liObj = document.createElement("li");
 		
-		hrefObj.appendChild(document.createTextNode(apps[i].appName+" "+apps[i].appVersion+" "+apps[i].setupproject+" "+apps[i].options));
+		hrefObj.appendChild(document.createTextNode(apps[i].appName+"  "+apps[i].appVersion+"  "+apps[i].optionsD+"  "+apps[i].setupproject));
 		liObj.appendChild(hrefObj);
 
 		hrefObj.setAttribute('href','javascript:;');
@@ -163,10 +208,14 @@ function openWindow(job_id){
 			for(var i = 0; i < jsondata.platforms.length; i++){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
-					myInput.value = jsondata.platforms[i];
+					myInput.value = jsondata.platforms[i].platform;
 					myInput.setAttribute('readOnly','readonly');
+					myInput.setAttribute('disabled','true');	
+					if (jsondata.platforms[i].checked)
+							myInput.setAttribute('checked','checked');
+						
 					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
+					mybox.appendChild(document.createTextNode(jsondata.platforms[i].platform));
 					mybox.appendChild(document.createElement("br"));
 					
 			}
@@ -174,7 +223,7 @@ function openWindow(job_id){
 				$("#dialog").dialog({
     				resizable: false,
     				height: 700,
-    				width: 950,
+    				width: 800,
    					modal: true
 				});
     	}	
@@ -224,10 +273,13 @@ function openCloneWindow(job_id){
 			for(var i = 0; i < jsondata.platforms.length; i++){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
-					myInput.value = jsondata.platforms[i];
+					myInput.value = jsondata.platforms[i].platform;
+					
+					if (jsondata.platforms[i].checked)
+							myInput.setAttribute('checked','true');
 					
 					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
+					mybox.appendChild(document.createTextNode(jsondata.platforms[i].platform));
 					mybox.appendChild(document.createElement("br"));		
 			}
 			$( "#VersionClone" ).autocomplete({

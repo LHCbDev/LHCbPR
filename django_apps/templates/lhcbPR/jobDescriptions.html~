@@ -78,7 +78,7 @@ function doFilter(requested_page){
 </script>
 
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
-<link rel="stylesheet" href="https://alamages.cern.ch/ComboBox.css" media="screen">
+
 <title>{{ active_tab }} job descriptions</title>
 </HEAD>
 <BODY>
@@ -96,7 +96,7 @@ function doFilter(requested_page){
 
 <div style="float: right;">
 {% if myauth %}
-<a href="/django/lhcbPR/logout/?next=https://alamages.cern.ch"> Logout </a>| {{ user.username }}
+<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
 {% else %}
 <a href="https://alamages.cern.ch/django/login/"> Login</a>
 {% endif %}
@@ -111,19 +111,19 @@ function doFilter(requested_page){
 <ol id="toc">
     <li><a href="/django/lhcbPR">Home</a></li>
 
-    <li class="current"><a href="javascript:;">Job Descriptions</a></li>
+    <li class="current"><a href="/django/lhcbPR/jobDescriptions">Job Descriptions</a></li>
     <li><a href="/django/lhcbPR/analyse">Analyse</a></li>
 </ol>
 
-
 <div class="content">
-<div id="help">
-<p> That's some help text about the page </p>
-</div><!-- closing div id=help-->
 <span id="helpButton" style="cursor:pointer;">
 <img id="helpImage" style="width:11px;height:11px;" src="https://alamages.cern.ch/arrow-downHelp.png" title="show help message"/>
 <a href="javascript:;" style="font-family: Palatino;" >help</a>
 </span>
+<div id="help">
+<p> That's some help text about the page </p>
+</div><!-- closing div id=help-->
+
 <br>
 <br>
 <div id="header">
@@ -230,18 +230,16 @@ onmouseover="showToolTip(event,'This saves the current selection as bookmark (op
 <td><input id="ApplicationDetails" type="text" value=""  readOnly="readonly" /></td><tr>
 <td style="text-align:right;padding:0.5em;">Version:</td>
 <td><input id="VersionDetails" type="text" value="" readOnly="readonly"/></td>
-</table><br>
-<table class="sample"><tr>
+<tr>
 <td style="text-align:right;padding:0.5em;">Options:</td>
-<td><input id="OptionsDetails"type="text" value="" readOnly="readonly" /></td><tr>
-<td style="text-align:right;padding:0.5em;">Description:</td>
-<td><input id="OptionsDDetails" type="text" value="" readOnly="readonly" /></td>
-</table><br>
-<table class="sample"><tr>
+<td><input id="OptionsDDetails"type="text" value="" readOnly="readonly" /></td><tr>
+<td style="text-align:right;padding:0.5em;"></td>
+<td><input id="OptionsDetails" type="text" value="" readOnly="readonly" /></td>
+<tr>
 <td style="text-align:right;padding:0.5em;">SetupProject:</td>
-<td><input id="SetupProjectDetails" type="text" value="" readOnly="readonly"/></td><tr>
-<td style="text-align:right;padding:0.5em;">Description:</td>
-<td><input id="SetupProjectDDetails" type="text" value="" readOnly="readonly"/></td>
+<td><input id="SetupProjectDDetails" type="text" value="" readOnly="readonly"/></td><tr>
+<td style="text-align:right;padding:0.5em;"></td>
+<td><input id="SetupProjectDetails" type="text" value="" readOnly="readonly"/></td>
 </table><br>
 <span>Requested platforms: </span>
 <p id="platformsDetails" 
@@ -272,19 +270,16 @@ onclick="">Close</button></span>
 <td style="text-align:right;padding:0.5em;">Version:</td>
 <!-- <td><input id="VersionClone" type="text" value="" /></td> -->
 <td><input id="VersionClone" type="text" value="" ></td>
-
-</table><br>
-<table class="sample"><tr>
+<tr>
 <td style="text-align:right;padding:0.5em;">Options:</td>
-<td><input id="OptionsClone"type="text" value="" /></td><tr>
-<td style="text-align:right;padding:0.5em;">Description:</td>
-<td><input id="OptionsDClone" type="text" value=""  /></td>
-</table><br>
-<table class="sample"><tr>
+<td><input id="OptionsDClone" type="text" value="" onkeyup="fixInputs('OptionsDClone','OptionsClone','description','Options')" /></td><tr>
+<td style="text-align:right;padding:0.5em;"></td>
+<td><input id="OptionsClone" type="text" value="" onblur="fixInputs('OptionsClone','OptionsDClone','content','Options','onblur')" readOnly="readonly" /></td>
+<tr>
 <td style="text-align:right;padding:0.5em;">SetupProject:</td>
-<td><input id="SetupProjectClone" type="text" value="" /></td><tr>
-<td style="text-align:right;padding:0.5em;">Description:</td>
-<td><input id="SetupProjectDClone" type="text" value="" /></td>
+<td><input id="SetupProjectDClone" type="text" value="" onkeyup="fixInputs('SetupProjectDClone','SetupProjectClone','description','SetupProject','onkeyup')" /></td><tr>
+<td style="text-align:right;padding:0.5em;"></td>
+<td><input id="SetupProjectClone" type="text" value="" onblur="fixInputs('SetupProjectClone','SetupProjectDClone','content','SetupProject','onblur')" readOnly="readonly"/></td>
 </table><br>
 <span>Requested platforms: </span>
 <p id="platformsClone" 
@@ -293,9 +288,8 @@ onclick="">Close</button></span>
 </span>
 </div> <!-- closing the JobDescriptionDetails-->
 <br>
-<span style="margin-left: 1.5em;"><button id="commitClone" type="button" style="padding:10px;">Commit</button>
-<span style="padding:2em;position:absolute;bottom:0;left:0;"><button id="goBackToDialog" type="button" style="padding: 10px;">Go back</button></span>
-<span style="padding:2em;position:absolute;bottom:0;right:0;"><button id="dialogCloneClose" type="button" style="padding: 10px;">Close</button></span>
+<span style="margin-left: 1.5em;"><button id="commitClone" type="button" style="padding:10px;">Commit</button></span><br><br>
+<span style="margin-left: 1.5em;"><button id="goBackToDialog" type="button" style="padding: 10px;">Cancel</button></span>
 </div> <!-- /cloneDialog -->
 
 <!-- bubble pop for help -->
@@ -304,7 +298,8 @@ onclick="">Close</button></span>
 <span></span>
 </div>
 <div class="bubble_middle">
-<span id="bubble_tooltip_content">If typing the adress seems impossible you can always try and pinpoint something on map.</span>
+<span id="bubble_tooltip_content">
+</span>
 </div>
 <div class="bubble_bottom"></div>
 </div>

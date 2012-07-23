@@ -3,10 +3,10 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://alamages.cern.ch/bubble-tooltip.js"></script>
-<!-- <script type="text/javascript" src="https://alamages.cern.ch/JobDescriptionFunctions.js"></script> -->
+<script type="text/javascript" src="https://alamages.cern.ch/JobDescriptionFunctions.js"></script>
 
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
-<link rel="stylesheet" href="https://alamages.cern.ch/ComboBox.css" media="screen">
+
 <title>Job descriptions</title>
 </HEAD>
 <BODY>
@@ -39,12 +39,23 @@
 <ol id="toc">
     <li><a href="/django/lhcbPR">Home</a></li>
 
-    <li class="current"><a href="javascript:;">Job Descriptions</a></li>
+    <li class="current"><a href="/django/lhcbPR/jobDescriptions">Job Descriptions</a></li>
     <li><a href="/django/lhcbPR/analyse">Analyse</a></li>
 </ol>
 
 
 <div class="content">
+
+<span id="helpButton" style="cursor:pointer;">
+<img id="helpImage" style="width:11px;height:11px;" src="https://alamages.cern.ch/arrow-downHelp.png" title="show help message"/>
+<a href="javascript:;" style="font-family: Palatino;" >help</a>
+</span>
+<div id="help">
+<p> That's some help text about the page </p>
+</div><!-- closing div id=help-->
+
+<br>
+<br>
 <div id="header">
 <ul>
 	{% for app in applications %}

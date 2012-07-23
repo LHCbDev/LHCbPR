@@ -75,9 +75,9 @@ def jobDescriptions(request, app_name):
     if not appVersions:
         return HttpResponseNotFound("<h3>Page was not found</h3>")
     
-    options = Options.objects.all().values('content').distinct('content')
+    options = Options.objects.all().values('description').distinct('description')
     platforms = Requested_platform.objects.filter(jobdescription__application__appName__exact=app_name).values('cmtconfig__cmtconfig').distinct('cmtconfig__cmtconfig')
-    setupProject = SetupProject.objects.all().values('content').distinct('content')
+    setupProject = SetupProject.objects.all().values('description').distinct('description')
     
     if 'appVersions' in request.GET:
         appVersionsList = makeListChecked(appVersions,'application__appVersion',request.GET['appVersions'].split(','))
@@ -88,13 +88,13 @@ def jobDescriptions(request, app_name):
     else:
         cmtconfigsList = makeListChecked(platforms,'cmtconfig__cmtconfig')
     if 'SetupProjects' in request.GET:
-        setupProjectList = makeListChecked(setupProject,'content',request.GET['SetupProjects'].split(','))
+        setupProjectList = makeListChecked(setupProject,'description',request.GET['SetupProjects'].split(','))
     else:
-        setupProjectList = makeListChecked(setupProject,'content')
+        setupProjectList = makeListChecked(setupProject,'description')
     if 'Options' in request.GET:
-        optionsList = makeListChecked(options,'content',request.GET['Options'].split(','))
+        optionsList = makeListChecked(options,'description',request.GET['Options'].split(','))
     else:
-        optionsList = makeListChecked(options,'content')
+        optionsList = makeListChecked(options,'description')
     if 'page' in request.GET:
         requested_page = request.GET['page']
     else:
@@ -184,9 +184,9 @@ def getFilters(request):
         if request.GET['appVersions']:
             querylist.append(makeQuery('application__appVersion__exact', request.GET['appVersions'].split(','), Q.OR))
         if request.GET['Options']:
-            querylist.append(makeQuery('options__content__exact',request.GET['Options'].split(','), Q.OR))
+            querylist.append(makeQuery('options__description__exact',request.GET['Options'].split(','), Q.OR))
         if request.GET['SetupProjects']:
-            querylist.append(makeQuery('setup_project__content__exact',request.GET['SetupProjects'].split(','), Q.OR))
+            querylist.append(makeQuery('setup_project__description__exact',request.GET['SetupProjects'].split(','), Q.OR))
         
         final_query = Q()
         for q in querylist:
@@ -218,7 +218,7 @@ def getFilters(request):
                      'optionsD' : j.options.description,
                      } 
             try:
-                myDict['setupproject'] = j.setup_project.content
+                myDict['setupproject'] = j.setup_project.description
             except Exception:
                 myDict['setupproject'] = ""
             
@@ -243,11 +243,15 @@ def getJobDetails(request):
     
     myJob = JobDescription.objects.get(pk=request.GET['job_id'])
 
-    platforms = Requested_platform.objects.filter(jobdescription__exact=myJob)
-    platformsList = []
-    if platforms:
-        for p in platforms:
-            platformsList.append(p.cmtconfig.cmtconfig)
+    platforms = makeList(Requested_platform.objects.filter(jobdescription__exact=myJob).values('cmtconfig__cmtconfig').distinct('cmtconfig_cmtconfig'),'cmtconfig__cmtconfig')
+    
+    all_platforms = makeList(Requested_platform.objects.values('cmtconfig__cmtconfig').distinct('cmtconfig_cmtconfig'),'cmtconfig__cmtconfig')
+    all_platformsList = []
+    for all_p in all_platforms:
+        if all_p in platforms:
+            all_platformsList.append({ 'platform' : all_p, 'checked' : True })
+        else:
+            all_platformsList.append({ 'platform' : all_p, 'checked' : False })
     
     dataDict = {
                 'pk' : myJob.id,   
@@ -255,7 +259,7 @@ def getJobDetails(request):
                 'appVersion' : myJob.application.appVersion,
                 'options' : myJob.options.content,
                 'optionsD' : myJob.options.description,
-                'platforms' : platformsList
+                'platforms' : all_platformsList
                 }
     try:
         dataDict['setupProject'] = myJob.setup_project.content
@@ -272,4 +276,24 @@ def getJobDetails(request):
         dataDict['setupDClone'] = makeList(SetupProject.objects.all().values('description').distinct('description'),'description')
         
     return HttpResponse(json.dumps(dataDict))
+
+@login_required
+def editRequests(request):
+    if not 'value' or not 'key' or not 'real_name' in request.GET:
+        return HttpResponse()
+    if request.GET['real_name'] == 'Options':
+        myObj = Options.objects.filter( **{'{0}__exact'.format(request.GET['key']) : request.GET['value']} )
+    else: #request.GET['real_name'] == 'SetupProject':
+        myObj = SetupProject.objects.filter( **{'{0}__exact'.format(request.GET['key']) : request.GET['value']} )
+    
+    if myObj.count() == 1:
+        if request.GET['key'] == 'description':
+            return HttpResponse(json.dumps({ 'data' : myObj[0].content }))
+        elif request.GET['key'] == 'content':
+            return HttpResponse(json.dumps({ 'data' : myObj[0].description }))
+        else:
+            return HttpResponse(json.dumps({ 'data' : '' }))
+    else:
+        return HttpResponse(json.dumps({ 'data' : '' }))
+    
     

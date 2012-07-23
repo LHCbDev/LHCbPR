@@ -24,7 +24,7 @@
 
 <div style="float: right;">
 {% if myauth %}
-<a href="/django/lhcbPR/logout/?next=https://alamages.cern.ch"> Logout </a>| {{ user.username }}
+<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
 {% else %}
 <a href="https://alamages.cern.ch/django/login/"> Login</a>
 {% endif %}
@@ -39,8 +39,8 @@
 <ol id="toc">
     <li><a href="/django/lhcbPR">Home</a></li>
 
-    <li><a href="https://alamages.cern.ch/django/lhcbPR/jobDescriptions">Job Descriptions</a></li>
-    <li class="current"><a href="javascript:;">Analyse</a></li>
+    <li><a href="/django/lhcbPR/jobDescriptions">Job Descriptions</a></li>
+    <li class="current"><a href="/django/lhcbPR/analyse">Analyse</a></li>
 </ol>
 
 
