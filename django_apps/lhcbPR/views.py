@@ -5,7 +5,8 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
 from django.template import RequestContext
 
-from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject
+
+from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job
 import json, subprocess, sys, configs, re, copy
 
 #***********************************************
@@ -54,14 +55,6 @@ def index(request):
     return render_to_response('lhcbPR/index.html', myDict,
                   context_instance=RequestContext(request))
 
-@login_required     
-def addnew(request):
-    myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user}
-    
-    return render_to_response('lhcbPR/addnew.html', myDict,
-                  context_instance=RequestContext(request))
-
 @login_required  #login_url="login"
 def jobDescriptions(request, app_name):
     
@@ -76,7 +69,7 @@ def jobDescriptions(request, app_name):
         return HttpResponseNotFound("<h3>Page was not found</h3>")
     
     options = Options.objects.all().values('description').distinct('description')
-    platforms = Requested_platform.objects.filter(jobdescription__application__appName__exact=app_name).values('cmtconfig__cmtconfig').distinct('cmtconfig__cmtconfig')
+    platforms = Platform.objects.all().values('cmtconfig').distinct('cmtconfig')
     setupProject = SetupProject.objects.all().values('description').distinct('description')
     
     if 'appVersions' in request.GET:
@@ -84,9 +77,9 @@ def jobDescriptions(request, app_name):
     else:
         appVersionsList = makeListChecked(appVersions,'application__appVersion')
     if 'platforms' in request.GET:
-        cmtconfigsList = makeListChecked(platforms,'cmtconfig__cmtconfig',request.GET['platforms'].split(','))
+        cmtconfigsList = makeListChecked(platforms,'cmtconfig',request.GET['platforms'].split(','))
     else:
-        cmtconfigsList = makeListChecked(platforms,'cmtconfig__cmtconfig')
+        cmtconfigsList = makeListChecked(platforms,'cmtconfig')
     if 'SetupProjects' in request.GET:
         setupProjectList = makeListChecked(setupProject,'description',request.GET['SetupProjects'].split(','))
     else:
@@ -136,21 +129,6 @@ def analyseHome(request):
     return render_to_response('lhcbPR/analyseHome.html', 
                   myDict,
                   context_instance=RequestContext(request))
-
-@login_required 
-def newdata(request):
-    applications = Application.objects.values('appName').distinct('appName')
-    
-    applicationsList = []
-    for dict in applications:  
-        applicationsList.append(dict['appName'])
-    myauth = request.user.is_authenticated()
-    myDict = { 'active_tab' : 'home' ,'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
-      
-    return render_to_response('lhcbPR/newdata.html', 
-                  myDict,
-                  context_instance=RequestContext(request))
-
     
 @login_required     
 def handleRequest(request):
@@ -206,7 +184,7 @@ def getFilters(request):
             # If page is not an integer, deliver first page.
             jobDes = paginator.page(1)
         except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
+            # If page is out of range (e.g. 9999), deliver last page of results.
             jobDes = paginator.page(paginator.num_pages)
         
         myobjectlist = []
@@ -245,13 +223,23 @@ def getJobDetails(request):
 
     platforms = makeList(Requested_platform.objects.filter(jobdescription__exact=myJob).values('cmtconfig__cmtconfig').distinct('cmtconfig_cmtconfig'),'cmtconfig__cmtconfig')
     
-    all_platforms = makeList(Requested_platform.objects.values('cmtconfig__cmtconfig').distinct('cmtconfig_cmtconfig'),'cmtconfig__cmtconfig')
+    all_platforms = makeList(Platform.objects.values('cmtconfig').distinct('cmtconfig'),'cmtconfig')
     all_platformsList = []
     for all_p in all_platforms:
         if all_p in platforms:
             all_platformsList.append({ 'platform' : all_p, 'checked' : True })
         else:
             all_platformsList.append({ 'platform' : all_p, 'checked' : False })
+            
+    handlers = makeList(JobHandler.objects.filter(jobDescription__exact=myJob).values('handler__name').distinct('handler__name'),'handler__name')
+    
+    all_handlers = makeList(Handler.objects.values('name').distinct('name'),'name')
+    all_handlersList = []
+    for all_h in all_handlers:
+        if all_h in handlers:
+            all_handlersList.append({ 'handler' : all_h, 'checked' : True })
+        else:
+            all_handlersList.append({ 'handler' : all_h, 'checked' : False })
     
     dataDict = {
                 'pk' : myJob.id,   
@@ -259,7 +247,8 @@ def getJobDetails(request):
                 'appVersion' : myJob.application.appVersion,
                 'options' : myJob.options.content,
                 'optionsD' : myJob.options.description,
-                'platforms' : all_platformsList
+                'platforms' : all_platformsList,
+                'handlers' : all_handlersList
                 }
     try:
         dataDict['setupProject'] = myJob.setup_project.content
@@ -268,13 +257,22 @@ def getJobDetails(request):
         dataDict['setupProject'] = ''
         dataDict['setupProjectD'] = ''
     
-    if 'cloneRequest' in request.GET:
-        dataDict['versionsClone'] = makeList(Application.objects.filter(appName__exact=myJob.application.appName).values('appVersion').distinct('appVersion'),'appVersion')
-        dataDict['optionsClone'] = makeList(Options.objects.all().values('content').distinct('content'),'content')
-        dataDict['optionsDClone'] = makeList(Options.objects.all().values('description').distinct('description'),'description')
-        dataDict['setupClone'] = makeList(SetupProject.objects.all().values('content').distinct('content'),'content')
-        dataDict['setupDClone'] = makeList(SetupProject.objects.all().values('description').distinct('description'),'description')
-        
+    if 'cloneRequest' or 'editRequest' in request.GET:
+        dataDict['versionsAll'] = makeList(Application.objects.filter(appName__exact=myJob.application.appName).values('appVersion').distinct('appVersion'),'appVersion')
+        dataDict['optionsAll'] = makeList(Options.objects.all().values('content').distinct('content'),'content')
+        dataDict['optionsDAll'] = makeList(Options.objects.all().values('description').distinct('description'),'description')
+        dataDict['setupAll'] = makeList(SetupProject.objects.all().values('content').distinct('content'),'content')
+        dataDict['setupDAll'] = makeList(SetupProject.objects.all().values('description').distinct('description'),'description')
+    
+    #check if the jobdescription exists in runned jobs so the user can edit or not some attributes
+    if 'editRequest':
+        try:
+            Job.objects.get(jobDescription__pk__exact=request.GET['job_id'])
+        except Exception:
+            dataDict['exists'] = False
+        else:
+            dataDict['exists'] = True
+                
     return HttpResponse(json.dumps(dataDict))
 
 @login_required
@@ -296,4 +294,20 @@ def editRequests(request):
     else:
         return HttpResponse(json.dumps({ 'data' : '' }))
     
+@login_required
+def commitClone(request):
+    app = Application(appName=request.GET['application'],appVersion=request.GET['version'])
+    setup = SetupProject(content=request.GET['setupproject'],description=request.GET['setupprojectD'])
+    opts = Options(content=request.GET['options'],description=request.GET['optionsD'])
     
+    myjob_id = JobDescription.objects.filter(application__appName__exact=request.GET['application'], 
+                                             application__appVersion__exact=request.GET['version'],
+                                             options__content__exact=request.GET['options'],
+                                             options__description__exact=request.GET['optionsD'],
+                                             setup_project__content__exact=request.GET['setupproject'],
+                                             setup_project__description__exact=request.GET['setupprojectD']
+                                             )
+    if myjob_id.count() > 0:
+        return HttpResponse(json.dumps({ 'exists': True }))
+    else:
+        return HttpResponse(json.dumps({ 'exists' : False }))

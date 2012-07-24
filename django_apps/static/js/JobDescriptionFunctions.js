@@ -1,6 +1,12 @@
 //hide some elements on startup
 var myCurrent_page;
 var myChoosedJob_id = "";
+
+/*  								application				version				options				setupporject		div id */
+var dialogInputs = ["ApplicationDetails","VersionDetails","SetupProjectDetails","OptionsDetails","overviewDialogP"];
+var cloneInputs = ["ApplicationClone","VersionClone","SetupProjectClone","OptionsClone","overviewCloneP"];
+var editInputs = ["ApplicationEdit","VersionEdit","SetupProjectEdit","OptionsEdit","overviewEditP"];
+
 String.prototype.fulltrim=function(){
 	return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
 }
@@ -12,16 +18,62 @@ $(document).ready(function () {
 	$("#SetupProjectButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$("#dialog").hide();
 	$("#cloneDialog").hide();
+	$("#editDialog").hide();
 	$("#dialogClose").click(function () {$("#dialog").dialog("close");});
-	$("#dialogCloneClose").click(function () { $("#cloneDialog").dialog("close"); });
 	$("#goBackToDialog").click(function () { 
 				openWindow(myChoosedJob_id); 	
 				$("#cloneDialog").dialog("close");
 			});
+	$("#goBackToDialogEdit").click(function () { 
+				openWindow(myChoosedJob_id); 	
+				$("#editDialog").dialog("close");
+			});
 	$("#RunInDialog").click(function () { run(); });
 	$("#UploadResultsInDialog").click(function () { uploadResults(); });
 	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); });
-	$("#commitClone").click(function () { alert("Commit new jobDescription id under construction..."); });
+	$("#EditInDialog").click(function () { openEditWindow(myChoosedJob_id); });
+	$("#commitClone").click(function () { checkCommit(); });
+	$("#commitEdit").click(function() { alert("Under construction...") });
+	$("#overviewDialog").hide();
+	$("#overviewButtonClone").click(function () {
+		// check visibility
+		if ($("#overviewClone").is(":hidden")) {
+		// it's hidden - show it
+				$("#overviewClone").slideDown("normal");
+				$("#overviewImageClone").attr('src','https://alamages.cern.ch/arrow_upHelp.gif');
+				
+		} else {
+			// it's not hidden - slide it down
+				$("#overviewClone").slideUp("normal");
+				$("#overviewImageClone").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
+			}
+		});
+	$("#overviewButtonEdit").click(function () {
+		// check visibility
+		if ($("#overviewEdit").is(":hidden")) {
+		// it's hidden - show it
+				$("#overviewEdit").slideDown("normal");
+				$("#overviewImageEdit").attr('src','https://alamages.cern.ch/arrow_upHelp.gif');
+				
+		} else {
+			// it's not hidden - slide it down
+				$("#overviewEdit").slideUp("normal");
+				$("#overviewImageEdit").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
+			}
+		});
+	$("#overviewButton").click(function () {
+		// check visibility
+		if ($("#overviewDialog").is(":hidden")) {
+		// it's hidden - show it
+				$("#overviewDialog").slideDown("normal");
+				$("#overviewImage").attr('src','https://alamages.cern.ch/arrow_upHelp.gif');
+				
+		} else {
+			// it's not hidden - slide it down
+				$("#overviewDialog").slideUp("normal");
+				$("#overviewImage").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
+			}
+		});
 	$("#help").hide();
 	$("#helpButton").click(function () {
 		// check visibility
@@ -37,6 +89,98 @@ $(document).ready(function () {
 		});
 		
 });
+
+function checkCommit(){
+	version = document.getElementById("VersionClone").value.fulltrim();
+	options_content = document.getElementById("OptionsClone").value.fulltrim();
+	options_descr = document.getElementById("OptionsDClone").value.fulltrim();
+	setup_content = document.getElementById("SetupProjectClone").value.fulltrim();
+	setup_descr = document.getElementById("SetupProjectDClone").value.fulltrim();
+	
+	if (version == "" || options_content == "" || options_descr == ""){
+		alert("All fields must be filled (except the SetupProjects fields which can be null)!");
+		return;
+	}
+	
+	var platforms = getSelectedChildsOne("platformsClone");
+	if (platforms.length == 0){
+		alert("At least one platform must be checked!")
+		return;
+	}
+	var handlers = getSelectedChildsOne("handlersClone");
+	if (handlers.length == 0){
+		alert("At least one handler must be checked!")
+		return;
+	}
+
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function()
+	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			if (jsondata.exists)
+				alert("Job description already exists");
+			else 
+				alert("Job added (dummy function, doesn't really saves the new object)");
+    	}	
+  	}
+	
+	application = document.getElementById("ApplicationClone").value.fulltrim();
+	// send the request the to server
+	xmlhttp.open("GET", "/django/lhcbPR/commitClone?application="+application+"&version="+version+"&setupproject="
+	+setup_content+"&setupprojectD="+setup_descr+"&options="+options_content+"&optionsD="+options_descr
+	+"&platforms="+escape(platforms.join(","))+"&handlers="+escape(handlers.join(",")), true);
+	xmlhttp.send();
+	
+	return;
+	
+	//alert("Oooook :D");
+	//return;
+}
+
+function getSelectedChildsOne(id){
+	nodes = document.getElementById(id).children;
+	var sdValues = [];
+	for(i=0; i<nodes.length; i+=1) {
+    	if (nodes[i].checked == true){
+			sdValues.push(nodes[i].value);
+		}
+	}
+	return sdValues;
+}
+
+function makeOverview(div_id){
+	var myArray;
+	if (div_id == "dialog")
+		myArray = dialogInputs;
+	if (div_id == "cloneDialog")
+		myArray = cloneInputs;
+	if (div_id == "editDialog")
+		myArray = editInputs;
+
+	removeAllChilds(myArray[4]);	
+
+	box = document.getElementById(myArray[4]);
+	
+	box.appendChild(document.createTextNode("SetupProject "+document.getElementById(myArray[0]).value.fulltrim()+" "
+		+document.getElementById(myArray[1]).value.fulltrim()+" "
+		+document.getElementById(myArray[2]).value.fulltrim()));
+	box.appendChild(document.createElement("br"));
+	box.appendChild(document.createTextNode("gaudirun.py "+document.getElementById(myArray[3]).value.fulltrim()));
+
+	return;
+}
 
 function fixInputs(father, child, func,real_name,event){
 		var myvalue = $("#"+father).val();
@@ -65,12 +209,13 @@ function fixInputs(father, child, func,real_name,event){
 							$("#"+father).attr("readOnly","readonly");
 					}
 					else{
-						if (event == "onkeyup"){
-							$("#"+child).removeAttr('readOnly');
-							$("#"+child).val("");
+						if (event == "onkeyup"){					
+    					 		$("#"+child).removeAttr('readOnly');
+								$("#"+child).val("");	
 						}
 					}
-					
+					makeOverview("cloneDialog");
+					makeOverview("editDialog");
 				}
     		}	
 			// send the request the to server
@@ -102,7 +247,6 @@ function removeAllChilds(myId){
     	} 
 	}	
 	return;
-	//$("#"+myId).empty();
 }
 
 function getSelectedChilds(id){
@@ -174,8 +318,6 @@ function permalink(){
 }
 
 function openWindow(job_id){
-	box = document.getElementById("Jobs");
-
 	var xmlhttp;    
 	if (window.XMLHttpRequest){
 		// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -203,8 +345,10 @@ function openWindow(job_id){
 			document.getElementById("SetupProjectDDetails").value = jsondata.setupProjectD;		
 			
 			removeAllChilds("platformsDetails");	
+			removeAllChilds("handlersDetails");	
 			mybox = document.getElementById("platformsDetails");
-	
+			myboxHandlers = document.getElementById("handlersDetails");			
+
 			for(var i = 0; i < jsondata.platforms.length; i++){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
@@ -219,13 +363,31 @@ function openWindow(job_id){
 					mybox.appendChild(document.createElement("br"));
 					
 			}
+			for(var i = 0; i < jsondata.handlers.length; i++){
+					myInput = document.createElement("input");
+					myInput.type = "checkbox";	
+					myInput.value = jsondata.handlers[i].handler;
+					myInput.setAttribute('readOnly','readonly');
+					myInput.setAttribute('disabled','true');	
+					if (jsondata.handlers[i].checked)
+							myInput.setAttribute('checked','checked');
+						
+					myboxHandlers.appendChild(myInput);
+					myboxHandlers.appendChild(document.createTextNode(jsondata.handlers[i].handler));
+					myboxHandlers.appendChild(document.createElement("br"));
+					
+			}
 			myChoosedJob_id = job_id;
+				$("#overviewDialog").hide();
 				$("#dialog").dialog({
     				resizable: false,
-    				height: 700,
-    				width: 800,
-   					modal: true
+    				height: 550,
+    				width: 860,
+   					modal: true,
+					//overflow: auto,
 				});
+				//fix overview
+				makeOverview("dialog");
     	}	
   	}
 	// send the request the to server
@@ -235,9 +397,115 @@ function openWindow(job_id){
 	return;
 }
 
-function openCloneWindow(job_id){
-	box = document.getElementById("Jobs");
+function openEditWindow(job_id){
+	if (job_id == "")
+		return;
 
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function()
+	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			mydialog = document.getElementById("editDialog");
+			mydialog.title="Update existing "+jsondata.appName+" job description";
+					
+			document.getElementById("ApplicationEdit").value = jsondata.appName;
+			document.getElementById("VersionEdit").value = jsondata.appVersion;
+			document.getElementById("OptionsEdit").value = jsondata.options;
+			document.getElementById("OptionsDEdit").value = jsondata.optionsD;
+			document.getElementById("SetupProjectEdit").value = jsondata.setupProject;
+			document.getElementById("SetupProjectDEdit").value = jsondata.setupProjectD;		
+			
+			removeAllChilds("platformsEdit");
+			removeAllChilds("handlersEdit");	
+			mybox = document.getElementById("platformsEdit");
+			myboxHandler = document.getElementById("handlersEdit");
+	
+			for(var i = 0; i < jsondata.platforms.length; i++){
+					myInput = document.createElement("input");
+					myInput.type = "checkbox";	
+					myInput.value = jsondata.platforms[i].platform;
+					
+					if (jsondata.platforms[i].checked)
+							myInput.setAttribute('checked','true');
+					
+					mybox.appendChild(myInput);
+					mybox.appendChild(document.createTextNode(jsondata.platforms[i].platform));
+					mybox.appendChild(document.createElement("br"));		
+			}
+			for(var i = 0; i < jsondata.handlers.length; i++){
+					myInput = document.createElement("input");
+					myInput.type = "checkbox";	
+					myInput.value = jsondata.handlers[i].handler;
+					
+					if (jsondata.handlers[i].checked)
+							myInput.setAttribute('checked','true');
+					
+					myboxHandler.appendChild(myInput);
+					myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i].handler));
+					myboxHandler.appendChild(document.createElement("br"));		
+			}
+			$( "#VersionEdit" ).autocomplete({
+				source: jsondata.versionsAll
+			});
+			$( "#OptionsEdit" ).autocomplete({
+				source: jsondata.optionsAll
+			});
+			$( "#OptionsDEdit" ).autocomplete({
+				source: jsondata.optionsDAll
+			});
+			$( "#SetupProjectEdit" ).autocomplete({
+				source: jsondata.setupAll
+			});
+			$( "#SetupProjectDEdit" ).autocomplete({
+				source: jsondata.setupDAll
+			});
+			$('#VersionEdit').attr('readOnly','readOnly');
+			$('#OptionsEdit').attr('readOnly','readonly');
+			$('#SetupProjectEdit').attr('readOnly','readonly');
+			$('#OptionsDEdit').attr('readOnly','readonly');
+			$('#SetupProjectDEdit').attr('readOnly','readonly');
+
+			if (!jsondata.exists){
+				$('#OptionsDEdit').removeAttr('readOnly');
+				$('#SetupProjectDEdit').removeAttr('readOnly');
+				removeAllChilds('editMessage');
+				document.getElementById("editMessage").appendChild(document.createTextNode("JobDescription doesn't exist in runned jobs"));
+			}
+			else{
+				removeAllChilds("editMessage");
+				document.getElementById("editMessage").appendChild(document.createTextNode("Job description exists in runned jobs!"));
+			}
+			$('#overviewEdit').hide();
+			$("#editDialog").dialog({
+    			resizable: false,
+    			height: 530,
+    			width: 860,
+   				modal: true
+			});
+			makeOverview("editDialog");
+    	}	
+  	}
+	// send the request the to server
+	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id+"&editRequest=", true);
+	xmlhttp.send();
+	$("#dialog").dialog("close");
+	return;
+}
+
+
+function openCloneWindow(job_id){
 	if (job_id == "")
 		return;
 
@@ -267,8 +535,10 @@ function openCloneWindow(job_id){
 			document.getElementById("SetupProjectClone").value = jsondata.setupProject;
 			document.getElementById("SetupProjectDClone").value = jsondata.setupProjectD;		
 			
-			removeAllChilds("platformsClone");	
+			removeAllChilds("platformsClone");
+			removeAllChilds("handlersClone");	
 			mybox = document.getElementById("platformsClone");
+			myboxHandler = document.getElementById("handlersClone");
 	
 			for(var i = 0; i < jsondata.platforms.length; i++){
 					myInput = document.createElement("input");
@@ -282,28 +552,44 @@ function openCloneWindow(job_id){
 					mybox.appendChild(document.createTextNode(jsondata.platforms[i].platform));
 					mybox.appendChild(document.createElement("br"));		
 			}
+			for(var i = 0; i < jsondata.handlers.length; i++){
+					myInput = document.createElement("input");
+					myInput.type = "checkbox";	
+					myInput.value = jsondata.handlers[i].handler;
+					
+					if (jsondata.handlers[i].checked)
+							myInput.setAttribute('checked','true');
+					
+					myboxHandler.appendChild(myInput);
+					myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i].handler));
+					myboxHandler.appendChild(document.createElement("br"));		
+			}
 			$( "#VersionClone" ).autocomplete({
-				source: jsondata.versionsClone	
+				source: jsondata.versionsAll
 			});
 			$( "#OptionsClone" ).autocomplete({
-				source: jsondata.optionsClone	
+				source: jsondata.optionsAll
 			});
 			$( "#OptionsDClone" ).autocomplete({
-				source: jsondata.optionsDClone	
+				source: jsondata.optionsDAll
 			});
 			$( "#SetupProjectClone" ).autocomplete({
-				source: jsondata.setupClone	
+				source: jsondata.setupAll
 			});
 			$( "#SetupProjectDClone" ).autocomplete({
-				source: jsondata.setupDClone	
+				source: jsondata.setupDAll
 			});
 			
+			$('#OptionsClone').attr('readOnly','readonly');
+			$('#SetupProjectClone').attr('readOnly','readonly');
+			$('#overviewClone').hide();
 			$("#cloneDialog").dialog({
     			resizable: false,
-    			height: 700,
-    			width: 600,
+    			height: 530,
+    			width: 860,
    				modal: true
 			});
+			makeOverview("cloneDialog");
     	}	
   	}
 	// send the request the to server

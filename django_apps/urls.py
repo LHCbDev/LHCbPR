@@ -16,21 +16,19 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^lhcbPR/getFilters', 'getFilters'),
     url(r'^lhcbPR/getJobDetails','getJobDetails'),
     url(r'^lhcbPR/editRequests', 'editRequests'),
+    url(r'^lhcbPR/commitClone', 'commitClone'),
     
-    url(r'^lhcbPR/test', 'test'),
-    url(r'^lhcbPR/addnew/', 'addnew'),
-    #url(r'^lhcbPR/newdata/$', 'newdata'),
-    #url(r'^lhcbPR/newdata/service', 'handleRequest'),
-    #url(r'^lhcbPR/newdata/getFilters', 'getFilters'),
     
-)
-
-urlpatterns += patterns('generic.views',
-    url(r'^generic/$','index'),
-    url(r'^generic/results/$','choose'),
-    url(r'^generic/service/$','handleService'),
+    
 )
 
 urlpatterns += patterns('',
     url(r'^admin/', include(admin.site.urls)),
 )
+
+
+#urlpatterns += patterns('generic.views',
+#    url(r'^generic/$','index'),
+#    url(r'^generic/results/$','choose'),
+#    url(r'^generic/service/$','handleService'),
+#)

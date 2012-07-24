@@ -75,7 +75,7 @@ P {
 }
 
 #manifest A:hover { 
-  color: #00FF00; 
+  //color: #00FF00; 
 }
 #manifest A:active { 
   color: #00FF00; 
@@ -113,7 +113,7 @@ A:visited {
   color: #191970;
 }
 A:hover { 
-  color: #FFFF00; 
+  //color: #FFFF00; 
 }
 A:active { 
   color: #00FF00; 
@@ -162,7 +162,7 @@ A#projecticon img {
 }
 
 .crtitle A:hover { 
-  color: #EE7600;
+  //color: #EE7600;
 }
 
 .iconspace { 
@@ -198,7 +198,7 @@ A#projecticon img {
 }
 
 .pagebody A:hover { 
-  color: #EE7600 ;
+  //color: #EE7600 ;
 }
 
 .pagebody A:active { 
@@ -237,7 +237,7 @@ A#projecticon img {
   color: #FFFFFF;
 }
 .firstcell A:hover { 
-  color: #FFFF00; 
+  //color: #FFFF00; 
 }
 .firstcell A:active { 
   color: #00FF00;
@@ -253,7 +253,7 @@ TR.oddrow TD {
 
 
 #project_links A:hover{ 
-  color: #FFFF00;   
+  //color: #FFFF00;   
 }
 
 #requ { 
@@ -377,9 +377,8 @@ b {
     list-style: none;
     height: 15em;
     overflow: auto;
-    width: 13em;
+    width: 13.5em;
 }
-
 .checklist, .checklist li { margin: 0; padding: 0; }
 
 .checklist label {
@@ -391,7 +390,7 @@ b {
 /* This is css for styling the show/hide buttons */
 .bf_button {  
   display:block;
-  width: 10em; 
+  width: 10.5em; 
   //border: 1px solid #ccc;
   //border-radius: 0.5em;
   background: url('https://alamages.cern.ch/bf_button_fon_right.png') no-repeat 100%; 
@@ -608,3 +607,68 @@ ol#toc li {
 	color:#505160;
 		alignment-adjust:central;
 }
+/***** help button for dialog ***/
+#overviewDialog{ 
+  width : 320px;
+  height : 80px;
+  border-width: 1px;
+  border-color: #000000;
+  border-style: dashed; //solid;
+  border-radius: 0.5em;
+  background-color: #F5F5F5;
+  padding : 0.5em;
+  margin-top: 7px;
+  font-family: fantasy;
+}
+#overviewClone{ 
+   width : 320px;
+  height : 80px;
+  border-width: 1px;
+  border-color: #000000;
+  border-style: dashed; //solid;
+  border-radius: 0.5em;
+  background-color: #F5F5F5;
+  padding : 0.5em;
+  margin-top: 7px;
+  font-family: fantasy;
+}
+
+/***  divs fixing   **/
+
+div.Outer {
+        width: 700px;
+		height: 450px;
+        //border:dashed 1px black;
+        position: relative;
+        clear: both;
+}
+div.InnerLeft {
+        width:50%
+		position: relative;     
+        float: left;
+        }
+ 
+div.InnerRight {
+        width:49%
+		position: relative;        
+        float: right;
+} 
+
+div.OuterAll {
+        width: 820px;
+		height: 450px;
+        //border:dashed 1px black;
+        position: relative;
+        clear: both;
+}
+div.InnerLeftAll {
+        width:80%
+		position: relative;     
+        float: left;
+        }
+ 
+div.InnerRightAll {
+        width:19%
+		position: relative;        
+        float: right;
+} 
