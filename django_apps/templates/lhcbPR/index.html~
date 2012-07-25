@@ -6,7 +6,7 @@
 <!-- <script type="text/javascript" src="https://alamages.cern.ch/JobDescriptionFunctions.js"></script> -->
 
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
-<link rel="stylesheet" href="https://alamages.cern.ch/ComboBox.css" media="screen">
+
 <title>Home</title>
 </HEAD>
 <BODY>
@@ -45,9 +45,11 @@
 
 
 <div class="content">
+<!-- 
 <p>Welcome to the lhcb perfomance and regression.</p>
-<p>Choose one of the tabs(job descriptions or analyse) to go to the corresponding action.</p>
-
+<p>Choose one of the tabs(job descriptions or analyse) to go to the corresponding action.</p> 
+-->
+<button type="submit">peos</button>
 </div><!-- /class=content(main tabs)-->
 </div> <!-- closing div class=pagebody-->
 </BODY>

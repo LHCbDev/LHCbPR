@@ -296,6 +296,9 @@ def editRequests(request):
     
 @login_required
 def commitClone(request):
+    if 'update' in request.GET:
+        return HttpResponse(json.dumps({ 'updated' : True }))
+    
     app = Application(appName=request.GET['application'],appVersion=request.GET['version'])
     setup = SetupProject(content=request.GET['setupproject'],description=request.GET['setupprojectD'])
     opts = Options(content=request.GET['options'],description=request.GET['optionsD'])

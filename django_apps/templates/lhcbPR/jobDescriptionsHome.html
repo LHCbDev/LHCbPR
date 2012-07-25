@@ -65,7 +65,12 @@
 
 </div>
 <div id="content">
-<p>Choose one of the applications(select one the tabs)</p>
+<p style="font-family: fantasy;">Choose one of the applications(select one the tabs)</p><br>
+	{% for app in applications %}
+	<button name="{{ app }}button" onclick="location.href='/django/lhcbPR/jobDescriptions/{{ app }}'" style="padding:2em;margin-left:1em;">{{ app }}</button>
+	{% endfor %}
+
+
 </div><!-- closing div id=content-->
 </div><!-- /class=content(main tabs)-->
 </div> <!-- closing div class=pagebody-->

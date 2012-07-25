@@ -1,5 +1,8 @@
 <html>
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<style>
+	ui-widget-overlay { opacity: .30;filter:Alpha(Opacity=30); }
+</style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://alamages.cern.ch/bubble-tooltip.js"></script>
@@ -390,7 +393,7 @@ onclick="">Close</button></span>
 <p id="overviewEditP" style="line-height:160%;font-size:14px;"></p>
 </div>
 <br>
-<span id="editMessage" style="font-family: Italics;font-size:12px;padding:0.5em;"><span>
+<span id="editMessage" style="font-family: Italics;font-size:14px;padding:0.5em;"><span>
 </div> <!-- closing the JobDescriptionDetails-->
 
 <div class="InnerRight" style="margin-top:0.5em;width:width:360px; height:400px;border-style:solid;border-width:1px;border-radius: 1em; padding:1em;">

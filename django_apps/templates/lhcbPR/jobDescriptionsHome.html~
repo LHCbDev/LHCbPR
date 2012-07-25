@@ -6,7 +6,7 @@
 <script type="text/javascript" src="https://alamages.cern.ch/JobDescriptionFunctions.js"></script>
 
 <link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
-<link rel="stylesheet" href="https://alamages.cern.ch/ComboBox.css" media="screen">
+
 <title>Job descriptions</title>
 </HEAD>
 <BODY>
@@ -65,7 +65,12 @@
 
 </div>
 <div id="content">
-<p>Choose one of the applications(select one the tabs)</p>
+<p>Choose one of the applications(select one the tabs)</p><br>
+	{% for app in applications %}
+	<button name="{{ app }}button" onclick="location.href='/django/lhcbPR/jobDescriptions/{{ app }}'" style="padding:2em;margin-left:1em;">{{ app }}</button>
+	{% endfor %}
+
+
 </div><!-- closing div id=content-->
 </div><!-- /class=content(main tabs)-->
 </div> <!-- closing div class=pagebody-->

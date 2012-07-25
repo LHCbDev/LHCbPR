@@ -2,7 +2,7 @@
 var myCurrent_page;
 var myChoosedJob_id = "";
 
-/*  								application				version				options				setupporject		div id */
+/*	application	version	options	setupporject	div	id */
 var dialogInputs = ["ApplicationDetails","VersionDetails","SetupProjectDetails","OptionsDetails","overviewDialogP"];
 var cloneInputs = ["ApplicationClone","VersionClone","SetupProjectClone","OptionsClone","overviewCloneP"];
 var editInputs = ["ApplicationEdit","VersionEdit","SetupProjectEdit","OptionsEdit","overviewEditP"];
@@ -10,6 +10,7 @@ var editInputs = ["ApplicationEdit","VersionEdit","SetupProjectEdit","OptionsEdi
 String.prototype.fulltrim=function(){
 	return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
 }
+
 
 $(document).ready(function () {
     $("#Platform").hide();
@@ -33,7 +34,7 @@ $(document).ready(function () {
 	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); });
 	$("#EditInDialog").click(function () { openEditWindow(myChoosedJob_id); });
 	$("#commitClone").click(function () { checkCommit(); });
-	$("#commitEdit").click(function() { alert("Under construction...") });
+	$("#commitEdit").click(function() { checkUpdate();});
 	$("#overviewDialog").hide();
 	$("#overviewButtonClone").click(function () {
 		// check visibility
@@ -89,6 +90,59 @@ $(document).ready(function () {
 		});
 		
 });
+function checkUpdate(){
+	version = document.getElementById("VersionEdit").value.fulltrim();
+	options_content = document.getElementById("OptionsEdit").value.fulltrim();
+	options_descr = document.getElementById("OptionsDEdit").value.fulltrim();
+	setup_content = document.getElementById("SetupProjectEdit").value.fulltrim();
+	setup_descr = document.getElementById("SetupProjectDEdit").value.fulltrim();
+	
+	if (version == "" || options_content == "" || options_descr == ""){
+		alert("All fields must be filled (except the SetupProjects fields which can be empty)!");
+		return;
+	}
+	
+	var platforms = getSelectedChildsOne("platformsEdit");
+	if (platforms.length == 0){
+		alert("At least one platform must be checked!")
+		return;
+	}
+	var handlers = getSelectedChildsOne("handlersEdit");
+	if (handlers.length == 0){
+		alert("At least one handler must be checked!")
+		return;
+	}
+
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function()
+	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			if (jsondata.updated)
+				alert("Job description updated successfully(dummy function, doesn't really updates the new object)");
+    	}	
+  	}
+	
+	application = document.getElementById("ApplicationClone").value.fulltrim();
+	// send the request the to server
+	xmlhttp.open("GET", "/django/lhcbPR/commitClone?application="+application+"&version="+version+"&setupproject="
+	+setup_content+"&setupprojectD="+setup_descr+"&options="+options_content+"&optionsD="+options_descr
+	+"&platforms="+escape(platforms.join(","))+"&handlers="+escape(handlers.join(","))+"&update=", true);
+	xmlhttp.send();
+	
+	return;
+}
 
 function checkCommit(){
 	version = document.getElementById("VersionClone").value.fulltrim();
@@ -98,7 +152,7 @@ function checkCommit(){
 	setup_descr = document.getElementById("SetupProjectDClone").value.fulltrim();
 	
 	if (version == "" || options_content == "" || options_descr == ""){
-		alert("All fields must be filled (except the SetupProjects fields which can be null)!");
+		alert("All fields must be filled (except the SetupProjects fields which can be empty)!");
 		return;
 	}
 	
@@ -144,9 +198,6 @@ function checkCommit(){
 	xmlhttp.send();
 	
 	return;
-	
-	//alert("Oooook :D");
-	//return;
 }
 
 function getSelectedChildsOne(id){
@@ -173,9 +224,7 @@ function makeOverview(div_id){
 
 	box = document.getElementById(myArray[4]);
 	
-	box.appendChild(document.createTextNode("SetupProject "+document.getElementById(myArray[0]).value.fulltrim()+" "
-		+document.getElementById(myArray[1]).value.fulltrim()+" "
-		+document.getElementById(myArray[2]).value.fulltrim()));
+	box.appendChild(document.createTextNode("SetupProject "+document.getElementById(myArray[0]).value.fulltrim()+" "+document.getElementById(myArray[1]).value.fulltrim()+" "+document.getElementById(myArray[2]).value.fulltrim()));
 	box.appendChild(document.createElement("br"));
 	box.appendChild(document.createTextNode("gaudirun.py "+document.getElementById(myArray[3]).value.fulltrim()));
 
@@ -384,7 +433,6 @@ function openWindow(job_id){
     				height: 550,
     				width: 860,
    					modal: true,
-					//overflow: auto,
 				});
 				//fix overview
 				makeOverview("dialog");
@@ -478,6 +526,7 @@ function openEditWindow(job_id){
 			$('#SetupProjectDEdit').attr('readOnly','readonly');
 
 			if (!jsondata.exists){
+				$('#VersionEdit').removeAttr('readOnly');
 				$('#OptionsDEdit').removeAttr('readOnly');
 				$('#SetupProjectDEdit').removeAttr('readOnly');
 				removeAllChilds('editMessage');
