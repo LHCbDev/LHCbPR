@@ -683,3 +683,18 @@ div.InnerRightAll {
 		position: relative;        
         float: right;
 } 
+
+
+/*** testing  **/
+
+#navigation {
+	border-right:1px solid black;
+	padding:10px 0px;
+	width:145px;
+}
+#navigation a  {
+	display:block;
+	background:url(navigation.png);
+	height:47px;
+	text-indent:-9000px;
+}

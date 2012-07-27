@@ -632,7 +632,18 @@ ol#toc li {
   margin-top: 7px;
   font-family: fantasy;
 }
-
+#overviewEdit{ 
+   width : 320px;
+  height : 80px;
+  border-width: 1px;
+  border-color: #000000;
+  border-style: dashed; //solid;
+  border-radius: 0.5em;
+  background-color: #F5F5F5;
+  padding : 0.5em;
+  margin-top: 7px;
+  font-family: fantasy;
+}
 /***  divs fixing   **/
 
 div.Outer {
@@ -672,3 +683,18 @@ div.InnerRightAll {
 		position: relative;        
         float: right;
 } 
+
+
+/*** testing  **/
+
+#navigation {
+	border-right:1px solid #999;
+	padding:10px 0px;
+	width:145px;
+}
+#navigation a  {
+	display:block;
+	background:url(navigation.png);
+	height:47px;
+	text-indent:-9000px;
+}

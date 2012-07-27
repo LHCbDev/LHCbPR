@@ -303,13 +303,20 @@ def commitClone(request):
     setup = SetupProject(content=request.GET['setupproject'],description=request.GET['setupprojectD'])
     opts = Options(content=request.GET['options'],description=request.GET['optionsD'])
     
-    myjob_id = JobDescription.objects.filter(application__appName__exact=request.GET['application'], 
-                                             application__appVersion__exact=request.GET['version'],
-                                             options__content__exact=request.GET['options'],
-                                             options__description__exact=request.GET['optionsD'],
-                                             setup_project__content__exact=request.GET['setupproject'],
-                                             setup_project__description__exact=request.GET['setupprojectD']
-                                             )
+    if request.GET['setupproject'] or request.GET['setupprojectD'] != '':
+        myjob_id = JobDescription.objects.filter(application__appName__exact=request.GET['application'], 
+                                                 application__appVersion__exact=request.GET['version'],
+                                                 options__content__exact=request.GET['options'],
+                                                 options__description__exact=request.GET['optionsD'],
+                                                 setup_project__content__exact=request.GET['setupproject'],
+                                                 setup_project__description__exact=request.GET['setupprojectD']
+                                                 )
+    else:
+        myjob_id = JobDescription.objects.filter(application__appName__exact=request.GET['application'], 
+                                                 application__appVersion__exact=request.GET['version'],
+                                                 options__content__exact=request.GET['options'],
+                                                 options__description__exact=request.GET['optionsD'],
+                                                 )
     if myjob_id.count() > 0:
         return HttpResponse(json.dumps({ 'exists': True }))
     else:

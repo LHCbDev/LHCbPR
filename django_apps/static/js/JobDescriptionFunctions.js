@@ -88,7 +88,37 @@ $(document).ready(function () {
 				$("#helpImage").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
 			}
 		});
-		
+
+/* $("#commitClone").click(function () { 
+	$version = $.trim($("#VersionClone").val().fulltrim());
+	$options_content = $.trim($("#OptionsClone").val());
+	$options_descr = $.trim($("#OptionsDClone").val());
+	$setup_content = $.trim($("#SetupProjectClone").val());
+	$setup_descr = $.trim($("#SetupProjectDClone").val());
+	$application = $.trim($("#ApplicationClone").val());
+
+	$.ajax({
+    	'url' : '/django/lhcbPR/commitClone',
+		'type' : 'GET',
+		'data' : {
+		'application' : $application,
+		'version' : $version, 
+		'setupproject' : $setup_content,
+		'setupprojectD' : $setup_descr,
+		'options' : $options_content,
+		'optionsD' : $options_descr,	
+		},
+    	'success' : function(data) {
+			 var jsondata = $.parseJSON(data);
+			if (jsondata.exists)
+				alert("Job description already exists");
+			else 
+				alert("Job added (dummy function, doesn't really saves the new object)");
+      	}
+    });
+ });
+*/
+
 });
 function checkUpdate(){
 	version = document.getElementById("VersionEdit").value.fulltrim();
@@ -153,6 +183,11 @@ function checkCommit(){
 	
 	if (version == "" || options_content == "" || options_descr == ""){
 		alert("All fields must be filled (except the SetupProjects fields which can be empty)!");
+		return;
+	}
+	
+	if ((setup_content == "" && setup_descr != "") || (setup_content != "" && setup_descr == "")){
+		alert("SetupProject fields must be both filled or both empty!");
 		return;
 	}
 	

@@ -1,8 +1,5 @@
 <html>
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<style>
-	ui-widget-overlay { opacity: .30;filter:Alpha(Opacity=30); }
-</style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://alamages.cern.ch/bubble-tooltip.js"></script>
@@ -119,6 +116,18 @@ function doFilter(requested_page){
 </ol>
 
 <div class="content">
+<ul id="navigation">
+    <li><a href="#" class="link1">Home</a></li>
+    <li><a href="#" class="link2">Metal</a></li>
+    <li><a href="#" class="link3">Plastic</a></li>
+    <li><a href="#" class="link4">Services</a></li>
+    <li><a href="#" class="link5">News</a></li>
+    <li><a href="#" class="link6">Catalog</a></li>
+    <li><a href="#" class="link7">About Us</a></li>
+    <li><a href="#" class="link8">Contact</a></li>
+    <li><a href="#" class="link9">Registered Users</a></li>
+</ul>
+
 <span id="helpButton" style="cursor:pointer;">
 <img id="helpImage" style="width:11px;height:11px;" src="https://alamages.cern.ch/arrow-downHelp.png" title="show help message"/>
 <a href="javascript:;" style="font-family: Palatino;" >help</a>
