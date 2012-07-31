@@ -32,7 +32,10 @@ def makeQuery(statement,arguments,operator):
     return combineStatements(dataDict, operator)
     
 def test(request):
-    pass
+    myauth = request.user.is_authenticated()
+    myDict = { 'myauth' : myauth, 'user' : request.user}
+    return render_to_response('lhcbPR/index.html', myDict,
+                  context_instance=RequestContext(request))
  
 def makeList(mylist,key):
     List = []
@@ -52,7 +55,7 @@ def makeListChecked(mylist,key,are_checked = []):
 def index(request):
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user}
-    return render_to_response('lhcbPR/index.html', myDict,
+    return render_to_response('lhcbPR/indexOf.html', myDict,
                   context_instance=RequestContext(request))
 
 @login_required  #login_url="login"

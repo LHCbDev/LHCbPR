@@ -12,11 +12,26 @@ String.prototype.fulltrim=function(){
 }
 
 
+var opts = {
+	lines: 13, // The number of lines to draw
+	length: 7, // The length of each line
+	width: 4, // The line thickness
+	radius: 10, // The radius of the inner circle
+	rotate: 0, // The rotation offset
+	color: '#000', // #rgb or #rrggbb
+	speed: 1, // Rounds per second
+	trail: 60, // Afterglow percentage
+	shadow: false, // Whether to render a shadow
+	hwaccel: false, // Whether to use hardware acceleration
+	className: 'spinner', // The CSS class to assign to the spinner
+	zIndex: 2e9, // The z-index (defaults to 2000000000)
+	top: 'auto', // Top position relative to parent in px
+	left: 'auto' // Left position relative to parent in px
+};
+  
 $(document).ready(function () {
     $("#Platform").hide();
-	$("#PlatformButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$("#SetupProject").hide();
-	$("#SetupProjectButton").css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
 	$("#dialog").hide();
 	$("#cloneDialog").hide();
 	$("#editDialog").hide();
@@ -314,11 +329,13 @@ function showHide( button_id, box_id )
 		if ($("#"+box_id).is(":hidden")) {
 			// it's hidden - show it
 				$("#"+box_id).slideDown("slow");
-				$("#"+button_id).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right.png)');
+				$("#"+button_id).find('span').removeClass('ui-icon-plusthick');
+				$("#"+button_id).find('span').addClass('ui-icon-minusthick');
 		} else {
 			// it's not hidden - slide it down
 				$("#"+box_id).slideUp("slow");
-				$("#"+button_id).css('background-image','url(https://alamages.cern.ch/bf_button_fon_right_plus.png)');
+				$("#"+button_id).find('span').removeClass('ui-icon-minusthick');
+				$("#"+button_id).find('span').addClass('ui-icon-plusthick');
 			}
 		});
 }

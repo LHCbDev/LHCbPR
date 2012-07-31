@@ -17,6 +17,7 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^lhcbPR/getJobDetails','getJobDetails'),
     url(r'^lhcbPR/editRequests', 'editRequests'),
     url(r'^lhcbPR/commitClone', 'commitClone'),
+    url(r'^lhcbPR/test', 'test')
     
     
     

@@ -1,430 +1,180 @@
 <html>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://alamages.cern.ch/bubble-tooltip.js"></script>
-<script type="text/javascript" src="https://alamages.cern.ch/JobDescriptionFunctions.js"></script>
-<script type="text/javascript">
-$(document).ready(function () {
- 	$(document.getElementsByName("{{ active_tab }}tab")).attr('id',   'selected');
-   	doFilter({{ current_page}});
-});
-function doFilter(requested_page){
-	box = document.getElementById("Jobs");
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>{{ active_tab }} job </title>
+		<link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
+		<script type="text/javascript" src="/static/js/bubble-tooltip.js"></script>
+		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
+		<script type="text/javascript" src="/static/js/spin.js"></script>
+		<!-- plugin for menu effect-->
+		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#menu').buttonset();
+				/* on click functions for the menus */
+				$('#homeMenu').click(function(){ document.location.href="/django/lhcbPR" });
+				$('#jobDescriptionsMenu').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions" });
+				$('#analyseMenu').click(function(){ document.location.href="/django/lhcbPR/analyse" });
+				
+				{% for app in applications %}
+				$('#{{ app }}tabButton').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions/{{ app }}" });
+				{% endfor %}
 
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
+				$('#tabs').tabs({ selected : -1, spinner: "Retrieving data..."});
+				$('#tabs').tabs('select', '#{{ active_tab }}tab');
+				
+				$('#VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase').hover(
+					function() { $(this).addClass('ui-state-hover'); },
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
 
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
-			var jobs = jsondata.jobs;
-			var pageInfo = jsondata.page_info;
-			removeAllChilds("Jobs"); 
-			addJobs("Jobs",box,jobs);
-			
-			removeAllChilds("pages");
-			removeAllChilds("nextprevious");
-			myCurrent_page = pageInfo.current_page;
-			document.getElementById("pages").appendChild(document.createTextNode("Page "+pageInfo.current_page+" of "+pageInfo.num_of_pages));
-			nextPrevious = document.getElementById("nextprevious");
-			
-			if (pageInfo.current_page > 1){
-				Aprevious = document.createElement("a");
-				Aprevious.setAttribute('href','javascript:;');
-				var functionFilter = "doFilter("+(pageInfo.current_page-1)+")";
-				Aprevious.setAttribute('onclick', functionFilter);
-				Aprevious.appendChild(document.createTextNode("previous"));
-				nextPrevious.appendChild(Aprevious);
-				nextPrevious.appendChild(document.createTextNode(" | "));
-			}
-			if ( pageInfo.current_page < pageInfo.num_of_pages ){
-				if (pageInfo.current_page <= 1)
-					nextPrevious.appendChild(document.createTextNode(" | "));
-				Anext = document.createElement("a");
-				Anext.setAttribute('href','javascript:;');
-				var functionFilter = "doFilter("+(pageInfo.current_page+1)+")";
-				Anext.setAttribute('onclick', functionFilter);
-				Anext.appendChild(document.createTextNode("next"));
-				nextPrevious.appendChild(Anext);	
-			}
-			
-			//fix the permalink
-			permalink();
-    	}	
-  	}
-	var setupprojects = getSelectedChilds("SetupProject");
-	var appVersions = getSelectedChilds("Version");
-	
-	var options = getSelectedChilds("Options");
-	var cmts = getSelectedChilds("Platform");	
+			  $("#VersionButton").click(function(){ showHide("VersionButton","Version") });
+			  $("#OptionsButton").click(function(){ showHide("OptionsButton","Options") });
+			  $("#PlatformButton").click(function(){ showHide("PlatformButton","Platform") });
+			  $("#SetupProjectButton").click(function(){ showHide("SetupProjectButton","SetupProject") });
+			  $("#VersionErase").click(function(){ clearCheckBox("Version") });
+			  $("#OptionsErase").click(function(){ clearCheckBox("Options") });
+			  $("#PlatformErase").click(function(){ clearCheckBox("Platform") });
+			  $("#SetupProjectErase").click(function(){ clearCheckBox("SetupProject") });
 
-	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getFilters?page="+requested_page+"&app={{ active_tab }}"+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&platforms="+escape(cmts.join(",")), true);
-	xmlhttp.send();
-	
-	return;
-}
-</script>
-
-<link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
-
-<title>{{ active_tab }} job descriptions</title>
-</HEAD>
-<BODY>
-<div class="ctitle">
-<TABLE id="pagetitle">
-<TBODY>
-<TR>
-<TD class=iconspace>
-<A href="http://cern.ch/lhcb-comp">
-<IMG id=lhcblogo  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
-</A>
-</TD>
-<TD vAlign=middle align=center>
-<H1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></H1>
-
-<div style="float: right;">
-{% if myauth %}
-<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
-{% else %}
-<a href="https://alamages.cern.ch/django/login/"> Login</a>
-{% endif %}
-</div><!-- closing div ^^-->
-
-</TD>
-</TR>
-</TBODY>
-</TABLE>
-</div><!-- closing div class="ctitle"-->
-<div class=pagebody >
-<ol id="toc">
-    <li><a href="/django/lhcbPR">Home</a></li>
-
-    <li class="current"><a href="/django/lhcbPR/jobDescriptions">Job Descriptions</a></li>
-    <li><a href="/django/lhcbPR/analyse">Analyse</a></li>
-</ol>
-
-<div class="content">
-<ul id="navigation">
-    <li><a href="#" class="link1">Home</a></li>
-    <li><a href="#" class="link2">Metal</a></li>
-    <li><a href="#" class="link3">Plastic</a></li>
-    <li><a href="#" class="link4">Services</a></li>
-    <li><a href="#" class="link5">News</a></li>
-    <li><a href="#" class="link6">Catalog</a></li>
-    <li><a href="#" class="link7">About Us</a></li>
-    <li><a href="#" class="link8">Contact</a></li>
-    <li><a href="#" class="link9">Registered Users</a></li>
-</ul>
-
-<span id="helpButton" style="cursor:pointer;">
-<img id="helpImage" style="width:11px;height:11px;" src="https://alamages.cern.ch/arrow-downHelp.png" title="show help message"/>
-<a href="javascript:;" style="font-family: Palatino;" >help</a>
-</span>
-<div id="help">
-<p> That's some help text about the page </p>
-</div><!-- closing div id=help-->
-
-<br>
-<br>
+				var opts = {
+  					lines: 13, // The number of lines to draw
+   					 length: 7, // The length of each line
+   					 width: 4, // The line thickness
+   					 radius: 10, // The radius of the inner circle
+   					 rotate: 0, // The rotation offset
+   					 color: '#000', // #rgb or #rrggbb
+   					 speed: 1, // Rounds per second
+   					 trail: 60, // Afterglow percentage
+   					 shadow: false, // Whether to render a shadow
+   					 hwaccel: false, // Whether to use hardware acceleration
+  					  className: 'spinner', // The CSS class to assign to the spinner
+  					  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  					  top: 'auto', // Top position relative to parent in px
+  					  left: 'auto' // Left position relative to parent in px
+  					};
+  					var target = document.getElementById('foo');
+  					var spinner = new Spinner(opts).spin(target);
+			});
+		</script>
+</head>
 <div id="header">
-<ul>
-	{% for app in applications %}
-	<li name="{{ app }}tab"><a href="/django/lhcbPR/jobDescriptions/{{ app }}">{{ app }}</a></li>
-	{% endfor %}
-</ul>
+	<div class="ctitle">
+		<table id="pagetitle">
+			<tr>
+				<td class="iconspace">
+					<a href="http://cern.ch/lhcb-comp">
+						<img id="lhcblogo"  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
+					</a>
+			</td>
+			<td class="headTitle">
+				<h1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
+				<div class="headLogin">
+					{% if myauth %}
+					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
+					{% else %}
+					<a href="/django/login/"> Login</a>
+					{% endif %}
+				</div><!-- closing div ^^-->
+			</td>
+		</table>
+	</div> <!-- /ctitle -->
 
-</div>
+	<div id="menu">
+		<input type="radio" id="homeMenu" name="radio" /><label for="homeMenu">Home</label>
+		<input type="radio" id="jobDescriptionsMenu" name="radio" checked="checked" /><label for="jobDescriptionsMenu">Job Descriptions</label>
+		<input type="radio" id="analyseMenu" name="radio" /><label for="analyseMenu">Analyse</label>
+	</div>
+</div> <!-- /header-->
 
-<div id="content">
-<div style="overflow: auto;">
-<a  id="mypermalink" href="" style="float : right; font-family: fantasy;" target="_blank"
-onmouseover="showToolTip(event,'This saves the current selection as bookmark (opens new tab)');return false" onmouseout="hideToolTip()"> Permalink to selection </a>
-<div id="myfilter" style="float : left;">
-<table class="sample">
-<tr>
-<td><a id="VersionButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Version")'><span>Version</span> </a>
-<img id="erase_button" onclick='clearCheckBox("Version")' src="https://alamages.cern.ch/eraser2.png" title="clear checkbox" style="width: 20px; height: 20px;margin: 0 0 0 0.5em;cursor:pointer;"/></td>
-<tr>
-<td>
-    <ul id="Version" name="Version" class="checklist"  >
-	{% for ver in appVersions %}
-		<li>
-				<label id="Version{{ forloop.counter }}">
-					<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver.value }}" onchange="doFilter(1)" {% if ver.checked %} checked="checked" {% endif %}>
-						{{ ver.value }}
-				 </label>
-		</li>
-	{% endfor %}
-    </ul>
-</td>
-<tr>
-<td><a id="OptionsButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Options")'><span>Options</span> </a>
-<img id="erase_button" onclick='clearCheckBox("Options")' src="https://alamages.cern.ch/eraser2.png" title="clear checkbox" style="width: 20px; height: 20px;margin: 0 0 0 0.5em;cursor:pointer;"/></td>
-<tr>
-<td>
-    <ul id="Options" name="Options" class="checklist" >
-		{% for opt in options %}
-		<li>
-				<label id="Options{{ forloop.counter }}">
-					<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt.value }}" onchange="doFilter(1)" {% if opt.checked %} checked="checked"  {% endif %}>
-						{{ opt.value }}
-				 </label>
-		</li>
-	{% endfor %}
-</td>
-<tr>
-<td><a id="SetupProjectButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"SetupProject")'><span>SetupProject</span> </a>
-<img id="erase_button" onclick='clearCheckBox("SetupProject")' src="https://alamages.cern.ch/eraser2.png" title="clear checkbox" style="width: 20px; height: 20px;margin: 0 0 0 0.5em;cursor:pointer;"/></td> 
-<tr>
-<td>
-    <ul id="SetupProject" name="SetupProject" class="checklist" >
-	{% for setup in setupProject %}
-		<li>
-				<label id="SetupProject{{ forloop.counter }}">
-					<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup.value }}" onchange="doFilter(1)" {% if setup.checked %} checked="checked" {% endif %}>
-						{{ setup.value }}
-				 </label>
-		</li>
-	{% endfor %}
-    </ul>
-</td>
-<tr>
-<td><a id="PlatformButton" href="javascript:;"  class="bf_button" onclick='showHide(this.id,"Platform")'><span>Platform</span> </a>
-<img id="erase_button" onclick='clearCheckBox("Platform")' src="https://alamages.cern.ch/eraser2.png" title="clear checkbox" style="width: 20px; height: 20px;margin: 0 0 0 0.5em;cursor:pointer;"/></td>
-<tr>
-<td>
-    <ul id="Platform" name="Platform" class="checklist">
-	{% for plat in platforms %}
-		<li>
-				<label id="Platform{{ forloop.counter }}">
-					<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.value }}" onchange="doFilter(1)" {% if plat.checked %} checked="checked"  {% endif %}>
-						{{ plat.value }}
-				 </label>
-		</li>
-	{% endfor %}
-    </ul>
-</td>
-</table>
-
-</div><!-- closing div id=myfilter -->
-
-<div style="float : middle; padding : 2em 0 0 15em;">
-<div id="button">
-<ul id="Jobs">
-<ul>
-</div><!-- closing button div ^^ -->
-<span id="pages" style="font-family: Verdana;"></span><br> <!--  Page 1 of 1  -->
-<span id="nextprevious" style="font-family: Palatino;"> </span> <!-- <a href="#">previous</a> | <a href="#" > next </a>  --> 
-</div> <!-- same here -->
-</div><!-- closing the scrollable div -->
-</div><!-- closing div id=content-->
-</div><!-- /class=content(main tabs)-->
-</div> <!-- closing div class=pagebody-->
-
-<!----------------------------------------------------------------- official dialog --------------------------------------------------------------------------------------------------------------->
-<div id="dialog" title="" >
-<div class="OuterAll">
-<div class="InnerLeftAll">
-<div class="Outer">
-
-<div class="InnerLeft" id="JobDescriptionDetails" style="margin-top:0.5em;float:left;width:340px;height:200px;border-width: 1px;border-style: solid;border-radius: 1em; padding:1em;">
-<table class="sample"><tr>
-<td style="text-align:right;padding:0.5em;">Application:</td>
-<td><input id="ApplicationDetails" type="text" value=""  readOnly="readonly" /></td><tr>
-<td style="text-align:right;padding:0.5em;">Version:</td>
-<td><input id="VersionDetails" type="text" value="" readOnly="readonly"/></td>
-<tr>
-<td style="text-align:right;padding:0.5em;">Options:</td>
-<td><input id="OptionsDDetails"type="text" value="" readOnly="readonly" /></td><tr>
-<td style="text-align:right;padding:0.5em;"></td>
-<td><input id="OptionsDetails" type="text" value="" readOnly="readonly" /></td>
-<tr>
-<td style="text-align:right;padding:0.5em;">SetupProject:</td>
-<td><input id="SetupProjectDDetails" type="text" value="" readOnly="readonly"/></td><tr>
-<td style="text-align:right;padding:0.5em;"></td>
-<td><input id="SetupProjectDetails" type="text" value="" readOnly="readonly"/></td>
-</table><br>
-
-<div id="overviewButton" style="cursor:pointer;margin-top: 7px;width:100px;"> <!--  position : absolute; left:0;bottom:0;margin-bottom:6em;margin-left: 1em;  -->
-<img id="overviewImage" style="width:11px;height:11px;" src="https://alamages.cern.ch/arrow-downHelp.png" title="show help message"/>
-<a href="javascript:;" style="font-family: Palatino;" >Overview</a>
-</div>
-<div id="overviewDialog" >
-<p id="overviewDialogP" style="line-height:160%;font-size:14px;"></p>
-</div>
-
-</div> <!-- closing the JobDescriptionDetails-->
-
-<div class="InnerRight" style="margin-top:0.5em;width:width:360px; height:400px;border-style:solid;border-width:1px;border-radius: 1em; padding:1em;">
-<span>Requested platforms: </span>
-<p  id="platformsDetails" 
-		style="overflow:auto;width: 245px;height:155px;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 1em;">
-</p>
-</span>
-<span>Handlers: </span>
-<p  id="handlersDetails" 
-		style="overflow:auto;width: 245px;height:150px;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 1em;">
-</p>
-</span>
-</div><!-- /innerRight -->
-</div> <!-- /outer-->
-</div> <!-- InnerleftAll -->
-<div class="InnerRightAll" style="margin-top:0.5em;">
-<span ><button id="RunInDialog" type="button" style="padding: 10px">Run</button></span><br><br>
-<span ><button id="CloneInDialog" type="button" style="padding: 10px">Clone</button></span><br><br>
-<span ><button id="EditInDialog" type="button" style="padding: 10px">Edit</button></span><br><br>
-</div>
-</div> <!--  /outerAll  -->
-<br><br>
-<span style="padding:1em;position:absolute;bottom:0;right:0;"><button id="dialogClose" type="button" style="padding: 10px;"
-onclick="">Close</button></span>
-</div> <!-- closing the  dialog -->
-
-<!----------------------------------------------------------------- Clone dialog --------------------------------------------------------------------------------------------------------------->
-<div id="cloneDialog">
-
-<div class="OuterAll">
-<div class="InnerLeftAll">
-<div class="Outer">
-
-<div class="InnerLeft" id="JobDescriptionClone" style="margin-top:0.5em;float:left;width:340px;height:200px;border-width: 1px;border-style: solid;border-radius: 1em; padding:1em;">
-<table class="sample"><tr>
-<td style="text-align:right;padding:0.5em;">Application:</td>
-<td><input id="ApplicationClone" type="text" value=""  readOnly="readonly" /></td><tr>
-<td style="text-align:right;padding:0.5em;">Version:</td>
-
-<td><input id="VersionClone" type="text" value="" onblur="makeOverview('cloneDialog')" onkeyup="makeOverview('cloneDialog')"></td>
-<tr>
-<td style="text-align:right;padding:0.5em;">Options:</td>
-<td><input id="OptionsDClone" type="text" value="" onblur="fixInputs('OptionsDClone','OptionsClone','description','Options','onkeyup')" onkeyup="fixInputs('OptionsDClone','OptionsClone','description','Options','onkeyup')" /></td>
-<tr>
-<td style="text-align:right;padding:0.5em;"></td>
-<td><input id="OptionsClone" type="text" value="" onblur="fixInputs('OptionsClone','OptionsDClone','content','Options','onblur')" readOnly="readonly" /></td>
-<tr>
-<td style="text-align:right;padding:0.5em;">SetupProject:</td>
-<td><input id="SetupProjectDClone" type="text" value="" onblur="fixInputs('SetupProjectDClone','SetupProjectClone','description','SetupProject','onkeyup')" onkeyup="fixInputs('SetupProjectDClone','SetupProjectClone','description','SetupProject','onkeyup')" /></td>
-<tr>
-<td style="text-align:right;padding:0.5em;"></td>
-<td><input id="SetupProjectClone" type="text" value="" onblur="fixInputs('SetupProjectClone','SetupProjectDClone','content','SetupProject','onblur')" readOnly="readonly"/></td>
-</table><br>
-
-<div id="overviewButtonClone" style="cursor:pointer;margin-top: 7px;width:100px;"> 
-
-<img id="overviewImageClone" style="width:11px;height:11px;" src="https://alamages.cern.ch/arrow-downHelp.png" title="show help message"/>
-<a href="javascript:;" style="{font-family: Palatino;} :hover {background: black}" >Overview</a>
-</div>
-<div id="overviewClone" >
-<p id="overviewCloneP" style="line-height:160%;font-size:14px;"></p>
-</div>
-
-</div> <!-- closing the JobDescriptionDetails-->
-
-<div class="InnerRight" style="margin-top:0.5em;width:width:360px; height:400px;border-style:solid;border-width:1px;border-radius: 1em; padding:1em;">
-<span>Requested platforms: </span>
-<p  id="platformsClone" 
-		style="overflow:auto;width: 245px;height:155px;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 1em;">
-</p>
-</span>
-<span>Handlers: </span>
-<p  id="handlersClone" 
-		style="overflow:auto;width: 245px;height:150px;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 1em;">
-</p>
-</span>
-</div><!-- /innerRight -->
-</div> <!-- /outer-->
-</div> <!-- InnerleftAll -->
-<div class="InnerRightAll" style="margin-top:0.5em;">
-<span ><button id="commitClone" type="button" style="padding:10px;">Commit</button></span><br><br>
-<span ><button id="goBackToDialog" type="button" style="padding: 10px;">Cancel</button></span>
-</div>
-</div> <!--  /outerAll  -->
-</div> <!-- /cloneDialog -->
-
-<!-- bubble pop for help -->
-<div id="bubble_tooltip" style="display: none; left: 221px; top: 404px;">
-<div class="bubble_top">
-<span></span>
-</div>
-<div class="bubble_middle">
-<span id="bubble_tooltip_content">
-</span>
-</div>
-<div class="bubble_bottom"></div>
-</div>
+<body>
+	<div class="pagebody">
+		<div id="tabs">
+			<ul>
+				{% for app in applications %}
+				<li><a id="{{ app }}tabButton" href="#{{ app }}tab">{{ app }}</a></li>
+				{% endfor %}
+			</ul>
+			<div id="{{ active_tab }}tab">
+				<div id="filterDiv">
+						<table class="filter">
+						<tr>
+						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-minusthick"></span>Version</a>
+								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+				 		   <ul id="Version" name="Version" class="checklist"  >
+							{% for ver in appVersions %}
+								<li>
+										<label id="Version{{ forloop.counter }}">
+											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver.value }}" onchange="doFilter(1)" {% if ver.checked %} checked="checked" {% endif %}>
+												{{ ver.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="OptionsButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-minusthick"></span>Options</a>
+								<a href="javascript:;" id="OptionsErase" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+						    <ul id="Options" name="Options" class="checklist" >
+								{% for opt in options %}
+								<li>
+										<label id="Options{{ forloop.counter }}">
+											<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt.value }}" onchange="doFilter(1)" {% if opt.checked %} checked="checked"  {% endif %}>
+												{{ opt.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="SetupProjectButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-plusthick"></span>SetupProject</a>
+								<a href="javascript:;" id="SetupProjectErase" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td> 
+						<tr>
+						<td>
+						    <ul id="SetupProject" name="SetupProject" class="checklist" >
+							{% for setup in setupProject %}
+								<li>
+										<label id="SetupProject{{ forloop.counter }}">
+											<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup.value }}" onchange="doFilter(1)" {% if setup.checked %} checked="checked" {% endif %}>
+												{{ setup.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
+								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+				 		   <ul id="Platform" name="Platform" class="checklist">
+							{% for plat in platforms %}
+								<li>
+										<label id="Platform{{ forloop.counter }}">
+											<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.value }}" onchange="doFilter(1)" {% if plat.checked %} checked="checked"  {% endif %}>
+												{{ plat.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						</table>
+				</div><!-- closing div id=myfilter -->
 
 
-<!----------------------------------------------------------------- edit dialog --------------------------------------------------------------------------------------------------------------->
-<div id="editDialog">
 
-<div class="OuterAll">
-<div class="InnerLeftAll">
-<div class="Outer">
+			</div><!-- active_tab -->
+		</div><!--  /tabs -->
+	</div> <!-- pagebody -->
+</body>
 
-<div class="InnerLeft" id="JobDescriptionEdit" style="margin-top:0.5em;float:left;width:340px;height:200px;border-width: 1px;border-style: solid;border-radius: 1em; padding:1em;">
-<table class="sample"><tr>
-<td style="text-align:right;padding:0.5em;">Application:</td>
-<td><input id="ApplicationEdit" type="text" value=""  readOnly="readonly" /></td><tr>
-<td style="text-align:right;padding:0.5em;">Version:</td>
-
-<td><input id="VersionEdit" type="text" value="" readOnly="readonly"  onblur="makeOverview('editDialog')" onkeyup="makeOverview('editDialog')"></td>
-<tr>
-<td style="text-align:right;padding:0.5em;">Options:</td>
-<td><input id="OptionsDEdit" type="text" value="" readOnly="readonly"  onblur="fixInputs('OptionsDEdit','OptionsEdit','description','Options','onkeyup')" onkeyup="fixInputs('OptionsDEdit','OptionsEdit','description','Options','onkeyup')" /></td>
-<tr>
-<td style="text-align:right;padding:0.5em;"></td>
-<td><input id="OptionsEdit" type="text" value="" onblur="fixInputs('OptionsEdit','OptionsDEdit','content','Options','onblur')" readOnly="readonly" /></td>
-<tr>
-<td style="text-align:right;padding:0.5em;">SetupProject:</td>
-<td><input id="SetupProjectDEdit" type="text" readOnly="readonly"  value="" onblur="fixInputs('SetupProjectDEdit','SetupProjectEdit','description','SetupProject','onkeyup')" onkeyup="fixInputs('SetupProjectDEdit','SetupProjectEdit','description','SetupProject','onkeyup')" /></td>
-<tr>
-<td style="text-align:right;padding:0.5em;"></td>
-<td><input id="SetupProjectEdit" type="text" value="" onblur="fixInputs('SetupProjectEdit','SetupProjectDEdit','content','SetupProject','onblur')" readOnly="readonly"/></td>
-</table><br>
-
-<div id="overviewButtonEdit" style="cursor:pointer;margin-top: 7px;width:100px;"> 
-
-<img id="overviewImageEdit" style="width:11px;height:11px;" src="https://alamages.cern.ch/arrow-downHelp.png" title="show help message"/>
-<a href="javascript:;" style="{font-family: Palatino;} :hover {background: black}" >Overview</a>
-</div>
-<div id="overviewEdit" >
-<p id="overviewEditP" style="line-height:160%;font-size:14px;"></p>
-</div>
-<br>
-<span id="editMessage" style="font-family: Italics;font-size:14px;padding:0.5em;"><span>
-</div> <!-- closing the JobDescriptionDetails-->
-
-<div class="InnerRight" style="margin-top:0.5em;width:width:360px; height:400px;border-style:solid;border-width:1px;border-radius: 1em; padding:1em;">
-<span>Requested platforms: </span>
-<p  id="platformsEdit" 
-		style="overflow:auto;width: 245px;height:155px;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 1em;">
-</p>
-</span>
-<span>Handlers: </span>
-<p  id="handlersEdit" 
-		style="overflow:auto;width: 245px;height:150px;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 1em;">
-</p>
-</span>
-</div><!-- /innerRight -->
-</div> <!-- /outer-->
-</div> <!-- InnerleftAll -->
-<div class="InnerRightAll" style="margin-top:0.5em;">
-<span ><button id="commitEdit" type="button" style="padding:10px;">Update</button></span><br><br>
-<span ><button id="goBackToDialogEdit" type="button" style="padding: 10px;">Cancel</button></span>
-</div>
-</div> <!--  /outerAll  -->
-</div> <!-- /cloneDialog -->
-
-</BODY>
-</HTML>
+</html>

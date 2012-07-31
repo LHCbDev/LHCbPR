@@ -1,78 +1,74 @@
 <html>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://alamages.cern.ch/bubble-tooltip.js"></script>
-<script type="text/javascript" src="https://alamages.cern.ch/JobDescriptionFunctions.js"></script>
-
-<link rel="stylesheet" href="https://alamages.cern.ch/lhcbPR.css" media="screen">
-
-<title>Job descriptions</title>
-</HEAD>
-<BODY>
-<div class="ctitle">
-<TABLE id="pagetitle">
-<TBODY>
-<TR>
-<TD class=iconspace>
-<A href="http://cern.ch/lhcb-comp">
-<IMG id=lhcblogo  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
-</A>
-</TD>
-<TD vAlign=middle align=center>
-<H1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></H1>
-
-<div style="float: right;">
-{% if myauth %}
-<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
-{% else %}
-<a href="https://alamages.cern.ch/django/login/"> Login</a>
-{% endif %}
-</div><!-- closing div ^^-->
-
-</TD>
-</TR>
-</TBODY>
-</TABLE>
-</div><!-- closing div class="ctitle"-->
-<div class=pagebody >
-<ol id="toc">
-    <li><a href="/django/lhcbPR">Home</a></li>
-
-    <li class="current"><a href="/django/lhcbPR/jobDescriptions">Job Descriptions</a></li>
-    <li><a href="/django/lhcbPR/analyse">Analyse</a></li>
-</ol>
-
-
-<div class="content">
-
-<span id="helpButton" style="cursor:pointer;">
-<img id="helpImage" style="width:11px;height:11px;" src="https://alamages.cern.ch/arrow-downHelp.png" title="show help message"/>
-<a href="javascript:;" style="font-family: Palatino;" >help</a>
-</span>
-<div id="help">
-<p> That's some help text about the page </p>
-</div><!-- closing div id=help-->
-
-<br>
-<br>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Job descriptions</title>
+		<link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
+		<script type="text/javascript" src="/static/js/bubble-tooltip.js"></script>
+		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
+		<!-- plugin for menu effect-->
+		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#menu").buttonset();
+				/* on click functions for the menus */
+				$("#homeMenu").click(function(){ document.location.href="/django/lhcbPR" });
+				$("#jobDescriptionsMenu").click(function(){ 
+							var target = document.getElementById('mainbody');
+  							var spinner = new Spinner(opts).spin(target);
+							//document.location.href="/django/lhcbPR/jobDescriptions" ;
+				});
+				$("#analyseMenu").click(function(){ document.location.href="/django/lhcbPR/analyse" });
+				
+				$("#tabs").tabs();
+				$("button").button();
+			});
+		</script>
+</head>
 <div id="header">
-<ul>
-	{% for app in applications %}
-	<li name="{{ app }}tab"><a href="/django/lhcbPR/jobDescriptions/{{ app }}">{{ app }}</a></li>
-	{% endfor %}
-</ul>
+	<div class="ctitle">
+		<table id="pagetitle">
+			<tr>
+				<td class="iconspace">
+					<a href="http://cern.ch/lhcb-comp">
+						<img id="lhcblogo"  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
+					</a>
+			</td>
+			<td class="headTitle">
+				<h1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
+				<div class="headLogin">
+					{% if myauth %}
+					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
+					{% else %}
+					<a href="/django/login/"> Login</a>
+					{% endif %}
+				</div><!-- closing div ^^-->
+			</td>
+		</table>
+	</div> <!-- /ctitle -->
 
-</div>
-<div id="content">
-<p style="font-family: fantasy;">Choose one of the applications(select one the tabs)</p><br>
-	{% for app in applications %}
-	<button name="{{ app }}button" onclick="location.href='/django/lhcbPR/jobDescriptions/{{ app }}'" style="padding:2em;margin-left:1em;">{{ app }}</button>
-	{% endfor %}
+	<div id="menu">
+		<input type="radio" id="homeMenu" name="radio" /><label for="homeMenu">Home</label>
+		<input type="radio" id="jobDescriptionsMenu" name="radio" checked="checked" /><label for="jobDescriptionsMenu">Job Descriptions</label>
+		<input type="radio" id="analyseMenu" name="radio" /><label for="analyseMenu">Analyse</label>
+	</div>
+</div> <!-- /header-->
 
+<body>
+	<div id="mainbody" class="pagebody">
+		<div id="tabs">
+			<ul>
+				<li><a href="#applications">Applications</a></li>
+			</ul>
+			<div id="applications">
+				Choose one of the following applications:<br><br>
+					{% for app in applications %}
+					<button name="{{ app }}button" onclick="location.href='/django/lhcbPR/jobDescriptions/{{ app }}'" style="padding:1.5em;margin-left:1em;">{{ app }}</button>
+					{% endfor %}
+			</div>
+		</div>
+	</div> <!-- pagebody -->
+</body>
 
-</div><!-- closing div id=content-->
-</div><!-- /class=content(main tabs)-->
-</div> <!-- closing div class=pagebody-->
-</BODY>
-</HTML>
+</html>

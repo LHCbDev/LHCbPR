@@ -1,0 +1,122 @@
+#lhcblogo {  border-style: none; width: 98px; height: 69px; margin-top:8px;}
+
+body{ 
+	background-color: #FFFFFF;
+	position: relative; 
+	margin: 0; padding: 0;
+	font-family: "Arial",sans-serif;
+}
+
+/* default link settings */
+a { text-decoration: none; }
+
+/*---------------------------------------------------- HEADER --------------------------------------------------*/
+.ctitle {
+	background : url(/static/images/generalHead.gif) no-repeat;
+	background-size: 105% 105%;
+}
+.ctitle table { 
+	border-width: 0px 0px 0px 0px;
+	border-spacing: 0px 0px;
+	border-style: none;
+	border-color: none;
+	border-collapse: collapse;
+	width: 100%;
+	border: 0px;
+}
+.ctitle td{ 
+	border-width: 1px 1px 1px 1px;
+	padding: 4px 8px 4px 8px;
+	border-style: solid solid solid solid;
+	font-variant: small-caps;
+	font-weight: bold;
+	color: black;
+	text-align: center;
+}
+/*------------- head details --------------*/
+.ctitle a:link { color: black; } 
+.ctitle a:visited { color: #FFFFFF; }
+.ctitle a:hover { color: #FFFF00; }
+.ctitle a:active { color: #00FF00; }
+.iconspace { width: 50px; }
+.headLogin { float: right; }
+.headTitle { vAlign :middle align : center; }
+
+#menu { margin-top : 4px; }
+
+/*------------------------------------------------ PAGEBODY ------------------------------------------------ */
+.fakewindowcontain { position: relative; width: 90%; height: 200px; padding:1% 4%; overflow:hidden; }
+
+.pagebody { 
+  position: relative;
+  width: 90%;
+  left: 5%;
+  overflow: auto;
+}
+
+/* the "hidden" tables to fix the layout */
+table.filter {
+	border-width: 0px;
+	border-spacing: 0px;
+	border-style: dashed;
+	border-color: gray;
+	border-collapse: separate;
+	background-color: white;
+	margin-top: 10px;
+}
+table.filter th {
+	border-width: 0px;
+	padding: 3px;
+	border-style: hidden;
+	border-color: gray;
+	background-color: white;
+	-moz-border-radius: ;
+
+}
+table.filter td {
+	border-width: 0px;
+	border-style: hidden;
+	border-color: gray;
+	background-color: white;
+	-moz-border-radius: ;
+	width : 223px;
+}
+table.filter td a#VersionButton, #OptionsButton, #PlatformButton, #SetupProjectButton{ display:inline-block; width:69%; }
+
+/*----- fixing the the show/hide/erase buttons ------*/
+#VersionButton, #OptionsButton, #SetupProjectButton, #PlatformButton {
+	padding: .4em 1em .2em 25px;text-decoration: none;position: relative;
+}
+#VersionErase, #OptionsErase, #SetupProjectErase, #PlatformErase{
+	padding: .4em 1em .2em 8px;text-decoration: none;position: relative;
+}
+#VersionButton span.ui-icon,#OptionsButton span.ui-icon, #SetupProjectButton span.ui-icon, #PlatformButton span.ui-icon,
+#VersionErase span.ui-icon, #OptionsErase span.ui-icon, #SetupProjectErase span.ui-icon,#PlatformErase span.ui-icon {
+	margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;
+}
+/*-------------------- uls containg the filtering elements ---------------------*/
+.checklist {
+    //border: 1px solid #ccc;
+    list-style: none;
+    max-height: 250px;
+    overflow: auto;
+	padding: 10px;
+}
+.checklist, .checklist li { margin: 0; padding: 0; }
+
+.checklist label {
+	display: block;
+    padding-left: 25px;
+    text-indent: -25px;
+}
+
+
+
+
+
+
+
+
+
+
+
