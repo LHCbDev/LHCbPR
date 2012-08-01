@@ -54,7 +54,6 @@ a { text-decoration: none; }
   overflow: auto;
 }
 
-
 /* the "hidden" tables to fix the layout */
 table.filter {
 	border-width: 0px;
@@ -63,7 +62,6 @@ table.filter {
 	border-color: gray;
 	border-collapse: separate;
 	background-color: white;
-	margin-top: 10px;
 }
 table.filter th {
 	border-width: 0px;
@@ -88,6 +86,8 @@ table.filter td a#VersionButton, #OptionsButton, #PlatformButton, #SetupProjectB
 #VersionButton, #OptionsButton, #SetupProjectButton, #PlatformButton {
 	padding: .4em 1em .2em 25px;text-decoration: none;position: relative;
 }
+#mypermalink {	padding: .4em 1em .2em 17px;text-decoration: none;position: relative; }
+
 #VersionErase, #OptionsErase, #SetupProjectErase, #PlatformErase{
 	padding: .4em 1em .2em 8px;text-decoration: none;position: relative;
 }
@@ -104,20 +104,113 @@ table.filter td a#VersionButton, #OptionsButton, #PlatformButton, #SetupProjectB
 	padding: 10px;
 }
 .checklist, .checklist li { margin: 0; padding: 0; }
-
+.checklist input { padding-left: 10px; }
 .checklist label {
 	display: block;
     padding-left: 25px;
     text-indent: -25px;
 }
 
+/*------------------------------ fix the divs next to other jobDescription page --------------------------*/
+div.Outer {
+        width: 700px;
+		height:auto;
+		min-height:570px;
+		height:auto !important;
+		height: 570; /* for IE cause doesn't support min-height */
+        //border:dashed 1px black;
+        position: relative;
+		overflow: auto;
+        clear: both;
+}
+div.InnerLeft {
+        //width:50%
+		position: relative;     
+        float: left;
+        }
+ 
+div.InnerRight {
+        //width: 49%;
+		position: relative;        
+        float: right;
+		//margin-top: 20px;
+} 
+
+/*----------------------- Job Descriptions --------------------------------*/
+//#feedback { font-size: 12px; }
+#JobDescriptions .ui-selecting { background: #77D5F7; }
+#JobDescriptions .ui-selected { background: #0078AE; color: white; }
+#JobDescriptions { list-style-type: none; margin: 0; padding: 0; width: 450px; }
+#JobDescriptions li { margin: 3px; padding: 0.4em; height: 18px; }
+#JobDescriptions li:hover { background: #77D5F7; cursor: pointer;}
+
+/*--------------- css for the ul icons(next/previous page)-----------*/
+ul#icons {margin: 0; padding: 0;}
+ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+ul#icons span.ui-icon {float: left; margin: 0 4px;}
+
+/*---------------------------------- page/results info----------------------*/
+#pagesInfo { margin: 5px 0 0 15px; float: left; }
+#resultsNumber { margin: 5px 5px 0 0; float: right; }
+
+/*----------------------------------- permalink span------------------------*/
+#mypermalink { float : right; /* font-family: fantasy; */ }
 
 
 
+/*-------------------------------------------------------------------------------------------------- dialog stuff--------------------------------------------------------------------------*/
+#platformContainer { margin-top:10px; /* max-height:410px; */ height: 410px; border-style:solid;border-width:1px;border-radius: 1em; padding:15px; }
+#JobDescriptionDetails { margin-top:10px;float:left;width:340px;max-height:350px;border-width: 1px;border-style: solid;border-radius: 1em; padding:15px; }
+#DialogButtons { margin-top: 10px; }
+#dialogClose { position:absolute;bottom:0;right:0; }
+
+
+#overviewButton { padding: .4em 1em .2em 25px;text-decoration: none;position: relative; }
+#overviewButton span.ui-icon { margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px; }
 
 
 
+/*------------------------------------dialogTable-----------------------------*/
+table.dialogTable td { text-align: right; } 
 
+#overviewDialog{ 
+  width : 320px;
+  height : 70px;
+  border-width: 1px;
+  border-color: #000000;
+  border-style: dashed; //solid;
+  border-radius: 0.5em;
+  background-color: #F5F5F5;
+  padding : 0.5em;
+  margin-top: 7px;
+  font-family: fantasy;
+}
+#overviewDialog { line-height:160%;font-size:14px; }
 
+#platformsDetails, #handlersDetails { width: 245px;max-height:155px;overflow:auto;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 1em;}
 
+/*-------------------------------  fixing the layout------------------------------------------------*/
 
+div.OuterDialog{
+        width: 700px;
+		height:auto;
+        position: relative;
+		overflow: auto;
+        clear: both;
+}
+div.InnerLeftDialog { position: relative; float: left; } 
+div.InnerRightDialog { position: relative; float: right; }
+
+div.dialogContainer { 
+		width: 820px;
+		//height:auto;
+		height: 400px;
+		position: relative;
+		overflow: auto;
+        clear: both; 
+}
+
+/*height:auto;
+		min-height:570px;
+		height:auto !important;
+		height: 570; /* for IE cause doesn't support min-height */

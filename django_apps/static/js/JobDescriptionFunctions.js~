@@ -28,9 +28,7 @@ var opts = {
 	top: 'auto', // Top position relative to parent in px
 	left: 'auto' // Left position relative to parent in px
 };
-  					var target = document.getElementById('foo');
-  					var spinner = new Spinner(opts).spin(target);
-			});
+  
 $(document).ready(function () {
     $("#Platform").hide();
 	$("#SetupProject").hide();
@@ -58,12 +56,12 @@ $(document).ready(function () {
 		if ($("#overviewClone").is(":hidden")) {
 		// it's hidden - show it
 				$("#overviewClone").slideDown("normal");
-				$("#overviewImageClone").attr('src','https://alamages.cern.ch/arrow_upHelp.gif');
+				$("#overviewImageClone").attr('src','/static/images/arrow_upHelp.gif');
 				
 		} else {
 			// it's not hidden - slide it down
 				$("#overviewClone").slideUp("normal");
-				$("#overviewImageClone").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
+				$("#overviewImageClone").attr('src','/static/images/arrow-downHelp.png');
 			}
 		});
 	$("#overviewButtonEdit").click(function () {
@@ -71,38 +69,40 @@ $(document).ready(function () {
 		if ($("#overviewEdit").is(":hidden")) {
 		// it's hidden - show it
 				$("#overviewEdit").slideDown("normal");
-				$("#overviewImageEdit").attr('src','https://alamages.cern.ch/arrow_upHelp.gif');
+				$("#overviewImageEdit").attr('src','/static/images/arrow_upHelp.gif');
 				
 		} else {
 			// it's not hidden - slide it down
 				$("#overviewEdit").slideUp("normal");
-				$("#overviewImageEdit").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
+				$("#overviewImageEdit").attr('src','/static/images/arrow-downHelp.png');
 			}
 		});
 	$("#overviewButton").click(function () {
 		// check visibility
 		if ($("#overviewDialog").is(":hidden")) {
-		// it's hidden - show it
-				$("#overviewDialog").slideDown("normal");
-				$("#overviewImage").attr('src','https://alamages.cern.ch/arrow_upHelp.gif');
-				
+			// it's hidden - show it
+				$("#overviewDialog").slideDown("slow");
+				$(this).find('span').removeClass('ui-icon-arrowthick-1-s');
+				$(this).find('span').addClass('ui-icon-arrowthick-1-n');
 		} else {
 			// it's not hidden - slide it down
-				$("#overviewDialog").slideUp("normal");
-				$("#overviewImage").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
+				$("#overviewDialog").slideUp("slow");
+				$(this).find('span').removeClass('ui-icon-arrowthick-1-n');
+				$(this).find('span').addClass('ui-icon-arrowthick-1-s');
 			}
 		});
+
 	$("#help").hide();
 	$("#helpButton").click(function () {
 		// check visibility
 		if ($("#help").is(":hidden")) {
 		// it's hidden - show it
 				$("#help").slideDown("normal");
-				$("#helpImage").attr('src','https://alamages.cern.ch/arrow_upHelp.gif');
+				$("#helpImage").attr('src','/static/images/arrow_upHelp.gif');
 		} else {
 			// it's not hidden - slide it down
 				$("#help").slideUp("normal");
-				$("#helpImage").attr('src','https://alamages.cern.ch/arrow-downHelp.png');
+				$("#helpImage").attr('src','/static/images/arrow-downHelp.png');
 			}
 		});
 
@@ -378,7 +378,26 @@ function clearCheckBox(id){
 	return;
 }
 
-function addJobs(myId,box,apps){
+
+function addJobs(box,apps){
+	//loop over the array which contains the versions
+	for(var i = 0; i < apps.length; i++)
+	{	
+		var myLi = document.createElement("li");
+		
+		myLi.appendChild(document.createTextNode(apps[i].appName+"  "+apps[i].appVersion+"  "+apps[i].optionsD+"  "+apps[i].setupproject));
+			
+		//extra function click
+		myLi.setAttribute('id', apps[i].pk);
+		myLi.setAttribute('class','ui-widget-content');
+		//myLi.setAttribute('onclick','return openWindow(this.id);');
+		box.appendChild(myLi);
+	}
+	return;
+}
+
+
+/*function addJobs(myId,box,apps){
 	//loop over the array which contains the versions
 	for(var i = 0; i < apps.length; i++)
 	{
@@ -397,6 +416,7 @@ function addJobs(myId,box,apps){
 	}
 	return;
 }
+*/
 
 function permalink(){
 	var setupprojects = getSelectedChilds("SetupProject");
@@ -484,7 +504,7 @@ function openWindow(job_id){
 				$("#overviewDialog").hide();
 				$("#dialog").dialog({
     				resizable: false,
-    				height: 550,
+    				max-height: 550,
     				width: 860,
    					modal: true,
 				});

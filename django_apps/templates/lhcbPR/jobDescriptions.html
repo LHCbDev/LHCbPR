@@ -12,26 +12,6 @@
 		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
 		<script type="text/javascript">
 			$(document).ready(function() {
-				var opts = {
-  					lines: 13, // The number of lines to draw
-   					 length: 7, // The length of each line
-   					 width: 4, // The line thickness
-   					 radius: 10, // The radius of the inner circle
-   					 rotate: 0, // The rotation offset
-   					 color: '#000', // #rgb or #rrggbb
-   					 speed: 1, // Rounds per second
-   					 trail: 60, // Afterglow percentage
-   					 shadow: false, // Whether to render a shadow
-   					 hwaccel: false, // Whether to use hardware acceleration
-  					  className: 'spinner', // The CSS class to assign to the spinner
-  					  zIndex: 2e9, // The z-index (defaults to 2000000000)
-  					  top: 'auto', // Top position relative to parent in px
-  					  left: 'auto' // Left position relative to parent in px
-  					};
-  					var target = document.getElementById('foo');
-  					var spinner = new Spinner(opts).spin(target);
-			});
-
 				$('#menu').buttonset();
 				/* on click functions for the menus */
 				$('#homeMenu').click(function(){ 
@@ -45,24 +25,92 @@
 				$('#{{ app }}tabButton').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions/{{ app }}" });
 				{% endfor %}
 
-				$('#tabs').tabs({ selected : -1, spinner: "Retrieving data..."});
+				$('#tabs').tabs({ selected : -1 });
 				$('#tabs').tabs('select', '#{{ active_tab }}tab');
 				
-				$('#VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase').hover(
+				$('#overviewButton, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
 					function() { $(this).addClass('ui-state-hover'); },
 					function() { $(this).removeClass('ui-state-hover'); }
 				);
 
-			  $("#VersionButton").click(function(){ showHide("VersionButton","Version") });
-			  $("#OptionsButton").click(function(){ showHide("OptionsButton","Options") });
-			  $("#PlatformButton").click(function(){ showHide("PlatformButton","Platform") });
-			  $("#SetupProjectButton").click(function(){ showHide("SetupProjectButton","SetupProject") });
-			  $("#VersionErase").click(function(){ clearCheckBox("Version") });
-			  $("#OptionsErase").click(function(){ clearCheckBox("Options") });
-			  $("#PlatformErase").click(function(){ clearCheckBox("Platform") });
-			  $("#SetupProjectErase").click(function(){ clearCheckBox("SetupProject") });
+				$("RunInDialog").button();
+				$("EditInDialog").button();
+				$("CloneInDialog").button();
+			
+			  	$("#VersionButton").click(function(){ showHide("VersionButton","Version") });
+			  	$("#OptionsButton").click(function(){ showHide("OptionsButton","Options") });
+			  	$("#PlatformButton").click(function(){ showHide("PlatformButton","Platform") });
+			 	$("#SetupProjectButton").click(function(){ showHide("SetupProjectButton","SetupProject") });
+			 	$("#VersionErase").click(function(){ clearCheckBox("Version") });
+			 	$("#OptionsErase").click(function(){ clearCheckBox("Options") });
+			  	$("#PlatformErase").click(function(){ clearCheckBox("Platform") });
+			  	$("#SetupProjectErase").click(function(){ clearCheckBox("SetupProject") });
 
+				$( "#JobDescriptions" ).selectable({
+					stop: function() { $( ".ui-selected", this ).each(function() { openWindow( $(this).attr('id') ); }) }
+				});
+				doFilter({{ current_page}});
 				
+				$("#next_button").click(function(){ doFilter(myCurrent_page+1) });
+				$("#previous_button").click(function(){ doFilter(myCurrent_page-1) });
+
+			});	
+
+function doFilter(requested_page){
+	box = document.getElementById("JobDescriptions");
+
+	var xmlhttp;    
+	if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else{
+		// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+
+	// when the response comes do...
+	xmlhttp.onreadystatechange=function()
+	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			var jobs = jsondata.jobs;
+			var pageInfo = jsondata.page_info;
+			removeAllChilds("JobDescriptions"); 
+			removeAllChilds("resultsNumber");
+			addJobs(box,jobs);
+			
+			removeAllChilds("pagesInfo");
+			myCurrent_page = pageInfo.current_page;
+			document.getElementById("pagesInfo").appendChild(document.createTextNode("Page "+pageInfo.current_page+" of "+pageInfo.num_of_pages));
+			document.getElementById("resultsNumber").appendChild(document.createTextNode(pageInfo.total_results+" results"));
+					
+			$("#next_button").hide();
+			$("#previous_button").hide();
+
+			if (pageInfo.current_page > 1){
+				$("#previous_button").show();
+			}
+			if ( pageInfo.current_page < pageInfo.num_of_pages ){
+				$("#next_button").show();
+			}			
+			//fix the permalink
+			permalink();
+    	}	
+  	}
+	var setupprojects = getSelectedChilds("SetupProject");
+	var appVersions = getSelectedChilds("Version");
+	
+	var options = getSelectedChilds("Options");
+	var cmts = getSelectedChilds("Platform");	
+
+	// send the request the to server
+	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getFilters?page="+requested_page+"&app={{ active_tab }}"+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&platforms="+escape(cmts.join(",")), true);
+	xmlhttp.send();
+	
+	return;
+}	
 		</script>
 </head>
 <div id="header">
@@ -103,7 +151,11 @@
 				{% endfor %}
 			</ul>
 			<div id="{{ active_tab }}tab">
-				<div id="filterDiv">
+
+			<a  id="mypermalink" class="ui-state-default ui-corner-all" href="" target="_blank"> Permalink to selection </a>
+
+			 <div class="Outer">
+				<div class="InnerLeft">
 						<table class="filter">
 						<tr>
 						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-minusthick"></span>Version</a>
@@ -172,14 +224,88 @@
 							{% endfor %}
 						    </ul>
 						</td>
-						</table>
-				</div><!-- closing div id=myfilter -->
+						</table><!-- closing div id=myfilter -->
+					</div><!-- /InnerLeft -->
+					<div class="InnerRight">
+						<div id="pagingButtons">
+							<ul id="icons" class="ui-widget ui-helper-clearfix">
+								<li id="previous_button" class="ui-state-default ui-corner-all" title="previous page"><span class="ui-icon ui-icon-arrowthick-1-w"></span></li>
+								<li id="next_button" class="ui-state-default ui-corner-all" title="next page"><span class="ui-icon ui-icon-arrowthick-1-e"></span></li>
+								<div id="pagepanel">
+									<span id="pagesInfo"></span>
+									<span id="resultsNumber"></span>
+								</div>
+							</ul>
+						</div><!-- pagingButtons -->
 
+						<ol id="JobDescriptions">
+							<!-- <li class="ui-widget-content">Item 1</li> -->	
+						</ol>
+					</div>
 
-
+			 </div><!--  /Outer -->
 			</div><!-- active_tab -->
 		</div><!--  /tabs -->
 	</div> <!-- pagebody -->
+
+<!-- dialog divs -->
+<div id="dialog" title="" >
+<div class="dialogContainer">
+	<div class="InnerLeftDialog">
+	<div class="OuterDialog">
+		<div id="JobDescriptionDetails" class="InnerLeftDialog">
+			<table class="dialogTable"><tr>
+				<td>Application:</td>
+				<td><input id="ApplicationDetails" type="text" value=""  readOnly="readonly" /></td><tr>
+				<td>Version:</td>
+				<td><input id="VersionDetails" type="text" value="" readOnly="readonly"/></td>
+				<tr>
+				<td >Options:</td>
+				<td><input id="OptionsDDetails"type="text" value="" readOnly="readonly" /></td><tr>
+				<td></td>
+				<td><input id="OptionsDetails" type="text" value="" readOnly="readonly" /></td>
+				<tr>
+				<td >SetupProject:</td>
+				<td><input id="SetupProjectDDetails" type="text" value="" readOnly="readonly"/></td><tr>
+				<td></td>
+				<td><input id="SetupProjectDetails" type="text" value="" readOnly="readonly"/></td>
+			</table><br>
+			<br>
+			<a id="overviewButton" class="ui-state-default ui-corner-all" href="javascript:;">
+				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
+			</a>
+
+			<div id="overviewDialog" >
+				<p id="overviewDialogP"></p>
+			</div>
+		</div> <!-- closing the JobDescriptionDetails-->
+
+		<div id="platformContainer" class="InnerRightDialog">
+			<span>Requested platforms: </span>
+			<p  id="platformsDetails"></p>
+
+			<span>Handlers: </span>
+				<p  id="handlersDetails"></p>
+			</span>
+		</div><!-- /innerRightDialog -->
+	</div> <!-- /OuterDialog -->
+	</div><!--InnerLeftRight(for the dialogcontainer) -->
+	<div id="DialogButtons" class="InnerRightDialog">
+		<button id="RunInDialog" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Run</span></button>
+		<br><br>
+		<button id="CloneInDialog" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Clone</span></button>
+		<br><br>
+		<button id="EditInDialog" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Edit</span></button>
+		<br><br>
+	</div> <!--InnerRightDialog(for the dialogcontainer) -->
+ 	<!--  /outerAll  -->
+	
+</div><!-- DialogContainer -->
+	
+	<button id="dialogClose" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Close</span></button>
+</div> <!-- closing the  dialog -->
+
+
 </body>
 
 </html>

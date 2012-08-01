@@ -16,11 +16,11 @@
 				/* on click functions for the menus */
 				$("#homeMenu").click(function(){ document.location.href="/django/lhcbPR" });
 				$("#jobDescriptionsMenu").click(function(){ 
-							$("#demoHeaders").hide();
-							$("#yo").hide();
+							//$("#demoHeaders").hide();
+							//$("#yo").hide();
 							var target = document.getElementById("pagebody");
   							var spinner = new Spinner(opts).spin(target);
-							//document.location.href="/django/lhcbPR/jobDescriptions" ;
+							document.location.href="/django/lhcbPR/jobDescriptions" ;
 				});
 				$("#analyseMenu").click(function(){ document.location.href="/django/lhcbPR/analyse" });
 			});

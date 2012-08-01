@@ -212,7 +212,8 @@ def getFilters(request):
             
         pageIngo = {
                     'num_of_pages' : paginator.num_pages,
-                    'current_page' : jobDes.number
+                    'current_page' : jobDes.number,
+                    'total_results' : jobDesTemp.count()
                     }
         
         return HttpResponse(json.dumps({ 'jobs' :  myobjectlist, 'page_info' : pageIngo }))
@@ -224,25 +225,35 @@ def getJobDetails(request):
     
     myJob = JobDescription.objects.get(pk=request.GET['job_id'])
 
+    #platforms = makeList(Requested_platform.objects.filter(jobdescription__exact=myJob).values('cmtconfig__cmtconfig').distinct('cmtconfig_cmtconfig'),'cmtconfig__cmtconfig')
+    #all_platforms = makeList(Platform.objects.values('cmtconfig').distinct('cmtconfig'),'cmtconfig')
+    #all_platformsList = []
+    #for all_p in all_platforms:
+    #    if all_p in platforms:
+    #        all_platformsList.append({ 'platform' : all_p, 'checked' : True })
+    #    else:
+    #        all_platformsList.append({ 'platform' : all_p, 'checked' : False })
+            
+    #handlers = makeList(JobHandler.objects.filter(jobDescription__exact=myJob).values('handler__name').distinct('handler__name'),'handler__name')
+    
+    #all_handlers = makeList(Handler.objects.values('name').distinct('name'),'name')
+    #all_handlersList = []
+    #for all_h in all_handlers:
+    #    if all_h in handlers:
+    #        all_handlersList.append({ 'handler' : all_h, 'checked' : True })
+    #    else:
+    #       all_handlersList.append({ 'handler' : all_h, 'checked' : False })
     platforms = makeList(Requested_platform.objects.filter(jobdescription__exact=myJob).values('cmtconfig__cmtconfig').distinct('cmtconfig_cmtconfig'),'cmtconfig__cmtconfig')
     
-    all_platforms = makeList(Platform.objects.values('cmtconfig').distinct('cmtconfig'),'cmtconfig')
     all_platformsList = []
-    for all_p in all_platforms:
-        if all_p in platforms:
-            all_platformsList.append({ 'platform' : all_p, 'checked' : True })
-        else:
-            all_platformsList.append({ 'platform' : all_p, 'checked' : False })
+    for all_p in platforms:
+        all_platformsList.append({ 'platform' : all_p, 'checked' : True })
             
     handlers = makeList(JobHandler.objects.filter(jobDescription__exact=myJob).values('handler__name').distinct('handler__name'),'handler__name')
     
-    all_handlers = makeList(Handler.objects.values('name').distinct('name'),'name')
     all_handlersList = []
-    for all_h in all_handlers:
-        if all_h in handlers:
-            all_handlersList.append({ 'handler' : all_h, 'checked' : True })
-        else:
-            all_handlersList.append({ 'handler' : all_h, 'checked' : False })
+    for all_h in handlers:
+        all_handlersList.append({ 'handler' : all_h, 'checked' : True })
     
     dataDict = {
                 'pk' : myJob.id,   
