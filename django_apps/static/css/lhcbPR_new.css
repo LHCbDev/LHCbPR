@@ -84,15 +84,22 @@ table.filter td a#VersionButton, #OptionsButton, #PlatformButton, #SetupProjectB
 
 /*----- fixing the the show/hide/erase buttons ------*/
 #VersionButton, #OptionsButton, #SetupProjectButton, #PlatformButton {
-	padding: .4em 1em .2em 25px;text-decoration: none;position: relative;
+	padding: 6px 16px 4px 25px;text-decoration: none;position: relative;
 }
 #mypermalink {	padding: .4em 1em .2em 17px;text-decoration: none;position: relative; }
 
 #VersionErase, #OptionsErase, #SetupProjectErase, #PlatformErase{
-	padding: .4em 1em .2em 8px;text-decoration: none;position: relative;
+	padding: 6px 16px 4px 8px;text-decoration: none;position: relative;
 }
 #VersionButton span.ui-icon,#OptionsButton span.ui-icon, #SetupProjectButton span.ui-icon, #PlatformButton span.ui-icon,
 #VersionErase span.ui-icon, #OptionsErase span.ui-icon, #SetupProjectErase span.ui-icon,#PlatformErase span.ui-icon {
+	margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;
+}
+
+#editPlatformsClone, #editHandlersClone {
+	padding: 2px 7px 2px 22px; text-decoration: none;position: relative;
+}
+#editPlatformsClone span.ui-icon, #editHandlersClone span.ui-icon {
 	margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;
 }
 /*-------------------- uls containg the filtering elements ---------------------*/
@@ -141,7 +148,7 @@ div.InnerRight {
 #JobDescriptions .ui-selecting { background: #77D5F7; }
 #JobDescriptions .ui-selected { background: #0078AE; color: white; }
 #JobDescriptions { list-style-type: none; margin: 0; padding: 0; width: 450px; }
-#JobDescriptions li { margin: 3px; padding: 0.4em; height: 18px; }
+#JobDescriptions li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
 #JobDescriptions li:hover { background: #77D5F7; cursor: pointer;}
 
 /*--------------- css for the ul icons(next/previous page)-----------*/
@@ -158,23 +165,30 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 
 
 
-/*-------------------------------------------------------------------------------------------------- dialog stuff--------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------- DIALOG STUFF --------------------------------------------------------------------------*/
 #platformContainer { margin-top:10px; max-height:410px; /* height: 410px; */ border-style:solid;border-width:1px;border-radius: 1em; padding:15px; }
-#JobDescriptionDetails { margin-top:10px;float:left;width:340px;max-height:350px;border-width: 1px;border-style: solid;border-radius: 1em; padding:15px; }
+
+#JobDescriptionDetails,#JobDescriptionClone { margin-top:10px;float:left;width:340px;max-height:350px;border-width: 1px;border-style: solid;border-radius: 1em; padding:15px; }
+
 #DialogButtons { margin-top: 10px; }
+
 #dialogClose { position:absolute;bottom:0;right:0; }
 
+#overviewButton,#overviewButtonClone { padding: 5px 12px 4px 22px; text-decoration: none;position: relative; }
 
-#overviewButton { padding: .4em 1em .2em 25px;text-decoration: none;position: relative; }
-#overviewButton span.ui-icon { margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px; }
+#overviewButton span.ui-icon, #overviewButtonClone span.ui-icon { margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px; }
+
+#overviewDialogP, #overviewCloneP { line-height:160%;font-size:14px; }
+
+#platformsDetails, #handlersDetails,#platformsClone, #handlersClone { width: 245px;max-height:155px;overflow:auto;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 1em;}
 
 
 
 /*------------------------------------dialogTable-----------------------------*/
 table.dialogTable td { text-align: right; } 
 
-#overviewDialog{ 
-  width : 320px;
+#overviewDialog, #overviewClone { 
+  width : 330px;
   height : 70px;
   border-width: 1px;
   border-color: #000000;
@@ -185,9 +199,7 @@ table.dialogTable td { text-align: right; }
   margin-top: 7px;
   font-family: fantasy;
 }
-#overviewDialog { line-height:160%;font-size:14px; }
 
-#platformsDetails, #handlersDetails { width: 245px;max-height:155px;overflow:auto;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 1em;}
 
 /*-------------------------------  fixing the layout------------------------------------------------*/
 
@@ -210,7 +222,24 @@ div.dialogContainer {
         clear: both; 
 }
 
-/*height:auto;
-		min-height:570px;
+
+/*---------------------------------- edit handler/platform container------------------------*/
+#panelContainer {
+        width: 495px;
+		height:auto;
+		min-height:360px;
 		height:auto !important;
-		height: 570; /* for IE cause doesn't support min-height */
+		height: 360; /* for IE cause doesn't support min-height */
+        position: relative;
+		overflow: auto;
+        clear: both;
+}
+#panelContainer ol { border-style:solid;border-width:1px; width:240px;height:340px;border-radius:1em; overflow:auto}
+#panelContainer p { text-align: center; }
+
+
+#availableAttributes .ui-selecting, #requestedAttributes .ui-selecting { background: #77D5F7; }
+#availableAttributes .ui-selected, #requestedAttributes .ui-selected { background: #0078AE; color: white; }
+#availableAttributes, #requestedAttributes { list-style-type: none; margin: 0; padding: 0;  }
+#availableAttributes li, #requestedAttributes li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
+#availableAttributes li:hover, #requestedAttributes li:hover { background: #77D5F7; cursor: pointer;}

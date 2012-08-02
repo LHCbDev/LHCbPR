@@ -30,7 +30,8 @@ var opts = {
 };
   
 $(document).ready(function () {
-    $("#Platform").hide();
+    $("#editPlatformsHandlers").hide();
+	$("#Platform").hide();
 	$("#SetupProject").hide();
 	$("#dialog").hide();
 	$("#cloneDialog").hide();
@@ -54,27 +55,29 @@ $(document).ready(function () {
 	$("#overviewButtonClone").click(function () {
 		// check visibility
 		if ($("#overviewClone").is(":hidden")) {
-		// it's hidden - show it
-				$("#overviewClone").slideDown("normal");
-				$("#overviewImageClone").attr('src','/static/images/arrow_upHelp.gif');
-				
+			// it's hidden - show it
+				$("#overviewClone").slideDown("slow");
+				$(this).find('span').removeClass('ui-icon-arrowthick-1-s');
+				$(this).find('span').addClass('ui-icon-arrowthick-1-n');
 		} else {
 			// it's not hidden - slide it down
-				$("#overviewClone").slideUp("normal");
-				$("#overviewImageClone").attr('src','/static/images/arrow-downHelp.png');
+				$("#overviewClone").slideUp("slow");
+				$(this).find('span').removeClass('ui-icon-arrowthick-1-n');
+				$(this).find('span').addClass('ui-icon-arrowthick-1-s');
 			}
 		});
 	$("#overviewButtonEdit").click(function () {
 		// check visibility
 		if ($("#overviewEdit").is(":hidden")) {
-		// it's hidden - show it
-				$("#overviewEdit").slideDown("normal");
-				$("#overviewImageEdit").attr('src','/static/images/arrow_upHelp.gif');
-				
+			// it's hidden - show it
+				$("#overviewEdit").slideDown("slow");
+				$(this).find('span').removeClass('ui-icon-arrowthick-1-s');
+				$(this).find('span').addClass('ui-icon-arrowthick-1-n');
 		} else {
 			// it's not hidden - slide it down
-				$("#overviewEdit").slideUp("normal");
-				$("#overviewImageEdit").attr('src','/static/images/arrow-downHelp.png');
+				$("#overviewEdit").slideUp("slow");
+				$(this).find('span').removeClass('ui-icon-arrowthick-1-n');
+				$(this).find('span').addClass('ui-icon-arrowthick-1-s');
 			}
 		});
 	$("#overviewButton").click(function () {
@@ -253,12 +256,11 @@ function checkCommit(){
 }
 
 function getSelectedChildsOne(id){
-	nodes = document.getElementById(id).children;
+	//nodes = document.getElementById(id).children;
+	nodes = document.getElementById(id).getElementsByTagName("input");
 	var sdValues = [];
 	for(i=0; i<nodes.length; i+=1) {
-    	if (nodes[i].checked == true){
 			sdValues.push(nodes[i].value);
-		}
 	}
 	return sdValues;
 }
@@ -390,33 +392,10 @@ function addJobs(box,apps){
 		//extra function click
 		myLi.setAttribute('id', apps[i].pk);
 		myLi.setAttribute('class','ui-widget-content');
-		//myLi.setAttribute('onclick','return openWindow(this.id);');
 		box.appendChild(myLi);
 	}
 	return;
 }
-
-
-/*function addJobs(myId,box,apps){
-	//loop over the array which contains the versions
-	for(var i = 0; i < apps.length; i++)
-	{
-		var hrefObj = document.createElement("a");		
-		var liObj = document.createElement("li");
-		
-		hrefObj.appendChild(document.createTextNode(apps[i].appName+"  "+apps[i].appVersion+"  "+apps[i].optionsD+"  "+apps[i].setupproject));
-		liObj.appendChild(hrefObj);
-
-		hrefObj.setAttribute('href','javascript:;');
-		hrefObj.setAttribute('id', apps[i].pk);
-			
-		//extra function click
-		hrefObj.setAttribute('onclick','openWindow(this.id)');
-		box.appendChild(liObj);
-	}
-	return;
-}
-*/
 
 function permalink(){
 	var setupprojects = getSelectedChilds("SetupProject");
@@ -475,28 +454,28 @@ function openWindow(job_id){
 			for(var i = 0; i < jsondata.platforms.length; i++){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
-					myInput.value = jsondata.platforms[i].platform;
+					myInput.value = jsondata.platforms[i];
 					myInput.setAttribute('readOnly','readonly');
 					myInput.setAttribute('disabled','true');	
-					if (jsondata.platforms[i].checked)
-							myInput.setAttribute('checked','checked');
+					
+					myInput.setAttribute('checked','checked');
 						
 					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i].platform));
+					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
 					mybox.appendChild(document.createElement("br"));
 					
 			}
 			for(var i = 0; i < jsondata.handlers.length; i++){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
-					myInput.value = jsondata.handlers[i].handler;
+					myInput.value = jsondata.handlers[i];
 					myInput.setAttribute('readOnly','readonly');
 					myInput.setAttribute('disabled','true');	
-					if (jsondata.handlers[i].checked)
-							myInput.setAttribute('checked','checked');
+					
+					myInput.setAttribute('checked','checked');
 						
 					myboxHandlers.appendChild(myInput);
-					myboxHandlers.appendChild(document.createTextNode(jsondata.handlers[i].handler));
+					myboxHandlers.appendChild(document.createTextNode(jsondata.handlers[i]));
 					myboxHandlers.appendChild(document.createElement("br"));
 					
 			}
@@ -504,7 +483,7 @@ function openWindow(job_id){
 				$("#overviewDialog").hide();
 				$("#dialog").dialog({
     				resizable: false,
-    				max-height: 550,
+    				height: 550,
     				width: 860,
    					modal: true,
 				});
@@ -557,25 +536,23 @@ function openEditWindow(job_id){
 			for(var i = 0; i < jsondata.platforms.length; i++){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
-					myInput.value = jsondata.platforms[i].platform;
+					myInput.value = jsondata.platforms[i];
 					
-					if (jsondata.platforms[i].checked)
-							myInput.setAttribute('checked','true');
+					myInput.setAttribute('checked','true');
 					
 					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i].platform));
+					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
 					mybox.appendChild(document.createElement("br"));		
 			}
 			for(var i = 0; i < jsondata.handlers.length; i++){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
-					myInput.value = jsondata.handlers[i].handler;
+					myInput.value = jsondata.handlers[i];
 					
-					if (jsondata.handlers[i].checked)
-							myInput.setAttribute('checked','true');
+					myInput.setAttribute('checked','true');
 					
 					myboxHandler.appendChild(myInput);
-					myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i].handler));
+					myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i]));
 					myboxHandler.appendChild(document.createElement("br"));		
 			}
 			$( "#VersionEdit" ).autocomplete({
@@ -666,25 +643,27 @@ function openCloneWindow(job_id){
 			for(var i = 0; i < jsondata.platforms.length; i++){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
-					myInput.value = jsondata.platforms[i].platform;
+					myInput.setAttribute('readOnly','readonly');
+					myInput.setAttribute('disabled','true');
+					myInput.value = jsondata.platforms[i];
 					
-					if (jsondata.platforms[i].checked)
-							myInput.setAttribute('checked','true');
+					myInput.setAttribute('checked','true');
 					
 					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i].platform));
+					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
 					mybox.appendChild(document.createElement("br"));		
 			}
 			for(var i = 0; i < jsondata.handlers.length; i++){
 					myInput = document.createElement("input");
-					myInput.type = "checkbox";	
-					myInput.value = jsondata.handlers[i].handler;
+					myInput.type = "checkbox";
+					myInput.setAttribute('readOnly','readonly');
+					myInput.setAttribute('disabled','true');
+					myInput.value = jsondata.handlers[i];
 					
-					if (jsondata.handlers[i].checked)
-							myInput.setAttribute('checked','true');
+					myInput.setAttribute('checked','true');
 					
 					myboxHandler.appendChild(myInput);
-					myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i].handler));
+					myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i]));
 					myboxHandler.appendChild(document.createElement("br"));		
 			}
 			$( "#VersionClone" ).autocomplete({
@@ -754,4 +733,111 @@ function run(){
 }
 function uploadResults(){
 	alert("Upload results function, under construction...");
+}
+
+//mybox_id is the container of the original platforms/handlers
+function openPanel(id, service,mybox_id){
+	if (service == "platforms"){
+		$("#editPlatformsHandlers").attr('title','Platforms edit panel');
+		$("#availableTitle").text("Available platforms");
+		$("#requestedTitle").text("Requested platforms");
+	}
+	else if(service == "handlers"){
+		$("#editPlatformsHandlers").attr('title','Handlers edit panel');
+		$("#availableTitle").text("Available handlers");
+		$("#requestedTitle").text("Requested handlers");
+	}
+	$.ajax({
+    	'url' : '/django/lhcbPR/editPanel',
+		'type' : 'GET',
+		'data' : {
+		'service' : service,
+		'jobDescription_id' : id, 
+		},
+    	'success' : function(data) {
+			var jsondata = $.parseJSON(data);
+			removeAllChilds("requestedAttributes");
+			var mybox = document.getElementById("requestedAttributes");
+			
+			requested = getSelectedChildsOne(mybox_id);
+			for(var i = 0; i < requested.length; i++)
+			{	
+				var myLi = document.createElement("li");
+				myLi.appendChild(document.createTextNode(requested[i]));
+				//extra function click
+				myLi.setAttribute('id', requested[i]);
+				myLi.setAttribute('class','ui-widget-content');
+				mybox.appendChild(myLi);
+			}
+			removeAllChilds("availableAttributes");
+			var mybox2 = document.getElementById("availableAttributes");
+			
+			/* check which requested exist also in available */
+			var available = [];
+			var exists = 0;
+			for (var y = 0; y < jsondata.available.length; y++){
+				for (var k = 0; k < requested.length; k++){
+					if (jsondata.available[y] == requested[k]){
+						exists = 1;
+						break;
+					}
+				}
+				if (exists == 0){
+					available.push(jsondata.available[y]);
+				}
+				exists = 0;
+			}
+			
+			for(var i = 0; i < available.length; i++)
+			{	
+					var myLi = document.createElement("li");
+					myLi.appendChild(document.createTextNode(available[i]));
+					//extra function click
+					myLi.setAttribute('id', available[i]);
+					myLi.setAttribute('class','ui-widget-content');
+					mybox2.appendChild(myLi);
+			}
+			//open dialog if success
+			$("#editPlatformsHandlers").dialog({
+    			resizable: false,
+    			height:560,
+    			width: 532,
+   				modal: true,
+				buttons: {
+						"Ok": function() {
+							var newAttributes =  getListValues("requestedAttributes");
+							mybox = document.getElementById(mybox_id);	
+							removeAllChilds(mybox_id);	
+								
+							for(var i = 0; i < newAttributes.length; i++){
+								myInput = document.createElement("input");
+								myInput.type = "checkbox";	
+								myInput.value = newAttributes[i];
+								myInput.setAttribute('readOnly','readonly');
+								myInput.setAttribute('disabled','true');	
+									
+								myInput.setAttribute('checked','checked');
+						
+								mybox.appendChild(myInput);
+								mybox.appendChild(document.createTextNode(newAttributes[i]));
+								mybox.appendChild(document.createElement("br"));	
+							}
+							$(this).dialog("close");
+						},
+						"Cancel": function() {
+							$(this).dialog("close");
+						}
+					}
+			});
+      	}
+    });
+}
+
+function getListValues(id){
+	nodes = document.getElementById(id).children;
+	var sdValues = [];
+	for(i=0; i<nodes.length; i+=1) {
+		sdValues.push(nodes[i].id);
+	}
+	return sdValues;
 }

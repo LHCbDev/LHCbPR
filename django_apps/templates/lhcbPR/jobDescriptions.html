@@ -28,7 +28,7 @@
 				$('#tabs').tabs({ selected : -1 });
 				$('#tabs').tabs('select', '#{{ active_tab }}tab');
 				
-				$('#overviewButton, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
+				$('#overviewButton,#overviewButtonClone,#editPlatformsClone,#editHandlersClone, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
 					function() { $(this).addClass('ui-state-hover'); },
 					function() { $(this).removeClass('ui-state-hover'); }
 				);
@@ -36,6 +36,8 @@
 				$("RunInDialog").button();
 				$("EditInDialog").button();
 				$("CloneInDialog").button();
+				$("commitClone").button();
+				$("goBackToDialog").button();
 			
 			  	$("#VersionButton").click(function(){ showHide("VersionButton","Version") });
 			  	$("#OptionsButton").click(function(){ showHide("OptionsButton","Options") });
@@ -49,11 +51,37 @@
 				$( "#JobDescriptions" ).selectable({
 					stop: function() { $( ".ui-selected", this ).each(function() { openWindow( $(this).attr('id') ); }) }
 				});
+				$( "#availableAttributes" ).selectable({
+					stop: function() { $( ".ui-selected", this ).each(function() { 
+							$(this).removeClass("ui-selected");
+							$("#requestedAttributes").append($(this)); 
+							$("#availableAttributes").find("#"+$(this).attr('id')).remove(); }) }
+				});
+				$( "#requestedAttributes" ).selectable({
+					stop: function() { $( ".ui-selected", this ).each(function() {
+							$(this).removeClass("ui-selected");
+							$("#availableAttributes").append($(this)); 
+							$("#requestedAttributes").find("#"+$(this).attr('id')).remove(); }) }
+				});
+
 				doFilter({{ current_page}});
 				
-				$("#next_button").click(function(){ doFilter(myCurrent_page+1) });
-				$("#previous_button").click(function(){ doFilter(myCurrent_page-1) });
+				$("#next_button").click(function(){ doFilter(myCurrent_page+1); });
+				$("#previous_button").click(function(){ doFilter(myCurrent_page-1); });
 
+				/* button for clone Dialog */
+				$("#VersionClone").focusout(function() { makeOverview('cloneDialog'); });
+				$("#VersionClone").keyup(function() { makeOverview('cloneDialog'); });
+				$("#OptionsDClone").focusout(function() { fixInputs('OptionsDClone','OptionsClone','description','Options','onkeyup'); });
+				$("#OptionsDClone").keyup(function() { fixInputs('OptionsDClone','OptionsClone','description','Options','onkeyup'); });
+				$("#OptionsClone").focusout(function() { fixInputs('OptionsClone','OptionsDClone','content','Options','onblur') });
+				$("#SetupProjectDClone").focusout(function(){ fixInputs('SetupProjectDClone','SetupProjectClone','description','SetupProject','onkeyup'); });
+				$("#SetupProjectDClone").keyup(function(){ fixInputs('SetupProjectDClone','SetupProjectClone','description','SetupProject','onkeyup'); });
+				$("#SetupProjectClone").focusout(function() { fixInputs('SetupProjectClone','SetupProjectDClone','content','SetupProject','onblur'); });
+	
+
+				$("#editPlatformsClone").click(function() { openPanel(myChoosedJob_id, "platforms","platformsClone"); });
+				$("#editHandlersClone").click(function() { openPanel(myChoosedJob_id, "handlers","handlersClone"); });
 			});	
 
 function doFilter(requested_page){
@@ -248,7 +276,7 @@ function doFilter(requested_page){
 		</div><!--  /tabs -->
 	</div> <!-- pagebody -->
 
-<!-- dialog divs -->
+<!------------------------------------------------------- dialog divs ----------------------------------------------------->
 <div id="dialog" title="" >
 <div class="dialogContainer">
 	<div class="InnerLeftDialog">
@@ -281,7 +309,7 @@ function doFilter(requested_page){
 		</div> <!-- closing the JobDescriptionDetails-->
 
 		<div id="platformContainer" class="InnerRightDialog">
-			<span>Requested platforms: </span>
+			<span>Requested platforms: </span> 
 			<p  id="platformsDetails"></p>
 
 			<span>Handlers: </span>
@@ -304,6 +332,78 @@ function doFilter(requested_page){
 	
 	<button id="dialogClose" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Close</span></button>
 </div> <!-- closing the  dialog -->
+
+<!----------------------------------- clone dialog ----------------------------------->
+<div id="cloneDialog" title="" >
+<div class="dialogContainer">
+	<div class="InnerLeftDialog">
+	<div class="OuterDialog">
+		<div id="JobDescriptionClone" class="InnerLeftDialog">
+			<table class="dialogTable"><tr>
+				<td>Application:</td>
+				<td><input id="ApplicationClone" type="text" value=""  readOnly="readonly" /></td><tr>
+				<td>Version:</td>
+				<td><input id="VersionClone" type="text" value="" /></td>
+				<tr>
+				<td >Options:</td>
+				<td><input id="OptionsDClone"type="text" value="" /></td><tr>
+				<td></td>
+				<td><input id="OptionsClone" type="text" value="" readOnly="readonly" /></td>
+				<tr>
+				<td >SetupProject:</td>
+				<td><input id="SetupProjectDClone" type="text" value=""/></td><tr>
+				<td></td>
+				<td><input id="SetupProjectClone" type="text" value="" readOnly="readonly"/></td>
+			</table><br>
+			<br>
+			<a id="overviewButtonClone" class="ui-state-default ui-corner-all" href="javascript:;">
+				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
+			</a>
+
+			<div id="overviewClone" >
+				<p id="overviewCloneP"></p>
+			</div>
+		</div> <!-- closing the JobDescriptionClone-->
+
+		<div id="platformContainer" class="InnerRightDialog">
+			<span>Requested platforms: </span>
+			<a id="editPlatformsClone" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
+			<p  id="platformsClone"></p>
+
+			<span>Handlers: </span>
+			<a id="editHandlersClone" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
+				<p  id="handlersClone"></p>
+			</span>
+		</div><!-- /innerRightDialog -->
+	</div> <!-- /OuterDialog -->
+	</div><!--InnerLeftRight(for the dialogcontainer) -->
+	<div id="DialogButtons" class="InnerRightDialog">
+		<button id="commitClone" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Commit</span></button>
+		<br><br>
+		<button id="goBackToDialog" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Cancel</span></button>
+	</div> <!--InnerRightDialog(for the dialogcontainer) -->
+ 	<!--  /outerAll  -->
+
+</div><!-- DialogContainer -->
+</div> <!-- closing the  dialogClone -->
+
+
+<div id="editPlatformsHandlers" title="">
+	<div id="panelContainer">
+		<div class="InnerLeft">
+			<p id="availableTitle"></p>
+			<ol id="availableAttributes">
+					<!-- <li class="ui-widget-content">Item 1</li> -->	
+			</ol>
+		</div><!-- InnerLeft -->
+		<div class="InnerRight">
+			<p id="requestedTitle"></p>
+			<ol id="requestedAttributes">
+					<!-- <li class="ui-widget-content">Item 1</li> -->	
+			</ol>
+		</div><!-- InnerRight -->
+	</div><!-- panelContainer  -->
+</div><!--  /editPlatformsHandlers -->
 
 
 </body>

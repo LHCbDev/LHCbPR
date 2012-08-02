@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
 from django.template import RequestContext
-
+from django.core import serializers
 
 from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job
 import json, subprocess, sys, configs, re, copy
@@ -36,13 +36,7 @@ def test(request):
     myDict = { 'myauth' : myauth, 'user' : request.user}
     return render_to_response('lhcbPR/index.html', myDict,
                   context_instance=RequestContext(request))
- 
-def makeList(mylist,key):
-    List = []
-    for dict in mylist:  
-        List.append(dict[key])
-    
-    return List
+
 def makeListChecked(mylist,key,are_checked = []):
     List = []
     for dict in mylist:
@@ -61,8 +55,7 @@ def index(request):
 @login_required  #login_url="login"
 def jobDescriptions(request, app_name):
     
-    applications = Application.objects.values('appName').distinct('appName')
-    applicationsList = makeList(applications, 'appName')
+    applicationsList = map(str,Application.objects.values_list('appName', flat=True).distinct())
         
     myauth = request.user.is_authenticated()
     
@@ -137,10 +130,10 @@ def analyseHome(request):
 def handleRequest(request):
     if request.method == 'GET':
         if request.GET['function'] == 'i_love_cookies':
-            appVersionsList = makeList(JobDescription.objects.filter(application__appName__exact=request.GET['key']).values('application__appVersion').distinct('application__appVersion'),'application__appVersion') 
-            optionsList = makeList(Options.objects.all().values('content').distinct('content'),'content')   
-            cmtconfigsList = makeList(Requested_platform.objects.filter(jobdescription__application__appName__exact=request.GET['key']).values('cmtconfig__cmtconfig').distinct('cmtconfig__cmtconfig'),'cmtconfig__cmtconfig')
-            setupProjectList = makeList(SetupProject.objects.all().values('content').distinct('content'),'content')
+            appVersionsList = map(str,JobDescription.objects.filter(application__appName__exact=request.GET['key']).values_list('application__appVersion', flat=True).distinct()) 
+            optionsList = map(str,Options.objects.all().values_list('content', flat=True).distinct())
+            cmtconfigsList = map(str,Requested_platform.objects.filter(jobdescription__application__appName__exact=request.GET['key']).values_list('cmtconfig__cmtconfig', flat=True).distinct())
+            setupProjectList = map(str,SetupProject.objects.all().values_list('content', flat=True).distinct())
             
             myDict = { 'appVersions' : appVersionsList,
                        'options' : optionsList,
@@ -225,35 +218,9 @@ def getJobDetails(request):
     
     myJob = JobDescription.objects.get(pk=request.GET['job_id'])
 
-    #platforms = makeList(Requested_platform.objects.filter(jobdescription__exact=myJob).values('cmtconfig__cmtconfig').distinct('cmtconfig_cmtconfig'),'cmtconfig__cmtconfig')
-    #all_platforms = makeList(Platform.objects.values('cmtconfig').distinct('cmtconfig'),'cmtconfig')
-    #all_platformsList = []
-    #for all_p in all_platforms:
-    #    if all_p in platforms:
-    #        all_platformsList.append({ 'platform' : all_p, 'checked' : True })
-    #    else:
-    #        all_platformsList.append({ 'platform' : all_p, 'checked' : False })
+    platforms = map(str,Requested_platform.objects.filter(jobdescription__exact=myJob).values_list('cmtconfig__cmtconfig', flat=True).distinct())
             
-    #handlers = makeList(JobHandler.objects.filter(jobDescription__exact=myJob).values('handler__name').distinct('handler__name'),'handler__name')
-    
-    #all_handlers = makeList(Handler.objects.values('name').distinct('name'),'name')
-    #all_handlersList = []
-    #for all_h in all_handlers:
-    #    if all_h in handlers:
-    #        all_handlersList.append({ 'handler' : all_h, 'checked' : True })
-    #    else:
-    #       all_handlersList.append({ 'handler' : all_h, 'checked' : False })
-    platforms = makeList(Requested_platform.objects.filter(jobdescription__exact=myJob).values('cmtconfig__cmtconfig').distinct('cmtconfig_cmtconfig'),'cmtconfig__cmtconfig')
-    
-    all_platformsList = []
-    for all_p in platforms:
-        all_platformsList.append({ 'platform' : all_p, 'checked' : True })
-            
-    handlers = makeList(JobHandler.objects.filter(jobDescription__exact=myJob).values('handler__name').distinct('handler__name'),'handler__name')
-    
-    all_handlersList = []
-    for all_h in handlers:
-        all_handlersList.append({ 'handler' : all_h, 'checked' : True })
+    handlers = map(str,JobHandler.objects.filter(jobDescription__exact=myJob).values_list('handler__name', flat=True).distinct())
     
     dataDict = {
                 'pk' : myJob.id,   
@@ -261,8 +228,8 @@ def getJobDetails(request):
                 'appVersion' : myJob.application.appVersion,
                 'options' : myJob.options.content,
                 'optionsD' : myJob.options.description,
-                'platforms' : all_platformsList,
-                'handlers' : all_handlersList
+                'platforms' : platforms,
+                'handlers' : handlers
                 }
     try:
         dataDict['setupProject'] = myJob.setup_project.content
@@ -272,11 +239,11 @@ def getJobDetails(request):
         dataDict['setupProjectD'] = ''
     
     if 'cloneRequest' or 'editRequest' in request.GET:
-        dataDict['versionsAll'] = makeList(Application.objects.filter(appName__exact=myJob.application.appName).values('appVersion').distinct('appVersion'),'appVersion')
-        dataDict['optionsAll'] = makeList(Options.objects.all().values('content').distinct('content'),'content')
-        dataDict['optionsDAll'] = makeList(Options.objects.all().values('description').distinct('description'),'description')
-        dataDict['setupAll'] = makeList(SetupProject.objects.all().values('content').distinct('content'),'content')
-        dataDict['setupDAll'] = makeList(SetupProject.objects.all().values('description').distinct('description'),'description')
+        dataDict['versionsAll'] = map(str,Application.objects.filter(appName__exact=myJob.application.appName).values_list('appVersion', flat=True).distinct())
+        dataDict['optionsAll'] = map(str,Options.objects.all().values_list('content', flat=True).distinct())
+        dataDict['optionsDAll'] = map(str,Options.objects.all().values_list('description', flat=True).distinct())
+        dataDict['setupAll'] = map(str,SetupProject.objects.all().values_list('content', flat=True).distinct())
+        dataDict['setupDAll'] = map(str,SetupProject.objects.all().values_list('description', flat=True).distinct())
     
     #check if the jobdescription exists in runned jobs so the user can edit or not some attributes
     if 'editRequest':
@@ -335,3 +302,13 @@ def commitClone(request):
         return HttpResponse(json.dumps({ 'exists': True }))
     else:
         return HttpResponse(json.dumps({ 'exists' : False }))
+@login_required
+def editPanel(request):
+    all_attributes = []
+    if request.GET['service'] == 'platforms':
+        all_attributes = map(str,Platform.objects.values_list('cmtconfig', flat=True).distinct())
+        
+    if request.GET['service'] == 'handlers':     
+        all_attributes = map(str,Handler.objects.values_list('name', flat=True).distinct())
+
+    return HttpResponse(json.dumps({ 'available' : all_attributes }))
