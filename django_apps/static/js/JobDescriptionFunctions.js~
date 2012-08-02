@@ -30,7 +30,8 @@ var opts = {
 };
   
 $(document).ready(function () {
-    $("#editPlatformsHandlers").hide();
+    $("#alertDialog").hide();
+	$("#editPlatformsHandlers").hide();
 	$("#Platform").hide();
 	$("#SetupProject").hide();
 	$("#dialog").hide();
@@ -49,7 +50,6 @@ $(document).ready(function () {
 	$("#UploadResultsInDialog").click(function () { uploadResults(); });
 	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); });
 	$("#EditInDialog").click(function () { openEditWindow(myChoosedJob_id); });
-	$("#commitClone").click(function () { checkCommit(); });
 	$("#commitEdit").click(function() { checkUpdate();});
 	$("#overviewDialog").hide();
 	$("#overviewButtonClone").click(function () {
@@ -109,35 +109,58 @@ $(document).ready(function () {
 			}
 		});
 
-/* $("#commitClone").click(function () { 
-	$version = $.trim($("#VersionClone").val().fulltrim());
-	$options_content = $.trim($("#OptionsClone").val());
-	$options_descr = $.trim($("#OptionsDClone").val());
-	$setup_content = $.trim($("#SetupProjectClone").val());
-	$setup_descr = $.trim($("#SetupProjectDClone").val());
-	$application = $.trim($("#ApplicationClone").val());
+		
+		$("#commitClone").click(function () { 
+			$version = $.trim($("#VersionClone").val().fulltrim());
+			$options_content = $.trim($("#OptionsClone").val());
+			$options_descr = $.trim($("#OptionsDClone").val());
+			$setup_content = $.trim($("#SetupProjectClone").val());
+			$setup_descr = $.trim($("#SetupProjectDClone").val());
+			$application = $.trim($("#ApplicationClone").val());
+			
+			if ($version == "" || $options_content == "" || $options_descr == ""){
+				myAlert("All fields must be filled (except the SetupProjects fields which can be empty)!","","Attention","");
+				return;
+			}
+	
+			if (($setup_content == "" && $setup_descr != "") || ($setup_content != "" && $setup_descr == "")){
+				myAlert("ASetupProject fields must be both filled or both empty!","","Attention","");
+				return;
+			}
+	
+			var platforms = getSelectedChildsOne("platformsClone");
+			if (platforms.length == 0){
+				myAlert("At least one platform must be checked!","","Attention","");
+				return;
+			}
 
-	$.ajax({
-    	'url' : '/django/lhcbPR/commitClone',
-		'type' : 'GET',
-		'data' : {
-		'application' : $application,
-		'version' : $version, 
-		'setupproject' : $setup_content,
-		'setupprojectD' : $setup_descr,
-		'options' : $options_content,
-		'optionsD' : $options_descr,	
-		},
-    	'success' : function(data) {
-			 var jsondata = $.parseJSON(data);
-			if (jsondata.exists)
-				alert("Job description already exists");
-			else 
-				alert("Job added (dummy function, doesn't really saves the new object)");
-      	}
-    });
- });
-*/
+			var handlers = getSelectedChildsOne("handlersClone");
+			if (handlers.length == 0){
+				myAlert("At least one handler must be checked!","","Commit message","");
+				return;
+			}
+
+			$.ajax({
+    			'url' : '/django/lhcbPR/commitClone',
+				'type' : 'GET',
+				'data' : {
+				'application' : $application,
+				'version' : $version, 
+				'setupproject' : $setup_content,
+				'setupprojectD' : $setup_descr,
+				'options' : $options_content,
+				'optionsD' : $options_descr,	
+				},
+    			'success' : function(data) {
+			 		var jsondata = $.parseJSON(data);
+					if (jsondata.exists)
+						myAlert("Job description already exists","","Attention","");
+					else 
+						myAlert("Job added (dummy function, doesn't really saves the new object)","","Attention","");
+      			}
+    		});/* /ajax*/
+ 		});/* /commitClone function*/
+		
 
 });
 function checkUpdate(){
@@ -189,67 +212,6 @@ function checkUpdate(){
 	xmlhttp.open("GET", "/django/lhcbPR/commitClone?application="+application+"&version="+version+"&setupproject="
 	+setup_content+"&setupprojectD="+setup_descr+"&options="+options_content+"&optionsD="+options_descr
 	+"&platforms="+escape(platforms.join(","))+"&handlers="+escape(handlers.join(","))+"&update=", true);
-	xmlhttp.send();
-	
-	return;
-}
-
-function checkCommit(){
-	version = document.getElementById("VersionClone").value.fulltrim();
-	options_content = document.getElementById("OptionsClone").value.fulltrim();
-	options_descr = document.getElementById("OptionsDClone").value.fulltrim();
-	setup_content = document.getElementById("SetupProjectClone").value.fulltrim();
-	setup_descr = document.getElementById("SetupProjectDClone").value.fulltrim();
-	
-	if (version == "" || options_content == "" || options_descr == ""){
-		alert("All fields must be filled (except the SetupProjects fields which can be empty)!");
-		return;
-	}
-	
-	if ((setup_content == "" && setup_descr != "") || (setup_content != "" && setup_descr == "")){
-		alert("SetupProject fields must be both filled or both empty!");
-		return;
-	}
-	
-	var platforms = getSelectedChildsOne("platformsClone");
-	if (platforms.length == 0){
-		alert("At least one platform must be checked!")
-		return;
-	}
-	var handlers = getSelectedChildsOne("handlersClone");
-	if (handlers.length == 0){
-		alert("At least one handler must be checked!")
-		return;
-	}
-
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
-			if (jsondata.exists)
-				alert("Job description already exists");
-			else 
-				alert("Job added (dummy function, doesn't really saves the new object)");
-    	}	
-  	}
-	
-	application = document.getElementById("ApplicationClone").value.fulltrim();
-	// send the request the to server
-	xmlhttp.open("GET", "/django/lhcbPR/commitClone?application="+application+"&version="+version+"&setupproject="
-	+setup_content+"&setupprojectD="+setup_descr+"&options="+options_content+"&optionsD="+options_descr
-	+"&platforms="+escape(platforms.join(","))+"&handlers="+escape(handlers.join(",")), true);
 	xmlhttp.send();
 	
 	return;
@@ -840,4 +802,29 @@ function getListValues(id){
 		sdValues.push(nodes[i].id);
 	}
 	return sdValues;
+}
+
+function myAlert(message1,message2,title, icon){
+	$("#alertDialogIcon").attr('class','');
+	$("#alertDialogIcon").addClass('ui-icon');
+	
+	if ( icon == "" ){
+		$("#alertDialogIcon").attr('ui-icon-notice');
+	}
+	else{
+		$("#alertDialogIcon").addClass(icon);
+	}
+	
+	$("#alertDialog").attr('title',title);
+	$("#alertMessage").text(message1);
+	$("#alertMessage2").text(message2);
+	$( "#alertDialog" ).dialog({
+			modal: true,
+			width : 350,
+			buttons: {
+				Ok: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+	});
 }

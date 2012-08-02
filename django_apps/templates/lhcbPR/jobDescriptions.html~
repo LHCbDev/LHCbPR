@@ -397,7 +397,7 @@ function doFilter(requested_page){
 <div class="dialogContainer">
 	<div class="InnerLeftDialog">
 	<div class="OuterDialog">
-		<div id="JobDescriptionClone" class="InnerLeftDialog">
+		<div id="JobDescriptionEdit" class="InnerLeftDialog">
 			<p id="editMessage"><p>
 			<table class="dialogTable"><tr>
 				<td>Application:</td>
@@ -465,6 +465,14 @@ function doFilter(requested_page){
 	</div><!-- panelContainer  -->
 </div><!--  /editPlatformsHandlers -->
 
+
+<div id="alertDialog" title="">
+	<p id="alertMessage">
+		<span id="alertDialogIcon" class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
+	</p>
+	<p id="alertMessage2">
+	</p>
+</div>
 
 </body>
 
