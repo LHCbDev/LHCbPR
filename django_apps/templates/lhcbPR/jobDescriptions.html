@@ -28,7 +28,7 @@
 				$('#tabs').tabs({ selected : -1 });
 				$('#tabs').tabs('select', '#{{ active_tab }}tab');
 				
-				$('#overviewButton,#overviewButtonClone,#editPlatformsClone,#editHandlersClone, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
+				$('#overviewButton,#overviewButtonClone,#editPlatformsClone,#editHandlersClone,#overviewButtonEdit,#editHandlersEdit,#editPlatformsEdit #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
 					function() { $(this).addClass('ui-state-hover'); },
 					function() { $(this).removeClass('ui-state-hover'); }
 				);
@@ -38,6 +38,8 @@
 				$("CloneInDialog").button();
 				$("commitClone").button();
 				$("goBackToDialog").button();
+				$("commitEdit").button();
+				$("goBackToDialogEdit").button();
 			
 			  	$("#VersionButton").click(function(){ showHide("VersionButton","Version") });
 			  	$("#OptionsButton").click(function(){ showHide("OptionsButton","Options") });
@@ -82,6 +84,8 @@
 
 				$("#editPlatformsClone").click(function() { openPanel(myChoosedJob_id, "platforms","platformsClone"); });
 				$("#editHandlersClone").click(function() { openPanel(myChoosedJob_id, "handlers","handlersClone"); });
+				$("#editPlatformsEdit").click(function() { openPanel(myChoosedJob_id, "platforms","platformsEdit"); });
+				$("#editHandlersEdit").click(function() { openPanel(myChoosedJob_id, "handlers","handlersEdit"); });
 			});	
 
 function doFilter(requested_page){
@@ -333,7 +337,7 @@ function doFilter(requested_page){
 	<button id="dialogClose" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Close</span></button>
 </div> <!-- closing the  dialog -->
 
-<!----------------------------------- clone dialog ----------------------------------->
+<!----------------------------------- CLONE DIALOG ----------------------------------->
 <div id="cloneDialog" title="" >
 <div class="dialogContainer">
 	<div class="InnerLeftDialog">
@@ -388,6 +392,62 @@ function doFilter(requested_page){
 </div> <!-- closing the  dialogClone -->
 
 
+<!---------------------------------------------- EDIT DIALOG --------------------------------------------------->
+<div id="editDialog" title="" >
+<div class="dialogContainer">
+	<div class="InnerLeftDialog">
+	<div class="OuterDialog">
+		<div id="JobDescriptionEdit" class="InnerLeftDialog">
+			<p id="editMessage"><p>
+			<table class="dialogTable"><tr>
+				<td>Application:</td>
+				<td><input id="ApplicationEdit" type="text" value=""  readOnly="readonly" /></td><tr>
+				<td>Version:</td>
+				<td><input id="VersionEdit" type="text" value="" readOnly="readonly"/></td>
+				<tr>
+				<td >Options:</td>
+				<td><input id="OptionsDEdit"type="text" value="" readOnly="readonly"/></td><tr>
+				<td></td>
+				<td><input id="OptionsEdit" type="text" value="" readOnly="readonly" /></td>
+				<tr>
+				<td >SetupProject:</td>
+				<td><input id="SetupProjectDEdit" type="text" value="" readOnly="readonly"/></td><tr>
+				<td></td>
+				<td><input id="SetupProjectEdit" type="text" value="" readOnly="readonly"/></td>
+			</table><br>
+			<br>
+			<a id="overviewButtonEdit" class="ui-state-default ui-corner-all" href="javascript:;">
+				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
+			</a>
+
+			<div id="overviewEdit" >
+				<p id="overviewEditP"></p>
+			</div>
+		</div> <!-- closing the JobDescriptionClone-->
+
+		<div id="platformContainer" class="InnerRightDialog">
+			<span>Requested platforms: </span>
+			<a id="editPlatformsEdit" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
+			<p  id="platformsEdit"></p>
+
+			<span>Handlers: </span>
+			<a id="editHandlersEdit" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
+				<p  id="handlersEdit"></p>
+			</span>
+		</div><!-- /innerRightDialog -->
+	</div> <!-- /OuterDialog -->
+	</div><!--InnerLeftRight(for the dialogcontainer) -->
+	<div id="DialogButtons" class="InnerRightDialog">
+		<button id="commitEdit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Commit</span></button>
+		<br><br>
+		<button id="goBackToDialogEdit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Cancel</span></button>
+	</div> <!--InnerRightDialog(for the dialogcontainer) -->
+ 	<!--  /outerAll  -->
+
+</div><!-- DialogContainer -->
+</div> <!-- closing the  dialogClone -->
+
+<!-------------------------------------- EDIT HANDLERS/PLATFORMS PANEL --------------------------------------->
 <div id="editPlatformsHandlers" title="">
 	<div id="panelContainer">
 		<div class="InnerLeft">
