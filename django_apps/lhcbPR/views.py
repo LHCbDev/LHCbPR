@@ -246,7 +246,7 @@ def getJobDetails(request):
         dataDict['setupDAll'] = map(str,SetupProject.objects.all().values_list('description', flat=True).distinct())
     
     #check if the jobdescription exists in runned jobs so the user can edit or not some attributes
-    if 'editRequest':
+    if 'editRequest' in request.GET:
         try:
             Job.objects.get(jobDescription__pk__exact=request.GET['job_id'])
         except Exception:

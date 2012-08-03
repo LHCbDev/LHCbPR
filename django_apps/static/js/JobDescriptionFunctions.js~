@@ -28,14 +28,13 @@ $(document).ready(function () {
 			});
 	$("#goBackToDialogEdit").click(function () { 
 				openWindow(myChoosedJob_id); 	
-				
+				$("#pagebody").mask("Loading...");
 				$("#editDialog").dialog("close");
 			});
 	$("#RunInDialog").click(function () { run(); });
 	$("#UploadResultsInDialog").click(function () { uploadResults(); });
 	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); $("#pagebody").mask("Loading..."); });
 	$("#EditInDialog").click(function () { openEditWindow(myChoosedJob_id); $("#pagebody").mask("Loading..."); });
-	$("#commitEdit").click(function() { checkUpdate();});
 	$("#overviewDialog").hide();
 	$("#overviewButtonClone").click(function () {
 		// check visibility
@@ -96,7 +95,7 @@ $(document).ready(function () {
 
 		
 		$("#commitClone").click(function () { 
-			$version = $.trim($("#VersionClone").val().fulltrim());
+			$version = $.trim($("#VersionClone").val());
 			$options_content = $.trim($("#OptionsClone").val());
 			$options_descr = $.trim($("#OptionsDClone").val());
 			$setup_content = $.trim($("#SetupProjectClone").val());
@@ -107,21 +106,68 @@ $(document).ready(function () {
 				myAlert("All fields must be filled (except the SetupProjects fields which can be empty)!","","Attention","");
 				return;
 			}
-	
 			if (($setup_content == "" && $setup_descr != "") || ($setup_content != "" && $setup_descr == "")){
-				myAlert("ASetupProject fields must be both filled or both empty!","","Attention","");
+				myAlert("SetupProject fields must be both filled or both empty!","","Attention","");
 				return;
 			}
-	
 			var platforms = getSelectedChildsOne("platformsClone");
 			if (platforms.length == 0){
 				myAlert("At least one platform must be checked!","","Attention","");
 				return;
 			}
-
 			var handlers = getSelectedChildsOne("handlersClone");
 			if (handlers.length == 0){
 				myAlert("At least one handler must be checked!","","Commit message","");
+				return;
+			}
+			$.ajax({
+    			'url' : '/django/lhcbPR/commitClone',
+				'type' : 'GET',
+				'data' : {
+				'application' : $application,
+				'version' : $version, 
+				'setupproject' : $setup_content,
+				'setupprojectD' : $setup_descr,
+				'options' : $options_content,
+				'optionsD' : $options_descr,	
+				'platforms' : escape(platforms.join(",")),
+				'handlers' : escape(handlers.join(",")),
+				},
+    			'success' : function(data) {
+			 		var jsondata = $.parseJSON(data);
+					if (jsondata.exists)
+						myAlert("Job description already exists","","Attention","");
+					else 
+						myAlert("Job added (dummy function, doesn't really saves the new object)","","Attention","");
+      			}
+    		});/* /ajax*/
+ 		});/* /commitClone function*/
+
+		
+		$("#commitEdit").click(function(){ 
+			$version = $.trim($("#VersionEdit").val());
+			$options_content = $.trim($("#OptionsEdit").val());
+			$options_descr = $.trim($("#OptionsDEdit").val());
+			$setup_content = $.trim($("#SetupProjectEdit").val());
+			$setup_descr = $.trim($("#SetupProjectDEdit").val());
+			$application = $.trim($("#ApplicationEdit").val());
+		
+			if ($version == "" || $options_content == "" || $options_descr == ""){
+				myAlert("All fields must be filled (except the SetupProjects fields which can be empty)!","","Attention","");
+				return;
+			}
+			if (($setup_content == "" && $setup_descr != "") || ($setup_content != "" && $setup_descr == "")){
+				myAlert("SetupProject fields must be both filled or both empty!","","Attention","");
+				return;
+			}
+			var platforms = getSelectedChildsOne("platformsEdit");
+			if (platforms.length == 0){
+				myAlert("At least one platform must be checked!","","Attention","");
+				return;
+			}
+			var handlers = getSelectedChildsOne("handlersEdit");
+			if (handlers.length == 0){
+				myAlert("At least one handler must be checked!","","Attention","");
 				return;
 			}
 
@@ -135,72 +181,18 @@ $(document).ready(function () {
 				'setupprojectD' : $setup_descr,
 				'options' : $options_content,
 				'optionsD' : $options_descr,	
+				'platforms' : escape(platforms.join(",")),
+				'handlers' : escape(handlers.join(",")),
+				'update' : '',
 				},
     			'success' : function(data) {
 			 		var jsondata = $.parseJSON(data);
-					if (jsondata.exists)
-						myAlert("Job description already exists","","Attention","");
-					else 
-						myAlert("Job added (dummy function, doesn't really saves the new object)","","Attention","");
+					if (jsondata.updated)
+						myAlert("Job description updated successfully(dummy function, doesn't really updates the new object)","","Attention","");
       			}
     		});/* /ajax*/
- 		});/* /commitClone function*/
-		
-
+		});/* commitEdit */
 });
-function checkUpdate(){
-	version = document.getElementById("VersionEdit").value.fulltrim();
-	options_content = document.getElementById("OptionsEdit").value.fulltrim();
-	options_descr = document.getElementById("OptionsDEdit").value.fulltrim();
-	setup_content = document.getElementById("SetupProjectEdit").value.fulltrim();
-	setup_descr = document.getElementById("SetupProjectDEdit").value.fulltrim();
-	
-	if (version == "" || options_content == "" || options_descr == ""){
-		alert("All fields must be filled (except the SetupProjects fields which can be empty)!");
-		return;
-	}
-	
-	var platforms = getSelectedChildsOne("platformsEdit");
-	if (platforms.length == 0){
-		alert("At least one platform must be checked!")
-		return;
-	}
-	var handlers = getSelectedChildsOne("handlersEdit");
-	if (handlers.length == 0){
-		alert("At least one handler must be checked!")
-		return;
-	}
-
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
-			if (jsondata.updated)
-				alert("Job description updated successfully(dummy function, doesn't really updates the new object)");
-    	}	
-  	}
-	
-	application = document.getElementById("ApplicationClone").value.fulltrim();
-	// send the request the to server
-	xmlhttp.open("GET", "/django/lhcbPR/commitClone?application="+application+"&version="+version+"&setupproject="
-	+setup_content+"&setupprojectD="+setup_descr+"&options="+options_content+"&optionsD="+options_descr
-	+"&platforms="+escape(platforms.join(","))+"&handlers="+escape(handlers.join(","))+"&update=", true);
-	xmlhttp.send();
-	
-	return;
-}
 
 function getSelectedChildsOne(id){
 	//nodes = document.getElementById(id).children;
@@ -233,44 +225,37 @@ function makeOverview(div_id){
 }
 
 function fixInputs(father, child, func,real_name,event){
-		var myvalue = $("#"+father).val();
-		
-			if (window.XMLHttpRequest){
-				// code for IE7+, Firefox, Chrome, Opera, Safari
-  				xmlhttp=new XMLHttpRequest();
-  			}
+	$myvalue =  $.trim($("#"+father).val());
+	
+	$.ajax({
+    	'url' : '/django/lhcbPR/editRequests',
+		'type' : 'GET',
+		'data' : {
+		'key' : func,
+		'value' : $myvalue,
+		'real_name' : real_name
+		},
+    	'success' : function(data) {
+			var jsondata = $.parseJSON(data);
+			var jsondata = JSON.parse(xmlhttp.responseText);
+			
+			if (jsondata.data != ""){
+				$("#"+child).val(jsondata.data);
+				if (event == "onkeyup")
+					$("#"+child).attr("readOnly","readonly");
+				else if (event == "onblur")
+					$("#"+father).attr("readOnly","readonly");
+			}
 			else{
-				// code for IE6, IE5
-  				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  			}
-
-			// when the response comes do...
-			xmlhttp.onreadystatechange=function()
-			{
-  				if (xmlhttp.readyState==4 && xmlhttp.status==200)
-				{
-					var jsondata = JSON.parse(xmlhttp.responseText);
-					
-					if (jsondata.data != ""){
-						$("#"+child).val(jsondata.data);
-						if (event == "onkeyup")
-							$("#"+child).attr("readOnly","readonly");
-						else if (event == "onblur")
-							$("#"+father).attr("readOnly","readonly");
-					}
-					else{
-						if (event == "onkeyup"){					
-    					 		$("#"+child).removeAttr('readOnly');
-								$("#"+child).val("");	
-						}
-					}
-					makeOverview("cloneDialog");
-					makeOverview("editDialog");
+				if (event == "onkeyup"){					
+    			 		$("#"+child).removeAttr('readOnly');
+						$("#"+child).val("");	
 				}
-    		}	
-			// send the request the to server
-			xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/editRequests?key="+func+"&value="+myvalue.fulltrim()+"&real_name="+real_name, true);
-			xmlhttp.send();
+			}
+			makeOverview("cloneDialog");
+			makeOverview("editDialog");
+      	}
+    });/* /ajax*/
 }
 
 function showHide( button_id, box_id )
@@ -332,8 +317,7 @@ function addJobs(box,apps){
 	//loop over the array which contains the versions
 	for(var i = 0; i < apps.length; i++)
 	{	
-		var myLi = document.createElement("li");
-		
+		var myLi = document.createElement("li");	
 		myLi.appendChild(document.createTextNode(apps[i].appName+"  "+apps[i].appVersion+"  "+apps[i].optionsD+"  "+apps[i].setupproject));
 			
 		//extra function click
@@ -359,7 +343,6 @@ function permalink(){
 		mypermalink+= "&Options="+escape(options.join(","));
 	if (cmts.length >= 1)
 		 mypermalink+= "&platforms="+escape(cmts.join(","));
-	
 	//location.hash = mypermalink;
 	document.getElementById("mypermalink").href = window.location.href.split("?")[0]+mypermalink;
 	
@@ -367,31 +350,25 @@ function permalink(){
 }
 
 function openWindow(job_id){
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
+	if (job_id == "")
+		return;
+	$.ajax({
+    	'url' : '/django/lhcbPR/getJobDetails',
+		'type' : 'GET',
+		'data' : {
+		'job_id' : job_id,	
+		},
+    	'success' : function(data) {
+			var jsondata = $.parseJSON(data);
 			mydialog = document.getElementById("dialog");
 			mydialog.title=jsondata.appName+" job description details";
 					
-			document.getElementById("ApplicationDetails").value = jsondata.appName;
-			document.getElementById("VersionDetails").value = jsondata.appVersion;
-			document.getElementById("OptionsDetails").value = jsondata.options;
-			document.getElementById("OptionsDDetails").value = jsondata.optionsD;
-			document.getElementById("SetupProjectDetails").value = jsondata.setupProject;
-			document.getElementById("SetupProjectDDetails").value = jsondata.setupProjectD;		
+			$("#ApplicationDetails").attr('value', jsondata.appName);
+			$("#VersionDetails").attr('value', jsondata.appVersion);
+			$("#OptionsDetails").attr('value', jsondata.options);
+			$("#OptionsDDetails").attr('value', jsondata.optionsD);
+			$("#SetupProjectDetails").attr('value', jsondata.setupProject);
+			$("#SetupProjectDDetails").attr('value', jsondata.setupProjectD);		
 			
 			removeAllChilds("platformsDetails");	
 			removeAllChilds("handlersDetails");	
@@ -399,75 +376,61 @@ function openWindow(job_id){
 			myboxHandlers = document.getElementById("handlersDetails");			
 
 			for(var i = 0; i < jsondata.platforms.length; i++){
-					myInput = document.createElement("input");
-					myInput.type = "checkbox";	
-					myInput.value = jsondata.platforms[i];
-					myInput.setAttribute('readOnly','readonly');
-					myInput.setAttribute('disabled','true');	
+				myInput = document.createElement("input");
+				myInput.type = "checkbox";	
+				myInput.value = jsondata.platforms[i];
+				myInput.setAttribute('readOnly','readonly');
+				myInput.setAttribute('disabled','true');	
 					
-					myInput.setAttribute('checked','checked');
+				myInput.setAttribute('checked','checked');
 						
-					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
-					mybox.appendChild(document.createElement("br"));
-					
+				mybox.appendChild(myInput);
+				mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
+				mybox.appendChild(document.createElement("br"));				
 			}
 			for(var i = 0; i < jsondata.handlers.length; i++){
-					myInput = document.createElement("input");
-					myInput.type = "checkbox";	
-					myInput.value = jsondata.handlers[i];
-					myInput.setAttribute('readOnly','readonly');
-					myInput.setAttribute('disabled','true');	
+				myInput = document.createElement("input");
+				myInput.type = "checkbox";	
+				myInput.value = jsondata.handlers[i];
+				myInput.setAttribute('readOnly','readonly');
+				myInput.setAttribute('disabled','true');	
 					
-					myInput.setAttribute('checked','checked');
+				myInput.setAttribute('checked','checked');
 						
-					myboxHandlers.appendChild(myInput);
-					myboxHandlers.appendChild(document.createTextNode(jsondata.handlers[i]));
-					myboxHandlers.appendChild(document.createElement("br"));
-					
+				myboxHandlers.appendChild(myInput);
+				myboxHandlers.appendChild(document.createTextNode(jsondata.handlers[i]));
+				myboxHandlers.appendChild(document.createElement("br"));			
 			}
 			myChoosedJob_id = job_id;
-				$("#overviewDialog").hide();
+			$("#overviewDialog").hide();
 			
-				$("#pagebody").unmask();
+			$("#pagebody").unmask();
 
-				$("#dialog").dialog({
-    				resizable: false,
-    				height: 550,
-    				width: 860,
-   					modal: true,
-				});
-				//fix overview
-				makeOverview("dialog");
-    	}	
-  	}
-	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id, true);
-	xmlhttp.send();
-	
+			$("#dialog").dialog({
+    			resizable: false,
+    			height: 550,
+    			width: 860,
+   				modal: true,
+			});
+			//fix overview
+			makeOverview("dialog");
+      	}
+    });/* /ajax*/
 	return;
 }
 
 function openEditWindow(job_id){
 	if (job_id == "")
 		return;
-
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
+	$.ajax({
+    	'url' : '/django/lhcbPR/getJobDetails',
+		'type' : 'GET',
+		'data' : {
+		'job_id' : job_id,
+		'editRequest' : ''
+		},
+    	'success' : function(data) {
+			var jsondata = $.parseJSON(data);
 			mydialog = document.getElementById("editDialog");
 			mydialog.title="Update existing "+jsondata.appName+" job description";
 					
@@ -484,30 +447,30 @@ function openEditWindow(job_id){
 			myboxHandler = document.getElementById("handlersEdit");
 	
 			for(var i = 0; i < jsondata.platforms.length; i++){
-					myInput = document.createElement("input");
-					myInput.type = "checkbox";	
-					myInput.value = jsondata.platforms[i];
-					myInput.setAttribute('readOnly','readonly');
-					myInput.setAttribute('disabled','true');
+				myInput = document.createElement("input");
+				myInput.type = "checkbox";	
+				myInput.value = jsondata.platforms[i];
+				myInput.setAttribute('readOnly','readonly');
+				myInput.setAttribute('disabled','true');
 					
-					myInput.setAttribute('checked','true');
+				myInput.setAttribute('checked','true');
 					
-					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
-					mybox.appendChild(document.createElement("br"));		
+				mybox.appendChild(myInput);
+				mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
+				mybox.appendChild(document.createElement("br"));		
 			}
 			for(var i = 0; i < jsondata.handlers.length; i++){
-					myInput = document.createElement("input");
-					myInput.type = "checkbox";	
-					myInput.value = jsondata.handlers[i];
-					myInput.setAttribute('readOnly','readonly');
-					myInput.setAttribute('disabled','true');
+				myInput = document.createElement("input");
+				myInput.type = "checkbox";	
+				myInput.value = jsondata.handlers[i];
+				myInput.setAttribute('readOnly','readonly');
+				myInput.setAttribute('disabled','true');
 					
-					myInput.setAttribute('checked','true');
+				myInput.setAttribute('checked','true');
 					
-					myboxHandler.appendChild(myInput);
-					myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i]));
-					myboxHandler.appendChild(document.createElement("br"));		
+				myboxHandler.appendChild(myInput);
+				myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i]));
+				myboxHandler.appendChild(document.createElement("br"));		
 			}
 			$( "#VersionEdit" ).autocomplete({
 				source: jsondata.versionsAll
@@ -542,9 +505,7 @@ function openEditWindow(job_id){
 				document.getElementById("editMessage").appendChild(document.createTextNode("Job description exists in runned jobs!"));
 			}
 			$('#overviewEdit').hide();
-
 			$("#pagebody").unmask();
-
 			$("#editDialog").dialog({
     			resizable: false,
     			height: 530,
@@ -552,45 +513,33 @@ function openEditWindow(job_id){
    				modal: true
 			});
 			makeOverview("editDialog");
-    	}	
-  	}
-	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id+"&editRequest=", true);
-	xmlhttp.send();
+      	}
+    });/* /ajax*/
 	$("#dialog").dialog("close");
 	return;
 }
-
-
 function openCloneWindow(job_id){
 	if (job_id == "")
 		return;
 
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
+	$.ajax({
+    	'url' : '/django/lhcbPR/getJobDetails',
+		'type' : 'GET',
+		'data' : {
+		'job_id' : job_id,
+		'cloneRequest' : '',
+		},
+    	'success' : function(data) {
+			var jsondata = $.parseJSON(data);
 			mydialog = document.getElementById("cloneDialog");
 			mydialog.title="Add new "+jsondata.appName+" job description";
 					
-			document.getElementById("ApplicationClone").value = jsondata.appName;
-			document.getElementById("VersionClone").value = jsondata.appVersion;
-			document.getElementById("OptionsClone").value = jsondata.options;
-			document.getElementById("OptionsDClone").value = jsondata.optionsD;
-			document.getElementById("SetupProjectClone").value = jsondata.setupProject;
-			document.getElementById("SetupProjectDClone").value = jsondata.setupProjectD;		
+			$("#ApplicationClone").attr('value', jsondata.appName);
+			$("#VersionClone").attr('value', jsondata.appVersion);
+			$("#OptionsClone").attr('value', jsondata.options);
+			$("#OptionsDClone").attr('value', jsondata.optionsD);
+			$("#SetupProjectClone").attr('value', jsondata.setupProject);
+			$("#SetupProjectDClone").attr('value', jsondata.setupProjectD);		
 			
 			removeAllChilds("platformsClone");
 			removeAllChilds("handlersClone");	
@@ -598,30 +547,30 @@ function openCloneWindow(job_id){
 			myboxHandler = document.getElementById("handlersClone");
 	
 			for(var i = 0; i < jsondata.platforms.length; i++){
-					myInput = document.createElement("input");
-					myInput.type = "checkbox";	
-					myInput.setAttribute('readOnly','readonly');
-					myInput.setAttribute('disabled','true');
-					myInput.value = jsondata.platforms[i];
+				myInput = document.createElement("input");
+				myInput.type = "checkbox";	
+				myInput.setAttribute('readOnly','readonly');
+				myInput.setAttribute('disabled','true');
+				myInput.value = jsondata.platforms[i];
 					
-					myInput.setAttribute('checked','true');
+				myInput.setAttribute('checked','true');
 					
-					mybox.appendChild(myInput);
-					mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
-					mybox.appendChild(document.createElement("br"));		
+				mybox.appendChild(myInput);
+				mybox.appendChild(document.createTextNode(jsondata.platforms[i]));
+				mybox.appendChild(document.createElement("br"));		
 			}
 			for(var i = 0; i < jsondata.handlers.length; i++){
-					myInput = document.createElement("input");
-					myInput.type = "checkbox";
-					myInput.setAttribute('readOnly','readonly');
-					myInput.setAttribute('disabled','true');
-					myInput.value = jsondata.handlers[i];
+				myInput = document.createElement("input");
+				myInput.type = "checkbox";
+				myInput.setAttribute('readOnly','readonly');
+				myInput.setAttribute('disabled','true');
+				myInput.value = jsondata.handlers[i];
 					
-					myInput.setAttribute('checked','true');
+				myInput.setAttribute('checked','true');
 					
-					myboxHandler.appendChild(myInput);
-					myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i]));
-					myboxHandler.appendChild(document.createElement("br"));		
+				myboxHandler.appendChild(myInput);
+				myboxHandler.appendChild(document.createTextNode(jsondata.handlers[i]));
+				myboxHandler.appendChild(document.createElement("br"));		
 			}
 			$( "#VersionClone" ).autocomplete({
 				source: jsondata.versionsAll
@@ -652,39 +601,9 @@ function openCloneWindow(job_id){
    				modal: true
 			});
 			makeOverview("cloneDialog");
-    	}	
-  	}
-	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getJobDetails?job_id="+job_id+"&cloneRequest=", true);
-	xmlhttp.send();
+      	}
+    });/* /ajax*/
 	$("#dialog").dialog("close");
-	return;
-}
-
-
-function commitJob(job_id){
-	var xmlhttp;    
-	if (window.XMLHttpRequest){
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-  		xmlhttp=new XMLHttpRequest();
-  	}
-	else{
-		// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  	}
-
-	// when the response comes do...
-	xmlhttp.onreadystatechange=function()
-	{
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var jsondata = JSON.parse(xmlhttp.responseText);
-    	}	
-  	}
-	// send the request the to server
-	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/commitClone?", true);
-	xmlhttp.send();
-	
 	return;
 }
 
