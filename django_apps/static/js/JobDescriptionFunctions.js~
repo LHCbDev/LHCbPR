@@ -10,26 +10,9 @@ var editInputs = ["ApplicationEdit","VersionEdit","SetupProjectEdit","OptionsEdi
 String.prototype.fulltrim=function(){
 	return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
 }
-
-
-var opts = {
-	lines: 13, // The number of lines to draw
-	length: 7, // The length of each line
-	width: 4, // The line thickness
-	radius: 10, // The radius of the inner circle
-	rotate: 0, // The rotation offset
-	color: '#000', // #rgb or #rrggbb
-	speed: 1, // Rounds per second
-	trail: 60, // Afterglow percentage
-	shadow: false, // Whether to render a shadow
-	hwaccel: false, // Whether to use hardware acceleration
-	className: 'spinner', // The CSS class to assign to the spinner
-	zIndex: 2e9, // The z-index (defaults to 2000000000)
-	top: 'auto', // Top position relative to parent in px
-	left: 'auto' // Left position relative to parent in px
-};
   
 $(document).ready(function () {
+	$("#overlay").hide();
     $("#alertDialog").hide();
 	$("#editPlatformsHandlers").hide();
 	$("#Platform").hide();
@@ -40,16 +23,18 @@ $(document).ready(function () {
 	$("#dialogClose").click(function () {$("#dialog").dialog("close");});
 	$("#goBackToDialog").click(function () { 
 				openWindow(myChoosedJob_id); 	
+				$("#pagebody").mask("Loading...");
 				$("#cloneDialog").dialog("close");
 			});
 	$("#goBackToDialogEdit").click(function () { 
 				openWindow(myChoosedJob_id); 	
+				
 				$("#editDialog").dialog("close");
 			});
 	$("#RunInDialog").click(function () { run(); });
 	$("#UploadResultsInDialog").click(function () { uploadResults(); });
-	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); });
-	$("#EditInDialog").click(function () { openEditWindow(myChoosedJob_id); });
+	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); $("#pagebody").mask("Loading..."); });
+	$("#EditInDialog").click(function () { openEditWindow(myChoosedJob_id); $("#pagebody").mask("Loading..."); });
 	$("#commitEdit").click(function() { checkUpdate();});
 	$("#overviewDialog").hide();
 	$("#overviewButtonClone").click(function () {
@@ -443,6 +428,9 @@ function openWindow(job_id){
 			}
 			myChoosedJob_id = job_id;
 				$("#overviewDialog").hide();
+			
+				$("#pagebody").unmask();
+
 				$("#dialog").dialog({
     				resizable: false,
     				height: 550,
@@ -499,6 +487,8 @@ function openEditWindow(job_id){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
 					myInput.value = jsondata.platforms[i];
+					myInput.setAttribute('readOnly','readonly');
+					myInput.setAttribute('disabled','true');
 					
 					myInput.setAttribute('checked','true');
 					
@@ -510,6 +500,8 @@ function openEditWindow(job_id){
 					myInput = document.createElement("input");
 					myInput.type = "checkbox";	
 					myInput.value = jsondata.handlers[i];
+					myInput.setAttribute('readOnly','readonly');
+					myInput.setAttribute('disabled','true');
 					
 					myInput.setAttribute('checked','true');
 					
@@ -550,6 +542,9 @@ function openEditWindow(job_id){
 				document.getElementById("editMessage").appendChild(document.createTextNode("Job description exists in runned jobs!"));
 			}
 			$('#overviewEdit').hide();
+
+			$("#pagebody").unmask();
+
 			$("#editDialog").dialog({
     			resizable: false,
     			height: 530,
@@ -647,6 +642,9 @@ function openCloneWindow(job_id){
 			$('#OptionsClone').attr('readOnly','readonly');
 			$('#SetupProjectClone').attr('readOnly','readonly');
 			$('#overviewClone').hide();
+			
+			$("#pagebody").unmask();
+			
 			$("#cloneDialog").dialog({
     			resizable: false,
     			height: 530,
@@ -809,7 +807,7 @@ function myAlert(message1,message2,title, icon){
 	$("#alertDialogIcon").addClass('ui-icon');
 	
 	if ( icon == "" ){
-		$("#alertDialogIcon").attr('ui-icon-notice');
+		$("#alertDialogIcon").addClass('ui-icon-alert');
 	}
 	else{
 		$("#alertDialogIcon").addClass(icon);

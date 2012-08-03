@@ -220,7 +220,7 @@ div.InnerRightDialog { position: relative; float: right; }
 div.dialogContainer { 
 		width: 820px;
 		//height:auto;
-		height: 400px;
+		max-height: 460px;
 		position: relative;
 		overflow: auto;
         clear: both; 
@@ -247,3 +247,18 @@ div.dialogContainer {
 #availableAttributes, #requestedAttributes { list-style-type: none; margin: 0; padding: 0;  }
 #availableAttributes li, #requestedAttributes li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
 #availableAttributes li:hover, #requestedAttributes li:hover { background: #77D5F7; cursor: pointer;}
+
+
+/*---------------------------------- overlay  --------------------------------*/
+#overlay {
+	visibility: hidden;
+	position: absolute;
+	background-color:rgba(0,0,0,0.5);
+	overflow: auto;
+	left: 0;
+	top: 0;
+	width:100%;
+	height:120%;
+	text-align:center;
+	z-index: 1000;
+} 

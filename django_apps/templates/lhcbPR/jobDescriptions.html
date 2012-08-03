@@ -8,21 +8,27 @@
 		<script type="text/javascript" src="/static/js/bubble-tooltip.js"></script>
 		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
 		<script type="text/javascript" src="/static/js/spin.js"></script>
-		<!-- plugin for menu effect-->
 		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
+		<!-- plugin for mask -->
+		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
+		<link type="text/css" href="/static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
+		
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$('#menu').buttonset();
 				/* on click functions for the menus */
 				$('#homeMenu').click(function(){ 
-						document.getElement
-						document.location.href="/django/lhcbPR" 
+						document.location.href="/django/lhcbPR";
+						$("#pagebody").mask("Loading...");
 				});
-				$('#jobDescriptionsMenu').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions" });
-				$('#analyseMenu').click(function(){ document.location.href="/django/lhcbPR/analyse" });
+				$('#jobDescriptionsMenu').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions"; $("#pagebody").mask("Loading..."); });
+				$('#analyseMenu').click(function(){ /* document.location.href="/django/lhcbPR/analyse"; $("#pagebody").mask("Loading..."); */});
 				
 				{% for app in applications %}
-				$('#{{ app }}tabButton').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions/{{ app }}" });
+				$('#{{ app }}tabButton').click(function(){ 
+						document.location.href="/django/lhcbPR/jobDescriptions/{{ app }}" ;
+						$("#{{ active_tab }}tab").mask("Loading...");
+					});
 				{% endfor %}
 
 				$('#tabs').tabs({ selected : -1 });
@@ -51,7 +57,7 @@
 			  	$("#SetupProjectErase").click(function(){ clearCheckBox("SetupProject") });
 
 				$( "#JobDescriptions" ).selectable({
-					stop: function() { $( ".ui-selected", this ).each(function() { openWindow( $(this).attr('id') ); }) }
+					stop: function() { $( ".ui-selected", this ).each(function() { openWindow( $(this).attr('id') );  $("#pagebody").mask("Loading..."); }) }
 				});
 				$( "#availableAttributes" ).selectable({
 					stop: function() { $( ".ui-selected", this ).each(function() { 
@@ -129,6 +135,8 @@ function doFilter(requested_page){
 			}			
 			//fix the permalink
 			permalink();
+			
+			$("#JobDescriptions").unmask();
     	}	
   	}
 	var setupprojects = getSelectedChilds("SetupProject");
@@ -136,7 +144,9 @@ function doFilter(requested_page){
 	
 	var options = getSelectedChilds("Options");
 	var cmts = getSelectedChilds("Platform");	
-
+	
+	$("#JobDescriptions").mask("Requesting...");
+	
 	// send the request the to server
 	xmlhttp.open("GET", "https://alamages.cern.ch/django/lhcbPR/getFilters?page="+requested_page+"&app={{ active_tab }}"+"&appVersions="+escape(appVersions.join(","))+"&SetupProjects="+escape(setupprojects.join(","))+"&Options="+escape(options.join(","))+"&platforms="+escape(cmts.join(",")), true);
 	xmlhttp.send();
@@ -175,7 +185,7 @@ function doFilter(requested_page){
 </div> <!-- /header-->
 
 <body>
-	<div class="pagebody">
+	<div id="pagebody" class="pagebody">
 		<div id="tabs">
 			<ul>
 				{% for app in applications %}
@@ -475,6 +485,9 @@ function doFilter(requested_page){
 	</p>
 </div>
 
+
+<!-- overlay -->
+<div id="overlay"></div>
 </body>
 
 </html>
