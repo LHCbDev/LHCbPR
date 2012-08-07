@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.core import serializers
 
 from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job
-import json, subprocess, sys, configs, re, copy
+import json, subprocess, sys, configs, re, copy, os
 
 #***********************************************
 from django.contrib.auth.decorators import login_required
@@ -312,3 +312,50 @@ def editPanel(request):
         all_attributes = map(str,Handler.objects.values_list('name', flat=True).distinct())
 
     return HttpResponse(json.dumps({ 'available' : all_attributes }))
+
+#@login_required comment in order the wget can work on this one
+def script(request):
+    if not 'pk' in request.GET:
+        return HttpResponse("<h3>Not primary key was given lol.</h3>")
+    if  not len(request.GET) ==  1:
+        return HttpResponse("<h3>Only one get attribute is allowed lol.</h3>")
+    try:
+        int(request.GET['pk'])
+    except Exception:
+        return HttpResponse("<h3>Not valid integer primary key was given lol.</h3>")
+    
+    myJobDes = JobDescription.objects.get(pk=request.GET['pk'])
+    filename = 'trolololo'+str(myJobDes.pk)
+    application = myJobDes.application.appName
+    version = myJobDes.application.appVersion
+    try:
+        setup_project =  myJobDes.setup_project.content
+    except Exception:
+        setup_project = ''
+    options = myJobDes.options.content
+    platforms = map(str,Requested_platform.objects.filter(jobdescription__exact=myJobDes).values_list('cmtconfig__cmtconfig', flat=True).distinct())       
+    handlers = map(str,JobHandler.objects.filter(jobDescription__exact=myJobDes).values_list('handler__name', flat=True).distinct())
+    
+    file_lines = [filename,
+                  '#!/bin/bash',
+                  '\n\n',
+                  '#job description id',
+                  '\n',
+                  'job_description_id='+str(myJobDes.pk),
+                  '\n\n'
+                  'handlers="'+','.join(handlers)+'"',
+                  '\n',
+                  '#platforms="'+','.join(platforms)+'"',
+                  '\n\n',
+                  'SetupProject '+str(application)+' '+str(version)+' '+str(setup_project),
+                  '\n',
+                  'gaudirun.py '+str(options),
+                  '\n\n',
+                  ]
+    
+    script = ''
+    for line in file_lines[1:]:
+        script += line
+    
+    return HttpResponse(script, mimetype="text/plain")
+    

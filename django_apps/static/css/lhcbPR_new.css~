@@ -166,7 +166,7 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 
 
 /*-------------------------------------------------------------------------------------------------- DIALOG STUFF --------------------------------------------------------------------------*/
-#platformContainer { margin-top:10px; max-height:410px; /* height: 410px; */ border-style:solid;border-width:1px;border-radius: 1em; padding:15px; }
+#platformContainer { margin-top:10px; max-height:410px; /* height: 410px; */ border-style:solid;border-width:1px;border-radius: 4px; padding:15px; }
 
 #JobDescriptionDetails,#JobDescriptionClone, #JobDescriptionEdit
 { margin-top:10px;float:left;width:340px;max-height:450px;border-width: 1px;border-style: solid;border-radius: 4px; padding:15px; }
@@ -175,10 +175,13 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 
 #dialogClose { position:absolute;bottom:0;right:0; }
 
-#overviewButton,#overviewButtonClone, #overviewButtonEdit 
+#overviewButton,#overviewButtonClone, #overviewButtonEdit
 { padding: 5px 12px 4px 22px; text-decoration: none;position: relative; }
 
-#overviewButton span.ui-icon, #overviewButtonClone span.ui-icon, #overviewButtonEdit span.ui-icon 
+#generatescript 
+{ padding: 5px 12px 4px 14px; text-decoration: none;position: relative; }
+
+#overviewButton span.ui-icon, #overviewButtonClone span.ui-icon, #overviewButtonEdit span.ui-icon, #generatescript span.ui-icon
 { margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px; }
 
 #overviewDialogP, #overviewCloneP, #overviewEditP { line-height:160%;font-size:14px; }
@@ -247,3 +250,6 @@ div.dialogContainer {
 #availableAttributes, #requestedAttributes { list-style-type: none; margin: 0; padding: 0;  }
 #availableAttributes li, #requestedAttributes li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
 #availableAttributes li:hover, #requestedAttributes li:hover { background: #77D5F7; cursor: pointer;}
+
+/*---------------------------------------- SCRIPT DIALOG-------------------------------------------*/
+#scriptDialog input { position: absolute; bottom:0; left:5; width: 95%; }

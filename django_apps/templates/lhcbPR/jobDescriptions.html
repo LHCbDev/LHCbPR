@@ -7,7 +7,6 @@
 		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
 		<script type="text/javascript" src="/static/js/bubble-tooltip.js"></script>
 		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
-		<script type="text/javascript" src="/static/js/spin.js"></script>
 		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
 		<!-- plugin for mask -->
 		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
@@ -34,7 +33,7 @@
 				$('#tabs').tabs({ selected : -1 });
 				$('#tabs').tabs('select', '#{{ active_tab }}tab');
 				
-				$('#overviewButton,#overviewButtonClone,#editPlatformsClone,#editHandlersClone,#overviewButtonEdit,#editHandlersEdit,#editPlatformsEdit #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
+				$('#overviewButton,#overviewButtonClone,#editPlatformsClone,#editHandlersClone,#overviewButtonEdit,#editHandlersEdit,#editPlatformsEdit,#generatescript, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
 					function() { $(this).addClass('ui-state-hover'); },
 					function() { $(this).removeClass('ui-state-hover'); }
 				);
@@ -325,6 +324,10 @@ function doFilter(requested_page){
 				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
 			</a>
 
+			<a id="generatescript" class="ui-state-default ui-corner-all" target="_blank" href="javascript:;">
+				<span class="ui-icon ui-icon-script"></span>
+			</a>
+
 			<div id="overviewDialog" >
 				<p id="overviewDialogP"></p>
 			</div>
@@ -493,9 +496,8 @@ function doFilter(requested_page){
 	</p>
 </div>
 
+<div id="scriptDialog" title="script"></div>
 
-<!-- overlay -->
-<div id="overlay"></div>
 </body>
 
 </html>
