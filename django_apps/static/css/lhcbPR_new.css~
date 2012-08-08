@@ -11,37 +11,9 @@ body{
 a { text-decoration: none; }
 
 /*---------------------------------------------------- HEADER --------------------------------------------------*/
-.ctitle {
-	background : url(/static/images/generalHead.gif) no-repeat;
-	background-size: 105% 105%;
-}
-.ctitle table { 
-	border-width: 0px 0px 0px 0px;
-	border-spacing: 0px 0px;
-	border-style: none;
-	border-color: none;
-	border-collapse: collapse;
-	width: 100%;
-	border: 0px;
-}
-.ctitle td{ 
-	border-width: 1px 1px 1px 1px;
-	padding: 4px 8px 4px 8px;
-	border-style: solid solid solid solid;
-	font-variant: small-caps;
-	font-weight: bold;
-	color: black;
-	text-align: center;
-}
-/*------------- head details --------------*/
-.ctitle a:link { color: black; } 
-.ctitle a:visited { color: #FFFFFF; }
-.ctitle a:hover { color: #FFFF00; }
-.ctitle a:active { color: #00FF00; }
 .iconspace { width: 50px; }
 .headLogin { float: right; }
-.headTitle { vAlign :middle align : center; }
-
+.headTitle { width : 100% ; font-variant: small-caps; text-align: center}
 #menu { margin-top : 4px; }
 
 /*------------------------------------------------ PAGEBODY ------------------------------------------------ */
@@ -232,7 +204,7 @@ div.dialogContainer {
 
 /*---------------------------------- edit handler/platform container------------------------*/
 #panelContainer {
-        width: 495px;
+        width: 515px;
 		height:auto;
 		min-height:360px;
 		height:auto !important;
@@ -241,7 +213,7 @@ div.dialogContainer {
 		overflow: auto;
         clear: both;
 }
-#panelContainer ol { border-style:solid;border-width:1px; width:240px;height:340px;border-radius:4px; overflow:auto}
+#panelContainer ol { border-style:solid;border-width:1px; width:250px;height:340px;border-radius:4px; overflow:auto}
 #panelContainer p { text-align: center; }
 
 
@@ -252,4 +224,4 @@ div.dialogContainer {
 #availableAttributes li:hover, #requestedAttributes li:hover { background: #77D5F7; cursor: pointer;}
 
 /*---------------------------------------- SCRIPT DIALOG-------------------------------------------*/
-#scriptDialog input { position: absolute; bottom:0; left:5; width: 95%; }
+#scriptDialog input { position: absolute; bottom:0; left:5px; width: 95%; }

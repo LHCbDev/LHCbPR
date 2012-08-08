@@ -18,7 +18,7 @@
 				/* on click functions for the menus */
 				$("#homeMenu").click(function(){ document.location.href="/django/lhcbPR";  $("#pagebody").mask("Loading..."); });
 				$("#jobDescriptionsMenu").click(function(){ document.location.href="/django/lhcbPR/jobDescriptions" ; $("#pagebody").mask("Loading..."); });
-				$("#analyseMenu").click(function(){ /* document.location.href="/django/lhcbPR/analyse"; */ $("#pagebody").mask("Loading..."); });
+				$("#analyseMenu").click(function(){ /* document.location.href="/django/lhcbPR/analyse"; $("#pagebody").mask("Loading..."); */  });
 			});
 		</script>
 </head>

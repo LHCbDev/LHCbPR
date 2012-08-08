@@ -716,7 +716,7 @@ function openPanel(id, service,mybox_id){
 			$("#editPlatformsHandlers").dialog({
     			resizable: false,
     			height:560,
-    			width: 532,
+    			width: 552,
    				modal: true,
 				buttons: {
 						"Ok": function() {

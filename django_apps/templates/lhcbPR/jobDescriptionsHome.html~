@@ -17,7 +17,9 @@
 			$(document).ready(function() {
 				$("#menu").buttonset();
 				/* on click functions for the menus */
-				$("#homeMenu").click(function(){ document.location.href="/django/lhcbPR"; $("#applications").mask("Loading..."); });
+				$("#homeMenu").click(function(){ 
+						document.location.href="/django/lhcbPR"; 
+						$("#applications").mask("Loading..."); });
 				$("#jobDescriptionsMenu").click(function(){ 
 							document.location.href="/django/lhcbPR/jobDescriptions" ;
 							$("#applications").mask("Loading...");

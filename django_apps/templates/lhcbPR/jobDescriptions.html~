@@ -56,19 +56,22 @@
 			  	$("#SetupProjectErase").click(function(){ clearCheckBox("SetupProject") });
 
 				$( "#JobDescriptions" ).selectable({
-					stop: function() { $( ".ui-selected", this ).each(function() { openWindow( $(this).attr('id') );  $("#pagebody").mask("Loading..."); }) }
+					stop: function() { $( ".ui-selected", this ).each(function() { 
+						openWindow( $(this).attr('id') );  
+						$("#pagebody").mask("Loading...");
+						$(this).removeClass("ui-selected"); }) }
 				});
 				$( "#availableAttributes" ).selectable({
 					stop: function() { $( ".ui-selected", this ).each(function() { 
-							$(this).removeClass("ui-selected");
-							$("#requestedAttributes").append($(this)); 
-							$("#availableAttributes").find("#"+$(this).attr('id')).remove(); }) }
+						$(this).removeClass("ui-selected");
+						$("#requestedAttributes").append($(this)); 
+						$("#availableAttributes").find("#"+$(this).attr('id')).remove(); }) }
 				});
 				$( "#requestedAttributes" ).selectable({
 					stop: function() { $( ".ui-selected", this ).each(function() {
-							$(this).removeClass("ui-selected");
-							$("#availableAttributes").append($(this)); 
-							$("#requestedAttributes").find("#"+$(this).attr('id')).remove(); }) }
+						$(this).removeClass("ui-selected");
+						$("#availableAttributes").append($(this)); 
+						$("#requestedAttributes").find("#"+$(this).attr('id')).remove(); }) }
 				});
 
 				doFilter({{ current_page}});
@@ -162,9 +165,9 @@ function doFilter(requested_page){
 }	
 		</script>
 </head>
-<div id="header">
-	<div class="ctitle">
-		<table id="pagetitle">
+<div>
+	<div class="ui-widget-header">
+		<table>
 			<tr>
 				<td class="iconspace">
 					<a href="http://cern.ch/lhcb-comp">
@@ -172,7 +175,7 @@ function doFilter(requested_page){
 					</a>
 			</td>
 			<td class="headTitle">
-				<h1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
+				<h1><a id="headA" href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
 				<div class="headLogin">
 					{% if myauth %}
 					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
@@ -182,7 +185,7 @@ function doFilter(requested_page){
 				</div><!-- closing div ^^-->
 			</td>
 		</table>
-	</div> <!-- /ctitle -->
+	</div> <!-- /ui-widget-header -->
 
 	<div id="menu">
 		<input type="radio" id="homeMenu" name="radio" /><label for="homeMenu">Home</label>
@@ -201,14 +204,14 @@ function doFilter(requested_page){
 			</ul>
 			<div id="{{ active_tab }}tab">
 
-			<a  id="mypermalink" class="ui-state-default ui-corner-all" href="" target="_blank"> Permalink to selection </a>
+			<a  id="mypermalink" class="ui-state-default ui-corner-all" href="" target="_blank" title="bookmark your selection"> Permalink to selection </a>
 
 			 <div class="Outer">
 				<div class="InnerLeft">
 						<table class="filter">
 						<tr>
 						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-minusthick"></span>Version</a>
-								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-closethick"></span></a>
+								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all" title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
@@ -225,7 +228,7 @@ function doFilter(requested_page){
 						</td>
 						<tr>
 						<td><a href="javascript:;" id="OptionsButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-minusthick"></span>Options</a>
-								<a href="javascript:;" id="OptionsErase" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-closethick"></span></a>
+								<a href="javascript:;" id="OptionsErase" class="ui-state-default ui-corner-all"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
@@ -241,7 +244,7 @@ function doFilter(requested_page){
 						</td>
 						<tr>
 						<td><a href="javascript:;" id="SetupProjectButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-plusthick"></span>SetupProject</a>
-								<a href="javascript:;" id="SetupProjectErase" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-closethick"></span></a>
+								<a href="javascript:;" id="SetupProjectErase" class="ui-state-default ui-corner-all"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
 						</td> 
 						<tr>
 						<td>
@@ -258,7 +261,7 @@ function doFilter(requested_page){
 						</td>
 						<tr>
 						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
-								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-closethick"></span></a>
+								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
@@ -324,7 +327,7 @@ function doFilter(requested_page){
 				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
 			</a>
 
-			<a id="generatescript" class="ui-state-default ui-corner-all" href="javascript:;">
+			<a id="generatescript" class="ui-state-default ui-corner-all" target="_blank" href="javascript:;" title="generate script">
 				<span class="ui-icon ui-icon-script"></span>
 			</a>
 
