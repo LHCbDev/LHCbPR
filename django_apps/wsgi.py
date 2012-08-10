@@ -1,8 +1,11 @@
-import os, sys
-sys.path.append('/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/')
-sys.path.append('/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/django_apps/')
-#sys.path.append("/home/LHCbPR/")
-#sys.path.append("/home/LHCbPR/django_apps/")
+import os, sys, inspect
+
+work_path = os.path.dirname(inspect.getfile(inspect.currentframe()))
+parent_work_path = os.path.dirname(work_path)
+
+sys.path.append(parent_work_path)
+sys.path.append(work_path)
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'django_apps.settings'
 
 import django.core.handlers.wsgi
