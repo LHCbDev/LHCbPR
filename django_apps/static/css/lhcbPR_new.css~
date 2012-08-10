@@ -13,7 +13,7 @@ a { text-decoration: none; }
 /*---------------------------------------------------- HEADER --------------------------------------------------*/
 .iconspace { width: 50px; }
 .headLogin { float: right; }
-.headTitle { width : 100% ; font-variant: small-caps; text-align: center}
+.headTitle { width : 100% ; font-variant: small-caps; text-align: center;}
 #menu { margin-top : 4px; }
 
 /*------------------------------------------------ PAGEBODY ------------------------------------------------ */

@@ -19,16 +19,12 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^lhcbPR/commitClone', 'commitClone'),
     url(r'^lhcbPR/editPanel', 'editPanel'),
     url(r'^lhcbPR/script', 'script'),
-    url(r'^lhcbPR/test', 'test')
-    
-    
-    
+    url(r'^lhcbPR/test', 'test')   
 )
 
 urlpatterns += patterns('',
     url(r'^admin/', include(admin.site.urls)),
 )
-
 
 #urlpatterns += patterns('generic.views',
 #    url(r'^generic/$','index'),

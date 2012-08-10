@@ -192,42 +192,6 @@ $(document).ready(function () {
       			}
     		});/* /ajax*/
 		});/* commitEdit */
-
-		/*$("#generatescript").click(function(e){ 
-			window.open("/django/lhcbPR/script?pk="+myChoosedJob_id,'_blank');
-			//$("#dialog").mask("Loading...");
-			$.ajax({
-    			'url' : '/django/lhcbPR/script',
-				'type' : 'GET',
-				'data' : {
-				'pk' : myChoosedJob_id,
-				},
-    			'success' : function(data) {
-					$("#dialog").unmask();
-			 		//window.open("/django/lhcbPR/script?pk="+myChoosedJob_id,'_blank');
-					$("#scriptDialog").empty();
-					$("#scriptDialog").append(data.replace(/\n/g,"<br>"));
-					$("#scriptDialog").dialog({
-    					resizable: false,
-    					height: 550,
-    					width: 860,
-   						modal: true,
-						buttons: {
-							"Link" : function() {
-								$("#scriptDialog").find("input").remove();
-								myInput = document.createElement("input");
-								myInput.value = "wget https://alamages.cern.ch/django/lhcbPR/script?pk="+myChoosedJob_id+" --no-check-certificate -O script_name";
-								$(this).append(myInput);
-							},
-							"Back": function() {
-								$(this).dialog("close");
-							}
-						}
-					});
-					
-      			}
-    		});/* /ajax
-		 }); */
 });
 
 function getSelectedChildsOne(id){
@@ -347,7 +311,6 @@ function clearCheckBox(id){
 		doFilter(1);
 	return;
 }
-
 
 function addJobs(box,apps){
 	//loop over the array which contains the versions

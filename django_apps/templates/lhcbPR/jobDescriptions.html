@@ -59,8 +59,10 @@
 					stop: function() { $( ".ui-selected", this ).each(function() { 
 						openWindow( $(this).attr('id') );  
 						$("#pagebody").mask("Loading...");
-						$(this).removeClass("ui-selected"); }) }
+						$(this).removeClass("ui-selected"); }) },
 				});
+
+				
 				$( "#availableAttributes" ).selectable({
 					stop: function() { $( ".ui-selected", this ).each(function() { 
 						$(this).removeClass("ui-selected");

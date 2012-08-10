@@ -59,8 +59,10 @@
 					stop: function() { $( ".ui-selected", this ).each(function() { 
 						openWindow( $(this).attr('id') );  
 						$("#pagebody").mask("Loading...");
-						$(this).removeClass("ui-selected"); }) }
+						$(this).removeClass("ui-selected"); }) },
 				});
+
+				
 				$( "#availableAttributes" ).selectable({
 					stop: function() { $( ".ui-selected", this ).each(function() { 
 						$(this).removeClass("ui-selected");
@@ -175,7 +177,7 @@ function doFilter(requested_page){
 					</a>
 			</td>
 			<td class="headTitle">
-				<h1><a id="headA" href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
+				<h1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
 				<div class="headLogin">
 					{% if myauth %}
 					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
