@@ -75,7 +75,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
-LOGIN_REDIRECT_URL = 'https://alamages.cern.ch/django/lhcbPR'
+LOGIN_REDIRECT_URL = '/django/lhcbPR'
 SHIB_SSO_ADMIN = True
 SHIB_SSO_CREATE_ACTIVE = True
 SHIB_SSO_CREATE_STAFF = False
@@ -121,8 +121,13 @@ AUTHENTICATION_BACKENDS = (
 
 ROOT_URLCONF = 'django_apps.urls'
 
+    
+import os
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+
 TEMPLATE_DIRS = (
-    '/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/django_apps/templates',
+    os.path.join(PROJECT_PATH, 'templates')
+    #'/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/django_apps/templates',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
