@@ -2,18 +2,22 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>Home</title>
-		<link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+		<!-- <link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" /> -->
+		<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css" />
 		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
 		<script type="text/javascript" src="/static/js/bubble-tooltip.js"></script>
 		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
-		<script type="text/javascript" src="/static/js/spin.js"></script>
-		<!-- plugin for menu effect-->
+		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
+		<!-- plugin for mask -->
 		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
 		<link type="text/css" href="/static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
-		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
+		
+  		<!-- <script type="text/javascript" src="http://jqueryui.com/js/jquery.js"></script>  -->
+  		<script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
 		<script type="text/javascript">
 			$(function(){
+				$('#switcher').themeswitcher({ loadTheme : 'Start' });
 				$("#menu").buttonset();
 				/* on click functions for the menus */
 				$("#homeMenu").click(function(){ document.location.href="/django/lhcbPR";  $("#pagebody").mask("Loading..."); });
@@ -33,6 +37,7 @@
 			</td>
 			<td class="headTitle">
 				<h1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
+				<div id="switcher"></div>
 				<div class="headLogin">
 					{% if myauth %}
 					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}

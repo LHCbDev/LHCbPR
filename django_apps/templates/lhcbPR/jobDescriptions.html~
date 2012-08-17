@@ -2,7 +2,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>{{ active_tab }} job description</title>
-		<link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+		<!-- <link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" /> -->
+		<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css" />
 		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
 		<script type="text/javascript" src="/static/js/bubble-tooltip.js"></script>
@@ -12,8 +13,12 @@
 		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
 		<link type="text/css" href="/static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
 		
+  		<!-- <script type="text/javascript" src="http://jqueryui.com/js/jquery.js"></script>  -->
+  		<script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
+
 		<script type="text/javascript">
 			$(document).ready(function() {
+				$('#switcher').themeswitcher({ loadTheme : 'Start' });
 				$('#menu').buttonset();
 				/* on click functions for the menus */
 				$('#homeMenu').click(function(){ 
@@ -37,7 +42,6 @@
 					function() { $(this).addClass('ui-state-hover'); },
 					function() { $(this).removeClass('ui-state-hover'); }
 				);
-
 				$("RunInDialog").button();
 				$("EditInDialog").button();
 				$("CloneInDialog").button();
@@ -153,9 +157,18 @@
 					permalink();
 			
 					$("#JobDescriptions").unmask();
+					addHover("JobDescriptions li")
       			}
    	 		}); 
-	} 
+		} 
+
+		function addHover(selector){
+			$("#"+selector).hover(
+					function() { $(this).addClass('ui-state-hover');},
+					function() { $(this).removeClass('ui-state-hover'); }
+				);	
+			$("#"+selector).cursor("isHover");
+		}
 		</script>
 </head>
 <div>
@@ -169,6 +182,7 @@
 			</td>
 			<td class="headTitle">
 				<h1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
+				<div id="switcher"></div>
 				<div class="headLogin">
 					{% if myauth %}
 					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}

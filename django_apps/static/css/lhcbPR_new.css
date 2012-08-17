@@ -13,6 +13,7 @@ a { text-decoration: none; }
 /*---------------------------------------------------- HEADER --------------------------------------------------*/
 .iconspace { width: 50px; }
 .headLogin { float: right; }
+#switcher { float : left; }
 .headTitle { width : 100% ; font-variant: small-caps; text-align: center;}
 #menu { margin-top : 4px; }
 
@@ -117,11 +118,11 @@ div.InnerRight {
 
 /*----------------------- Job Descriptions --------------------------------*/
 //#feedback { font-size: 12px; }
-#JobDescriptions .ui-selecting { background: #77D5F7; }
-#JobDescriptions .ui-selected { background: #0078AE; color: white; }
+//#JobDescriptions .ui-selecting { background: #77D5F7; }
+//#JobDescriptions .ui-selected { background: #0078AE; color: white; }
+//#JobDescriptions li:hover { background: #77D5F7; cursor: pointer;}
 #JobDescriptions { list-style-type: none; margin: 0; padding: 0; width: 450px; }
 #JobDescriptions li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
-#JobDescriptions li:hover { background: #77D5F7; cursor: pointer;}
 
 /*--------------- css for the ul icons(next/previous page)-----------*/
 ul#icons {margin: 0; padding: 0;}
