@@ -130,15 +130,28 @@ $(document).ready(function () {
 				'setupprojectD' : $setup_descr,
 				'options' : $options_content,
 				'optionsD' : $options_descr,	
-				'platforms' : escape(platforms.join(",")),
-				'handlers' : escape(handlers.join(",")),
+				'platforms' : platforms.join(","),
+				'handlers' : handlers.join(","),
 				},
     			'success' : function(data) {
 			 		var jsondata = $.parseJSON(data);
 					if (jsondata.exists)
 						myAlert("Job description already exists","","Attention","");
-					else 
-						myAlert("Job added (dummy function, doesn't really saves the new object)","","Attention","");
+					else{ 
+						myAlertCommit("Job added successfully","","Attention","");
+						$( "#alertDialog" ).dialog({
+							modal: true,
+							width : 350,
+							buttons: {
+								Ok: function() {
+								$( this ).dialog( "close" );
+								$("#cloneDialog").dialog("close");
+								doFilter(1);
+								openWindow(jsondata.job_id);
+								}
+							}
+						});
+					}
       			}
     		});/* /ajax*/
  		});/* /commitClone function*/
@@ -175,20 +188,33 @@ $(document).ready(function () {
     			'url' : '/django/lhcbPR/commitClone',
 				'type' : 'GET',
 				'data' : {
+				'id' : myChoosedJob_id,
 				'application' : $application,
 				'version' : $version, 
 				'setupproject' : $setup_content,
 				'setupprojectD' : $setup_descr,
 				'options' : $options_content,
 				'optionsD' : $options_descr,	
-				'platforms' : escape(platforms.join(",")),
-				'handlers' : escape(handlers.join(",")),
+				'platforms' : platforms.join(","),
+				'handlers' : handlers.join(","),
 				'update' : '',
 				},
     			'success' : function(data) {
 			 		var jsondata = $.parseJSON(data);
 					if (jsondata.updated)
-						myAlert("Job description updated successfully(dummy function, doesn't really updates the new object)","","Attention","");
+						myAlertCommit("Job description updated successfully","","Attention","");
+						$( "#alertDialog" ).dialog({
+							modal: true,
+							width : 350,
+							buttons: {
+								Ok: function() {
+								$( this ).dialog( "close" );
+								$("#editDialog").dialog("close");
+								doFilter(1);
+								openWindow(jsondata.job_id);
+								}
+							}
+						});
       			}
     		});/* /ajax*/
 		});/* commitEdit */
@@ -237,7 +263,6 @@ function fixInputs(father, child, func,real_name,event){
 		},
     	'success' : function(data) {
 			var jsondata = $.parseJSON(data);
-			var jsondata = JSON.parse(xmlhttp.responseText);
 			
 			if (jsondata.data != ""){
 				$("#"+child).val(jsondata.data);
@@ -311,7 +336,6 @@ function clearCheckBox(id){
 		doFilter(1);
 	return;
 }
-
 
 function addJobs(box,apps){
 	//loop over the array which contains the versions
@@ -614,6 +638,14 @@ function uploadResults(){
 	alert("Upload results function, under construction...");
 }
 
+function addHover(selector){
+	$("#"+selector).hover(
+		function() { $(this).addClass('ui-state-hover'); 
+							$(this).css('cursor','pointer');},
+		function() { $(this).removeClass('ui-state-hover'); }
+	);	
+}
+
 //mybox_id is the container of the original platforms/handlers
 function openPanel(id, service,mybox_id){
 	if (service == "platforms"){
@@ -676,6 +708,8 @@ function openPanel(id, service,mybox_id){
 					myLi.setAttribute('class','ui-widget-content');
 					mybox2.appendChild(myLi);
 			}
+			addHover("requestedAttributes li");
+			addHover("availableAttributes li");
 			//open dialog if success
 			$("#editPlatformsHandlers").dialog({
     			resizable: false,
@@ -741,7 +775,24 @@ function myAlert(message1,message2,title, icon){
 			buttons: {
 				Ok: function() {
 					$( this ).dialog( "close" );
+					
 				}
 			}
 	});
+}
+
+function myAlertCommit(message1,message2,title, icon){
+	$("#alertDialogIcon").attr('class','');
+	$("#alertDialogIcon").addClass('ui-icon');
+	
+	if ( icon == "" ){
+		$("#alertDialogIcon").addClass('ui-icon-alert');
+	}
+	else{
+		$("#alertDialogIcon").addClass(icon);
+	}
+	
+	$("#alertDialog").attr('title',title);
+	$("#alertMessage").text(message1);
+	$("#alertMessage2").text(message2);
 }

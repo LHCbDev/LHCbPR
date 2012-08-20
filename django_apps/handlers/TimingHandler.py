@@ -8,7 +8,7 @@ class TimingHandler(BaseHandler):
 	def __init__(self):
 		super(self.__class__, self).__init__()
 
-	def collectResults(self,directory='.'):
+	def collectResults(self,directory):
 		try:
 			os.chdir(directory)
 		except OSError:

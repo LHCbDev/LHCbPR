@@ -70,12 +70,14 @@
 				$( "#availableAttributes" ).selectable({
 					stop: function() { $( ".ui-selected", this ).each(function() { 
 						$(this).removeClass("ui-selected");
+						$(this).removeClass("ui-state-hover");
 						$("#requestedAttributes").append($(this)); 
 						$("#availableAttributes").find("#"+$(this).attr('id')).remove(); }) }
 				});
 				$( "#requestedAttributes" ).selectable({
 					stop: function() { $( ".ui-selected", this ).each(function() {
 						$(this).removeClass("ui-selected");
+						$(this).removeClass("ui-state-hover");
 						$("#availableAttributes").append($(this)); 
 						$("#requestedAttributes").find("#"+$(this).attr('id')).remove(); }) }
 				});
@@ -157,18 +159,10 @@
 					permalink();
 			
 					$("#JobDescriptions").unmask();
-					addHover("JobDescriptions li")
+					addHover("JobDescriptions li");
       			}
    	 		}); 
 		} 
-
-		function addHover(selector){
-			$("#"+selector).hover(
-					function() { $(this).addClass('ui-state-hover'); 
-										$(this).css('cursor','pointer');},
-					function() { $(this).removeClass('ui-state-hover'); }
-				);	
-		}
 		</script>
 </head>
 <div>
@@ -313,7 +307,11 @@
 	<div class="InnerLeftDialog">
 	<div class="OuterDialog">
 		<div id="JobDescriptionDetails" class="InnerLeftDialog">
-			<table class="dialogTable"><tr>
+			<table id="dialogTable" class="ui-widget">
+				<thead class="ui-widget-header">
+				</thead>
+				<tbody class="ui-widget-content">
+				<tr>
 				<td>Application:</td>
 				<td><input id="ApplicationDetails" type="text" value=""  readOnly="readonly" /></td><tr>
 				<td>Version:</td>
@@ -328,6 +326,7 @@
 				<td><input id="SetupProjectDDetails" type="text" value="" readOnly="readonly"/></td><tr>
 				<td></td>
 				<td><input id="SetupProjectDetails" type="text" value="" readOnly="readonly"/></td>
+			</tbody>
 			</table><br>
 			<br>
 			<a id="overviewButton" class="ui-state-default ui-corner-all" href="javascript:;">
@@ -338,8 +337,9 @@
 				<span class="ui-icon ui-icon-script"></span>
 			</a>
 
-			<div id="overviewDialog" >
-				<p id="overviewDialogP"></p>
+			<div id="overviewDialog" class="fakewindowcontain">
+				<p id="overviewDialogP" >Home page body text under construction...</p>
+				<div class="ui-widget-overlay"></div>
 			</div>
 		</div> <!-- closing the JobDescriptionDetails-->
 
@@ -394,9 +394,9 @@
 			<a id="overviewButtonClone" class="ui-state-default ui-corner-all" href="javascript:;">
 				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
 			</a>
-
-			<div id="overviewClone" >
-				<p id="overviewCloneP"></p>
+			<div id="overviewClone" class="fakewindowcontain">
+				<p id="overviewCloneP" >Home page body text under construction...</p>
+				<div class="ui-widget-overlay"></div>
 			</div>
 		</div> <!-- closing the JobDescriptionClone-->
 
@@ -450,9 +450,9 @@
 			<a id="overviewButtonEdit" class="ui-state-default ui-corner-all" href="javascript:;">
 				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
 			</a>
-
-			<div id="overviewEdit" >
-				<p id="overviewEditP"></p>
+			<div id="overviewEdit" class="fakewindowcontain">
+				<p id="overviewEditP" >Home page body text under construction...</p>
+				<div class="ui-widget-overlay"></div>
 			</div>
 		</div> <!-- closing the JobDescriptionClone-->
 

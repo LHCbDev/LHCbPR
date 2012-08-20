@@ -278,13 +278,36 @@ def editRequests(request):
 @login_required
 def commitClone(request):
     if 'update' in request.GET:
-        return HttpResponse(json.dumps({ 'updated' : True }))
+        myObj = JobDescription.objects.get(pk=request.GET['id'])
+        myObj.setup_project = None
+        if request.GET['setupproject'] != '' and request.GET['setupprojectD'] != '':
+            setupprojectTemp, created = SetupProject.objects.get_or_create(content=request.GET['setupproject'], description=request.GET['setupprojectD'])
+            myObj.setup_project=setupprojectTemp
+        
+        
+        optionsTemp, created = Options.objects.get_or_create(content=request.GET['options'], description=request.GET['optionsD'])
+        appTemp, created = Application.objects.get_or_create(appName=request.GET['application'], appVersion=request.GET['version'])
+        
+        
+        myObj.options = optionsTemp
+        myObj.application = appTemp
+        
+        myObj.save()
+                  
+        JobHandler.objects.filter(jobDescription__pk=request.GET['id']).delete()
+        for handler_name in request.GET['handlers'].split(','):
+            handlerTemp = Handler.objects.get(name=handler_name)
+            jobHandlerTemp, created = JobHandler.objects.get_or_create(jobDescription=myObj, handler=handlerTemp)
+        
+        Requested_platform.objects.filter(jobdescription__pk=request.GET['id']).delete()
+        for platform_name in request.GET['platforms'].split(','):
+            platformTemp = Platform.objects.get(cmtconfig=platform_name)
+            requestedPlatfromTemp, created = Requested_platform.objects.get_or_create(jobdescription=myObj, cmtconfig=platformTemp)
+        
+        return HttpResponse(json.dumps({ 'updated' : True, 'job_id' : myObj.id }))
     
-    app = Application(appName=request.GET['application'],appVersion=request.GET['version'])
-    setup = SetupProject(content=request.GET['setupproject'],description=request.GET['setupprojectD'])
-    opts = Options(content=request.GET['options'],description=request.GET['optionsD'])
     
-    if request.GET['setupproject'] or request.GET['setupprojectD'] != '':
+    if request.GET['setupproject'] != '' and request.GET['setupprojectD'] != '':
         myjob_id = JobDescription.objects.filter(application__appName__exact=request.GET['application'], 
                                                  application__appVersion__exact=request.GET['version'],
                                                  options__content__exact=request.GET['options'],
@@ -301,7 +324,26 @@ def commitClone(request):
     if myjob_id.count() > 0:
         return HttpResponse(json.dumps({ 'exists': True }))
     else:
-        return HttpResponse(json.dumps({ 'exists' : False }))
+        if request.GET['setupproject'] != '' and request.GET['setupprojectD'] != '':
+            setupprojectTemp, created = SetupProject.objects.get_or_create(content=request.GET['setupproject'], description=request.GET['setupprojectD'])
+        
+        optionsTemp, created = Options.objects.get_or_create(content=request.GET['options'], description=request.GET['optionsD'])
+        appTemp, created = Application.objects.get_or_create(appName=request.GET['application'], appVersion=request.GET['version'])
+        
+        if request.GET['setupproject'] != '' and request.GET['setupprojectD'] != '':
+            myObj, created = JobDescription.objects.get_or_create(application=appTemp, options=optionsTemp, setup_project=setupprojectTemp)
+        else:
+            myObj, created = JobDescription.objects.get_or_create(application=appTemp, options=optionsTemp)           
+        
+        for handler_name in request.GET['handlers'].split(','):
+            handlerTemp = Handler.objects.get(name=handler_name)
+            jobHandlerTemp, created = JobHandler.objects.get_or_create(jobDescription=myObj, handler=handlerTemp)
+        
+        for platform_name in request.GET['platforms'].split(','):
+            platformTemp = Platform.objects.get(cmtconfig=platform_name)
+            requestedPlatfromTemp, created = Requested_platform.objects.get_or_create(jobdescription=myObj, cmtconfig=platformTemp)
+        
+        return HttpResponse(json.dumps({ 'exists' : False, 'job_id' : myObj.id }))
 @login_required
 def editPanel(request):
     all_attributes = []

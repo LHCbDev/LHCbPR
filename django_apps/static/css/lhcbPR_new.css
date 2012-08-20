@@ -1,7 +1,7 @@
 #lhcblogo {  border-style: none; width: 98px; height: 69px; margin-top:8px;}
 
 body{ 
-	background-color: #FFFFFF;
+	//background-color: #FFFFFF;
 	position: relative; 
 	margin: 0; padding: 0;
 	font-family: "Arial",sans-serif;
@@ -117,10 +117,6 @@ div.InnerRight {
 } 
 
 /*----------------------- Job Descriptions --------------------------------*/
-//#feedback { font-size: 12px; }
-//#JobDescriptions .ui-selecting { background: #77D5F7; }
-//#JobDescriptions .ui-selected { background: #0078AE; color: white; }
-//#JobDescriptions li:hover { background: #77D5F7; cursor: pointer;}
 #JobDescriptions { list-style-type: none; margin: 0; padding: 0; width: 450px; }
 #JobDescriptions li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
 
@@ -165,64 +161,58 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 #editMessage { font-family: Italics;font-size:14px;padding:0px; }
 
 /*------------------------------------dialogTable-----------------------------*/
-table.dialogTable td { text-align: right; } 
+#dialogTable td { text-align: right; } 
 
 #overviewDialog, #overviewClone, #overviewEdit { 
-  width : 330px;
-  height : 70px;
-  border-width: 1px;
-  border-color: #000000;
-  border-style: dashed; //solid;
-  border-radius: 0.5em;
-  background-color: #F5F5F5;
-  padding : 0.5em;
-  margin-top: 7px;
-  font-family: fantasy;
+  	width : 330px;
+  	height : 70px;
+  	border-width: 1px;
+  	border-color: #000000;
+  	border-style: dashed; //solid;
+  	border-radius: 0.5em;
+  	padding : 0.5em;
+  	margin-top: 7px;
 }
 
 
 /*-------------------------------  fixing the layout------------------------------------------------*/
 
 div.OuterDialog{
-        width: 700px;
-		height:auto;
-        position: relative;
-		overflow: auto;
-        clear: both;
+	width: 700px;
+	height:auto;
+	position: relative;
+	overflow: auto;
+	clear: both;
 }
 div.InnerLeftDialog { position: relative; float: left; } 
 div.InnerRightDialog { position: relative; float: right; }
 
 div.dialogContainer { 
-		width: 820px;
-		//height:auto;
-		max-height: 460px;
-		position: relative;
-		overflow: auto;
-        clear: both; 
+	width: 820px;
+	max-height: 460px;
+	position: relative;
+	overflow: auto;
+	clear: both; 
 }
 
 
 /*---------------------------------- edit handler/platform container------------------------*/
 #panelContainer {
-        width: 515px;
-		height:auto;
-		min-height:360px;
-		height:auto !important;
-		height: 360; /* for IE cause doesn't support min-height */
-        position: relative;
-		overflow: auto;
-        clear: both;
+	width: 515px;
+	height:auto;
+	min-height:360px;
+	height:auto !important;
+	height: 360; /* for IE cause doesn't support min-height */
+	position: relative;
+	overflow: auto;
+	clear: both;
 }
 #panelContainer ol { border-style:solid;border-width:1px; width:250px;height:340px;border-radius:4px; overflow:auto}
 #panelContainer p { text-align: center; }
 
 
-#availableAttributes .ui-selecting, #requestedAttributes .ui-selecting { background: #77D5F7; }
-#availableAttributes .ui-selected, #requestedAttributes .ui-selected { background: #0078AE; color: white; }
 #availableAttributes, #requestedAttributes { list-style-type: none; margin: 0; padding: 0;  }
 #availableAttributes li, #requestedAttributes li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
-#availableAttributes li:hover, #requestedAttributes li:hover { background: #77D5F7; cursor: pointer;}
 
 /*---------------------------------------- SCRIPT DIALOG-------------------------------------------*/
 #scriptDialog input { position: absolute; bottom:0; left:5px; width: 95%; }
