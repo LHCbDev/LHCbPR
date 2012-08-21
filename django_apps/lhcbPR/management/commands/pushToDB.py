@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from lhcbPR.models import CMTCONFIG, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription
+from lhcbPR.models import Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription
 from django.db import transaction
 import json, re
 
@@ -29,7 +29,7 @@ class Command(BaseCommand):
         
         try:
             cmtconfigDict = myDataDict['CMTCONFIG']
-            mycmtconfig, created = CMTCONFIG.objects.get_or_create(platform=cmtconfigDict['platform'])
+            mycmtconfig, created = Platform.objects.get_or_create(cmtconfig=cmtconfigDict['platform'])
             
             hostDict = myDataDict['HOST']
             myhost, created = Host.objects.get_or_create(hostname=hostDict['hostname'],
@@ -51,7 +51,7 @@ class Command(BaseCommand):
             attributelist = myDataDict['JobAttributes']
             counter = 0
             for atr in attributelist:
-                self.stdout.write( 'Saving: '+str(counter)+' attribute')
+                self.stdout.write( 'Saving: '+str(counter)+' attribute\n')
                 myAtr, created = JobAttribute.objects.get_or_create(
                                                                     name = atr['name'],
                                                                     type = atr['type'],

@@ -341,8 +341,9 @@ function addJobs(box,apps){
 	//loop over the array which contains the versions
 	for(var i = 0; i < apps.length; i++)
 	{	
-		var myLi = document.createElement("li");	
-		myLi.appendChild(document.createTextNode(apps[i].appName+"  "+apps[i].appVersion+"  "+apps[i].optionsD+"  "+apps[i].setupproject));
+		var myLi = document.createElement("li");
+		//apps[i].appName+"  "+
+		myLi.appendChild(document.createTextNode(apps[i].appVersion+"  "+apps[i].optionsD+"  "+apps[i].setupproject));
 			
 		//extra function click
 		myLi.setAttribute('id', apps[i].pk);

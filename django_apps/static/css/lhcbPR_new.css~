@@ -93,15 +93,15 @@ table.filter td a#VersionButton, #OptionsButton, #PlatformButton, #SetupProjectB
 
 /*------------------------------ fix the divs next to other jobDescription page --------------------------*/
 div.Outer {
-        width: 700px;
+        min-width: auto;/*700px;*/
 		height:auto;
 		min-height:570px;
 		height:auto !important;
 		height: 570; /* for IE cause doesn't support min-height */
-        //border:dashed 1px black;
         position: relative;
 		overflow: auto;
         clear: both;
+		display : inline-block;
 }
 div.InnerLeft {
         //width:50%
@@ -110,14 +110,13 @@ div.InnerLeft {
         }
  
 div.InnerRight {
-        //width: 49%;
 		position: relative;        
         float: right;
-		//margin-top: 20px;
+		margin-left: 20px;
 } 
 
 /*----------------------- Job Descriptions --------------------------------*/
-#JobDescriptions { list-style-type: none; margin: 0; padding: 0; width: 450px; }
+#JobDescriptions { list-style-type: none; margin: 0; padding: 0; min-width: 450px; }
 #JobDescriptions li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
 
 /*--------------- css for the ul icons(next/previous page)-----------*/
@@ -161,7 +160,7 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 #editMessage { font-family: Italics;font-size:14px;padding:0px; }
 
 /*------------------------------------dialogTable-----------------------------*/
-//#dialogTable td { text-align: right; } 
+#dialogTable td { text-align: right; } 
 
 #overviewDialog, #overviewClone, #overviewEdit { 
   	width : 330px;

@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+#
 #the same script extractStat in python instead of perl
+#
 import sys, re
 
 column_names = ['EVENT_LOOP']

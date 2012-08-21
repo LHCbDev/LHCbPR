@@ -219,8 +219,10 @@ def getJobDetails(request):
     myJob = JobDescription.objects.get(pk=request.GET['job_id'])
 
     platforms = map(str,Requested_platform.objects.filter(jobdescription__exact=myJob).values_list('cmtconfig__cmtconfig', flat=True).distinct())
+    platforms.sort() 
             
     handlers = map(str,JobHandler.objects.filter(jobDescription__exact=myJob).values_list('handler__name', flat=True).distinct())
+    handlers.sort()
     
     dataDict = {
                 'pk' : myJob.id,   
@@ -353,6 +355,7 @@ def editPanel(request):
     if request.GET['service'] == 'handlers':     
         all_attributes = map(str,Handler.objects.values_list('name', flat=True).distinct())
 
+    all_attributes.sort()
     return HttpResponse(json.dumps({ 'available' : all_attributes }))
 
 #@login_required comment in order the wget can work on this one
@@ -389,16 +392,19 @@ def script(request):
                   '\n',
                   '#PLATFORMS="'+','.join(platforms)+'"',
                   '\n\n',
-                  'SetupProject '+str(application)+' '+str(version)+' '+str(setup_project),
+                  '. SetupProject.sh '+str(application)+' '+str(version)+' '+str(setup_project),
                   '\n\n',
                   'START=`date +"%Y-%m-%d,%T"`\n',
                   'gaudirun.py '+str(options),
                   '\n',
                   'END=`date +"%Y-%m-%d,%T"`',
                   '\n\n',
+                  'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPR\n'
                   'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPRHandlers\n',
-                  '#use python26'
+                  'export PYTHONPATH=$PYTHONPATH:LHCbPRHandlers:.\n\n'
+                  '#use python version 2.6\n'
                   'python LHCbPRHandlers/collectRunResults.py -s ${START} -e ${END} -p `hostname` -c ${CMTCONFIG} -j ${JOB_DESCRIPTION_ID} -l ${HANDLERS}\n',
+                  'python LHCbPR/django_apps/manage.py pushToDB json_results',
                   ]
     
     script = ''
