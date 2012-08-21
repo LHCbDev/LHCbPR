@@ -383,16 +383,22 @@ def script(request):
                   '\n\n',
                   '#job description id',
                   '\n',
-                  'job_description_id='+str(myJobDes.pk),
+                  'JOB_DESCRIPTION_ID='+str(myJobDes.pk),
                   '\n\n'
-                  'handlers="'+','.join(handlers)+'"',
+                  'HANDLERS="'+','.join(handlers)+'"',
                   '\n',
-                  '#platforms="'+','.join(platforms)+'"',
+                  '#PLATFORMS="'+','.join(platforms)+'"',
                   '\n\n',
                   'SetupProject '+str(application)+' '+str(version)+' '+str(setup_project),
-                  '\n',
-                  'gaudirun.py '+str(options),
                   '\n\n',
+                  'START=`date +"%Y-%m-%d,%T"`\n',
+                  'gaudirun.py '+str(options),
+                  '\n',
+                  'END=`date +"%Y-%m-%d,%T"`',
+                  '\n\n',
+                  'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPRHandlers\n',
+                  '#use python26'
+                  'python LHCbPRHandlers/collectRunResults.py -s ${START} -e ${END} -p `hostname` -c ${CMTCONFIG} -j ${JOB_DESCRIPTION_ID} -l ${HANDLERS}\n',
                   ]
     
     script = ''

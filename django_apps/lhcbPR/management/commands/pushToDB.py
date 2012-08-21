@@ -51,7 +51,7 @@ class Command(BaseCommand):
             attributelist = myDataDict['JobAttributes']
             counter = 0
             for atr in attributelist:
-                print 'Saving: '+str(counter)
+                self.stdout.write( 'Saving: '+str(counter)+' attribute')
                 myAtr, created = JobAttribute.objects.get_or_create(
                                                                     name = atr['name'],
                                                                     type = atr['type'],
