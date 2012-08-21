@@ -11,6 +11,7 @@ String.prototype.fulltrim=function(){
 }
   
 $(document).ready(function () {
+	$("#job_info").hide();
 	$("#scriptDialog").hide();
 	$("#overlay").hide();
     $("#alertDialog").hide();
@@ -218,6 +219,9 @@ $(document).ready(function () {
       			}
     		});/* /ajax*/
 		});/* commitEdit */
+
+		$("#job_info").click(function(){  });
+		
 });
 
 function getSelectedChildsOne(id){
@@ -375,6 +379,7 @@ function permalink(){
 }
 
 function openWindow(job_id){
+	$("#job_info").hide();
 	if (job_id == "")
 		return;
 	$.ajax({
@@ -431,6 +436,11 @@ function openWindow(job_id){
 			
 			$("#pagebody").unmask();
 			$("#generatescript").attr('href','/django/lhcbPR/script?pk='+myChoosedJob_id);
+			$("#job_info").attr('href','/django/lhcbPR/getRunnedJobs?pk='+myChoosedJob_id);
+			
+			if(jsondata.runned_job)
+				$("#job_info").show();		
+	
 			$("#dialog").dialog({
     			resizable: false,
     			height: 550,
@@ -518,7 +528,7 @@ function openEditWindow(job_id){
 			$('#OptionsDEdit').attr('readOnly','readonly');
 			$('#SetupProjectDEdit').attr('readOnly','readonly');
 
-			if (!jsondata.exists){
+			if (!jsondata.runned_job){
 				$('#VersionEdit').removeAttr('readOnly');
 				$('#OptionsDEdit').removeAttr('readOnly');
 				$('#SetupProjectDEdit').removeAttr('readOnly');

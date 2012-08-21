@@ -143,13 +143,13 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 
 #dialogClose { position:absolute;bottom:0;right:0; }
 
-#overviewButton,#overviewButtonClone, #overviewButtonEdit
+#overviewButton,#overviewButtonClone, #overviewButtonEdit, #job_info
 { padding: 5px 12px 4px 22px; text-decoration: none;position: relative; }
 
 #generatescript 
 { padding: 5px 12px 4px 14px; text-decoration: none;position: relative; }
 
-#overviewButton span.ui-icon, #overviewButtonClone span.ui-icon, #overviewButtonEdit span.ui-icon, #generatescript span.ui-icon
+#overviewButton span.ui-icon, #overviewButtonClone span.ui-icon, #overviewButtonEdit span.ui-icon, #generatescript span.ui-icon, #job_info span.ui-icon
 { margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px; }
 
 #overviewDialogP, #overviewCloneP, #overviewEditP { line-height:160%;font-size:14px; }

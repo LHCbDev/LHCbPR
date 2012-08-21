@@ -93,7 +93,7 @@ table.filter td a#VersionButton, #OptionsButton, #PlatformButton, #SetupProjectB
 
 /*------------------------------ fix the divs next to other jobDescription page --------------------------*/
 div.Outer {
-        min-width: auto;/*700px;*/
+        width: auto;/*700px;*/
 		height:auto;
 		min-height:570px;
 		height:auto !important;
@@ -143,7 +143,7 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 
 #dialogClose { position:absolute;bottom:0;right:0; }
 
-#overviewButton,#overviewButtonClone, #overviewButtonEdit
+#overviewButton,#overviewButtonClone, #overviewButtonEdit, #job_info
 { padding: 5px 12px 4px 22px; text-decoration: none;position: relative; }
 
 #generatescript 

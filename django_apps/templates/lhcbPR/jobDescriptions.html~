@@ -38,7 +38,7 @@
 				$('#tabs').tabs({ selected : -1 });
 				$('#tabs').tabs('select', '#{{ active_tab }}tab');
 				
-				$('#overviewButton,#overviewButtonClone,#editPlatformsClone,#editHandlersClone,#overviewButtonEdit,#editHandlersEdit,#editPlatformsEdit,#generatescript, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
+				$('#job_info,#overviewButton,#overviewButtonClone,#editPlatformsClone,#editHandlersClone,#overviewButtonEdit,#editHandlersEdit,#editPlatformsEdit,#generatescript, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
 					function() { $(this).addClass('ui-state-hover'); },
 					function() { $(this).removeClass('ui-state-hover'); }
 				);
@@ -307,7 +307,7 @@
 	<div class="InnerLeftDialog">
 	<div class="OuterDialog">
 		<div id="JobDescriptionDetails" class="InnerLeftDialog">
-			<table id="dialogTable" border="1" class="ui-widget">
+			<table id="dialogTable" class="ui-widget">
 				<thead class="ui-widget-header">
 				</thead>
 				<tbody class="ui-widget-content">
@@ -332,11 +332,13 @@
 			<a id="overviewButton" class="ui-state-default ui-corner-all" href="javascript:;">
 				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
 			</a>
-
 			<a id="generatescript" class="ui-state-default ui-corner-all" target="_blank" href="javascript:;" title="generate script">
 				<span class="ui-icon ui-icon-script"></span>
 			</a>
-
+			<a id="job_info" class="ui-state-default ui-corner-all" href="javascript:;">
+				Runned jobs<span class="ui-icon ui-icon-lightbulb"></span>
+			</a>
+			
 			<div id="overviewDialog" class="fakewindowcontain">
 				<p id="overviewDialogP" >Home page body text under construction...</p>
 				<div class="ui-widget-overlay"></div>

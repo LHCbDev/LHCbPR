@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext
 from django.core import serializers
 
-from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job
+from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
 import json, subprocess, sys, configs, re, copy, os
 
 #***********************************************
@@ -248,13 +248,12 @@ def getJobDetails(request):
         dataDict['setupDAll'] = map(str,SetupProject.objects.all().values_list('description', flat=True).distinct())
     
     #check if the jobdescription exists in runned jobs so the user can edit or not some attributes
-    if 'editRequest' in request.GET:
-        try:
-            Job.objects.get(jobDescription__pk__exact=request.GET['job_id'])
-        except Exception:
-            dataDict['exists'] = False
-        else:
-            dataDict['exists'] = True
+    runned_jobs = Job.objects.filter(jobDescription__pk=request.GET['job_id']).count()
+    if runned_jobs > 0:
+        dataDict['runned_job'] = True
+    else:
+        dataDict['runned_job'] = False
+        
                 
     return HttpResponse(json.dumps(dataDict))
 
@@ -363,14 +362,13 @@ def script(request):
     if not 'pk' in request.GET:
         return HttpResponse("<h3>Not primary key was given lol.</h3>")
     if  not len(request.GET) ==  1:
-        return HttpResponse("<h3>Only one get attribute is allowed lol.</h3>")
+        return HttpResponse("<h3>Only one GET attribute is allowed lol.</h3>")
     try:
         int(request.GET['pk'])
     except Exception:
         return HttpResponse("<h3>Not valid integer primary key was given lol.</h3>")
     
     myJobDes = JobDescription.objects.get(pk=request.GET['pk'])
-    filename = 'trolololo'+str(myJobDes.pk)
     application = myJobDes.application.appName
     version = myJobDes.application.appVersion
     try:
@@ -381,24 +379,16 @@ def script(request):
     platforms = map(str,Requested_platform.objects.filter(jobdescription__exact=myJobDes).values_list('cmtconfig__cmtconfig', flat=True).distinct())       
     handlers = map(str,JobHandler.objects.filter(jobDescription__exact=myJobDes).values_list('handler__name', flat=True).distinct())
     
-    file_lines = [filename,
-                  '#!/bin/bash',
-                  '\n\n',
-                  '#job description id',
-                  '\n',
-                  'JOB_DESCRIPTION_ID='+str(myJobDes.pk),
-                  '\n\n'
-                  'HANDLERS="'+','.join(handlers)+'"',
-                  '\n',
-                  '#PLATFORMS="'+','.join(platforms)+'"',
-                  '\n\n',
-                  '. SetupProject.sh '+str(application)+' '+str(version)+' '+str(setup_project),
-                  '\n\n',
+    file_lines = [
+                  '#!/bin/bash\n\n',
+                  '#job description id\n',
+                  'JOB_DESCRIPTION_ID='+str(myJobDes.pk)+'\n\n',
+                  'HANDLERS="'+','.join(handlers)+'"\n',
+                  '#PLATFORMS="'+','.join(platforms)+'"\n\n',
+                  '. SetupProject.sh '+str(application)+' '+str(version)+' '+str(setup_project)+'\n\n',
                   'START=`date +"%Y-%m-%d,%T"`\n',
-                  'gaudirun.py '+str(options),
-                  '\n',
-                  'END=`date +"%Y-%m-%d,%T"`',
-                  '\n\n',
+                  'gaudirun.py '+str(options)+'\n',
+                  'END=`date +"%Y-%m-%d,%T"`\n\n',
                   'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPR\n'
                   'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPRHandlers\n',
                   'export PYTHONPATH=$PYTHONPATH:LHCbPRHandlers\n\n'
@@ -408,8 +398,52 @@ def script(request):
                   ]
     
     script = ''
-    for line in file_lines[1:]:
+    for line in file_lines:
         script += line
     
     return HttpResponse(script, mimetype="text/plain")
+
+def getRunnedJobs(request):
+    if not 'pk' in request.GET:
+        return HttpResponse("<h3>Not primary key was given lol.</h3>")
+    if  not len(request.GET) ==  1:
+        return HttpResponse("<h3>Only one GET attribute is allowed lol.</h3>")
+    try:
+        int(request.GET['pk'])
+    except Exception:
+        return HttpResponse("<h3>Not valid integer primary key was given lol.</h3>")
     
+    details = ''
+    #runnedJobs = Job.objects.filter(jobDescription__pk=request.GET['pk'])
+    total = Job.objects.filter(jobDescription__pk=request.GET['pk']).count()
+    jobTemp = Job.objects.filter(jobDescription__pk=request.GET['pk'])[0]
+    #for jobTemp in runnedJobs:
+    details+='\nTotal number of runned jobs: '+str(total)+'\n\n'
+    details+='Sample of the collected attributes of the job\n'
+    details+='--------------------------------First Job details-----------------------------------------------\n'
+    details+='Job id: '+str(jobTemp.id)+'\n'
+    details+='Host:'+jobTemp.host.hostname+'\n'
+    details+='Job description id:'+str(jobTemp.jobDescription.id)+'\n'
+    details+='Platform:'+jobTemp.platform.cmtconfig+'\n'
+    details+='Start time:'+str(jobTemp.time_start)+'\n'
+    details+='End time time:'+str(jobTemp.time_end)+'\n'
+    details+='Status:'+jobTemp.status+'\n'
+    
+    details+='{0:30} ===> {1:30}\n'.format('Attribute Name', 'Value')
+    attributesList = []
+    attributesList.extend(JobResults.objects.filter(job__pk=jobTemp.pk))
+    #attributesList.extend(ResultBinary.objects.filter(job__pk=jobTemp.pk))
+    
+    for attr in attributesList:
+        if attr.jobAttribute.type == 'Float':
+            details+='{0:30} ===> {1:30}\n'.format(attr.jobAttribute.name, str(attr.resultfloat.data))
+        elif attr.jobAttribute.type == 'Integer':
+            details+='{0:30} ===> {1:30}\n'.format(attr.jobAttribute.name, str(attr.resultint.data))
+        elif attr.jobAttribute.type == 'String':
+            details+='{0:30} ===> {1:30}\n'.format(attr.jobAttribute.name, str(attr.resultstring.data))
+        
+    details+='\n\n'
+    
+    #details="No content yet lol."
+    
+    return HttpResponse(details, mimetype="text/plain")
