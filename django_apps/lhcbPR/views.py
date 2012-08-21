@@ -401,7 +401,7 @@ def script(request):
                   '\n\n',
                   'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPR\n'
                   'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPRHandlers\n',
-                  'export PYTHONPATH=$PYTHONPATH:LHCbPRHandlers:.\n\n'
+                  'export PYTHONPATH=$PYTHONPATH:LHCbPRHandlers\n\n'
                   '#use python version 2.6\n'
                   'python LHCbPRHandlers/collectRunResults.py -s ${START} -e ${END} -p `hostname` -c ${CMTCONFIG} -j ${JOB_DESCRIPTION_ID} -l ${HANDLERS}\n',
                   'python LHCbPR/django_apps/manage.py pushToDB json_results',
