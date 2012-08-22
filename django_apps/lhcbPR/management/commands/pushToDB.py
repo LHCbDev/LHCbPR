@@ -67,7 +67,7 @@ class Command(BaseCommand):
             
             counter = 0
             for atr in attributelist:
-                logger.info( 'Saving: '+str(counter)+' attribute\n')
+                logger.info( 'Saving: '+str(counter)+' attribute')
                 
                 myAtr, created = JobAttribute.objects.get_or_create(
                                                                     name = atr['name'],
