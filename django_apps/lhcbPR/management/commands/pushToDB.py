@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
-from lhcbPR.models import Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription
+from lhcbPR.models import Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
 from django.db import transaction
-import json, re
+import json, re, logging
 
 class Command(BaseCommand):
 
@@ -10,21 +10,24 @@ class Command(BaseCommand):
         """ 
         Pushes the data from the given json file inside the database
         """
+        logging.basicConfig(level=logging.INFO)
+        logger = logging.getLogger('pushToDB')
+        
         myDataDict = {}
         try:
             f = open(args[0],'r').read()
             myDataDict = json.loads(f)
         except ValueError:
-            self.stdout.write('Invalid json file!Check your input file\n')
+            logger.error('Invalid json file!Check your input file\n')
             return
         except IOError:
-            self.stdout.write('No such file or directory!\n')
+            logger.error('No such file or directory!\n')
             return
         except IndexError:
-            self.stdout.write('No input was given!\n')
+            logger.error('No input was given!\n')
             return
         else:
-            self.stdout.write('Json file was valid , processing...\n')
+            logger.info('Json file was valid , processing...')
           
         
         try:
@@ -38,6 +41,12 @@ class Command(BaseCommand):
             
             myjobDescription = JobDescription.objects.get(pk=myDataDict['id_jobDescription'])
             
+            attributelist = myDataDict['JobAttributes']
+            
+            if not attributelist:
+                logger.warning('No collected results were found in the json input file, perhaps all handlers failed')
+                logger.warning('Aborting saving job...')
+                return
             
             myjob, created = Job.objects.get_or_create(
                                              host = myhost,
@@ -48,10 +57,18 @@ class Command(BaseCommand):
                                              status = myDataDict['status']
                                              )
             
-            attributelist = myDataDict['JobAttributes']
+            for handres in myDataDict['handlers_info']:
+                myHandler = Handler.objects.get(name__exact=handres['handler'])
+                handler_result, created = HandlerResult.objects.get_or_create(
+                                                                              job=myjob,
+                                                                              handler=myHandler,
+                                                                              success=handres['successful']
+                                                                              )
+            
             counter = 0
             for atr in attributelist:
-                self.stdout.write( 'Saving: '+str(counter)+' attribute\n')
+                logger.info( 'Saving: '+str(counter)+' attribute\n')
+                
                 myAtr, created = JobAttribute.objects.get_or_create(
                                                                     name = atr['name'],
                                                                     type = atr['type'],
@@ -87,7 +104,12 @@ class Command(BaseCommand):
                 counter+=1
             
         except KeyError:
-            self.stdout.write('Attributes given in json file are wrong, aborting...\n')
+            logger.error('Attributes given in json file are wrong, aborting...\n')
+            return
+        except Exception,e:
+            logger.error(e)
+            logger.error('Aborting...')
+            return
             
         
-        self.stdout.write('Json data file for new Job added successfully\n')
+        logger.info('Json data file for new Job added successfully\n')
