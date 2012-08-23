@@ -62,7 +62,7 @@ def jobDescriptions(request, app_name):
     appVersions = JobDescription.objects.filter(application__appName__exact=app_name).values('application__appVersion').distinct('application__appVersion')
     
     if not appVersions:
-        return HttpResponseNotFound("<h3>Page was not found</h3>")
+        return HttpResponseNotFound("<h3>No existing job descriptions for this application yet.</h3>")
     
     options = Options.objects.all().values('description').distinct('description')
     platforms = Platform.objects.all().values('cmtconfig').distinct('cmtconfig')
