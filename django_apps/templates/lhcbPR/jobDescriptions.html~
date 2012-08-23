@@ -306,7 +306,7 @@
 <div class="dialogContainer">
 	<div class="InnerLeftDialog">
 	<div class="OuterDialog">
-		<div id="JobDescriptionDetails" class="InnerLeftDialog">
+		<div class="InnerLeftDialog jobDetails">
 			<table id="dialogTable" class="ui-widget">
 				<thead class="ui-widget-header">
 				</thead>
@@ -335,22 +335,22 @@
 			<a id="generatescript" class="ui-state-default ui-corner-all" target="_blank" href="javascript:;" title="generate script">
 				<span class="ui-icon ui-icon-script"></span>
 			</a>
-			<a id="job_info" class="ui-state-default ui-corner-all" href="javascript:;">
+			<a id="job_info" class="ui-state-default ui-corner-all" href="javascript:;" target="_blank" title="Open tab with runned jobs information">
 				Runned jobs<span class="ui-icon ui-icon-lightbulb"></span>
 			</a>
 			
 			<div id="overviewDialog" class="fakewindowcontain">
-				<p id="overviewDialogP" >Home page body text under construction...</p>
+				<p id="overviewDialogP" class="overview"></p>
 				<div class="ui-widget-overlay"></div>
 			</div>
 		</div> <!-- closing the JobDescriptionDetails-->
 
 		<div id="platformContainer" class="InnerRightDialog">
 			<span>Requested platforms: </span> 
-			<p  id="platformsDetails"></p>
+			<p  id="platformsDetails" class="details"></p>
 
 			<span>Handlers: </span>
-				<p  id="handlersDetails"></p>
+				<p  id="handlersDetails" class="details"></p>
 			</span>
 		</div><!-- /innerRightDialog -->
 	</div> <!-- /OuterDialog -->
@@ -375,8 +375,12 @@
 <div class="dialogContainer">
 	<div class="InnerLeftDialog">
 	<div class="OuterDialog">
-		<div id="JobDescriptionClone" class="InnerLeftDialog">
-			<table class="dialogTable"><tr>
+		<div class="InnerLeftDialog jobDetails">
+			<table id="dialogTable" class="ui-widget">
+				<thead class="ui-widget-header">
+				</thead>
+				<tbody class="ui-widget-content">
+				<tr>
 				<td>Application:</td>
 				<td><input id="ApplicationClone" type="text" value=""  readOnly="readonly" /></td><tr>
 				<td>Version:</td>
@@ -391,13 +395,14 @@
 				<td><input id="SetupProjectDClone" type="text" value=""/></td><tr>
 				<td></td>
 				<td><input id="SetupProjectClone" type="text" value="" readOnly="readonly"/></td>
+			</tbody>
 			</table><br>
 			<br>
 			<a id="overviewButtonClone" class="ui-state-default ui-corner-all" href="javascript:;">
 				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
 			</a>
 			<div id="overviewClone" class="fakewindowcontain">
-				<p id="overviewCloneP" >Home page body text under construction...</p>
+				<p id="overviewCloneP" class="overview"></p>
 				<div class="ui-widget-overlay"></div>
 			</div>
 		</div> <!-- closing the JobDescriptionClone-->
@@ -405,11 +410,11 @@
 		<div id="platformContainer" class="InnerRightDialog">
 			<span>Requested platforms: </span>
 			<a id="editPlatformsClone" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
-			<p  id="platformsClone"></p>
+			<p  id="platformsClone" class="details"></p>
 
 			<span>Handlers: </span>
 			<a id="editHandlersClone" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
-				<p  id="handlersClone"></p>
+				<p  id="handlersClone" class="details"></p>
 			</span>
 		</div><!-- /innerRightDialog -->
 	</div> <!-- /OuterDialog -->
@@ -430,9 +435,13 @@
 <div class="dialogContainer">
 	<div class="InnerLeftDialog">
 	<div class="OuterDialog">
-		<div id="JobDescriptionEdit" class="InnerLeftDialog">
+		<div class="InnerLeftDialog jobDetails">
 			<p id="editMessage"><p>
-			<table class="dialogTable"><tr>
+			<table id="dialogTable" class="ui-widget">
+				<thead class="ui-widget-header">
+				</thead>
+				<tbody class="ui-widget-content">
+				<tr>
 				<td>Application:</td>
 				<td><input id="ApplicationEdit" type="text" value=""  readOnly="readonly" /></td><tr>
 				<td>Version:</td>
@@ -447,13 +456,14 @@
 				<td><input id="SetupProjectDEdit" type="text" value="" readOnly="readonly"/></td><tr>
 				<td></td>
 				<td><input id="SetupProjectEdit" type="text" value="" readOnly="readonly"/></td>
+			</tbody>
 			</table><br>
 			<br>
 			<a id="overviewButtonEdit" class="ui-state-default ui-corner-all" href="javascript:;">
 				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
 			</a>
 			<div id="overviewEdit" class="fakewindowcontain">
-				<p id="overviewEditP" >Home page body text under construction...</p>
+				<p id="overviewEditP" class="overview"></p>
 				<div class="ui-widget-overlay"></div>
 			</div>
 		</div> <!-- closing the JobDescriptionClone-->
@@ -461,11 +471,11 @@
 		<div id="platformContainer" class="InnerRightDialog">
 			<span>Requested platforms: </span>
 			<a id="editPlatformsEdit" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
-			<p  id="platformsEdit"></p>
+			<p  id="platformsEdit" class="details"></p>
 
 			<span>Handlers: </span>
 			<a id="editHandlersEdit" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
-				<p  id="handlersEdit"></p>
+				<p  id="handlersEdit" class="details"></p>
 			</span>
 		</div><!-- /innerRightDialog -->
 	</div> <!-- /OuterDialog -->

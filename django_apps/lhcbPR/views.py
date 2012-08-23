@@ -8,6 +8,7 @@ from django.core import serializers
 
 from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
 import json, subprocess, sys, configs, re, copy, os
+from random import choice
 
 #***********************************************
 from django.contrib.auth.decorators import login_required
@@ -24,6 +25,11 @@ def combineStatements(StatementsDict, operator):
     return query
      
 def makeQuery(statement,arguments,operator):
+    """Gets a list of different arguments and for each argument creates 
+    a dictionary with the given statement
+    example :
+    argument : v43r0
+    statement: application__appVersion__exact"""
     dataDict = {}
     
     for arg in arguments:
@@ -32,12 +38,19 @@ def makeQuery(statement,arguments,operator):
     return combineStatements(dataDict, operator)
     
 def test(request):
+    """Just a test view which serves testing hmtl pages,
+    for the moment it serves the jquery ui examples page"""
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user}
     return render_to_response('lhcbPR/index.html', myDict,
                   context_instance=RequestContext(request))
 
 def makeListChecked(mylist,key,are_checked = []):
+    """For each dictionary in mylist check if the dictionary[key] 
+    exists in the checked values, if yes/no it saves it as checked/unchecked 
+    in a final dictionary list, this method is used for bookmarking the 
+    filtering values in /jobDescriptions/APP_NAME page
+    """
     List = []
     for dict in mylist:
         if dict[key] in are_checked:
@@ -47,6 +60,9 @@ def makeListChecked(mylist,key,are_checked = []):
     return List
       
 def index(request):
+    """This view serves the home page of the application(lhcbPR), along 
+    with the page it provides information for the user(if he is authenticated
+    or not)"""
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user}
     return render_to_response('lhcbPR/indexOf.html', myDict,
@@ -54,10 +70,17 @@ def index(request):
 
 @login_required  #login_url="login"
 def jobDescriptions(request, app_name):
+    """From the url is takes the requested application(app_name) , example:
+    /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
+    and depending on the app_name it returns the available versions, options, setupprojects"""
     
     applicationsList = map(str,Application.objects.values_list('appName', flat=True).distinct())
         
     myauth = request.user.is_authenticated()
+    
+    apps = Application.objects.filter(appName__exact=app_name)
+    if not apps:
+        return HttpResponseNotFound("<h3>Page not found</h3>")        
     
     appVersions = JobDescription.objects.filter(application__appName__exact=app_name).values('application__appVersion').distinct('application__appVersion')
     
@@ -68,6 +91,11 @@ def jobDescriptions(request, app_name):
     platforms = Platform.objects.all().values('cmtconfig').distinct('cmtconfig')
     setupProject = SetupProject.objects.all().values('description').distinct('description')
     
+    #the GET request may also have information about which versions,options etc the user wants to 
+    #to be checked in the filtering checkboxes(used for bookmarking the jobDescriptions page)
+    #so it gets all versions,options... for the requested application(from app_name) and checks which 
+    #of them exists in GET request values and using the makeListChecked method it creates the proper lists to
+    #to redirected back to the user
     if 'appVersions' in request.GET:
         appVersionsList = makeListChecked(appVersions,'application__appVersion',request.GET['appVersions'].split(','))
     else:
@@ -89,6 +117,7 @@ def jobDescriptions(request, app_name):
     else:
         requested_page = 1
     
+    #then create the final data dictionary
     dataDict = { 'appVersions' : appVersionsList,
                'options' : optionsList,
                'platforms' : cmtconfigsList,
@@ -106,6 +135,7 @@ def jobDescriptions(request, app_name):
    
 @login_required 
 def jobDescriptionsHome(request):
+    """Serves the jobDescriptions home page with the available applications"""
     applications = Application.objects.values('appName').distinct('appName')
     
     applicationsList = []
@@ -119,35 +149,19 @@ def jobDescriptionsHome(request):
                   context_instance=RequestContext(request))
 @login_required 
 def analyseHome(request):
+    """To be used later when we start developing the analyzing functions for the 
+    lhcbpr application"""
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user }
       
     return render_to_response('lhcbPR/analyseHome.html', 
                   myDict,
                   context_instance=RequestContext(request))
-    
-@login_required     
-def handleRequest(request):
-    if request.method == 'GET':
-        if request.GET['function'] == 'i_love_cookies':
-            appVersionsList = map(str,JobDescription.objects.filter(application__appName__exact=request.GET['key']).values_list('application__appVersion', flat=True).distinct()) 
-            optionsList = map(str,Options.objects.all().values_list('content', flat=True).distinct())
-            cmtconfigsList = map(str,Requested_platform.objects.filter(jobdescription__application__appName__exact=request.GET['key']).values_list('cmtconfig__cmtconfig', flat=True).distinct())
-            setupProjectList = map(str,SetupProject.objects.all().values_list('content', flat=True).distinct())
-            
-            myDict = { 'appVersions' : appVersionsList,
-                       'options' : optionsList,
-                       'cmtconfigs' : cmtconfigsList,
-                       'setupProject' : setupProjectList,
-                       }
-            
-            return HttpResponse(json.dumps(myDict))
-        
-        if request.GET['function'] == 'Options':
-            pass
 
 @login_required
 def getFilters(request):
+    """Gets the filtering values for the request and returns the jobDescriptions which 
+    agree with the filtering values(query to the database)"""
     results_per_page = 15
     if request.method == 'GET':
     
@@ -199,8 +213,6 @@ def getFilters(request):
             fixed_description = myDict['appName']+"   "+myDict['appVersion']+"  "+myDict["setupproject"]
             fixed_description += "  "+myDict['options']
             
-            #old missing part
-            
             myobjectlist.append(myDict)
             
         pageIngo = {
@@ -213,6 +225,9 @@ def getFilters(request):
 
 @login_required
 def getJobDetails(request):
+    """Gets a job description id from the GET request and returns back all the available information
+    for the requested job description options,setupproject,handlers,platforms etc, also if the request comes 
+    from the clone or edit dialogs(from the web interface) it returns all the available handlers/platforms/options etc"""
     if not 'job_id' in request.GET:
         return HttpResponseNotFound()
     
@@ -240,6 +255,10 @@ def getJobDetails(request):
         dataDict['setupProject'] = ''
         dataDict['setupProjectD'] = ''
     
+    #if the request comes from the edit or clone dialog(web iterface) send all available
+    #needed information(this information is used to create a new job description or edit 
+    #an existing one, so the user needs to have (except from the information for the choosed job description)
+    #all the available values for options/setupprojects etc
     if 'cloneRequest' or 'editRequest' in request.GET:
         dataDict['versionsAll'] = map(str,Application.objects.filter(appName__exact=myJob.application.appName).values_list('appVersion', flat=True).distinct())
         dataDict['optionsAll'] = map(str,Options.objects.all().values_list('content', flat=True).distinct())
@@ -259,6 +278,10 @@ def getJobDetails(request):
 
 @login_required
 def editRequests(request):
+    """This view is called each time the user writes/changes a value in a job description(in clone/edit functions).
+    this is used to make sure that the pairs(options-options description , setup_project-setup_project description) will stay unique,
+    so if the user types an existing option(in the input html element of the web interface) the option description will
+    automatically change to the corresponding value, and the opposite """
     if not 'value' or not 'key' or not 'real_name' in request.GET:
         return HttpResponse()
     if request.GET['real_name'] == 'Options':
@@ -278,6 +301,10 @@ def editRequests(request):
     
 @login_required
 def commitClone(request):
+    """This view checks if a commit request from the user(add new job description/or edit an existing one) is valid.
+    if it's valid it updates/creates the old/new job description, which means add/edit handler,requested platforms, options etc"""
+    
+    #if the request is an edit request
     if 'update' in request.GET:
         myObj = JobDescription.objects.get(pk=request.GET['id'])
         myObj.setup_project = None
@@ -347,6 +374,8 @@ def commitClone(request):
         return HttpResponse(json.dumps({ 'exists' : False, 'job_id' : myObj.id }))
 @login_required
 def editPanel(request):
+    """Serves the information is needed for the editing handlers/platforms dialog, just sends back
+    all available handlers and platforms"""
     all_attributes = []
     if request.GET['service'] == 'platforms':
         all_attributes = map(str,Platform.objects.values_list('cmtconfig', flat=True).distinct())
@@ -359,6 +388,9 @@ def editPanel(request):
 
 #@login_required comment in order the wget can work on this one
 def script(request):
+    """Takes a job description id from the GET request and creates the corresponding script for the
+    requested id, it's the script which the user will use to run it's job, call handlers to collect
+    the run results, push the data to the database(uses the right options, handlers list etc)"""
     if not 'pk' in request.GET:
         return HttpResponse("<h3>Not primary key was given lol.</h3>")
     if  not len(request.GET) ==  1:
@@ -404,6 +436,8 @@ def script(request):
     return HttpResponse(script, mimetype="text/plain")
 
 def getRunnedJobs(request):
+    """Just an example of printing information about runned jobs(summary, collected results for each job etc)
+    to be replaced soon, choose randomly one runned job for the requested job description"""
     if not 'pk' in request.GET:
         return HttpResponse("<h3>Not primary key was given lol.</h3>")
     if  not len(request.GET) ==  1:
@@ -416,11 +450,11 @@ def getRunnedJobs(request):
     details = ''
     #runnedJobs = Job.objects.filter(jobDescription__pk=request.GET['pk'])
     total = Job.objects.filter(jobDescription__pk=request.GET['pk']).count()
-    jobTemp = Job.objects.filter(jobDescription__pk=request.GET['pk'])[0]
+    jobTemp = choice(Job.objects.filter(jobDescription__pk=request.GET['pk']))
     #for jobTemp in runnedJobs:
     details+='\nTotal number of runned jobs: '+str(total)+'\n\n'
-    details+='Sample of the collected attributes of the job\n'
-    details+='--------------------------------First Job details-----------------------------------------------\n'
+    details+='Sample of the collected attributes of a random runned job\n'
+    details+='-------------------------------- Job details-----------------------------------------------\n'
     details+='Job id: '+str(jobTemp.id)+'\n'
     details+='Host:'+jobTemp.host.hostname+'\n'
     details+='Job description id:'+str(jobTemp.jobDescription.id)+'\n'
@@ -443,7 +477,5 @@ def getRunnedJobs(request):
             details+='{0:30} ===> {1:30}\n'.format(attr.jobAttribute.name, str(attr.resultstring.data))
         
     details+='\n\n'
-    
-    #details="No content yet lol."
     
     return HttpResponse(details, mimetype="text/plain")

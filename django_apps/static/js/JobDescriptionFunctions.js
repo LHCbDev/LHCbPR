@@ -12,7 +12,6 @@ String.prototype.fulltrim=function(){
   
 $(document).ready(function () {
 	$("#job_info").hide();
-	$("#scriptDialog").hide();
 	$("#overlay").hide();
     $("#alertDialog").hide();
 	$("#editPlatformsHandlers").hide();

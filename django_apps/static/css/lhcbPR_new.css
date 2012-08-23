@@ -1,7 +1,6 @@
 #lhcblogo {  border-style: none; width: 98px; height: 69px; margin-top:8px;}
 
 body{ 
-	//background-color: #FFFFFF;
 	position: relative; 
 	margin: 0; padding: 0;
 	font-family: "Arial",sans-serif;
@@ -77,7 +76,6 @@ table.filter td a#VersionButton, #OptionsButton, #PlatformButton, #SetupProjectB
 }
 /*-------------------- uls containg the filtering elements ---------------------*/
 .checklist {
-    //border: 1px solid #ccc;
     list-style: none;
     max-height: 250px;
     overflow: auto;
@@ -104,7 +102,6 @@ div.Outer {
 		display : inline-block;
 }
 div.InnerLeft {
-        //width:50%
 		position: relative;     
         float: left;
         }
@@ -134,10 +131,9 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 
 
 /*-------------------------------------------------------------------------------------------------- DIALOG STUFF --------------------------------------------------------------------------*/
-#platformContainer { margin-top:10px; max-height:410px; /* height: 410px; */ border-style:solid;border-width:1px;border-radius: 4px; padding:15px; }
+#platformContainer { margin-top:10px; max-height:410px; border-style:solid;border-width:1px;border-radius: 4px; padding:15px; }
 
-#JobDescriptionDetails,#JobDescriptionClone, #JobDescriptionEdit
-{ margin-top:10px;float:left;width:340px;max-height:450px;border-width: 1px;border-style: solid;border-radius: 4px; padding:15px; }
+.jobDetails { margin-top:10px;float:left;width:340px;max-height:450px;border-width: 1px;border-style: solid;border-radius: 4px; padding:15px; }
 
 #DialogButtons { margin-top: 10px; }
 
@@ -152,10 +148,9 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 #overviewButton span.ui-icon, #overviewButtonClone span.ui-icon, #overviewButtonEdit span.ui-icon, #generatescript span.ui-icon, #job_info span.ui-icon
 { margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px; }
 
-#overviewDialogP, #overviewCloneP, #overviewEditP { line-height:160%;font-size:14px; }
+.overview { line-height:160%;font-size:14px; }
 
-#platformsDetails, #handlersDetails,#platformsClone, #handlersClone, #platformsEdit, #handlersEdit 
-{ width: 245px;max-height:155px;overflow:auto;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 4px;;}
+.details { width: 245px;max-height:155px;overflow:auto;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 4px;;}
 
 #editMessage { font-family: Italics;font-size:14px;padding:0px; }
 
@@ -167,7 +162,7 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
   	height : 70px;
   	border-width: 1px;
   	border-color: #000000;
-  	border-style: dashed; //solid;
+  	border-style: dashed;
   	border-radius: 0.5em;
   	padding : 0.5em;
   	margin-top: 7px;
@@ -212,7 +207,4 @@ div.dialogContainer {
 
 
 #availableAttributes, #requestedAttributes { list-style-type: none; margin: 0; padding: 0;  }
-#availableAttributes li, #requestedAttributes li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
-
-/*---------------------------------------- SCRIPT DIALOG-------------------------------------------*/
-#scriptDialog input { position: absolute; bottom:0; left:5px; width: 95%; }
+#availableAttributes li, #requestedAttributes li { margin: 3px; padding: 7px; height: 18px; }
