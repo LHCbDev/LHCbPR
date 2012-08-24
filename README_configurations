@@ -55,6 +55,9 @@
 			</Files>
 			</Directory>
 		
+		***Attention , for the moment in order the urls to work , the WSGIScriptAlias must be as the above example(/django ...) :
+			
+			WSGIScriptAlias /django path_to_wsgi.py
 
 	5) Important note: in scl6 you must change the permissions for the selinux if you want the apache to be able to serve your files/application:
 		example : 
