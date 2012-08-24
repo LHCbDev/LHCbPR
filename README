@@ -1,0 +1,67 @@
+*** Comments for the script generated to run a job 
+
+An example of the script along with explaining comments:
+
+#!/bin/bash
+
+#job description id, is the primary key the job description has inside the database, 
+#so we will know which job description was used
+#to run this job and save properly the output results
+JOB_DESCRIPTION_ID=2
+
+#this variable contains the List of handlers(comma separated)
+#these are the handlers who will be used to collect the job output results(log, root files etc)
+HANDLERS="TimingHandler"
+#PLATFORMS="x86_64-slc5-gcc43-opt,x86_64-slc5-gcc46-opt"
+
+. SetupProject.sh BRUNEL v43r2 --no-user-area
+
+#we save the start time before the job starts
+START=`date +"%Y-%m-%d,%T"`
+gaudirun.py $BRUNELROOT/options/Brunel-Default.py $BRUNELROOT/options/COLLISION12-Beam4000GeV-VeloClosed-MagDown.py --option="from Configurables import Brunel; Brunel().EvtMax=1000" 2>&1 > timing.log
+
+#we save the end time and via using the start time we can calculate low long the above job was running
+END=`date +"%Y-%m-%d,%T"`
+
+#clone the needed stuff to call the handlers, collect the results and push them to the database
+#the LHCbPR folder contains the files which are needed to connect to the database and push the results
+git clone /afs/cern.ch/lhcb/software/GIT/LHCbPR
+
+#this folder contains the handlers and the script which is used to call the handlers, 
+#also for the moment it contains a django instance(the whole project) so the user will be able from his 
+#own local computer to push the results to the dataabse using django libraries, that's why i add it to the PYTHONPATH
+git clone /afs/cern.ch/lhcb/software/GIT/LHCbPRHandlers
+export PYTHONPATH=$PYTHONPATH:LHCbPRHandlers
+
+#use python version 2.6
+python LHCbPRHandlers/collectRunResults.py -s ${START} -e ${END} -p `hostname` -c ${CMTCONFIG} -j ${JOB_DESCRIPTION_ID} -l ${HANDLERS}
+
+#the manage.py python file calls the command 'pushToDB' giving it the json_results(output produced by the collectRunResults script)
+python LHCbPR/django_apps/manage.py pushToDB json_results
+
+# Attention the pushToDB uses cx_Oracle,tnsnames,instant oracle client packages in order to connect to the oracle database, therefore if you use
+# the python manage.py pushToDB json_results command just make sure your environment provides these packages
+#(for example the SetupProject Brunel environment provides all these packages)
+
+
+
+
+****** TODO list (will be soon moved to a proper document)
+
+	* A new way of sending the json_results to the database
+	
+	* Initial data to the database(applications-versions , at least one job description in order to produce the other via clone function)
+	
+	* Discuss how to store root files, the one way is to serialize the whole file(or part of it) with pickle and save it as text,
+		the other way is to override the file store the django has and save the file inside the oracle database
+		
+	* Limit access to specific e-group
+		some via shibboleth,some via django(same page, different available functions depending on the user permissions)
+		
+	* Add a relation between options-application/version
+	
+	* In the details job description dialog add a button "new" along with clone/edit maybe
+	
+	* Check again the the checking in the clone/edit dialog when a user changes the description/content (not to be done automatically, unique pairs)
+	
+	* Analyze functions ( provide an api)
