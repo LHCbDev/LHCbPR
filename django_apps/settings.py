@@ -13,23 +13,23 @@ MANAGERS = ADMINS
 
 DATABASES = {
     #database for alamages virtual machine
-    'default': {
-        'ENGINE': 'django.db.backends.oracle', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'devdb11',                      # Or path to database file if using sqlite3.
-        'USER': 'LHCB_PR',                      # Not used with sqlite3.
-        'PASSWORD': 'Xe_masi31',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
-    #database for lhcbpr virtual machine
     #'default': {
     #    'ENGINE': 'django.db.backends.oracle', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
     #    'NAME': 'devdb11',                      # Or path to database file if using sqlite3.
-    #    'USER': 'lhcb_prtest',                      # Not used with sqlite3.
-    #    'PASSWORD': 'Lekuwu49',                  # Not used with sqlite3.
+    #    'USER': 'LHCB_PR',                      # Not used with sqlite3.
+    #    'PASSWORD': 'Xe_masi31',                  # Not used with sqlite3.
     #    'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
     #    'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     #}
+    #database for lhcbpr virtual machine
+    'default': {
+        'ENGINE': 'django.db.backends.oracle', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'devdb11',                      # Or path to database file if using sqlite3.
+        'USER': 'lhcb_prtest',                      # Not used with sqlite3.
+        'PASSWORD': 'Lekuwu49',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
 
 }
 
