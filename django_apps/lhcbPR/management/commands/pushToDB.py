@@ -1,5 +1,8 @@
+from __future__ import unicode_literals
 from django.core.management.base import BaseCommand, CommandError
-from lhcbPR.models import Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
+from django.core.files import File
+from django.core.files.base import ContentFile
+from lhcbPR.models import ResultRoot, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
 from django.db import transaction
 import json, re, logging
 
@@ -67,7 +70,7 @@ class Command(BaseCommand):
             
             counter = 0
             for atr in attributelist:
-                logger.info( 'Saving: '+str(counter)+' attribute')
+                #logger.info( 'Saving: '+str(counter)+' attribute')
                 
                 myAtr, created = JobAttribute.objects.get_or_create(
                                                                     name = atr['name'],
@@ -75,36 +78,48 @@ class Command(BaseCommand):
                                                                     description = atr['description'],
                                                                     group = atr['group']
                                                                     )
-                if atr['type'] == 'Float':
-                    finalAtr= ResultFloat.objects.get_or_create(
-                                                    job = myjob,
-                                                    jobAttribute = myAtr,
-                                                    data = atr['data']
-                                                    ) 
-                elif atr['type'] == 'Integer':
-                    finalAtr = ResultInt.objects.get_or_create(
-                                                    job = myjob,
-                                                    jobAttribute = myAtr,
-                                                    data = atr['data']
-                                                    ) 
-                elif atr['type'] == 'String':
-                    finalAtr = ResultString.objects.get_or_create(
-                                                    job = myjob,
-                                                    jobAttribute = myAtr,
-                                                    data = atr['data']
-                                                    ) 
-                elif atr['type'] == 'ROOT_Blob':
-                    finalAtr, created = ResultBinary.objects.get_or_create(
-                                                    job = myjob,
-                                                    jobAttribute = myAtr,
-                                                    data = atr['data'],
-                                                    root_version = atr['ROOT_version']
-                                                    ) 
+                #if atr['type'] == 'Float':
+                #    finalAtr= ResultFloat.objects.get_or_create(
+                #                                    job = myjob,
+                #                                    jobAttribute = myAtr,
+                #                                    data = atr['data']
+                #                                    ) 
+                #elif atr['type'] == 'Integer':
+                #    finalAtr = ResultInt.objects.get_or_create(
+                #                                    job = myjob,
+                #                                    jobAttribute = myAtr,
+                #                                    data = atr['data']
+                #                                    ) 
+                #elif atr['type'] == 'String':
+                #    finalAtr = ResultString.objects.get_or_create(
+                #                                    job = myjob,
+                #                                    jobAttribute = myAtr,
+                #                                    data = atr['data']
+                #                                    ) 
+                #elif atr['type'] == 'ROOT_Blob':
+                #    finalAtr, created = ResultBinary.objects.get_or_create(
+                #                                    job = myjob,
+                #                                    jobAttribute = myAtr,
+                #                                    data = atr['data'],
+                #                                    root_version = atr['ROOT_version']
+                #                                    ) 
+                #elif atr['type'] == 'RootFile':
+                if atr['type'] == 'RootFile':
+                    content = open(atr['rootfile'], 'r').read()
+                    #ResultRoot(job = myjob,
+                    #           jobAttribute = myAtr,
+                    #           rootfile = File(f),
+                    #         )
+                    finalAtr = ResultRoot(
+                                          job = myjob,
+                                          jobAttribute = myAtr,
+                                          )
+                    finalAtr.rootfile.save('mytestrootfile', ContentFile(content), save=True)
                 
                 counter+=1
             
-        except KeyError:
-            logger.error('Attributes given in json file are wrong, aborting...\n')
+        except KeyError, e:
+            logger.error('Attributes given in json file are wrong, aborting...\n'+str(e)+'\n')
             return
         except Exception,e:
             logger.error(e)

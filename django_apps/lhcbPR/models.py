@@ -74,10 +74,15 @@ class ResultInt(JobResults):
     data = models.IntegerField()
     
 class ResultBinary(JobResults):
-    root_version = models.CharField(max_length=20)
     data = models.TextField()
     
+class ResultFile(JobResults):
+    file = models.FileField(upload_to='root/',blank=True)
+
 class HandlerResult(models.Model):
     job = models.ForeignKey(Job)
     handler = models.ForeignKey(Handler)
     success = models.BooleanField()
+    
+class AddedResults(models.Model):
+    identifier = models.CharField(max_length=64, unique=True)
