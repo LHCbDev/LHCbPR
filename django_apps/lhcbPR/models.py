@@ -85,4 +85,4 @@ class HandlerResult(models.Model):
     success = models.BooleanField()
     
 class AddedResults(models.Model):
-    identifier = models.CharField(max_length=64, unique=True)
+    identifier = models.CharField(max_length=64)

@@ -87,17 +87,17 @@ class Command(BaseCommand):
                                            cmtconfig=Platform.objects.get(pk=obj['fields']['cmtconfig']),
                                            )
                 logger.info('Requested_platform saved '+str(counter))
-            if obj['model'] == 'lhcbPR.job':
-                Job.objects.get_or_create(
-                                           pk=obj['pk'],
-                                           host=Host.objects.get(pk=obj['fields']['host']),
-                                           jobDescription=JobDescription.objects.get(pk=obj['fields']['jobDescription']),
-                                           platform=Platform.objects.get(pk=obj['fields']['platform']),
-                                           status=obj['fields']['status'],
-                                           time_end=obj['fields']['time_end'],
-                                           time_start=obj['fields']['time_start']
-                                           )
-                logger.info('Job saved '+str(counter))
+            #if obj['model'] == 'lhcbPR.job':
+            #    Job.objects.get_or_create(
+            #                               pk=obj['pk'],
+            #                               host=Host.objects.get(pk=obj['fields']['host']),
+            #                               jobDescription=JobDescription.objects.get(pk=obj['fields']['jobDescription']),
+            #                               platform=Platform.objects.get(pk=obj['fields']['platform']),
+            #                               status=obj['fields']['status'],
+            #                               time_end=obj['fields']['time_end'],
+            #                               time_start=obj['fields']['time_start']
+            #                               )
+            #    logger.info('Job saved '+str(counter))
             if obj['model'] == 'lhcbPR.handler':
                Handler.objects.get_or_create(
                                            pk=obj['pk'],
@@ -146,14 +146,14 @@ class Command(BaseCommand):
             #                               data=obj['fields']['data'],
             #                               )
             #   logger.info('ResultFloat saved '+str(counter))
-            if obj['model'] == 'lhcbPR.handlerresult':
-               HandlerResult.objects.get_or_create(
-                                           pk=obj['pk'],
-                                           handler=Handler.objects.get(pk=obj['fields']['handler']),
-                                           job=Job.objects.get(pk=obj['fields']['job']),
-                                           success=obj['fields']['success']
-                                           )
-               logger.info('HandlerResult saved '+str(counter))
+            #if obj['model'] == 'lhcbPR.handlerresult':
+            #   HandlerResult.objects.get_or_create(
+            #                               pk=obj['pk'],
+            #                               handler=Handler.objects.get(pk=obj['fields']['handler']),
+            #                               job=Job.objects.get(pk=obj['fields']['job']),
+            #                               success=obj['fields']['success']
+            #                               )
+            #   logger.info('HandlerResult saved '+str(counter))
             counter+=1
             
                

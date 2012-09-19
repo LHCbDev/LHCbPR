@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files import File
 from django.core.files.base import ContentFile
-from lhcbPR.models import ResultFile, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
+from lhcbPR.models import Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
 from django.db import transaction
 import json, re, logging
 
@@ -70,7 +70,7 @@ class Command(BaseCommand):
             
             counter = 0
             for atr in attributelist:
-                #logger.info( 'Saving: '+str(counter)+' attribute')
+                logger.info( 'Saving: '+str(counter)+' attribute')
                 
                 myAtr, created = JobAttribute.objects.get_or_create(
                                                                     name = atr['name'],
