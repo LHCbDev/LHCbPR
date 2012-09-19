@@ -4,16 +4,16 @@
     }, 
     "HOST": {
         "cpu_info": "", 
-        "hostname": "pclhcb10", 
+        "hostname": "pclhcb11", 
         "memoryinfo": ""
     }, 
     "JobAttributes": [
         {
-            "rootfile": "/afs/cern.ch/user/e/ekiagias/tests/Brunel-10ev-histos.root", 
+            "file": "/afs/cern.ch/user/e/ekiagias/tests/Brunel-10ev-histos.root", 
             "description": "no description yet", 
             "group": "root file family", 
             "name": "rootfilesavetest", 
-            "type": "RootFile"
+            "type": "File"
         },
 		{
             "data": "3196.293", 
@@ -2747,6 +2747,6 @@
     ], 
     "id_jobDescription": "1", 
     "status": "", 
-    "time_end": "2012-08-24,17:30:29", 
-    "time_start": "2012-08-24,17:28:46"
+    "time_end": "2012-08-24,17:24:29", 
+    "time_start": "2012-08-24,17:22:46"
 }
