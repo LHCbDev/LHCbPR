@@ -30,7 +30,6 @@ class Command(BaseCommand):
         for obj in json.loads(f):
             if obj['model'] == 'lhcbPR.host':
                 Host.objects.get_or_create(
-                                           pk=obj['pk'],
                                            cpu_info=obj['fields']['cpu_info'],
                                            hostname=obj['fields']['hostname'],
                                            memoryinfo=obj['fields']['memoryinfo']
@@ -38,21 +37,19 @@ class Command(BaseCommand):
                 logger.info('Host saved '+str(counter))
             if obj['model'] == 'lhcbPR.application':
                 Application.objects.get_or_create(
-                                           pk=obj['pk'],
                                            appVersion=obj['fields']['appVersion'],
                                            appName=obj['fields']['appName'],
                                            )
                 logger.info('Application saved '+str(counter))
             if obj['model'] == 'lhcbPR.options':
                 Options.objects.get_or_create(
-                                           pk=obj['pk'],
                                            content=obj['fields']['content'],
                                            description=obj['fields']['description'],
                                            )
                 logger.info('Options saved '+str(counter))
             if obj['model'] == 'lhcbPR.setupproject':
                 SetupProject.objects.get_or_create(
-                                           pk=obj['pk'],
+                
                                            content=obj['fields']['content'],
                                            description=obj['fields']['description'],
                                            )
