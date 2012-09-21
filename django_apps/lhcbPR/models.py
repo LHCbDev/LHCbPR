@@ -76,8 +76,13 @@ class ResultInt(JobResults):
 class ResultBinary(JobResults):
     data = models.TextField()
     
+
+def content_file_name(instance, filename):
+    return '/'.join([str(instance.job.jobDescription.pk), str(instance.job.pk), filename])
+
 class ResultFile(JobResults):
-    file = models.FileField(upload_to='root/',blank=True)
+    file = models.FileField(upload_to=content_file_name,blank=True)
+
 
 class HandlerResult(models.Model):
     job = models.ForeignKey(Job)

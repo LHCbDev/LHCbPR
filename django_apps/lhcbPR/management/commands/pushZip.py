@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files import File
 from django.core.files.base import ContentFile
-from lhcbPR.models import ResultFile, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
+from lhcbPR.models import AddedResults, ResultFile, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
 from django.db import transaction
 import json, re, logging, zipfile
 
@@ -22,7 +22,7 @@ class Command(BaseCommand):
             
             myDataDict = json.loads(unzipper.read('json_results'))
         except ValueError:
-            logger.error('Invalid json file!Check your input file\n')
+            logger.error('Invalid json file in zip folder!Check your input zip folder\n')
             return
         except IOError,e:
             logger.error('No such file or directory!\n')
@@ -34,10 +34,15 @@ class Command(BaseCommand):
         except Exception, e:
             logger.error(str(Exception))
         else:
-            logger.info('Json file was valid , processing...')
+            logger.info('Json file from zip folder was valid , processing...')
           
         
         try:
+            results_unique_id, created = AddedResults.objects.get_or_create(identifier=myDataDict['results_id'])
+            if not created:
+                logger.warning('Results file '+results_unique_id.identifier+' already added, aborting...')
+                return
+            
             cmtconfigDict = myDataDict['CMTCONFIG']
             mycmtconfig, created = Platform.objects.get_or_create(cmtconfig=cmtconfigDict['platform'])
             
@@ -100,16 +105,8 @@ class Command(BaseCommand):
                                                     jobAttribute = myAtr,
                                                     data = atr['data']
                                                     ) 
-                elif atr['type'] == 'ROOT_Blob':
-                    finalAtr, created = ResultBinary.objects.get_or_create(
-                                                    job = myjob,
-                                                    jobAttribute = myAtr,
-                                                    data = atr['data'],
-                                                    root_version = atr['ROOT_version']
-                                                    ) 
                 elif atr['type'] == 'File':
-                    file = unzipper.read(atr['file'])
-                    #content = open(file, 'r').read()
+                    file = unzipper.read(atr['filename'])
                     finalAtr = ResultFile(
                                           job = myjob,
                                           jobAttribute = myAtr,
@@ -117,7 +114,9 @@ class Command(BaseCommand):
                     finalAtr.file.save(atr['file'], ContentFile(file), save=True)
                 
                 counter+=1
-            
+         
+            logger.info('Zip folder with new job results added successfully\n')   
+        
         except KeyError, e:
             logger.error('Attributes given in json file are wrong, aborting...\n'+str(e)+'\n')
             return
@@ -125,6 +124,3 @@ class Command(BaseCommand):
             logger.error(e)
             logger.error('Aborting...')
             return
-            
-        
-        logger.info('Json data file for new Job added successfully\n')
