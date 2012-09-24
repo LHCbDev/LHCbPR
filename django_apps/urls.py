@@ -26,9 +26,3 @@ urlpatterns += patterns('lhcbPR.views',
 urlpatterns += patterns('',
     url(r'^admin/', include(admin.site.urls)),
 )
-
-#urlpatterns += patterns('generic.views',
-#    url(r'^generic/$','index'),
-#    url(r'^generic/results/$','choose'),
-#    url(r'^generic/service/$','handleService'),
-#)

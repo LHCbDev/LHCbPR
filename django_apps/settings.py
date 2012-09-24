@@ -152,7 +152,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'shibsso',
     'lhcbPR',
-    #'generic',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

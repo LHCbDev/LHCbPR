@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.core import serializers
 
 from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
-import json, subprocess, sys, configs, re, copy, os
+import json, subprocess, sys, re, copy, os
 from random import choice
 
 #***********************************************

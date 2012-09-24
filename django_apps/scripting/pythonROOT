@@ -1,0 +1,13 @@
+#!/bin/bash
+#fixing the enviroment variables in order to use properly the ROOT
+export LD_LIBRARY_PATH="/afs/cern.ch/sw/lcg/app/releases/ROOT/5.32.02/x86_64-slc5-gcc43-opt/root/lib:/afs/cern.ch/sw/lcg/external/xrootd/3.1.0p2/x86_64-slc5-gcc43-opt/lib64:/afs/cern.ch/sw/lcg/external/gcc/4.3.5/x86_64-slc5/lib64:/afs/cern.ch/lhcb/software/releases/COMPAT/COMPAT_v1r10/CompatSys/x86_64-slc5-gcc43-opt/lib:/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/lib"
+
+export PATH="/afs/cern.ch/sw/lcg/app/releases/ROOT/5.32.02/x86_64-slc5-gcc43-opt/root/bin:/afs/cern.ch/sw/lcg/external/xrootd/3.1.0p2/x86_64-slc5-gcc43-opt/bin:/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/bin:/afs/cern.ch/sw/lcg/external/gccxml/0.9.0_20110825/x86_64-slc5-gcc43-opt/bin:/afs/cern.ch/sw/lcg/external/gcc/4.3.5/x86_64-slc5/bin:/afs/cern.ch/lhcb/software/releases/COMPAT/COMPAT_v1r10/CompatSys/x86_64-slc5-gcc43-opt/bin:/afs/cern.ch/sw/contrib/CMT/v1r20p20090520/Linux-x86_64:/afs/cern.ch/lhcb/software/releases/LBSCRIPTS/LBSCRIPTS_v6r7p4/InstallArea/scripts:/afs/cern.ch/lhcb/bin:/usr/sue/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/kerberos/bin:/usr/X11R6/bin"
+
+export PYTHONPATH="/afs/cern.ch/sw/lcg/app/releases/ROOT/5.32.02/x86_64-slc5-gcc43-opt/root/lib:/afs/cern.ch/lhcb/software/releases/LBSCRIPTS/LBSCRIPTS_v6r7p4/InstallArea/python"
+
+export ROOTSYS="/afs/cern.ch/sw/lcg/app/releases/ROOT/5.32.02/x86_64-slc5-gcc43-opt/root"
+
+#calling the a python script which uses ROOT
+#/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/bin/python
+python26 $@
