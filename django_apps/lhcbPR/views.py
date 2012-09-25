@@ -9,34 +9,13 @@ from django.core import serializers
 from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
 import json, subprocess, sys, re, copy, os
 from random import choice
+from tools.viewTools import handle_uploaded_file, makeQuery, makeListChecked
 
 #***********************************************
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import BACKEND_SESSION_KEY
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-def combineStatements(StatementsDict, operator):
-    """Takes a dictionary with statements, combines them depending on the
-    given operator(AND,OR) and return a final query(query)"""
-    query =  Q()
-    for k,v in StatementsDict.iteritems():
-        query.add(Q( **{ v : k }),operator)
-    
-    return query
-     
-def makeQuery(statement,arguments,operator):
-    """Gets a list of different arguments and for each argument creates 
-    a dictionary with the given statement
-    example :
-    argument : v43r0
-    statement: application__appVersion__exact"""
-    dataDict = {}
-    
-    for arg in arguments:
-        dataDict[arg] = statement
-        
-    return combineStatements(dataDict, operator)
-    
 def test(request):
     """Just a test view which serves testing hmtl pages,
     for the moment it serves the jquery ui examples page"""
@@ -44,20 +23,6 @@ def test(request):
     myDict = { 'myauth' : myauth, 'user' : request.user}
     return render_to_response('lhcbPR/index.html', myDict,
                   context_instance=RequestContext(request))
-
-def makeListChecked(mylist,key,are_checked = []):
-    """For each dictionary in mylist check if the dictionary[key] 
-    exists in the checked values, if yes/no it saves it as checked/unchecked 
-    in a final dictionary list, this method is used for bookmarking the 
-    filtering values in /jobDescriptions/APP_NAME page
-    """
-    List = []
-    for dict in mylist:
-        if dict[key] in are_checked:
-            List.append({'value' : dict[key], 'checked' : True})
-        else:
-            List.append({'value' : dict[key], 'checked' : False})
-    return List
       
 def index(request):
     """This view serves the home page of the application(lhcbPR), along 
@@ -421,12 +386,13 @@ def script(request):
                   'START=`date +"%Y-%m-%d,%T"`\n',
                   'gaudirun.py '+str(options)+' 2>&1 > timing.log\n',
                   'END=`date +"%Y-%m-%d,%T"`\n\n',
-                  'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPR\n'
                   'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPRHandlers\n',
-                  'export PYTHONPATH=$PYTHONPATH:LHCbPRHandlers\n\n'
-                  '#use python version 2.6\n'
-                  'python LHCbPRHandlers/collectRunResults.py -s ${START} -e ${END} -p `hostname` -c ${CMTCONFIG} -j ${JOB_DESCRIPTION_ID} -l ${HANDLERS}\n',
-                  'python LHCbPR/django_apps/manage.py pushToDB json_results',
+                  'export PYTHONPATH=$PYTHONPATH:LHCbPRHandlers\n\n',
+                  '#use python version 2.6\n',
+                  '#the collectRunResults has by default the -a argument which automatically sends the data\n',
+                  '#to the database, if you want to do it manually remove -a argument and uncomment the sendToDB script\n',
+                  'python LHCbPRHandlers/collectRunResults.py -s ${START} -e ${END} -p `hostname` -c ${CMTCONFIG} -j ${JOB_DESCRIPTION_ID} -l ${HANDLERS} -a\n',
+                  '#python LHCbPRHandlers/sendToDB -s name_of_zip',
                   ]
     
     script = ''
@@ -479,3 +445,10 @@ def getRunnedJobs(request):
     details+='\n\n'
     
     return HttpResponse(details, mimetype="text/plain")
+
+@csrf_exempt
+def upload_file(request):
+    if request.method == 'POST':
+        handle_uploaded_file(request.FILES['file'])
+        return HttpResponse('Server message: Uploading results zip file was successful')
+    

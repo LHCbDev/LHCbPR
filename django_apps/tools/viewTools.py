@@ -1,6 +1,9 @@
+import os
 from django.db.models import Q
+from django.conf import settings
 #extra functions which are used in lhcbPR app, i moved them here in order
-#to keep the views clean 
+#to keep the views clean
+
 def combineStatements(StatementsDict, operator):
     """Takes a dictionary with statements, combines them depending on the
     given operator(AND,OR) and return a final query(query)"""
@@ -11,6 +14,11 @@ def combineStatements(StatementsDict, operator):
     return query
      
 def makeQuery(statement,arguments,operator):
+    """Gets a list of different arguments and for each argument creates 
+    a dictionary with the given statement
+    example :
+    argument : v43r0
+    statement: application__appVersion__exact"""
     dataDict = {}
     
     for arg in arguments:
@@ -19,6 +27,11 @@ def makeQuery(statement,arguments,operator):
     return combineStatements(dataDict, operator)
 
 def makeListChecked(mylist,key,are_checked = []):
+    """For each dictionary in mylist check if the dictionary[key] 
+    exists in the checked values, if yes/no it saves it as checked/unchecked 
+    in a final dictionary list, this method is used for bookmarking the 
+    filtering values in /jobDescriptions/APP_NAME page
+    """
     List = []
     for dict in mylist:
         if dict[key] in are_checked:
@@ -26,3 +39,9 @@ def makeListChecked(mylist,key,are_checked = []):
         else:
             List.append({'value' : dict[key], 'checked' : False})
     return List
+
+def handle_uploaded_file(f):
+    path_to_save = os.path.join(settings.PROJECT_PATH, 'static/uploaded/'+f.name)
+    with open( path_to_save , 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)

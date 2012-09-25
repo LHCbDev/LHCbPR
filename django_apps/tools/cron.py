@@ -41,6 +41,20 @@ class Event(object):
         if self.matchtime(t):
             self.action(*self.args, **self.kwargs)
 
+#class CronTab(object):
+#    def __init__(self, *events):
+#        self.events = events
+
+#    def run(self):
+#        t=datetime(*datetime.now().timetuple()[:5])
+#        while 1:
+#            for e in self.events:
+#                e.check(t)
+
+#            t += timedelta(minutes=1)
+#            while datetime.now() < t:
+#                time.sleep((t - datetime.now()).seconds)
+                
 class CronTab(object):
     def __init__(self, *events):
         self.events = events
@@ -52,5 +66,8 @@ class CronTab(object):
                 e.check(t)
 
             t += timedelta(minutes=1)
-            while datetime.now() < t:
-                time.sleep((t - datetime.now()).seconds)
+            n = datetime.now()
+            while n < t:
+                s = (t - n).seconds + 1
+                time.sleep(s)
+                n = datetime.now()
