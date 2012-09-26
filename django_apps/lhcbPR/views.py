@@ -384,7 +384,7 @@ def script(request):
                   '#PLATFORMS="'+','.join(platforms)+'"\n\n',
                   '. SetupProject.sh '+str(application)+' '+str(version)+' '+str(setup_project)+'\n\n',
                   'START=`date +"%Y-%m-%d,%T"`\n',
-                  'gaudirun.py '+str(options)+' 2>&1 > timing.log\n',
+                  'gaudirun.py '+str(options)+' 2>&1 > run.log\n',
                   'END=`date +"%Y-%m-%d,%T"`\n\n',
                   'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPRHandlers\n',
                   'export PYTHONPATH=$PYTHONPATH:LHCbPRHandlers\n\n',

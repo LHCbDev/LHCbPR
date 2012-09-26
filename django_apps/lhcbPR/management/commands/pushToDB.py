@@ -6,6 +6,10 @@ from lhcbPR.models import ResultFile, Platform, Host, Job, JobResults, JobAttrib
 from django.db import transaction
 import json, re, logging
 
+#
+##Old,should not be used , to be deleted
+#
+
 class Command(BaseCommand):
 
     @transaction.commit_on_success
