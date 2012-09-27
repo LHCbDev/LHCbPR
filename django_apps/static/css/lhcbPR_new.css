@@ -14,7 +14,7 @@ a { text-decoration: none; }
 .headLogin { float: right; }
 #switcher { float : left; }
 .headTitle { width : 100% ; font-variant: small-caps; text-align: center;}
-#menu { margin-top : 4px; }
+#menu { margin-top : 4px; float : left;}
 
 /*------------------------------------------------ PAGEBODY ------------------------------------------------ */
 .fakewindowcontain { position: relative; width: 90%; height: 200px; padding:1% 4%; overflow:hidden; }
@@ -208,3 +208,16 @@ div.dialogContainer {
 
 #availableAttributes, #requestedAttributes { list-style-type: none; margin: 0; padding: 0;  }
 #availableAttributes li, #requestedAttributes li { margin: 3px; padding: 7px; height: 18px; }
+
+/*--------------------------------------help panel------------------------------------------------*/
+#helpMenu { 
+	height: auto; 
+	border-width: 1px;
+	border-radius: 6px;
+	border-style: hidden;
+	display: none;
+}
+.helpText {
+	font-size: 14px;
+	line-height: 130%;
+}

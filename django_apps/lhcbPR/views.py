@@ -107,7 +107,7 @@ def jobDescriptionsHome(request):
     for dict in applications:  
         applicationsList.append(dict['appName'])
     myauth = request.user.is_authenticated()
-    myDict = { 'active_tab' : 'home' ,'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
+    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
       
     return render_to_response('lhcbPR/jobDescriptionsHome.html', 
                   myDict,
@@ -116,8 +116,12 @@ def jobDescriptionsHome(request):
 def analyseHome(request):
     """To be used later when we start developing the analyzing functions for the 
     lhcbpr application"""
+    
+    #find for which applications there are runned jobs
+    applicationsList = list(Job.objects.values_list('jobDescription__application__appName',flat=True).distinct())
+    
     myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user }
+    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
       
     return render_to_response('lhcbPR/analyseHome.html', 
                   myDict,

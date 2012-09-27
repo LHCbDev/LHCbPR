@@ -1,0 +1,87 @@
+*** How to write a handler
+	Each handler will work like any usual parser , will parse any data it wants and it will save it.
+	The only difference is the way you save the numbers/objects you want and that your handler class must extend the BaseHandler. 
+	For example let say you want to parse some logs and extract some numbers, ex : my_number = file.readline() 
+	
+		In order to save my_number you will call the self.saveInt or self.saveFloat etc depending what type is the my_number
+		
+		The BaseHandler class provides the following methods:
+			* saveInt
+			* saveFloat
+			* saveString
+			* saveFile
+			
+		each of the above methods take 4 arguments,( 'group' and 'description' arguments are optional) 
+			example saveInt(name, data, description, group)
+			
+				* name : the name of the attribute you save( example : 'cpu_execute_time')  
+				* data : the data/value your attribute has (example : 12.45)
+				* description(optional) : any description you want to add for the attribute (example : 'this number represents...')
+				* group(optional) : the group(if any) in which the attribute you save belongs(example : 'timing measures')
+				
+			The description and group are optional arguments. So let say you have an attribute:
+			
+				execution_time = 12.45  , If you want to save this number you can either save it like:
+					
+					self.saveFloat('execution_time', 12.45,'the total execution time', 'timing results')
+					
+					or just save it without description/group, just its name and its value/data:
+					
+					self.saveFloat('execution_time', 12.45)
+					
+					*** remember to use the right method for the right type, if you want to save string use the saveString function 
+						if you want to save an Integer use saveInt etc
+		
+		**saveFile(name,filename,description="",group="")
+			
+			if you want to save a file , call the saveFile function giving a 'name' for your file attribute 
+			and in 'filename' provide the path to the file you want to save. example: 
+				
+				lets say that you have a file: my_results_file = '/afs/cern.ch/.../path/my_file' you can save it :
+					##				attribute name 			path to file
+					self.saveFile('my_results_file' , '/afs/cern.ch/.../path/my_file' )
+					
+					also you can add a group or a description(like the explained above)
+		
+		
+*** How the structure of your handler must be
+		
+		You must create a class which will extend the BaseHandler as shown here:
+		#
+		#
+		#
+			from BaseHandler import BaseHandler
+			
+			class your_handler_name(BaseHandler):
+			    
+			    def __init__(self):
+			        super(self.__class__, self).__init__()
+			    
+			    def collectResults(self,directory):
+			    
+		#
+		#
+		#
+		
+		First and most important , the handler python file must have the same name as the handler class,
+		for example if your handler class is called 'TimingHandler' then the python file must have the name 'TimingHandler.py'
+		
+		Second in the __init__ you must call super(self.__class__, self).__init__() (as shown above, just copy paste it)
+		
+		and at last you must override the method collectResults(self,directory) , so now each time you want to save something you 
+		will call one of the functions saveInt,saveFloat etc using self.saveInt(...) etc, then you can add anything else (example other functions)
+		you want in your handler class
+		
+		Any file your handler needs it must find it in the given directory (the directory argument of collectResults function)
+		
+		For an example you can take a look of the two existing timing handlers in the handlers directory. 
+		
+
+*****
+**** IMPORTANT , when you add a new handler in the repository remember to add a new entry in the Handler table in the oracle database
+	in order to see/be able to select the new handler in the web interface
+			
+						 
+						
+				
+				

@@ -6,8 +6,7 @@
 		<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css" />
 		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
-		<script type="text/javascript" src="/static/js/bubble-tooltip.js"></script>
-		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
+		<script type="text/javascript" src="/static/js/generalFunctions.js"></script>
 		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
 		<!-- plugin for mask -->
 		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
@@ -29,8 +28,8 @@
 							$("#applications").mask("Loading...");
 				});
 				$("#analyseMenu").click(function(){ 
-						/* document.location.href="/django/lhcbPR/analyse"; 
-						$("#applications").mask("Loading..."); */
+						document.location.href="/django/lhcbPR/analyse"; 
+						$("#applications").mask("Loading...");
 				});
 				
 				$("#tabs").tabs();
@@ -49,6 +48,7 @@
 			</td>
 			<td class="headTitle">
 				<h1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
+				<div id="switcher"></div>
 				<div class="headLogin">
 					{% if myauth %}
 					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
@@ -60,15 +60,22 @@
 		</table>
 	</div> <!-- /ui-widget-header -->
 
+
 	<div id="menu">
-		<input type="radio" id="homeMenu" name="radio" /><label for="homeMenu">Home</label>
-		<input type="radio" id="jobDescriptionsMenu" name="radio" checked="checked" /><label for="jobDescriptionsMenu">Job Descriptions</label>
-		<input type="radio" id="analyseMenu" name="radio" /><label for="analyseMenu">Analyse</label>
-	</div>
+			<input type="radio" id="homeMenu" name="radio" /><label for="homeMenu">Home</label>
+			<input type="radio" id="jobDescriptionsMenu" name="radio" checked="checked" /><label for="jobDescriptionsMenu">Job Descriptions</label>
+			<input type="radio" id="analyseMenu" name="radio" /><label for="analyseMenu">Analyse</label>
+			<a  id="helpButton" href="javascript:;">help</a>			
+		</div>
 </div> <!-- /header-->
 
 <body>
 	<div id="mainbody" class="pagebody">
+		<div id="helpMenu" class="fakewindowcontain">
+				<p class="helpText">Choose one of the applications(click button) to see the existing job descriptions for the choosed application. Any time you can navigate back to home page,using the Home button, or choose a different application by clicking to the corresponding tab/button. Also you can go to analyze page by clicking on the Analyze button.</p>
+				<div class="ui-widget-overlay"></div>
+		</div>
+
 		<div id="tabs">
 			<ul>
 				<li><a href="#applications">Applications</a></li>

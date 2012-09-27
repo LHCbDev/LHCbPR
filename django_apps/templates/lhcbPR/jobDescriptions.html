@@ -6,7 +6,7 @@
 		<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css" />
 		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
-		<script type="text/javascript" src="/static/js/bubble-tooltip.js"></script>
+		<script type="text/javascript" src="/static/js/generalFunctions.js"></script>
 		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
 		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
 		<!-- plugin for mask -->
@@ -26,7 +26,7 @@
 						$("#pagebody").mask("Loading...");
 				});
 				$('#jobDescriptionsMenu').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions"; $("#pagebody").mask("Loading..."); });
-				$('#analyseMenu').click(function(){ /* document.location.href="/django/lhcbPR/analyse"; $("#pagebody").mask("Loading..."); */});
+				$('#analyseMenu').click(function(){  document.location.href="/django/lhcbPR/analyse"; $("#pagebody").mask("Loading..."); });
 				
 				{% for app in applications %}
 				$('#{{ app }}tabButton').click(function(){ 
@@ -192,11 +192,17 @@
 		<input type="radio" id="homeMenu" name="radio" /><label for="homeMenu">Home</label>
 		<input type="radio" id="jobDescriptionsMenu" name="radio" checked="checked" /><label for="jobDescriptionsMenu">Job Descriptions</label>
 		<input type="radio" id="analyseMenu" name="radio" /><label for="analyseMenu">Analyse</label>
+		<a  id="helpButton" href="javascript:;">help</a>
 	</div>
 </div> <!-- /header-->
 
 <body>
 	<div id="pagebody" class="pagebody">
+		<div id="helpMenu" class="fakewindowcontain">
+				<p class="helpText">In this page you see the existing job descriptions for the choosed application(highlighted tab). The menu on the right provides you the ability to filter the jobDescriptions, by choosing(clicking) specific/multiple Version,Options or SetupProject(Platform choices are not  functional yet), in order to shorten the list with the results(existing jobDescriptions). <br><br>By clicking on one job description a  new dialog will open. This dialog contains the full details for the choosed jobDescription along with some available actions(buttons) : "Run" , "Edit"  and "Clone".<br><b>Run button</b> : run the job description(not functional yet, under construction).<br><br><b>Edit button</b>: you can edit the job description(only if there are no jobs runned for this job description), after you finish your modify what you want, to save your changes you can click the  "Commit" button, or in you can just go backby clicking the "Cancel" button.<br><br><b>Clone button</b>: you can clone(copy) the choosed jobdescription and create a new one, and after you modify your jobDescription to save/create the new one click "Commit" or "Cancel" to go back. <br><br>In the first dialog(details dialog) your can click the button next to the "Overview" to generate a script which you can use to run locally the jobdescription(download and run the script to your computer) . The script will run the job description with the selected handlers, will collect the requested data ,depending on the handlers, and will send the results to the database. More details about the handler click <a id="handlers_info" href="/static/README_handler" target="_blank" > here </a>(link doesn't work yet)</p>
+				<div class="ui-widget-overlay"></div>
+		</div>
+		
 		<div id="tabs">
 			<ul>
 				{% for app in applications %}
@@ -249,7 +255,7 @@
 						</td> 
 						<tr>
 						<td>
-						    <ul id="SetupProject" name="SetupProject" class="checklist" >
+						    <ul id="SetupProject" name="SetupProject" class="checklist" style="display:none;">
 							{% for setup in setupProject %}
 								<li>
 										<label id="SetupProject{{ forloop.counter }}">
@@ -266,7 +272,7 @@
 						</td>
 						<tr>
 						<td>
-				 		   <ul id="Platform" name="Platform" class="checklist">
+				 		   <ul id="Platform" name="Platform" class="checklist" style="display:none;">
 							{% for plat in platforms %}
 								<li>
 										<label id="Platform{{ forloop.counter }}">
@@ -302,7 +308,7 @@
 	</div> <!-- pagebody -->
 
 <!------------------------------------------------------- dialog divs ----------------------------------------------------->
-<div id="dialog" title="" >
+<div id="dialog" title="" style="display:none;">
 <div class="dialogContainer">
 	<div class="InnerLeftDialog">
 	<div class="OuterDialog">
@@ -371,7 +377,7 @@
 </div> <!-- closing the  dialog -->
 
 <!----------------------------------- CLONE DIALOG ----------------------------------->
-<div id="cloneDialog" title="" >
+<div id="cloneDialog" title="" style="display:none;">
 <div class="dialogContainer">
 	<div class="InnerLeftDialog">
 	<div class="OuterDialog">
@@ -431,7 +437,7 @@
 
 
 <!---------------------------------------------- EDIT DIALOG --------------------------------------------------->
-<div id="editDialog" title="" >
+<div id="editDialog" title="" style="display:none;">
 <div class="dialogContainer">
 	<div class="InnerLeftDialog">
 	<div class="OuterDialog">
@@ -491,7 +497,7 @@
 </div> <!-- closing the  dialogClone -->
 
 <!-------------------------------------- EDIT HANDLERS/PLATFORMS PANEL --------------------------------------->
-<div id="editPlatformsHandlers" title="">
+<div id="editPlatformsHandlers" title="" style="display:none;">
 	<div id="panelContainer">
 		<div class="InnerLeft">
 			<p id="availableTitle"></p>
@@ -509,7 +515,7 @@
 </div><!--  /editPlatformsHandlers -->
 
 
-<div id="alertDialog" title="">
+<div id="alertDialog" title="" style="display:none;">
 	<p>
 		<span id="alertDialogIcon" class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
 		<span id="alertMessage"><span>

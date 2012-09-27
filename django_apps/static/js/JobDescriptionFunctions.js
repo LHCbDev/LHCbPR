@@ -9,17 +9,8 @@ var editInputs = ["ApplicationEdit","VersionEdit","SetupProjectEdit","OptionsEdi
 String.prototype.fulltrim=function(){
 	return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
 }
-  
+
 $(document).ready(function () {
-	$("#job_info").hide();
-	$("#overlay").hide();
-    $("#alertDialog").hide();
-	$("#editPlatformsHandlers").hide();
-	$("#Platform").hide();
-	$("#SetupProject").hide();
-	$("#dialog").hide();
-	$("#cloneDialog").hide();
-	$("#editDialog").hide();
 	$("#dialogClose").click(function () {$("#dialog").dialog("close");});
 	$("#goBackToDialog").click(function () { 
 				openWindow(myChoosedJob_id); 	
@@ -79,21 +70,6 @@ $(document).ready(function () {
 			}
 		});
 
-	$("#help").hide();
-	$("#helpButton").click(function () {
-		// check visibility
-		if ($("#help").is(":hidden")) {
-		// it's hidden - show it
-				$("#help").slideDown("normal");
-				$("#helpImage").attr('src','/static/images/arrow_upHelp.gif');
-		} else {
-			// it's not hidden - slide it down
-				$("#help").slideUp("normal");
-				$("#helpImage").attr('src','/static/images/arrow-downHelp.png');
-			}
-		});
-
-		
 		$("#commitClone").click(function () { 
 			$version = $.trim($("#VersionClone").val());
 			$options_content = $.trim($("#OptionsClone").val());
@@ -156,7 +132,6 @@ $(document).ready(function () {
     		});/* /ajax*/
  		});/* /commitClone function*/
 
-		
 		$("#commitEdit").click(function(){ 
 			$version = $.trim($("#VersionEdit").val());
 			$options_content = $.trim($("#OptionsEdit").val());
@@ -784,8 +759,7 @@ function myAlert(message1,message2,title, icon){
 			width : 350,
 			buttons: {
 				Ok: function() {
-					$( this ).dialog( "close" );
-					
+					$( this ).dialog( "close" );			
 				}
 			}
 	});
@@ -801,7 +775,6 @@ function myAlertCommit(message1,message2,title, icon){
 	else{
 		$("#alertDialogIcon").addClass(icon);
 	}
-	
 	$("#alertDialog").attr('title',title);
 	$("#alertMessage").text(message1);
 	$("#alertMessage2").text(message2);
