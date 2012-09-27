@@ -386,13 +386,13 @@ def script(request):
                   'START=`date +"%Y-%m-%d,%T"`\n',
                   'gaudirun.py '+str(options)+' 2>&1 > run.log\n',
                   'END=`date +"%Y-%m-%d,%T"`\n\n',
-                  'git clone /afs/cern.ch/lhcb/software/GIT/LHCbPRHandlers\n',
-                  'export PYTHONPATH=$PYTHONPATH:LHCbPRHandlers\n\n',
+                  '#the next command, downloads the LHCbPRHandlers, unzips the file, removes the zip file(overrides previous folder/files, if any)\n',
+                  "python -c \"import os,urllib,zipfile;urllib.urlretrieve('http://lhcbproject.web.cern.ch/lhcbproject/GIT/dist/LHCbPRHandlers/LHCbPRHandlers.zip','LHCbPRHandlers.zip');unzipper=zipfile.ZipFile('LHCbPRHandlers.zip');unzipper.extractall();os.remove('LHCbPRHandlers.zip')\"\n\n",
                   '#use python version 2.6\n',
                   '#the collectRunResults has by default the -a argument which automatically sends the data\n',
                   '#to the database, if you want to do it manually remove -a argument and uncomment the sendToDB script\n',
                   'python LHCbPRHandlers/collectRunResults.py -s ${START} -e ${END} -p `hostname` -c ${CMTCONFIG} -j ${JOB_DESCRIPTION_ID} -l ${HANDLERS} -a\n',
-                  '#python LHCbPRHandlers/sendToDB -s name_of_zip',
+                  '#python LHCbPRHandlers/sendToDB.py -s name_of_zip',
                   ]
     
     script = ''
