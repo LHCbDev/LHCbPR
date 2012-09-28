@@ -21,14 +21,14 @@
 				$("#menu").buttonset();
 				/* on click functions for the menus */
 				$("#homeMenu").click(function(){ 
-					document.location.href="/django/lhcbPR"; 
+					document.location.href="/django/lhcbPR/"; 
 					$("#applications").mask("Loading..."); });
 				$("#jobDescriptionsMenu").click(function(){ 
-					document.location.href="/django/lhcbPR/jobDescriptions" ;
+					document.location.href="/django/lhcbPR/jobDescriptions/" ;
 					$("#applications").mask("Loading...");
 				});
 				$("#analyseMenu").click(function(){ 
-					document.location.href="/django/lhcbPR/analyse"; 
+					document.location.href="/django/lhcbPR/analyse/"; 
 					$("#applications").mask("Loading...");
 				});
 				
@@ -51,7 +51,7 @@
 				<div id="switcher"></div>
 				<div class="headLogin">
 					{% if myauth %}
-					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
+					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR/"> Logout </a>| {{ user.username }}
 					{% else %}
 					<a href="/django/login/"> Login</a>
 					{% endif %}
@@ -83,7 +83,7 @@
 			<div id="applications">
 				Choose one of the following applications:<br><br>
 					{% for app in applications %}
-					<button name="{{ app }}button" onclick="location.href='/django/lhcbPR/jobDescriptions/{{ app }}'" style="padding:1.5em;margin-left:1em;">{{ app }}</button>
+					<button name="{{ app }}button" onclick="location.href='/django/lhcbPR/jobDescriptions/{{ app }}/'" style="padding:1.5em;margin-left:1em;">{{ app }}</button>
 					{% endfor %}
 			</div>
 		</div>

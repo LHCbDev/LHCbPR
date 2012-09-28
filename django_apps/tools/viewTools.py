@@ -26,18 +26,18 @@ def makeQuery(statement,arguments,operator):
         
     return combineStatements(dataDict, operator)
 
-def makeListChecked(mylist,key,are_checked = []):
+def makeCheckedList(mylist,are_checked = []):
     """For each dictionary in mylist check if the dictionary[key] 
     exists in the checked values, if yes/no it saves it as checked/unchecked 
     in a final dictionary list, this method is used for bookmarking the 
     filtering values in /jobDescriptions/APP_NAME page
     """
     List = []
-    for dict in mylist:
-        if dict[key] in are_checked:
-            List.append({'value' : dict[key], 'checked' : True})
+    for myObj in mylist:
+        if myObj in are_checked:
+            List.append({'value' : myObj, 'checked' : True})
         else:
-            List.append({'value' : dict[key], 'checked' : False})
+            List.append({'value' : myObj, 'checked' : False})
     return List
 
 def handle_uploaded_file(f):

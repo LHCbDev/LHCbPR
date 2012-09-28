@@ -22,15 +22,15 @@
 				$('#menu').buttonset();
 				/* on click functions for the menus */
 				$('#homeMenu').click(function(){ 
-						document.location.href="/django/lhcbPR";
+						document.location.href="/django/lhcbPR/";
 						$("#pagebody").mask("Loading...");
 				});
-				$('#jobDescriptionsMenu').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions"; $("#pagebody").mask("Loading..."); });
-				$('#analyseMenu').click(function(){  document.location.href="/django/lhcbPR/analyse"; $("#pagebody").mask("Loading..."); });
+				$('#jobDescriptionsMenu').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions/"; $("#pagebody").mask("Loading..."); });
+				$('#analyseMenu').click(function(){  document.location.href="/django/lhcbPR/analyse/"; $("#pagebody").mask("Loading..."); });
 				
 				{% for app in applications %}
 				$('#{{ app }}tabButton').click(function(){ 
-						document.location.href="/django/lhcbPR/jobDescriptions/{{ app }}" ;
+						document.location.href="/django/lhcbPR/jobDescriptions/{{ app }}/" ;
 						$("#{{ active_tab }}tab").mask("Loading...");
 					});
 				{% endfor %}
@@ -111,7 +111,23 @@
 				$("#editPlatformsEdit").click(function() { openPanel(myChoosedJob_id, "platforms","platformsEdit"); });
 				$("#editHandlersEdit").click(function() { openPanel(myChoosedJob_id, "handlers","handlersEdit"); });
 			});	
-
+		
+		function addJobs(box,apps){
+			//loop over the array which contains the versions
+			for(var i = 0; i < apps.length; i++)
+			{	
+				var myLi = document.createElement("li");
+				//apps[i].appName
+				myLi.appendChild(document.createTextNode(apps[i].appVersion+"  "+apps[i].optionsD+"  "+apps[i].setupproject));
+			
+				//extra function click
+				myLi.setAttribute('id', apps[i].pk);
+				myLi.setAttribute('class','ui-widget-content');
+				box.appendChild(myLi);
+			}
+			return;
+		}	
+	
 		function doFilter(requested_page){
 			box = document.getElementById("JobDescriptions");
 
@@ -123,7 +139,7 @@
 			$("#JobDescriptions").mask("Requesting...");
 	
 			$.ajax({
-    			'url' : '/django/lhcbPR/getFilters',
+    			'url' : '/django/lhcbPR/getFilters/',
 				'type' : 'GET',
 				'data' : {
 				'page' : requested_page,
@@ -179,7 +195,7 @@
 				<div id="switcher"></div>
 				<div class="headLogin">
 					{% if myauth %}
-					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR"> Logout </a>| {{ user.username }}
+					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR/"> Logout </a>| {{ user.username }}
 					{% else %}
 					<a href="/django/login/"> Login</a>
 					{% endif %}

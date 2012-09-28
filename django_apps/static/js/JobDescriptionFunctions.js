@@ -97,7 +97,7 @@ $(document).ready(function () {
 				return;
 			}
 			$.ajax({
-    			'url' : '/django/lhcbPR/commitClone',
+    			'url' : '/django/lhcbPR/commitClone/',
 				'type' : 'GET',
 				'data' : {
 				'application' : $application,
@@ -160,7 +160,7 @@ $(document).ready(function () {
 			}
 
 			$.ajax({
-    			'url' : '/django/lhcbPR/commitClone',
+    			'url' : '/django/lhcbPR/commitClone/',
 				'type' : 'GET',
 				'data' : {
 				'id' : myChoosedJob_id,
@@ -232,7 +232,7 @@ function fixInputs(father, child, func,real_name,event){
 	$myvalue =  $.trim($("#"+father).val());
 	
 	$.ajax({
-    	'url' : '/django/lhcbPR/editRequests',
+    	'url' : '/django/lhcbPR/editRequests/',
 		'type' : 'GET',
 		'data' : {
 		'key' : func,
@@ -301,7 +301,7 @@ function getSelectedChilds(id){
 }
 
 function clearCheckBox(id){
-	var checked_existed;
+	var checked_existed = false;
 	nodes = document.getElementById(id).children;
 	for(i=0; i<nodes.length; i+=1) {
     	if (nodes[i].children[0].children[0].checked == true){
@@ -312,22 +312,6 @@ function clearCheckBox(id){
 	//call again the filters
 	if (checked_existed)
 		doFilter(1);
-	return;
-}
-
-function addJobs(box,apps){
-	//loop over the array which contains the versions
-	for(var i = 0; i < apps.length; i++)
-	{	
-		var myLi = document.createElement("li");
-		//apps[i].appName
-		myLi.appendChild(document.createTextNode(apps[i].appVersion+"  "+apps[i].optionsD+"  "+apps[i].setupproject));
-			
-		//extra function click
-		myLi.setAttribute('id', apps[i].pk);
-		myLi.setAttribute('class','ui-widget-content');
-		box.appendChild(myLi);
-	}
 	return;
 }
 
@@ -357,7 +341,7 @@ function openWindow(job_id){
 	if (job_id == "")
 		return;
 	$.ajax({
-    	'url' : '/django/lhcbPR/getJobDetails',
+    	'url' : '/django/lhcbPR/getJobDetails/',
 		'type' : 'GET',
 		'data' : {
 		'job_id' : job_id,	
@@ -432,7 +416,7 @@ function openEditWindow(job_id){
 	if (job_id == "")
 		return;
 	$.ajax({
-    	'url' : '/django/lhcbPR/getJobDetails',
+    	'url' : '/django/lhcbPR/getJobDetails/',
 		'type' : 'GET',
 		'data' : {
 		'job_id' : job_id,
@@ -532,7 +516,7 @@ function openCloneWindow(job_id){
 		return;
 
 	$.ajax({
-    	'url' : '/django/lhcbPR/getJobDetails',
+    	'url' : '/django/lhcbPR/getJobDetails/',
 		'type' : 'GET',
 		'data' : {
 		'job_id' : job_id,
@@ -644,7 +628,7 @@ function openPanel(id, service,mybox_id){
 		$("#requestedTitle").text("Requested handlers");
 	}
 	$.ajax({
-    	'url' : '/django/lhcbPR/editPanel',
+    	'url' : '/django/lhcbPR/editPanel/',
 		'type' : 'GET',
 		'data' : {
 		'service' : service,

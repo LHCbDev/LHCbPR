@@ -9,7 +9,7 @@ from django.core import serializers
 from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
 import json, subprocess, sys, re, copy, os
 from random import choice
-from tools.viewTools import handle_uploaded_file, makeQuery, makeListChecked
+from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList
 
 #***********************************************
 from django.contrib.auth.decorators import login_required
@@ -47,36 +47,36 @@ def jobDescriptions(request, app_name):
     if not apps:
         return HttpResponseNotFound("<h3>Page not found</h3>")        
     
-    appVersions = JobDescription.objects.filter(application__appName__exact=app_name).values('application__appVersion').distinct('application__appVersion')
+    appVersions = JobDescription.objects.filter(application__appName__exact=app_name).values_list('application__appVersion', flat=True).distinct()
     
     if not appVersions:
         return HttpResponseNotFound("<h3>No existing job descriptions for this application yet.</h3>")
     
-    options = Options.objects.all().values('description').distinct('description')
-    platforms = Platform.objects.all().values('cmtconfig').distinct('cmtconfig')
-    setupProject = SetupProject.objects.all().values('description').distinct('description')
+    options = Options.objects.values_list('description', flat=True).distinct()
+    platforms = Platform.objects.values_list('cmtconfig', flat=True).distinct()
+    setupProject = SetupProject.objects.values_list('description', flat=True).distinct()
     
     #the GET request may also have information about which versions,options etc the user wants to 
     #to be checked in the filtering checkboxes(used for bookmarking the jobDescriptions page)
     #so it gets all versions,options... for the requested application(from app_name) and checks which 
-    #of them exists in GET request values and using the makeListChecked method it creates the proper lists to
+    #of them exists in GET request values and using the makeCheckedList method it creates the proper lists to
     #to redirected back to the user
     if 'appVersions' in request.GET:
-        appVersionsList = makeListChecked(appVersions,'application__appVersion',request.GET['appVersions'].split(','))
+        appVersionsList = makeCheckedList(appVersions,request.GET['appVersions'].split(','))
     else:
-        appVersionsList = makeListChecked(appVersions,'application__appVersion')
+        appVersionsList = makeCheckedList(appVersions)
     if 'platforms' in request.GET:
-        cmtconfigsList = makeListChecked(platforms,'cmtconfig',request.GET['platforms'].split(','))
+        cmtconfigsList = makeCheckedList(platforms, request.GET['platforms'].split(','))
     else:
-        cmtconfigsList = makeListChecked(platforms,'cmtconfig')
+        cmtconfigsList = makeCheckedList(platforms)
     if 'SetupProjects' in request.GET:
-        setupProjectList = makeListChecked(setupProject,'description',request.GET['SetupProjects'].split(','))
+        setupProjectList = makeCheckedList(setupProject, request.GET['SetupProjects'].split(','))
     else:
-        setupProjectList = makeListChecked(setupProject,'description')
+        setupProjectList = makeCheckedList(setupProject)
     if 'Options' in request.GET:
-        optionsList = makeListChecked(options,'description',request.GET['Options'].split(','))
+        optionsList = makeCheckedList(options,request.GET['Options'].split(','))
     else:
-        optionsList = makeListChecked(options,'description')
+        optionsList = makeCheckedList(options)
     if 'page' in request.GET:
         requested_page = request.GET['page']
     else:
@@ -126,7 +126,142 @@ def analyseHome(request):
     return render_to_response('lhcbPR/analyseHome.html', 
                   myDict,
                   context_instance=RequestContext(request))
+    
+@login_required  #login_url="login"
+def analyse(request, app_name):
+    """From the url is takes the requested application(app_name) , example:
+    /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
+    and depending on the app_name it returns the available versions, options, setupprojects"""
+    
+    applicationsList = map(str,Job.objects.values_list('jobDescription__application__appName',flat=True).distinct())
+        
+    myauth = request.user.is_authenticated()
+    
+    apps = Application.objects.filter(appName__exact=app_name)
+    if not apps:
+        return HttpResponseNotFound("<h3>Page not found, no such application</h3>")
+    
+    if not app_name in applicationsList:
+        return HttpResponseNotFound("<h3>There are no runned jobs for this application</h3>")  
+    
+    appVersions = Job.objects.filter(jobDescription__application__appName__exact=app_name).values_list('jobDescription__application__appVersion', flat=True).distinct()
+    
+    if not appVersions:
+        return HttpResponseNotFound("<h3>No existing job descriptions for this application yet.</h3>")
+    
+    options = Job.objects.values_list('jobDescription__options__description', flat=True).distinct()
+    platforms = Job.objects.values_list('platform__cmtconfig', flat=True).distinct()
+    setupProject = Job.objects.values_list('jobDescription__setup_project__description', flat=True).distinct()
+    
+    #the GET request may also have information about which versions,options etc the user wants to 
+    #to be checked in the filtering checkboxes(used for bookmarking the jobDescriptions page)
+    #so it gets all versions,options... for the requested application(from app_name) and checks which 
+    #of them exists in GET request values and using the makeCheckedList method it creates the proper lists to
+    #to redirected back to the user
+    if 'appVersions' in request.GET:
+        appVersionsList = makeCheckedList(appVersions,request.GET['appVersions'].split(','))
+    else:
+        appVersionsList = makeCheckedList(appVersions)
+    if 'platforms' in request.GET:
+        cmtconfigsList = makeCheckedList(platforms, request.GET['platforms'].split(','))
+    else:
+        cmtconfigsList = makeCheckedList(platforms)
+    if 'SetupProjects' in request.GET:
+        setupProjectList = makeCheckedList(setupProject, request.GET['SetupProjects'].split(','))
+    else:
+        setupProjectList = makeCheckedList(setupProject)
+    if 'Options' in request.GET:
+        optionsList = makeCheckedList(options,request.GET['Options'].split(','))
+    else:
+        optionsList = makeCheckedList(options)
+    if 'page' in request.GET:
+        requested_page = request.GET['page']
+    else:
+        requested_page = 1
+    
+    #then create the final data dictionary
+    dataDict = { 'appVersions' : appVersionsList,
+               'options' : optionsList,
+               'platforms' : cmtconfigsList,
+               'setupProject' : setupProjectList,
+               'active_tab' : app_name ,
+               'myauth' : myauth, 
+               'user' : request.user, 
+               'applications' : applicationsList,
+               'current_page' : requested_page
+               }
+      
+    return render_to_response('lhcbPR/analyse.html', 
+                  dataDict,
+                  context_instance=RequestContext(request))
 
+@login_required
+def getFiltersAnalyse(request):
+    """Gets the filtering values for the request and returns the jobDescriptions which 
+    agree with the filtering values(query to the database)"""
+    results_per_page = 15
+    if request.method == 'GET':
+    
+        querylist = []
+        
+        if request.GET['app']:
+            querylist.append(makeQuery('jobDescription__application__appName__exact', request.GET['app'].split(','), Q.OR))
+        if request.GET['appVersions']:
+            querylist.append(makeQuery('jobDescription__application__appVersion__exact', request.GET['appVersions'].split(','), Q.OR))
+        if request.GET['Options']:
+            querylist.append(makeQuery('jobDescription__options__description__exact',request.GET['Options'].split(','), Q.OR))
+        if request.GET['SetupProjects']:
+            querylist.append(makeQuery('jobDescription__setup_project__description__exact',request.GET['SetupProjects'].split(','), Q.OR))
+        if request.GET['platforms']:
+           querylist.append(makeQuery('platform__cmtconfig__exact', request.GET['platforms'].split(','), Q.OR))
+        
+        final_query = Q()
+        for q in querylist:
+           final_query &= q 
+        
+        jobsTemp = Job.objects.filter(final_query).distinct('jobDescription')     
+        
+        
+        myJobDescriptions = []
+        for jd in jobsTemp:
+            myJobDescriptions.append(jd.jobDescription)
+        unique_jobDescriptions = list(set(myJobDescriptions))
+        paginator = Paginator(unique_jobDescriptions ,results_per_page)
+        requested_page = request.GET['page']
+        
+        try:
+            jobsDes = paginator.page(requested_page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            jobsDes = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            jobsDes = paginator.page(paginator.num_pages)
+        
+        
+        myobjectlist = []
+        
+        for j in jobsDes.object_list :#jobsTemp
+            myDict={ 'pk' : j.id,   
+                     'appName' : j.application.appName,
+                     'appVersion' : j.application.appVersion,
+                     'optionsD' : j.options.description,
+                     } 
+            try:
+                myDict['setupproject'] = j.jobDescription.setup_project.description
+            except Exception:
+                myDict['setupproject'] = ""
+            
+            myobjectlist.append(myDict)
+            
+        pageIngo = {
+                    'num_of_pages' : paginator.num_pages,
+                    'current_page' : jobsDes.number,
+                    'total_results' : len(unique_jobDescriptions)
+                    }
+        
+        return HttpResponse(json.dumps({ 'jobs' :  myobjectlist, 'page_info' : pageIngo }))
+  
 @login_required
 def getFilters(request):
     """Gets the filtering values for the request and returns the jobDescriptions which 
@@ -171,16 +306,12 @@ def getFilters(request):
             myDict={ 'pk' : j.id,   
                      'appName' : j.application.appName,
                      'appVersion' : j.application.appVersion,
-                     'options' : j.options.content,
                      'optionsD' : j.options.description,
                      } 
             try:
                 myDict['setupproject'] = j.setup_project.description
             except Exception:
                 myDict['setupproject'] = ""
-            
-            fixed_description = myDict['appName']+"   "+myDict['appVersion']+"  "+myDict["setupproject"]
-            fixed_description += "  "+myDict['options']
             
             myobjectlist.append(myDict)
             
