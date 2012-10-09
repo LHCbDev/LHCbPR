@@ -1,15 +1,17 @@
 # Create your views here.
 from django.db.models import Q
+from django.db import connection, transaction
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
 from django.template import RequestContext
 from django.core import serializers
+from django.conf import settings
 
-from lhcbPR.models import JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
+from lhcbPR.models import Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
 import json, subprocess, sys, re, copy, os
 from random import choice
-from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList
+from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, dictfetchall
 
 #***********************************************
 from django.contrib.auth.decorators import login_required
@@ -119,6 +121,8 @@ def analyseHome(request):
     
     #find for which applications there are runned jobs
     applicationsList = list(Job.objects.values_list('jobDescription__application__appName',flat=True).distinct())
+        
+    myauth = request.user.is_authenticated()
     
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
@@ -126,74 +130,167 @@ def analyseHome(request):
     return render_to_response('lhcbPR/analyseHome.html', 
                   myDict,
                   context_instance=RequestContext(request))
-    
+
 @login_required  #login_url="login"
 def analyse(request, app_name):
     """From the url is takes the requested application(app_name) , example:
     /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
     and depending on the app_name it returns the available versions, options, setupprojects"""
-    
-    applicationsList = map(str,Job.objects.values_list('jobDescription__application__appName',flat=True).distinct())
-        
+    applicationsList = list(Job.objects.values_list('jobDescription__application__appName',flat=True).distinct())
     myauth = request.user.is_authenticated()
     
     apps = Application.objects.filter(appName__exact=app_name)
     if not apps:
-        return HttpResponseNotFound("<h3>Page not found, no such application</h3>")
+        return HttpResponseNotFound("<h3>Page not found, no such application</h3>")     
     
-    if not app_name in applicationsList:
-        return HttpResponseNotFound("<h3>There are no runned jobs for this application</h3>")  
+    atrs = map(str, JobResults.objects.filter(job__jobDescription__application__appName__exact=app_name).values_list('jobAttribute__name', flat=True).distinct())
     
-    appVersions = Job.objects.filter(jobDescription__application__appName__exact=app_name).values_list('jobDescription__application__appVersion', flat=True).distinct()
+    #cursor = connection.cursor()
+    #get all available(saved from runned jobs) attribute names for the requested application 
+    #cursor.execute("select att.name from lhcbpr_job j, lhcbpr_jobresults r, lhcbpr_jobattribute att, lhcbpr_application apl, lhcbpr_jobdescription jobdes where j.id = r.job_id and jobdes.id = j.jobdescription_id and apl.id = jobdes.application_id and apl.appname = '{0}' and r.jobattribute_id = att.id".format(app_name))
+    #atrs = cursor.fetchall()
     
-    if not appVersions:
-        return HttpResponseNotFound("<h3>No existing job descriptions for this application yet.</h3>")
+    platforms = Job.objects.filter(jobDescription__application__appName=app_name).values_list('platform__cmtconfig', flat=True).distinct()
+    hosts = Job.objects.filter(jobDescription__application__appName=app_name).values_list('host__hostname', flat=True).distinct()
+    jobdes = Job.objects.filter(jobDescription__application__appName=app_name).values_list('jobDescription__pk',flat=True).distinct()
+    versions = Job.objects.filter(jobDescription__application__appName=app_name).values_list('jobDescription__application__appVersion', flat=True).distinct()
     
-    options = Job.objects.values_list('jobDescription__options__description', flat=True).distinct()
-    platforms = Job.objects.values_list('platform__cmtconfig', flat=True).distinct()
-    setupProject = Job.objects.values_list('jobDescription__setup_project__description', flat=True).distinct()
-    
-    #the GET request may also have information about which versions,options etc the user wants to 
-    #to be checked in the filtering checkboxes(used for bookmarking the jobDescriptions page)
-    #so it gets all versions,options... for the requested application(from app_name) and checks which 
-    #of them exists in GET request values and using the makeCheckedList method it creates the proper lists to
-    #to redirected back to the user
-    if 'appVersions' in request.GET:
-        appVersionsList = makeCheckedList(appVersions,request.GET['appVersions'].split(','))
+    if 'versions' in request.GET:
+        versionsList = makeCheckedList(versions, request.GET['versions'].split(','))
     else:
-        appVersionsList = makeCheckedList(appVersions)
+        versionsList = makeCheckedList(versions)
     if 'platforms' in request.GET:
-        cmtconfigsList = makeCheckedList(platforms, request.GET['platforms'].split(','))
+        platformsList = makeCheckedList(platforms, request.GET['platforms'].split(','))
     else:
-        cmtconfigsList = makeCheckedList(platforms)
-    if 'SetupProjects' in request.GET:
-        setupProjectList = makeCheckedList(setupProject, request.GET['SetupProjects'].split(','))
+        platformsList = makeCheckedList(platforms)
+    if 'hosts' in request.GET:
+        hostsList = makeCheckedList(hosts, request.GET['hosts'].split(','))
     else:
-        setupProjectList = makeCheckedList(setupProject)
-    if 'Options' in request.GET:
-        optionsList = makeCheckedList(options,request.GET['Options'].split(','))
+        hostsList = makeCheckedList(hosts)
+    if 'JobDes' in request.GET:
+        checked_jobdes = request.GET['JobDes'].split(',')
     else:
-        optionsList = makeCheckedList(options)
-    if 'page' in request.GET:
-        requested_page = request.GET['page']
-    else:
-        requested_page = 1
+        checked_jobdes = []
+
+    jobdesList = []
+    for j_pk in jobdes:
+        j_temp = JobDescription.objects.get(pk=j_pk)
+        
+        jobdes_value = j_temp.application.appVersion+' '+j_temp.options.description
+        try:
+          j_temp.setup_project.description
+        except Exception:
+            pass
+        else:
+           jobdes_value+=' '+j_temp.setup_project.description    
+          
+        if j_temp.pk in checked_jobdes:
+            jobdesList.append({'id': j_temp.pk, 'checked': True, 'value': jobdes_value })
+        else:
+            jobdesList.append({'id': j_temp.pk, 'checked': False, 'value': jobdes_value })
+  
     
-    #then create the final data dictionary
-    dataDict = { 'appVersions' : appVersionsList,
-               'options' : optionsList,
-               'platforms' : cmtconfigsList,
-               'setupProject' : setupProjectList,
-               'active_tab' : app_name ,
-               'myauth' : myauth, 
-               'user' : request.user, 
-               'applications' : applicationsList,
-               'current_page' : requested_page
+    dataDict = { 'attributes' : atrs,
+                'platforms' : platformsList,
+                'hosts' : hostsList,
+                'jobdescr' : jobdesList,
+                'versions' : versionsList,
+                'active_tab' : app_name ,
+                'myauth' : myauth, 
+                'user' : request.user, 
+                'applications' : applicationsList,
                }
       
     return render_to_response('lhcbPR/analyse.html', 
                   dataDict,
                   context_instance=RequestContext(request))
+
+@login_required
+def queryOverview(request):
+    if request.method == 'GET' and 'hosts' in request.GET and 'jobdes' in request.GET and 'platforms' in request.GET and 'atr' in request.GET:
+        
+        query = 'SELECT j.jobdescription_id, h.hostname, plat.cmtconfig, count(*) as "Number", \n'
+        query += 'round(avg(rf.data), 2) as Average, round(stddev(rf.data), 2) as stddev,\n'
+        query +=' round(stddev(rf.data)/avg(rf.data) * 100, 2) as stddev_per, \n'
+        query += ' round(avg((extract( second from  (time_end - time_start)) + extract( minute from  (time_end - time_start)) * 60 + extract ( hour  from  (time_end - time_start)) * 3600)),2) totaltime_avg \n'
+        query += ' FROM lhcbpr_job j, lhcbpr_jobresults r, lhcbpr_jobattribute att,\n'
+        query += ' lhcbpr_resultfloat rf, lhcbpr_host h, lhcbpr_platform plat \n'
+        query += ' WHERE j.id = r.job_id and plat.id = j.platform_id AND h.id = j.host_id \n'
+        query += ' AND r.jobattribute_id = att.id AND rf.jobresults_ptr_id = r.id \n'
+        query += " AND att.name ='{0}'".format(request.GET['atr'])
+        
+        hosts = request.GET['hosts'].split(',')
+        host_temp = []
+        if not hosts[0] == "":
+            for h in hosts:
+                host_temp.append("h.hostname = '"+h+"'")
+            
+            query += ' AND ( '+' OR '.join(host_temp)+' ) \n'
+        
+        jobdes = request.GET['jobdes'].split(',')
+        jobdes_temp = []
+        if not jobdes[0] == "":
+            for j in jobdes:
+                jobdes_temp.append("j.jobdescription_id = '"+j+"'")
+            
+            query += ' AND ( '+' OR '.join(jobdes_temp)+' ) \n'
+        
+        platforms = request.GET['platforms'].split(',')
+        platforms_temp = []
+        if not platforms[0] == "":
+            for p in platforms:
+                platforms_temp.append("plat.cmtconfig = '"+p+"'")
+            
+            query += ' AND ( '+' OR '.join(platforms_temp)+' ) \n'
+            
+        query+= 'GROUP BY j.jobdescription_id, h.hostname, plat.cmtconfig;\n'
+        
+        
+        return HttpResponse(query, mimetype="text/plain")
+    
+@login_required
+def query(request):
+    if request.method == 'GET' and 'hosts' in request.GET and 'jobdes' in request.GET and 'platforms' in request.GET and 'atr' in request.GET:
+        
+        query = 'SELECT j.jobdescription_id, h.hostname, plat.cmtconfig, count(*) as "Number", round(avg(rf.data), 2) as Average, round(stddev(rf.data), 2) as stddev, round(stddev(rf.data)/avg(rf.data) * 100, 2) as stddev_per, '
+        query += ' round(avg((extract( second from  (time_end - time_start)) + extract( minute from  (time_end - time_start)) * 60 + extract ( hour  from  (time_end - time_start)) * 3600)),2) totaltime_avg '
+        query += 'FROM lhcbpr_job j, lhcbpr_jobresults r, lhcbpr_jobattribute att,lhcbpr_resultfloat rf, lhcbpr_host h, lhcbpr_platform plat '
+        query += 'WHERE j.id = r.job_id and plat.id = j.platform_id AND h.id = j.host_id AND r.jobattribute_id = att.id AND rf.jobresults_ptr_id = r.id '
+        query += "AND att.name ='{0}'".format(request.GET['atr'])
+        
+        hosts = request.GET['hosts'].split(',')
+        host_temp = []
+        if not hosts[0] == "":
+            for h in hosts:
+                host_temp.append("h.hostname = '"+h+"'")
+            
+            query += ' AND ( '+' OR '.join(host_temp)+' ) '
+        
+        jobdes = request.GET['jobdes'].split(',')
+        jobdes_temp = []
+        if not jobdes[0] == "":
+            for j in jobdes:
+                jobdes_temp.append("j.jobdescription_id = '"+j+"'")
+            
+            query += ' AND ( '+' OR '.join(jobdes_temp)+' ) '
+        
+        platforms = request.GET['platforms'].split(',')
+        platforms_temp = []
+        if not platforms[0] == "":
+            for p in platforms:
+                platforms_temp.append("plat.cmtconfig = '"+p+"'")
+            
+            query += ' AND ( '+' OR '.join(platforms_temp)+' ) '
+            
+        query+= 'GROUP BY j.jobdescription_id, h.hostname, plat.cmtconfig;'
+        
+        #establish connection
+        cursor = connection.cursor()
+        #execute query
+        cursor.execute(query)
+        answerDict = dictfetchall(cursor)
+        
+        return HttpResponse(json.dumps(answerDict))
 
 @login_required
 def getFiltersAnalyse(request):
@@ -375,34 +472,37 @@ def getJobDetails(request):
         
                 
     return HttpResponse(json.dumps(dataDict))
-
-@login_required
-def editRequests(request):
-    """This view is called each time the user writes/changes a value in a job description(in clone/edit functions).
-    this is used to make sure that the pairs(options-options description , setup_project-setup_project description) will stay unique,
-    so if the user types an existing option(in the input html element of the web interface) the option description will
-    automatically change to the corresponding value, and the opposite """
-    if not 'value' or not 'key' or not 'real_name' in request.GET:
-        return HttpResponse()
-    if request.GET['real_name'] == 'Options':
-        myObj = Options.objects.filter( **{'{0}__exact'.format(request.GET['key']) : request.GET['value']} )
-    else: #request.GET['real_name'] == 'SetupProject':
-        myObj = SetupProject.objects.filter( **{'{0}__exact'.format(request.GET['key']) : request.GET['value']} )
-    
-    if myObj.count() == 1:
-        if request.GET['key'] == 'description':
-            return HttpResponse(json.dumps({ 'data' : myObj[0].content }))
-        elif request.GET['key'] == 'content':
-            return HttpResponse(json.dumps({ 'data' : myObj[0].description }))
-        else:
-            return HttpResponse(json.dumps({ 'data' : '' }))
-    else:
-        return HttpResponse(json.dumps({ 'data' : '' }))
     
 @login_required
 def commitClone(request):
     """This view checks if a commit request from the user(add new job description/or edit an existing one) is valid.
     if it's valid it updates/creates the old/new job description, which means add/edit handler,requested platforms, options etc"""
+    
+    
+    optObj = Options.objects.filter(description__exact=request.GET['optionsD'])
+    if optObj.count() > 0:
+        if not optObj[0].content == request.GET['options']:
+            return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing Options description with wrong corresponding content' , 
+                             'content' : optObj[0].content, 'description' : optObj[0].description  }))
+    
+    optObjD = Options.objects.filter(content__exact=request.GET['options'])
+    if optObjD.count() > 0:
+        if not optObjD[0].description == request.GET['optionsD']:
+            return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing Options content with wrong corresponding description' , 
+                             'content' : optObjD[0].content, 'description' : optObjD[0].description  }))
+    
+    if not request.GET['setupproject'] == "" and not request.GET['setupprojectD'] == "":
+        setupObj = SetupProject.objects.filter(description__exact=request.GET['setupprojectD'])
+        if setupObj.count() > 0:
+            if not setupObj[0].content == request.GET['setupproject']:
+                return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing SetupProject description with wrong corresponding content' , 
+                          'content' : setupObj[0].content, 'description' : setupObj[0].description  }))
+        
+        setupObjD = SetupProject.objects.filter(content__exact=request.GET['setupproject'])
+        if setupObjD.count() > 0:
+            if not setupObjD[0].description == request.GET['setupprojectD']:
+                return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing SetupProject content with wrong corresponding description' , 
+                             'content' : setupObjD[0].content, 'description' : setupObjD[0].description  }))
     
     #if the request is an edit request
     if 'update' in request.GET:
@@ -432,7 +532,7 @@ def commitClone(request):
             platformTemp = Platform.objects.get(cmtconfig=platform_name)
             requestedPlatfromTemp, created = Requested_platform.objects.get_or_create(jobdescription=myObj, cmtconfig=platformTemp)
         
-        return HttpResponse(json.dumps({ 'updated' : True, 'job_id' : myObj.id }))
+        return HttpResponse(json.dumps({ 'error' : False, 'updated' : True, 'job_id' : myObj.id }))
     
     
     if request.GET['setupproject'] != '' and request.GET['setupprojectD'] != '':
@@ -450,7 +550,7 @@ def commitClone(request):
                                                  options__description__exact=request.GET['optionsD'],
                                                  )
     if myjob_id.count() > 0:
-        return HttpResponse(json.dumps({ 'exists': True }))
+        return HttpResponse(json.dumps({ 'error': False , 'exists': True }))
     else:
         if request.GET['setupproject'] != '' and request.GET['setupprojectD'] != '':
             setupprojectTemp, created = SetupProject.objects.get_or_create(content=request.GET['setupproject'], description=request.GET['setupprojectD'])
@@ -471,7 +571,7 @@ def commitClone(request):
             platformTemp = Platform.objects.get(cmtconfig=platform_name)
             requestedPlatfromTemp, created = Requested_platform.objects.get_or_create(jobdescription=myObj, cmtconfig=platformTemp)
         
-        return HttpResponse(json.dumps({ 'exists' : False, 'job_id' : myObj.id }))
+        return HttpResponse(json.dumps({'error' : False,  'exists' : False, 'job_id' : myObj.id }))
 @login_required
 def editPanel(request):
     """Serves the information is needed for the editing handlers/platforms dialog, just sends back
@@ -513,13 +613,14 @@ def script(request):
     
     file_lines = [
                   '#!/bin/bash\n\n',
+                  '#this script produced by: {0} machine\n\n'.format(settings.HOSTNAME),
                   '#job description id\n',
                   'JOB_DESCRIPTION_ID='+str(myJobDes.pk)+'\n\n',
                   'HANDLERS="'+','.join(handlers)+'"\n',
                   '#PLATFORMS="'+','.join(platforms)+'"\n\n',
-                  '. SetupProject.sh '+str(application)+' '+str(version)+' '+str(setup_project)+'\n\n',
+                  '. SetupProject.sh {0} {1} {2}\n\n'.format(str(application), str(version), str(setup_project)),
                   'START=`date +"%Y-%m-%d,%T"`\n',
-                  'gaudirun.py '+str(options)+' 2>&1 > run.log\n',
+                  'gaudirun.py {0} 2>&1 > run.log\n'.format(str(options)),
                   'END=`date +"%Y-%m-%d,%T"`\n\n',
                   '#the next command, downloads the LHCbPRHandlers, unzips the file, removes the zip file(overrides previous folder/files, if any)\n',
                   "python -c \"import os,urllib,zipfile;urllib.urlretrieve('http://lhcbproject.web.cern.ch/lhcbproject/GIT/dist/LHCbPRHandlers/LHCbPRHandlers.zip','LHCbPRHandlers.zip');unzipper=zipfile.ZipFile('LHCbPRHandlers.zip');unzipper.extractall();os.remove('LHCbPRHandlers.zip')\"\n\n",

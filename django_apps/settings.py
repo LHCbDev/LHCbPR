@@ -1,6 +1,6 @@
 # Django settings for database_test project.
 
-import os
+import os, socket
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = True
@@ -10,8 +10,12 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
-#'ENGINE': 'django.db.backends.sqlite3',
-#'NAME': '/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/database.db',
+#try to get the hostname(machine)
+try:
+    HOSTNAME = socket.gethostname()
+except:
+    HOSTNAME = 'localhost'
+
 MANAGERS = ADMINS
 
 DATABASES = {

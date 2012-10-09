@@ -2,8 +2,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>{{ active_tab }} job description</title>
-		<!-- <link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" /> -->
-		<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css" />
+		<link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+		<!--  <link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css" /> -->
 		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
 		<script type="text/javascript" src="/static/js/generalFunctions.js"></script>
@@ -14,11 +14,11 @@
 		<link type="text/css" href="/static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
 		
   		<!-- <script type="text/javascript" src="http://jqueryui.com/js/jquery.js"></script>  -->
-  		<script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
+  		<!-- <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script> -->
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-				$('#switcher').themeswitcher({ loadTheme : 'Start' });
+				/* $('#switcher').themeswitcher({ loadTheme : 'Start' }); */
 				$('#menu').buttonset();
 				/* on click functions for the menus */
 				$('#homeMenu').click(function(){ 
@@ -38,7 +38,7 @@
 				$('#tabs').tabs({ selected : -1 });
 				$('#tabs').tabs('select', '#{{ active_tab }}tab');
 				
-				$('#job_info,#overviewButton,#overviewButtonClone,#editPlatformsClone,#editHandlersClone,#overviewButtonEdit,#editHandlersEdit,#editPlatformsEdit,#generatescript, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
+				$('#job_info,#overviewButtonClone,#editPlatformsClone,#editHandlersClone,#overviewButtonEdit,#editHandlersEdit,#editPlatformsEdit,#generatescript, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
 					function() { $(this).addClass('ui-state-hover'); },
 					function() { $(this).removeClass('ui-state-hover'); }
 				);
@@ -87,25 +87,6 @@
 				$("#next_button").click(function(){ doFilter(myCurrent_page+1); });
 				$("#previous_button").click(function(){ doFilter(myCurrent_page-1); });
 
-				/* button for clone Dialog */
-				$("#VersionClone").focusout(function() { makeOverview('cloneDialog'); });
-				$("#VersionClone").keyup(function() { makeOverview('cloneDialog'); });
-				$("#OptionsDClone").focusout(function() { fixInputs('OptionsDClone','OptionsClone','description','Options','onkeyup'); });
-				$("#OptionsDClone").keyup(function() { fixInputs('OptionsDClone','OptionsClone','description','Options','onkeyup'); });
-				$("#OptionsClone").focusout(function() { fixInputs('OptionsClone','OptionsDClone','content','Options','onblur') });
-				$("#SetupProjectDClone").focusout(function(){ fixInputs('SetupProjectDClone','SetupProjectClone','description','SetupProject','onkeyup'); });
-				$("#SetupProjectDClone").keyup(function(){ fixInputs('SetupProjectDClone','SetupProjectClone','description','SetupProject','onkeyup'); });
-				$("#SetupProjectClone").focusout(function() { fixInputs('SetupProjectClone','SetupProjectDClone','content','SetupProject','onblur'); });
-	
-				$("#VersionEdit").focusout(function() { makeOverview('editDialog'); });
-				$("#VersionEdit").keyup(function() { makeOverview('editDialog'); });
-				$("#OptionsDEdit").focusout(function() { fixInputs('OptionsDEdit','OptionsEdit','description','Options','onkeyup'); });
-				$("#OptionsDEdit").keyup(function() { fixInputs('OptionsDEdit','OptionsEdit','description','Options','onkeyup'); });
-				$("#OptionsEdit").focusout(function() { fixInputs('OptionsEdit','OptionsDEdit','content','Options','onblur') });
-				$("#SetupProjectDEdit").focusout(function(){ fixInputs('SetupProjectDEdit','SetupProjectEdit','description','SetupProject','onkeyup'); });
-				$("#SetupProjectDEdit").keyup(function(){ fixInputs('SetupProjectDEdit','SetupProjectEdit','description','SetupProject','onkeyup'); });
-				$("#SetupProjectEdit").focusout(function() { fixInputs('SetupProjectEdit','SetupProjectDEdit','content','SetupProject','onblur'); });
-				
 				$("#editPlatformsClone").click(function() { openPanel(myChoosedJob_id, "platforms","platformsClone"); });
 				$("#editHandlersClone").click(function() { openPanel(myChoosedJob_id, "handlers","handlersClone"); });
 				$("#editPlatformsEdit").click(function() { openPanel(myChoosedJob_id, "platforms","platformsEdit"); });
@@ -215,7 +196,7 @@
 <body>
 	<div id="pagebody" class="pagebody">
 		<div id="helpMenu" class="fakewindowcontain">
-				<p class="helpText">In this page you see the existing job descriptions for the choosed application(highlighted tab). The menu on the right provides you the ability to filter the jobDescriptions, by choosing(clicking) specific/multiple Version,Options or SetupProject(Platform choices are not  functional yet), in order to shorten the list with the results(existing jobDescriptions). <br><br>By clicking on one job description a  new dialog will open. This dialog contains the full details for the choosed jobDescription along with some available actions(buttons) : "Run" , "Edit"  and "Clone".<br><b>Run button</b> : run the job description(not functional yet, under construction).<br><br><b>Edit button</b>: you can edit the job description(only if there are no jobs runned for this job description), after you finish your modify what you want, to save your changes you can click the  "Commit" button, or in you can just go backby clicking the "Cancel" button.<br><br><b>Clone button</b>: you can clone(copy) the choosed jobdescription and create a new one, and after you modify your jobDescription to save/create the new one click "Commit" or "Cancel" to go back. <br><br>In the first dialog(details dialog) your can click the button next to the "Overview" to generate a script which you can use to run locally the jobdescription(download and run the script to your computer) . The script will run the job description with the selected handlers, will collect the requested data ,depending on the handlers, and will send the results to the database. More details about the handler click <a id="handlers_info" href="/static/README_handler" target="_blank" > here </a>(link doesn't work yet)</p>
+				<p class="helpText">In this page you see the existing job descriptions for the choosed application(highlighted tab). The menu on the right provides you the ability to filter the jobDescriptions, by choosing(clicking) specific/multiple Version,Options or SetupProject(Platform choices are not  functional yet), in order to shorten the list with the results(existing jobDescriptions). <br><br>By clicking on one job description a  new dialog will open. This dialog contains the full details for the choosed jobDescription along with some available actions(buttons) : "Run" , "Edit"  and "Clone".<br><b>Run button</b> : run the job description(not functional yet, under construction).<br><br><b>Edit button</b>: you can edit the job description(only if there are no jobs runned for this job description), after you finish your modify what you want, to save your changes you can click the  "Commit" button, or in you can just go backby clicking the "Cancel" button.<br><br><b>Clone button</b>: you can clone(copy) the choosed jobdescription and create a new one, and after you modify your jobDescription to save/create the new one click "Commit" or "Cancel" to go back. <br><br>In the first dialog you can click on "Generate script" to generate a script which you can use to run locally the jobdescription(download and run the script to your computer) . The script will run the job description with the selected handlers, will collect the requested data ,depending on the handlers, and will send the results to the database. More details about the handler click <a id="handlers_info" href="/static/README_handler" target="_blank" > here </a>(link doesn't work yet)</p>
 				<div class="ui-widget-overlay"></div>
 		</div>
 		
@@ -233,8 +214,8 @@
 				<div class="InnerLeft">
 						<table class="filter">
 						<tr>
-						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-minusthick"></span>Version</a>
-								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all" title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Version</a>
+								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all filterErase" title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
@@ -250,8 +231,8 @@
 						    </ul>
 						</td>
 						<tr>
-						<td><a href="javascript:;" id="OptionsButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-minusthick"></span>Options</a>
-								<a href="javascript:;" id="OptionsErase" class="ui-state-default ui-corner-all"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
+						<td><a href="javascript:;" id="OptionsButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Options</a>
+								<a href="javascript:;" id="OptionsErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
@@ -266,8 +247,8 @@
 							{% endfor %}
 						</td>
 						<tr>
-						<td><a href="javascript:;" id="SetupProjectButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-plusthick"></span>SetupProject</a>
-								<a href="javascript:;" id="SetupProjectErase" class="ui-state-default ui-corner-all"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						<td><a href="javascript:;" id="SetupProjectButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>SetupProject</a>
+								<a href="javascript:;" id="SetupProjectErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
 						</td> 
 						<tr>
 						<td>
@@ -283,8 +264,8 @@
 						    </ul>
 						</td>
 						<tr>
-						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
-								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
+								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
@@ -326,14 +307,10 @@
 <!------------------------------------------------------- dialog divs ----------------------------------------------------->
 <div id="dialog" title="" style="display:none;">
 <div class="dialogContainer">
-	<div class="InnerLeftDialog">
-	<div class="OuterDialog">
-		<div class="InnerLeftDialog jobDetails">
+		<div class="jobDetails">
 			<table id="dialogTable" class="ui-widget">
-				<thead class="ui-widget-header">
-				</thead>
-				<tbody class="ui-widget-content">
-				<tr>
+				<thead class="ui-widget-header"></thead>
+				<tbody class="ui-widget-content"><tr>
 				<td>Application:</td>
 				<td><input id="ApplicationDetails" type="text" value=""  readOnly="readonly" /></td><tr>
 				<td>Version:</td>
@@ -349,35 +326,27 @@
 				<td></td>
 				<td><input id="SetupProjectDetails" type="text" value="" readOnly="readonly"/></td>
 			</tbody>
-			</table><br>
+			</table> 
 			<br>
-			<a id="overviewButton" class="ui-state-default ui-corner-all" href="javascript:;">
-				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
+			<a id="generatescript" class="ui-state-default ui-corner-all simplebutton" target="_blank" href="javascript:;" title="generate script">
+				<span class="ui-icon ui-icon-script"></span>Generate script
 			</a>
-			<a id="generatescript" class="ui-state-default ui-corner-all" target="_blank" href="javascript:;" title="generate script">
-				<span class="ui-icon ui-icon-script"></span>
-			</a>
-			<a id="job_info" class="ui-state-default ui-corner-all" href="javascript:;" target="_blank" title="Open tab with runned jobs information">
+			<a id="job_info" class="ui-state-default ui-corner-all simplebutton" href="javascript:;" target="_blank" title="Open tab with runned jobs information">
 				Runned jobs<span class="ui-icon ui-icon-lightbulb"></span>
 			</a>
-			
-			<div id="overviewDialog" class="fakewindowcontain">
-				<p id="overviewDialogP" class="overview"></p>
-				<div class="ui-widget-overlay"></div>
-			</div>
 		</div> <!-- closing the JobDescriptionDetails-->
-
-		<div id="platformContainer" class="InnerRightDialog">
+	
+	<div class="OuterDialog">
+		<div class="platformContainer">
 			<span>Requested platforms: </span> 
 			<p  id="platformsDetails" class="details"></p>
 
 			<span>Handlers: </span>
 				<p  id="handlersDetails" class="details"></p>
 			</span>
-		</div><!-- /innerRightDialog -->
-	</div> <!-- /OuterDialog -->
-	</div><!--InnerLeftRight(for the dialogcontainer) -->
-	<div id="DialogButtons" class="InnerRightDialog">
+		</div><!-- /InnerLeftDialog -->
+	
+	<div id="DialogButtons">
 		<button id="RunInDialog" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Run</span></button>
 		<br><br>
 		<button id="CloneInDialog" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Clone</span></button>
@@ -385,8 +354,7 @@
 		<button id="EditInDialog" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Edit</span></button>
 		<br><br>
 	</div> <!--InnerRightDialog(for the dialogcontainer) -->
- 	<!--  /outerAll  -->
-	
+	</div><!--  /outerDialog  -->
 </div><!-- DialogContainer -->
 	
 	<button id="dialogClose" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Close</span></button>
@@ -395,9 +363,7 @@
 <!----------------------------------- CLONE DIALOG ----------------------------------->
 <div id="cloneDialog" title="" style="display:none;">
 <div class="dialogContainer">
-	<div class="InnerLeftDialog">
-	<div class="OuterDialog">
-		<div class="InnerLeftDialog jobDetails">
+		<div class="jobDetails">
 			<table id="dialogTable" class="ui-widget">
 				<thead class="ui-widget-header">
 				</thead>
@@ -411,42 +377,35 @@
 				<td >Options:</td>
 				<td><input id="OptionsDClone"type="text" value="" /></td><tr>
 				<td></td>
-				<td><input id="OptionsClone" type="text" value="" readOnly="readonly" /></td>
+				<td><input id="OptionsClone" type="text" value="" /></td>
 				<tr>
 				<td >SetupProject:</td>
 				<td><input id="SetupProjectDClone" type="text" value=""/></td><tr>
 				<td></td>
-				<td><input id="SetupProjectClone" type="text" value="" readOnly="readonly"/></td>
+				<td><input id="SetupProjectClone" type="text" value="" /></td>
 			</tbody>
-			</table><br>
-			<br>
-			<a id="overviewButtonClone" class="ui-state-default ui-corner-all" href="javascript:;">
-				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
-			</a>
-			<div id="overviewClone" class="fakewindowcontain">
-				<p id="overviewCloneP" class="overview"></p>
-				<div class="ui-widget-overlay"></div>
-			</div>
-		</div> <!-- closing the JobDescriptionClone-->
-
-		<div id="platformContainer" class="InnerRightDialog">
+			</table>
+		</div> <!-- jobDetails-->
+	
+		<div class="OuterDialog">
+		<div class="platformContainer">
 			<span>Requested platforms: </span>
-			<a id="editPlatformsClone" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
+			<a id="editPlatformsClone" class="ui-state-default ui-corner-all editAvailableRequested" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
 			<p  id="platformsClone" class="details"></p>
 
 			<span>Handlers: </span>
-			<a id="editHandlersClone" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
+			<a id="editHandlersClone" class="ui-state-default ui-corner-all editAvailableRequested" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
 				<p  id="handlersClone" class="details"></p>
 			</span>
-		</div><!-- /innerRightDialog -->
-	</div> <!-- /OuterDialog -->
-	</div><!--InnerLeftRight(for the dialogcontainer) -->
-	<div id="DialogButtons" class="InnerRightDialog">
-		<button id="commitClone" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Commit</span></button>
-		<br><br>
-		<button id="goBackToDialog" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Cancel</span></button>
-	</div> <!--InnerRightDialog(for the dialogcontainer) -->
- 	<!--  /outerAll  -->
+		</div><!-- /plaformContainer-->
+		
+		<div id="DialogButtons">
+			<button id="commitClone" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Commit</span></button>
+			<br><br>
+			<button id="goBackToDialog" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Cancel</span></button>
+		</div> <!--InnerRightDialog(for the dialogcontainer) -->
+
+		</div><!-- OuterDialog -->
 
 </div><!-- DialogContainer -->
 </div> <!-- closing the  dialogClone -->
@@ -455,10 +414,8 @@
 <!---------------------------------------------- EDIT DIALOG --------------------------------------------------->
 <div id="editDialog" title="" style="display:none;">
 <div class="dialogContainer">
-	<div class="InnerLeftDialog">
-	<div class="OuterDialog">
-		<div class="InnerLeftDialog jobDetails">
-			<p id="editMessage"><p>
+		<div class="jobDetails">
+			<p id="editMessage"></p>
 			<table id="dialogTable" class="ui-widget">
 				<thead class="ui-widget-header">
 				</thead>
@@ -479,34 +436,28 @@
 				<td></td>
 				<td><input id="SetupProjectEdit" type="text" value="" readOnly="readonly"/></td>
 			</tbody>
-			</table><br>
-			<br>
-			<a id="overviewButtonEdit" class="ui-state-default ui-corner-all" href="javascript:;">
-				<span class="ui-icon ui-icon-arrowthick-1-s"></span>Overview
-			</a>
-			<div id="overviewEdit" class="fakewindowcontain">
-				<p id="overviewEditP" class="overview"></p>
-				<div class="ui-widget-overlay"></div>
-			</div>
-		</div> <!-- closing the JobDescriptionClone-->
+			</table>
+		</div> <!-- jobDetails-->
 
-		<div id="platformContainer" class="InnerRightDialog">
+		<div class="OuterDialog">
+		<div class="platformContainer">
 			<span>Requested platforms: </span>
-			<a id="editPlatformsEdit" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
+			<a id="editPlatformsEdit" class="ui-state-default ui-corner-all editAvailableRequested" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
 			<p  id="platformsEdit" class="details"></p>
 
 			<span>Handlers: </span>
-			<a id="editHandlersEdit" class="ui-state-default ui-corner-all" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
+			<a id="editHandlersEdit" class="ui-state-default ui-corner-all editAvailableRequested" href="javascript:;"><span class="ui-icon ui-icon-wrench"></span>edit</a>
 				<p  id="handlersEdit" class="details"></p>
 			</span>
-		</div><!-- /innerRightDialog -->
-	</div> <!-- /OuterDialog -->
-	</div><!--InnerLeftRight(for the dialogcontainer) -->
-	<div id="DialogButtons" class="InnerRightDialog">
-		<button id="commitEdit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Commit</span></button>
-		<br><br>
-		<button id="goBackToDialogEdit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Cancel</span></button>
-	</div> <!--InnerRightDialog(for the dialogcontainer) -->
+		</div><!-- /platformContainer-->
+		
+		<div id="DialogButtons">
+			<button id="commitEdit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Commit</span></button>
+			<br><br>
+			<button id="goBackToDialogEdit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Cancel</span></button>
+		</div> <!--InnerRightDialog(for the dialogcontainer) -->
+		</div> <!-- /OuterDialog -->
+	
  	<!--  /outerAll  -->
 
 </div><!-- DialogContainer -->
@@ -529,8 +480,6 @@
 		</div><!-- InnerRight -->
 	</div><!-- panelContainer  -->
 </div><!--  /editPlatformsHandlers -->
-
-
 <div id="alertDialog" title="" style="display:none;">
 	<p>
 		<span id="alertDialogIcon" class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
@@ -538,6 +487,9 @@
 	</p>
 	<p id="alertMessage2">
 	</p>
+</div>
+
+<div id="alert" title="Attention" style="display:none;">
 </div>
 
 </body>

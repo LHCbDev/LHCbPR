@@ -1,11 +1,6 @@
 var myCurrent_page;
 var myChoosedJob_id = "";
 
-/*	application	version	options	setupporject	div	id */
-var dialogInputs = ["ApplicationDetails","VersionDetails","SetupProjectDetails","OptionsDetails","overviewDialogP"];
-var cloneInputs = ["ApplicationClone","VersionClone","SetupProjectClone","OptionsClone","overviewCloneP"];
-var editInputs = ["ApplicationEdit","VersionEdit","SetupProjectEdit","OptionsEdit","overviewEditP"];
-
 String.prototype.fulltrim=function(){
 	return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
 }
@@ -26,49 +21,6 @@ $(document).ready(function () {
 	$("#UploadResultsInDialog").click(function () { uploadResults(); });
 	$("#CloneInDialog").click(function () { openCloneWindow(myChoosedJob_id); $("#pagebody").mask("Loading..."); });
 	$("#EditInDialog").click(function () { openEditWindow(myChoosedJob_id); $("#pagebody").mask("Loading..."); });
-	$("#overviewDialog").hide();
-	$("#overviewButtonClone").click(function () {
-		// check visibility
-		if ($("#overviewClone").is(":hidden")) {
-			// it's hidden - show it
-				$("#overviewClone").slideDown("slow");
-				$(this).find('span').removeClass('ui-icon-arrowthick-1-s');
-				$(this).find('span').addClass('ui-icon-arrowthick-1-n');
-		} else {
-			// it's not hidden - slide it down
-				$("#overviewClone").slideUp("slow");
-				$(this).find('span').removeClass('ui-icon-arrowthick-1-n');
-				$(this).find('span').addClass('ui-icon-arrowthick-1-s');
-			}
-		});
-	$("#overviewButtonEdit").click(function () {
-		// check visibility
-		if ($("#overviewEdit").is(":hidden")) {
-			// it's hidden - show it
-				$("#overviewEdit").slideDown("slow");
-				$(this).find('span').removeClass('ui-icon-arrowthick-1-s');
-				$(this).find('span').addClass('ui-icon-arrowthick-1-n');
-		} else {
-			// it's not hidden - slide it down
-				$("#overviewEdit").slideUp("slow");
-				$(this).find('span').removeClass('ui-icon-arrowthick-1-n');
-				$(this).find('span').addClass('ui-icon-arrowthick-1-s');
-			}
-		});
-	$("#overviewButton").click(function () {
-		// check visibility
-		if ($("#overviewDialog").is(":hidden")) {
-			// it's hidden - show it
-				$("#overviewDialog").slideDown("slow");
-				$(this).find('span').removeClass('ui-icon-arrowthick-1-s');
-				$(this).find('span').addClass('ui-icon-arrowthick-1-n');
-		} else {
-			// it's not hidden - slide it down
-				$("#overviewDialog").slideUp("slow");
-				$(this).find('span').removeClass('ui-icon-arrowthick-1-n');
-				$(this).find('span').addClass('ui-icon-arrowthick-1-s');
-			}
-		});
 
 		$("#commitClone").click(function () { 
 			$version = $.trim($("#VersionClone").val());
@@ -111,22 +63,28 @@ $(document).ready(function () {
 				},
     			'success' : function(data) {
 			 		var jsondata = $.parseJSON(data);
-					if (jsondata.exists)
-						myAlert("Job description already exists","","Attention","");
-					else{ 
-						myAlertCommit("Job added successfully","","Attention","");
-						$( "#alertDialog" ).dialog({
-							modal: true,
-							width : 350,
-							buttons: {
-								Ok: function() {
-								$( this ).dialog( "close" );
-								$("#cloneDialog").dialog("close");
-								doFilter(1);
-								openWindow(jsondata.job_id);
+					
+					if (jsondata.error){
+						fillAlert(jsondata);
+					}
+					else{
+						if (jsondata.exists)
+							myAlert("Job description already exists","","Attention","");
+						else{ 
+							myAlertCommit("Job added successfully","","Attention","");
+							$( "#alertDialog" ).dialog({
+								modal: true,
+								width : 350,
+								buttons: {
+									Ok: function() {
+									$( this ).dialog( "close" );
+									$("#cloneDialog").dialog("close");
+									doFilter(1);
+									openWindow(jsondata.job_id);
+									}
 								}
-							}
-						});
+							});
+						}/* //else */
 					}
       			}
     		});/* /ajax*/
@@ -176,20 +134,25 @@ $(document).ready(function () {
 				},
     			'success' : function(data) {
 			 		var jsondata = $.parseJSON(data);
-					if (jsondata.updated)
-						myAlertCommit("Job description updated successfully","","Attention","");
-						$( "#alertDialog" ).dialog({
-							modal: true,
-							width : 350,
-							buttons: {
-								Ok: function() {
-								$( this ).dialog( "close" );
-								$("#editDialog").dialog("close");
-								doFilter(1);
-								openWindow(jsondata.job_id);
+					if (jsondata.error){
+						fillAlert(jsondata);
+					}
+					else{
+						if (jsondata.updated)
+							myAlertCommit("Job description updated successfully","","Attention","");
+							$( "#alertDialog" ).dialog({
+								modal: true,
+								width : 350,
+								buttons: {
+									Ok: function() {
+									$( this ).dialog( "close" );
+									$("#editDialog").dialog("close");
+									doFilter(1);
+									openWindow(jsondata.job_id);
+									}
 								}
-							}
-						});
+							});
+					}
       			}
     		});/* /ajax*/
 		});/* commitEdit */
@@ -197,6 +160,34 @@ $(document).ready(function () {
 		$("#job_info").click(function(){  });
 		
 });
+
+function fillAlert(jsondata){
+	removeAllChilds("alert")
+	myAlertDiv = document.getElementById("alert");
+	myAlertDiv.appendChild(document.createTextNode(jsondata.errorMessage));
+	myAlertDiv.appendChild(document.createElement("br"));
+	myAlertDiv.appendChild(document.createTextNode("Did you mean :"));
+	myAlertDiv.appendChild(document.createElement("br"));
+	myB = document.createElement("b");
+	myB.appendChild(document.createTextNode("Content"));
+	myAlertDiv.appendChild(myB);
+	myAlertDiv.appendChild(document.createTextNode(": "+jsondata.content));
+	myAlertDiv.appendChild(document.createElement("br"));
+	myB = document.createElement("b");
+	myB.appendChild(document.createTextNode("Description"));
+	myAlertDiv.appendChild(myB);
+	myAlertDiv.appendChild(document.createTextNode(": "+jsondata.description));
+
+	$( "#alert" ).dialog({
+			modal: true,
+			width : 800,
+			buttons: {
+				Ok: function() {
+					$( this ).dialog( "close" );			
+				}
+			}
+	});
+}
 
 function getSelectedChildsOne(id){
 	//nodes = document.getElementById(id).children;
@@ -206,59 +197,6 @@ function getSelectedChildsOne(id){
 			sdValues.push(nodes[i].value);
 	}
 	return sdValues;
-}
-
-function makeOverview(div_id){
-	var myArray;
-	if (div_id == "dialog")
-		myArray = dialogInputs;
-	if (div_id == "cloneDialog")
-		myArray = cloneInputs;
-	if (div_id == "editDialog")
-		myArray = editInputs;
-
-	removeAllChilds(myArray[4]);	
-
-	box = document.getElementById(myArray[4]);
-	
-	box.appendChild(document.createTextNode("SetupProject "+document.getElementById(myArray[0]).value.fulltrim()+" "+document.getElementById(myArray[1]).value.fulltrim()+" "+document.getElementById(myArray[2]).value.fulltrim()));
-	box.appendChild(document.createElement("br"));
-	box.appendChild(document.createTextNode("gaudirun.py "+document.getElementById(myArray[3]).value.fulltrim()));
-
-	return;
-}
-
-function fixInputs(father, child, func,real_name,event){
-	$myvalue =  $.trim($("#"+father).val());
-	
-	$.ajax({
-    	'url' : '/django/lhcbPR/editRequests/',
-		'type' : 'GET',
-		'data' : {
-		'key' : func,
-		'value' : $myvalue,
-		'real_name' : real_name
-		},
-    	'success' : function(data) {
-			var jsondata = $.parseJSON(data);
-			
-			if (jsondata.data != ""){
-				$("#"+child).val(jsondata.data);
-				if (event == "onkeyup")
-					$("#"+child).attr("readOnly","readonly");
-				else if (event == "onblur")
-					$("#"+father).attr("readOnly","readonly");
-			}
-			else{
-				if (event == "onkeyup"){					
-    			 		$("#"+child).removeAttr('readOnly');
-						$("#"+child).val("");	
-				}
-			}
-			makeOverview("cloneDialog");
-			makeOverview("editDialog");
-      	}
-    });/* /ajax*/
 }
 
 function showHide( button_id, box_id )
@@ -390,7 +328,6 @@ function openWindow(job_id){
 				myboxHandlers.appendChild(document.createElement("br"));			
 			}
 			myChoosedJob_id = job_id;
-			$("#overviewDialog").hide();
 			
 			$("#pagebody").unmask();
 			$("#generatescript").attr('href','/django/lhcbPR/script?pk='+myChoosedJob_id);
@@ -398,15 +335,13 @@ function openWindow(job_id){
 			
 			if(jsondata.runned_job)
 				$("#job_info").show();		
-	
+		
 			$("#dialog").dialog({
-    			resizable: false,
-    			height: 550,
+    			autoResize: true,
+    			height: 'auto',
     			width: 860,
-   				modal: true,
+				modal : true
 			});
-			//fix overview
-			makeOverview("dialog");
       	}
     });/* /ajax*/
 	return;
@@ -489,7 +424,9 @@ function openEditWindow(job_id){
 			if (!jsondata.runned_job){
 				$('#VersionEdit').removeAttr('readOnly');
 				$('#OptionsDEdit').removeAttr('readOnly');
+				$('#OptionsEdit').removeAttr('readOnly');
 				$('#SetupProjectDEdit').removeAttr('readOnly');
+				$('#SetupProjectEdit').removeAttr('readOnly');
 				removeAllChilds('editMessage');
 				document.getElementById("editMessage").appendChild(document.createTextNode("JobDescription doesn't exist in runned jobs"));
 			}
@@ -497,15 +434,13 @@ function openEditWindow(job_id){
 				removeAllChilds("editMessage");
 				document.getElementById("editMessage").appendChild(document.createTextNode("Job description exists in runned jobs!"));
 			}
-			$('#overviewEdit').hide();
 			$("#pagebody").unmask();
 			$("#editDialog").dialog({
-    			resizable: false,
-    			height: 530,
+    			autoResize: true,
+    			height: 'auto',
     			width: 860,
    				modal: true
 			});
-			makeOverview("editDialog");
       	}
     });/* /ajax*/
 	$("#dialog").dialog("close");
@@ -581,19 +516,14 @@ function openCloneWindow(job_id){
 				source: jsondata.setupDAll
 			});
 			
-			$('#OptionsClone').attr('readOnly','readonly');
-			$('#SetupProjectClone').attr('readOnly','readonly');
-			$('#overviewClone').hide();
-			
 			$("#pagebody").unmask();
 			
 			$("#cloneDialog").dialog({
-    			resizable: false,
-    			height: 530,
+    			autoResize: true,
+    			height: 'auto',
     			width: 860,
    				modal: true
 			});
-			makeOverview("cloneDialog");
       	}
     });/* /ajax*/
 	$("#dialog").dialog("close");
@@ -683,7 +613,7 @@ function openPanel(id, service,mybox_id){
 			$("#editPlatformsHandlers").dialog({
     			resizable: false,
     			height:560,
-    			width: 560,
+    			width: 700,
    				modal: true,
 				buttons: {
 						"Ok": function() {

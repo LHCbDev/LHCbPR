@@ -50,28 +50,27 @@ table.filter td {
 	border-color: gray;
 	background-color: white;
 	-moz-border-radius: ;
-	width : 223px;
+	width : 350px;
 }
-table.filter td a#VersionButton, #OptionsButton, #PlatformButton, #SetupProjectButton{ display:inline-block; width:69%; }
+
 
 /*----- fixing the the show/hide/erase buttons ------*/
-#VersionButton, #OptionsButton, #SetupProjectButton, #PlatformButton {
-	padding: 6px 16px 4px 25px;text-decoration: none;position: relative;
+.filterButton {
+	display:inline-block; width:74%; padding: 6px 16px 4px 25px;text-decoration: none;position: relative;
 }
 #mypermalink {	padding: .4em 1em .2em 17px;text-decoration: none;position: relative; }
 
-#VersionErase, #OptionsErase, #SetupProjectErase, #PlatformErase{
+.filterErase{
 	padding: 6px 16px 4px 8px;text-decoration: none;position: relative;
 }
-#VersionButton span.ui-icon,#OptionsButton span.ui-icon, #SetupProjectButton span.ui-icon, #PlatformButton span.ui-icon,
-#VersionErase span.ui-icon, #OptionsErase span.ui-icon, #SetupProjectErase span.ui-icon,#PlatformErase span.ui-icon {
-	margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;
+.filterErase span.ui-icon, .filterButton span.ui-icon {
+	margin: 0 5px 0 0;position: absolute;left: 4px;top: 50%;margin-top: -8px;
 }
 
-#editPlatformsClone, #editHandlersClone,#editPlatformsEdit, #editHandlersEdit {
+.editAvailableRequested {
 	padding: 2px 7px 2px 22px; text-decoration: none;position: relative;
 }
-#editPlatformsClone span.ui-icon, #editHandlersClone span.ui-icon, #editPlatformsEdit span.ui-icon, #editHandlersEdit span.ui-icon {
+.editAvailableRequested span.ui-icon {
 	margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;
 }
 /*-------------------- uls containg the filtering elements ---------------------*/
@@ -109,12 +108,12 @@ div.InnerLeft {
 div.InnerRight {
 		position: relative;        
         float: right;
-		margin-left: 20px;
+		margin-left: 10px;
 } 
 
 /*----------------------- Job Descriptions --------------------------------*/
 #JobDescriptions { list-style-type: none; margin: 0; padding: 0; min-width: 450px; }
-#JobDescriptions li { margin: 3px; /* padding: 0.4em; */ padding: 7px; height: 18px; }
+#JobDescriptions li { margin: 3px; padding: 7px; }
 
 /*--------------- css for the ul icons(next/previous page)-----------*/
 ul#icons {margin: 0; padding: 0;}
@@ -131,26 +130,23 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 
 
 /*-------------------------------------------------------------------------------------------------- DIALOG STUFF --------------------------------------------------------------------------*/
-#platformContainer { margin-top:10px; max-height:410px; border-style:solid;border-width:1px;border-radius: 4px; padding:15px; }
+.platformContainer { margin-top:10px; max-height:410px; border-style:solid;border-width:1px;border-radius: 4px; padding:15px; float:left;}
 
-.jobDetails { margin-top:10px;float:left;width:340px;max-height:450px;border-width: 1px;border-style: solid;border-radius: 4px; padding:15px; }
+.jobDetails { margin-top:10px;float:left;width:787px;max-height:450px;border-width: 1px;border-style: solid;border-radius: 4px; padding:15px; float: left;}
+.jobDetails input { width: 660px; }
 
-#DialogButtons { margin-top: 10px; }
+#DialogButtons { margin-top: 10px; float : right;}
 
 #dialogClose { position:absolute;bottom:0;right:0; }
 
-#overviewButton,#overviewButtonClone, #overviewButtonEdit, #job_info
-{ padding: 5px 12px 4px 22px; text-decoration: none;position: relative; }
+.simplebutton { padding: 5px 12px 4px 22px; text-decoration: none;position: relative; }
 
-#generatescript 
-{ padding: 5px 12px 4px 14px; text-decoration: none;position: relative; }
+.simplebutton span.ui-icon { margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px; }
 
-#overviewButton span.ui-icon, #overviewButtonClone span.ui-icon, #overviewButtonEdit span.ui-icon, #generatescript span.ui-icon, #job_info span.ui-icon
-{ margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px; }
 
 .overview { line-height:160%;font-size:14px; }
 
-.details { width: 245px;max-height:155px;overflow:auto;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 4px;;}
+.details { width: 300px;max-height:155px;overflow:auto;margin-left:2em;border-style:dashed;border-width:1px;border-radius: 4px;;}
 
 #editMessage { font-family: Italics;font-size:14px;padding:0px; }
 
@@ -159,7 +155,7 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 
 #overviewDialog, #overviewClone, #overviewEdit { 
   	width : 330px;
-  	height : 70px;
+  	height : auto; /* 70px; */
   	border-width: 1px;
   	border-color: #000000;
   	border-style: dashed;
@@ -172,18 +168,21 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 /*-------------------------------  fixing the layout------------------------------------------------*/
 
 div.OuterDialog{
-	width: 700px;
+	/* width: 700px; */
+	width : 500px;
 	height:auto;
 	position: relative;
 	overflow: auto;
-	clear: both;
+	float : left;
+	clear: left;
 }
 div.InnerLeftDialog { position: relative; float: left; } 
 div.InnerRightDialog { position: relative; float: right; }
 
 div.dialogContainer { 
 	width: 820px;
-	max-height: 460px;
+	height : auto;
+	/* max-height: 460px; */
 	position: relative;
 	overflow: auto;
 	clear: both; 
@@ -202,12 +201,14 @@ div.dialogContainer {
 	clear: both;
 	display : inline-block;
 }
-#panelContainer ol { border-style:solid;border-width:1px; width:250px;height:340px;border-radius:4px; overflow:auto}
+#panelContainer ol { border-style:solid;border-width:1px; 
+width:322px;
+height:340px;border-radius:4px; overflow:auto;}
 #panelContainer p { text-align: center; }
 
 
 #availableAttributes, #requestedAttributes { list-style-type: none; margin: 0; padding: 0;  }
-#availableAttributes li, #requestedAttributes li { margin: 3px; padding: 7px; height: 18px; }
+#availableAttributes li, #requestedAttributes li { margin: 3px; padding: 7px; }
 
 /*--------------------------------------help panel------------------------------------------------*/
 #helpMenu { 

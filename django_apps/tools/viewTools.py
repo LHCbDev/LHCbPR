@@ -45,3 +45,20 @@ def handle_uploaded_file(f):
     with open( path_to_save , 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+            
+def dictfetchall_original(cursor):
+    "Returns all rows from a cursor as a dict"
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
+
+#change version (make decimal to str) with map function 
+def dictfetchall(cursor):
+    "Returns all rows from a cursor as a dict"
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], map(str,row)))
+        for row in cursor.fetchall()
+    ]

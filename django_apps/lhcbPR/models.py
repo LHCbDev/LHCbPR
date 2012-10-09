@@ -9,8 +9,8 @@ class Host(models.Model):
         return self.hostname
  
 class Application(models.Model):
-    appName = models.CharField(max_length=50)
-    appVersion = models.CharField(max_length=50)
+    appName = models.CharField(max_length=50, db_index=True)
+    appVersion = models.CharField(max_length=50, db_index=True)
     
     class Meta:
         unique_together = ('appName', 'appVersion',)
@@ -19,12 +19,12 @@ class Application(models.Model):
         return self.appName+' '+self.appVersion
 
 class Options(models.Model):
-    content = models.CharField(max_length=200)
-    description = models.CharField(max_length=300)
+    content = models.CharField(max_length=2000)
+    description = models.CharField(max_length=2000, db_index=True)
 
 class SetupProject(models.Model):
     content = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, db_index=True)
 
 class JobDescription(models.Model):
     application = models.ForeignKey(Application)
