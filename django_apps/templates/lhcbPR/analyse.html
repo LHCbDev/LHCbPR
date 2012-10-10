@@ -18,16 +18,6 @@
   		<!-- <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script> -->
 
 		<script type="text/javascript">			
-			function clearCheckBox2(id){
-				nodes = document.getElementById(id).children;
-				for(i=0; i<nodes.length; i+=1) {
-    				if (nodes[i].children[0].children[0].checked == true){
-						nodes[i].children[0].children[0].checked = false;
-					}
-				}
-				return;
-			}
-
 			$(document).ready(function() {
 				/* $('#switcher').themeswitcher({ loadTheme : 'Start' }); */
 				$('#menu').buttonset();
@@ -48,124 +38,12 @@
 
 				$('#tabs').tabs({ selected : -1 });
 				$('#tabs').tabs('select', '#{{ active_tab }}tab');
-				
-				$('#execute_query').hover(
-					function() { $(this).addClass('ui-state-hover'); },
-					function() { $(this).removeClass('ui-state-hover'); }
-				);
-				var atrValues = [  ];
-				{% for atr in attributes %}
-					atrValues.push("{{ atr }}")
-				{% endfor %}
-				$( "#atrs" ).autocomplete({
-					source: atrValues
-				});
 
-				$("#HostButton").click(function(){ showHide("HostButton","Host") });
-			  	$("#JobDesButton").click(function(){ showHide("JobDesButton","JobDes") });
-			  	$("#PlatformButton").click(function(){ showHide("PlatformButton","Platform") });
-			  	$("#VersionButton").click(function(){ showHide("VersionButton","Version") });
-
-				$("#HostErase").click(function(){ clearCheckBox2("Host") });
-			 	$("#JobDesErase").click(function(){ clearCheckBox2("JobDes") });
-			  	$("#PlatformErase").click(function(){ clearCheckBox2("Platform") });
-				$("#VersionErase").click(function(){ clearCheckBox2("Version") });
-
-				$("#execute_query").click(function() { query(); });
-				$("#query_overview").click(function() { queryOverview(); });
-
+				$("button").button();
 			});
-
-function queryOverview(){
-var platforms = getSelectedChilds("Platform");
-	var hosts = getSelectedChilds("Host");
-	var versions = getSelectedChilds("Version");
-	var jobdes = getSelectedChilds("JobDes");
-	var appName = "{{  active_tab }}";
-	$atr = $.trim($("#atrs").val());
-	
-	if ($atr == "") {
-		alert("Attribute field can not be empty!");
-		return;
-	}
-	if (jobdes == ""){
-		alert("At least one jobDescription must be selected!");
-		return;
-	}
-	
-	$.ajax({
-    	'url' : '/django/lhcbPR/queryOverview/',
-		'type' : 'GET',
-		'data' : {
-		'platforms' : platforms.join(","),
-		'hosts' : hosts.join(","),
-		'versions' : versions.join(","),
-		'jobdes' : jobdes.join(","),
-		'appName' : appName,
-		'atr' : $atr
-		},
-    	'success' : function(data) {
-			removeAllChilds("query_panel");
-			document.getElementById("query_panel").appendChild(document.createElement("pre").appendChild(document.createTextNode(data)));
-			$("#query_panel").dialog({
-    			resizable: false,
-    			height:560,
-    			width: 700,
-   				modal: true,
-				buttons: {
-						"Ok": function() {
-							$(this).dialog("close");
-						},
-					}
-			});
-      	}
-    });/* /ajax*/
-	return;
-}
-
-function query(){
-	var platforms = getSelectedChilds("Platform");
-	var hosts = getSelectedChilds("Host");
-	var versions = getSelectedChilds("Version");
-	var jobdes = getSelectedChilds("JobDes");
-	var appName = "{{  active_tab }}";
-	$atr = $.trim($("#atrs").val());
-	
-	if ($atr == "") {
-		alert("Attribute field can not be empty!");
-		return;
-	}
-	if (jobdes == ""){
-		alert("At least one jobDescription must be selected!");
-		return;
-	}
-	
-	$.ajax({
-    	'url' : '/django/lhcbPR/query/',
-		'type' : 'GET',
-		'data' : {
-		'platforms' : platforms.join(","),
-		'hosts' : hosts.join(","),
-		'versions' : versions.join(","),
-		'jobdes' : jobdes.join(","),
-		'appName' : appName,
-		'atr' : $atr
-		},
-    	'success' : function(data) {
-			var jsondata = $.parseJSON(data);
-			removeAllChilds("results");
-			myResultsDiv = document.getElementById("results");
-			myPre = document.createElement("pre");
-			myPre.appendChild(document.createTextNode(JSON.stringify(jsondata, null, '      ')));
-			myResultsDiv.appendChild(myPre);
-      	}
-    });/* /ajax*/
-	return;
-}
 		</script>
 		<style type="text/css">
-			#execute_query { padding: .4em 1em .2em 17px;text-decoration: none;position: relative; float: right;}
-			#filter_container { padding-top: 1em; padding-bottom: 1em; } 
+			
 		</style>
 </head>
 <div>
@@ -202,7 +80,7 @@ function query(){
 <body>
 	<div id="pagebody" class="pagebody">
 		<div id="helpMenu" class="fakewindowcontain">
-				<p class="helpText"></p>
+				<p class="helpText">Choose the type of analysis you want.</p>
 				<div class="ui-widget-overlay"></div>
 		</div>
 		
@@ -213,93 +91,14 @@ function query(){
 				{% endfor %}
 			</ul>
 			<div id="{{ active_tab }}tab">
-				
-					<a  id="execute_query" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Execute query </a>
-
-					<div class="Outer">
-
-					<div id="filter_container" class="InnerLeft">	
-						<label>Query on attribute: </label> 
-							<input id="atrs" type="text" value="" /><br>
-						
-						<table class="filter" style="margin-top: 1em;">
-						<tr>
-						<td><a href="javascript:;" id="HostButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Host</a>
-								<a href="javascript:;" id="HostErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
-						</td>
-						<tr>
-						<td>
-						    <ul id="Host" name="Host" class="checklist" >
-								{% for h in hosts %}
-								<li>
-										<label id="Host{{ forloop.counter }}">
-											<input id="Host{{ forloop.counter }}a" type="checkbox" value="{{ h.value }}" {% if h.checked %} checked="checked"  {% endif %}>
-												{{ h.value }}
-										 </label>
-								</li>
-							{% endfor %}
-						</td>
-						<tr>
-						<td><a href="javascript:;" id="JobDesButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Job Description</a>
-								<a href="javascript:;" id="JobDesErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
-						</td> 
-						<tr>
-						<td>
-						    <ul id="JobDes" name="JobDes" class="checklist">
-							{% for j in jobdescr %}
-								<li>
-										<label id="JobDes{{ forloop.counter }}">
-											<input id="JobDes{{ forloop.counter }}a" type="checkbox" value="{{ j.id }}" {% if j.checked %} checked="checked" {% endif %}>
-												{{ j.value }}
-										 </label>
-								</li>
-							{% endfor %}
-						    </ul>
-						</td>
-						<tr>
-						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
-								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
-						</td>
-						<tr>
-						<td>
-				 		   <ul id="Platform" name="Platform" class="checklist" style="display:none;">
-							{% for plat in platforms %}
-								<li>
-										<label id="Platform{{ forloop.counter }}">
-											<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
-												{{ plat.value }}
-										 </label>
-								</li>
-							{% endfor %}
-						    </ul>
-						</td>
-						<tr>
-						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Version (not functional yet)</a>
-								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
-						</td>
-						<tr>
-						<td>
-				 		   <ul id="Version" name="Version" class="checklist" style="display:none;">
-							{% for v in versions %}
-								<li>
-										<label id="Version{{ forloop.counter }}">
-											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ v.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
-												{{ v.value }}
-										 </label>
-								</li>
-							{% endfor %}
-						    </ul>
-						</td>
-						</table><!-- closing div id=myfilter -->
-						<br>
-
-						<a  id="query_overview" class="ui-state-default ui-corner-all simplebutton" href="javascript:;"  title="bookmark your selection"> query overview </a>
-					</div><!-- /filter_container + InnerLeft(has two classes)-->				
-					
-					<div id="results" class="InnerRight" style="margin-top: 1em;margin-left:1em;">
-					</div><!-- /resutls + InnerRight (has two classes)-->
-	
-					</div><!-- /Outer-->
+				Successful handlers for this application:
+				<p>
+					{% for h in handlers %}
+						<li>{{ h }}</li> <br>
+					{% endfor %}
+				</p>
+				Choose type of analysis: <br><br>
+				<button name="{{ active_tab }}buttonBasic" onclick="location.href='/django/lhcbPR/analyse/basic/{{ active_tab }}/'" style="padding:1.5em;margin-left:1em;">BASIC</button>
 			</div><!-- active_tab -->
 		</div><!--  /tabs -->
 	</div> <!-- pagebody -->

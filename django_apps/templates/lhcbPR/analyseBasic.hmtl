@@ -1,0 +1,380 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>{{ active_tab }} basic analysis</title>
+		<link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+		<!-- <link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css" /> -->
+		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
+		<script type="text/javascript" src="/static/js/generalFunctions.js"></script>
+		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
+		<script type="text/javascript" src="/static/js/json.htmTable.js"></script>
+		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
+		<!-- plugin for mask -->
+		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
+		<link type="text/css" href="/static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
+		
+  		<!-- <script type="text/javascript" src="http://jqueryui.com/js/jquery.js"></script> -->
+  		<!-- <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script> -->
+
+		<script type="text/javascript">			
+			function clearCheckBox2(id){
+				nodes = document.getElementById(id).children;
+				for(i=0; i<nodes.length; i+=1) {
+    				if (nodes[i].children[0].children[0].checked == true){
+						nodes[i].children[0].children[0].checked = false;
+					}
+				}
+				return;
+			}
+
+			$(document).ready(function() {
+				/* $('#switcher').themeswitcher({ loadTheme : 'Start' }); */
+				$('#menu').buttonset();
+				/* on click functions for the menus */
+				$('#homeMenu').click(function(){ 
+						document.location.href="/django/lhcbPR/";
+						$("#pagebody").mask("Loading...");
+				});
+				$('#jobDescriptionsMenu').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions/"; $("#pagebody").mask("Loading..."); });
+				$('#analyseMenu').click(function(){  document.location.href="/django/lhcbPR/analyse/"; $("#pagebody").mask("Loading..."); });
+				
+				{% for app in applications %}
+				$('#{{ app }}tabButton').click(function(){ 
+						document.location.href="/django/lhcbPR/analyse/{{ app }}/" ;
+						$("#{{ active_tab }}tab").mask("Loading...");
+					});
+				{% endfor %}
+
+				$('#tabs').tabs({ selected : -1 });
+				$('#tabs').tabs('select', '#{{ active_tab }}tab');
+				
+				$('#execute_query').hover(
+					function() { $(this).addClass('ui-state-hover'); },
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
+				var atrValues = [  ];
+				{% for atr in attributes %}
+					atrValues.push("{{ atr }}")
+				{% endfor %}
+				$( "#atrs" ).autocomplete({
+					source: atrValues
+				});
+
+				$("#HostButton").click(function(){ showHide("HostButton","Host") });
+			  	$("#JobDesButton").click(function(){ showHide("JobDesButton","JobDes") });
+			  	$("#PlatformButton").click(function(){ showHide("PlatformButton","Platform") });
+			  	$("#VersionButton").click(function(){ showHide("VersionButton","Version") });
+
+				$("#HostErase").click(function(){ clearCheckBox2("Host") });
+			 	$("#JobDesErase").click(function(){ clearCheckBox2("JobDes") });
+			  	$("#PlatformErase").click(function(){ clearCheckBox2("Platform") });
+				$("#VersionErase").click(function(){ clearCheckBox2("Version") });
+
+				$("#execute_query").click(function() { query(); });
+				$("#query_overview").click(function() { queryOverview(); });
+				$("#generate_histogram").attr("checked",false);
+				$("#generate_histogram").click(function(){ 
+					var isChecked = $(this).is(':checked');
+					if (isChecked){
+						/*  $("#histogram_configs").show("slide", { direction: "left" }, 1000); */
+						$("#histogram_configs").slideDown("normal"); 
+					}
+					else{
+						/* $("#histogram_configs").hide("slide", { direction: "right" }, 1000); */
+						$("#histogram_configs").slideUp("normal");
+					}
+				 });
+
+			});
+
+function queryOverview(){
+var platforms = getSelectedChilds("Platform");
+	var hosts = getSelectedChilds("Host");
+	var versions = getSelectedChilds("Version");
+	var jobdes = getSelectedChilds("JobDes");
+	var appName = "{{  active_tab }}";
+	$atr = $.trim($("#atrs").val());
+	
+	if ($atr == "") {
+		alert("Attribute field can not be empty!");
+		return;
+	}
+	if (jobdes == ""){
+		alert("At least one jobDescription must be selected!");
+		return;
+	}
+	
+	$.ajax({
+    	'url' : '/django/lhcbPR/queryOverview/',
+		'type' : 'GET',
+		'data' : {
+		'platforms' : platforms.join(","),
+		'hosts' : hosts.join(","),
+		'versions' : versions.join(","),
+		'jobdes' : jobdes.join(","),
+		'appName' : appName,
+		'atr' : $atr
+		},
+    	'success' : function(data) {
+			removeAllChilds("query_panel");
+			document.getElementById("query_panel").appendChild(document.createElement("pre").appendChild(document.createTextNode(data)));
+			$("#query_panel").dialog({
+    			resizable: false,
+    			height:560,
+    			width: 700,
+   				modal: true,
+				buttons: {
+						"Ok": function() {
+							$(this).dialog("close");
+						},
+					}
+			});
+      	}
+    });/* /ajax*/
+	return;
+}
+
+function query(){
+	$nbins = $("#nbins").val();
+	$xlow = $("#xlow").val();
+	$xup = $("#xup").val();
+	
+	var isChecked = $("#generate_histogram").is(':checked');
+	if ( isChecked ){
+		if($nbins != ""){		
+			if( !($.isNumeric($nbins))){
+				alert("All nbins , xlow, up values must be strictly integers!");
+				return;
+			}
+		}
+		if($xlow != ""){		
+			if( !($.isNumeric($xlow))){
+				alert("All nbins , xlow, up values must be strictly integers!");
+				return;
+			}
+		}
+		if($xup != ""){		
+			if( !($.isNumeric($xup))){
+				alert("All nbins , xlow, up values must be strictly integers!");
+				return;
+			}
+		}
+	}
+	
+	var platforms = getSelectedChilds("Platform");
+	var hosts = getSelectedChilds("Host");
+	var versions = getSelectedChilds("Version");
+	var jobdes = getSelectedChilds("JobDes");
+	var appName = "{{  active_tab }}";
+	$atr = $.trim($("#atrs").val());
+	
+	var isChecked = $("#generate_histogram").is(':checked');
+	
+	if ($atr == "") {
+		alert("Attribute field can not be empty!");
+		return;
+	}
+	if (jobdes == ""){
+		alert("At least one jobDescription must be selected!");
+		return;
+	}
+	
+	$("#results").mask("Requesting...");
+	
+	$.ajax({
+    	'url' : '/django/lhcbPR/query/',
+		'type' : 'GET',
+		'data' : {
+		'platforms' : platforms.join(","),
+		'hosts' : hosts.join(","),
+		'versions' : versions.join(","),
+		'jobdes' : jobdes.join(","),
+		'appName' : appName,
+		'atr' : $atr,
+		'histogram' : isChecked,
+		'nbins' : $nbins,
+		'xlow' : $xlow,
+		'xup' : $xup
+		},
+    	'success' : function(data) {
+			var jsondata = $.parseJSON(data);
+			if (!jsondata.error){
+				removeAllChilds("results");
+				myResultsDiv = document.getElementById("results");
+				myPre = document.createElement("pre");
+				myPre.appendChild(document.createTextNode(JSON.stringify(jsondata.results, null, '      ')));
+				myResultsDiv.appendChild(myPre);
+				
+				if (jsondata.histogram){
+					myImg = document.createElement("img");
+					myImg.src = "/static/images/histograms/histogram.png?"+ new Date().getTime();
+
+					myResultsDiv.appendChild(myImg);
+				}
+				$("#results").unmask();
+			}
+			else{
+				alert("Results from query more than one! Can not generate histogram.");
+				$("#results").unmask();
+			}
+      	}
+    });/* /ajax*/
+	return;
+}
+		</script>
+		<style type="text/css">
+			#execute_query { padding: .4em 1em .2em 17px;text-decoration: none;position: relative; float: right;}
+			#filter_container { padding-top: 0.5em; padding-bottom: 0.5em; }
+			//#histogram_configs { margin-left: 1em; }
+			#histogram_configs input { width: 60px; }
+		</style>
+</head>
+<div>
+	<div class="ui-widget-header">
+		<table>
+			<tr>
+				<td class="iconspace">
+					<a href="http://cern.ch/lhcb-comp">
+						<img id="lhcblogo"  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
+					</a>
+			</td>
+			<td class="headTitle">
+				<h1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
+				<div id="switcher"></div>
+				<div class="headLogin">
+					{% if myauth %}
+					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR/"> Logout </a>| {{ user.username }}
+					{% else %}
+					<a href="/django/login/"> Login</a>
+					{% endif %}
+				</div><!-- closing div ^^-->
+			</td>
+		</table>
+	</div> <!-- /ui-widget-header -->
+
+	<div id="menu">
+		<input type="radio" id="homeMenu" name="radio" /><label for="homeMenu">Home</label>
+		<input type="radio" id="jobDescriptionsMenu" name="radio" /><label for="jobDescriptionsMenu">Job Descriptions</label>
+		<input type="radio" id="analyseMenu" name="radio" checked="checked"/><label for="analyseMenu">Analyse</label>
+		<a  id="helpButton" href="javascript:;">help</a>
+	</div>
+</div> <!-- /header-->
+
+<body>
+	<div id="pagebody" class="pagebody">
+		<div id="helpMenu" class="fakewindowcontain">
+				<p class="helpText">Choose one attribute on which you want to query on, and also choose at least one job description and press the "execute query" button to get back the results(depending on the selected filters).<br><br>
+				In case you want to generate a histogram click on the corresponding checkbok, but make sure your query produces only one result else the generate histogram function won't work. <br> Also you can customize your histogram by typing your values on the nbins, xlow, xup input texts(only numbers are permitted)</p>
+				<div class="ui-widget-overlay"></div>
+		</div>
+		
+		<div id="tabs">
+			<ul>
+				{% for app in applications %}
+				<li><a id="{{ app }}tabButton" href="#{{ app }}tab">{{ app }}</a></li>
+				{% endfor %}
+			</ul>
+			<div id="{{ active_tab }}tab">
+				
+					<a  id="execute_query" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Execute query </a>
+
+					<div class="Outer">
+
+					<div id="filter_container" class="InnerLeft">	
+						<label>Query on attribute: </label> 
+							<input id="atrs" type="text" value="" /><br><br>
+						
+						<label><input id="generate_histogram" type="checkbox">Generate histogram </label>
+						<div id="histogram_configs" style="display :none;">
+							<label>nbins</label><input id="nbins" type="text" value="" /><label> xlow</label><input id="xlow" type="text" value="" /><label> xup</label><input id="xup" type="text" value="" />
+							<br><label style="font-size: 13px;"> (leave blank to use default values)</label>
+						</div>
+						
+						<table class="filter" style="margin-top: 1em;">
+						<tr>
+						<td><a href="javascript:;" id="HostButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Host</a>
+								<a href="javascript:;" id="HostErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+						    <ul id="Host" name="Host" class="checklist" >
+								{% for h in hosts %}
+								<li>
+										<label id="Host{{ forloop.counter }}">
+											<input id="Host{{ forloop.counter }}a" type="checkbox" value="{{ h.value }}" {% if h.checked %} checked="checked"  {% endif %}>
+												{{ h.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="JobDesButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Job Description</a>
+								<a href="javascript:;" id="JobDesErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td> 
+						<tr>
+						<td>
+						    <ul id="JobDes" name="JobDes" class="checklist">
+							{% for j in jobdescr %}
+								<li>
+										<label id="JobDes{{ forloop.counter }}">
+											<input id="JobDes{{ forloop.counter }}a" type="checkbox" value="{{ j.id }}" {% if j.checked %} checked="checked" {% endif %}>
+												{{ j.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
+								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+				 		   <ul id="Platform" name="Platform" class="checklist" style="display:none;">
+							{% for plat in platforms %}
+								<li>
+										<label id="Platform{{ forloop.counter }}">
+											<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
+												{{ plat.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Version (not functional yet)</a>
+								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+				 		   <ul id="Version" name="Version" class="checklist" style="display:none;">
+							{% for v in versions %}
+								<li>
+										<label id="Version{{ forloop.counter }}">
+											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ v.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
+												{{ v.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						</table><!-- closing div id=myfilter -->
+						<br>
+
+						<a  id="query_overview" class="ui-state-default ui-corner-all simplebutton" href="javascript:;"  title="bookmark your selection"> query overview </a>
+					</div><!-- /filter_container + InnerLeft(has two classes)-->				
+					
+					<div id="results" class="InnerRight" style="margin-top: 1em;margin-left:1em;">
+					</div><!-- /resutls + InnerRight (has two classes)-->
+	
+					</div><!-- /Outer-->
+			</div><!-- active_tab -->
+		</div><!--  /tabs -->
+	</div> <!-- pagebody -->
+
+<div id="query_panel" title="Query Overview" style="display: none;">
+</div>
+</body>
+
+</html>

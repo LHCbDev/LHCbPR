@@ -1,0 +1,21 @@
+from django.contrib import admin
+from lhcbPR.models import Application, Options, SetupProject, JobDescription, Platform, Requested_platform, Job, Handler, JobHandler, JobAttribute, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary, ResultFile, HandlerResult, AddedResults
+
+admin.site.register(Application)
+admin.site.register(Options)
+admin.site.register(SetupProject)
+admin.site.register(JobDescription)
+admin.site.register(Platform)
+admin.site.register(Requested_platform)
+admin.site.register(Job)
+admin.site.register(Handler)
+admin.site.register(JobHandler)
+admin.site.register(JobAttribute)
+admin.site.register(JobResults)
+admin.site.register(ResultString)
+admin.site.register(ResultFloat)
+admin.site.register(ResultInt)
+admin.site.register(ResultBinary)
+admin.site.register(ResultFile)
+admin.site.register(HandlerResult)
+admin.site.register(AddedResults)

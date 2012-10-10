@@ -8,8 +8,8 @@ from django.template import RequestContext
 from django.core import serializers
 from django.conf import settings
 
-from lhcbPR.models import Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
-import json, subprocess, sys, re, copy, os
+from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
+import json, subprocess, sys, re, copy, os, subprocess
 from random import choice
 from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, dictfetchall
 
@@ -134,6 +134,33 @@ def analyseHome(request):
 @login_required  #login_url="login"
 def analyse(request, app_name):
     """From the url is takes the requested application(app_name) , example:
+    /django/lhcbPR/analyse/BRUNEL ==> app_name = 'BRUNEL' 
+    and depending on the app_name it returns the available versions, options, setupprojects"""
+    applicationsList = list(Job.objects.values_list('jobDescription__application__appName',flat=True).distinct())
+    myauth = request.user.is_authenticated()
+    
+    apps = Application.objects.filter(appName__exact=app_name)
+    if not apps:
+        return HttpResponseNotFound("<h3>Page not found, no such application</h3>")     
+    
+    handlers = list(HandlerResult.objects.filter(job__jobDescription__application__appName=app_name).filter(success=True).values_list('handler__name',flat=True).distinct())
+    
+    
+    dataDict = { 
+                'handlers' : handlers,
+                'active_tab' : app_name ,
+                'myauth' : myauth, 
+                'user' : request.user, 
+                'applications' : applicationsList,
+               }
+      
+    return render_to_response('lhcbPR/analyse.html', 
+                  dataDict,
+                  context_instance=RequestContext(request))
+
+@login_required  #login_url="login"
+def analyseBasic(request, app_name):
+    """From the url is takes the requested application(app_name) , example:
     /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
     and depending on the app_name it returns the available versions, options, setupprojects"""
     applicationsList = list(Job.objects.values_list('jobDescription__application__appName',flat=True).distinct())
@@ -201,7 +228,7 @@ def analyse(request, app_name):
                 'applications' : applicationsList,
                }
       
-    return render_to_response('lhcbPR/analyse.html', 
+    return render_to_response('lhcbPR/analyseBasic.hmtl', 
                   dataDict,
                   context_instance=RequestContext(request))
 
@@ -260,11 +287,12 @@ def query(request):
         
         hosts = request.GET['hosts'].split(',')
         host_temp = []
+        secondpart_query = ""
         if not hosts[0] == "":
             for h in hosts:
                 host_temp.append("h.hostname = '"+h+"'")
             
-            query += ' AND ( '+' OR '.join(host_temp)+' ) '
+            secondpart_query += ' AND ( '+' OR '.join(host_temp)+' ) '
         
         jobdes = request.GET['jobdes'].split(',')
         jobdes_temp = []
@@ -272,7 +300,7 @@ def query(request):
             for j in jobdes:
                 jobdes_temp.append("j.jobdescription_id = '"+j+"'")
             
-            query += ' AND ( '+' OR '.join(jobdes_temp)+' ) '
+            secondpart_query += ' AND ( '+' OR '.join(jobdes_temp)+' ) '
         
         platforms = request.GET['platforms'].split(',')
         platforms_temp = []
@@ -280,8 +308,10 @@ def query(request):
             for p in platforms:
                 platforms_temp.append("plat.cmtconfig = '"+p+"'")
             
-            query += ' AND ( '+' OR '.join(platforms_temp)+' ) '
-            
+            secondpart_query += ' AND ( '+' OR '.join(platforms_temp)+' ) '
+        
+        query += secondpart_query
+        
         query+= 'GROUP BY j.jobdescription_id, h.hostname, plat.cmtconfig;'
         
         #establish connection
@@ -290,7 +320,52 @@ def query(request):
         cursor.execute(query)
         answerDict = dictfetchall(cursor)
         
-        return HttpResponse(json.dumps(answerDict))
+        if request.GET['histogram'] == "true":
+            if len(answerDict) == 0:
+                return HttpResponse(json.dumps({ 'results' : answerDict , 'error' : False , 'histogram' : False }))
+            if not len(answerDict) == 1:
+                return HttpResponse(json.dumps({ 'error' : True }))
+            
+            values_query = 'SELECT rf.data'
+            values_query += ' FROM lhcbpr_job j, lhcbpr_jobresults r, lhcbpr_jobattribute att,lhcbpr_resultfloat rf, lhcbpr_host h, lhcbpr_platform plat '
+            values_query += ' WHERE j.id = r.job_id and plat.id = j.platform_id AND h.id = j.host_id AND r.jobattribute_id = att.id AND rf.jobresults_ptr_id = r.id '
+            values_query += " AND att.name ='{0}'".format(request.GET['atr'])
+            
+            values_query += secondpart_query
+            
+            cursor.execute(values_query)
+            
+            row = cursor.fetchall()
+            values_list = [ r[0] for r in row ]
+            
+            step = 10
+            
+            if request.GET['xlow'] == "":
+                xlow = min(values_list)
+            else:
+                xlow = int(request.GET['xlow'])     
+            if request.GET['xup'] == "":
+                xup = max(values_list)
+            else:
+                xup = int(request.GET['xup'])
+            if request.GET['nbins'] == "":
+                nbins = int((xup-xlow)/step)+1
+            else:
+                nbins = int(request.GET['nbins'])
+            
+            f = open(os.path.join(settings.PROJECT_PATH, 'static/images/histograms/values_list'),'w')
+            f.write(json.dumps({ 'values_list' : values_list, 'nbins' : nbins, 'xlow': xlow, 'xup': xup , 'atr': request.GET['atr']}))
+            f.close()
+            #here the subprocess
+            
+            p = subprocess.Popen(["bash", os.path.join(settings.PROJECT_PATH, 'pythonROOT'), os.path.join(settings.PROJECT_PATH, 'generate_histogram.py')])
+            #p = subprocess.Popen(["bash", 'pythonROOT', 'generate_histogram.py'])
+            if p.wait() == 0:
+            #os.remove(os.path.join(settings.PROJECT_PATH, 'static/images/histograms/values_list'))
+                return HttpResponse(json.dumps({ 'results' : answerDict , 'error' : False, 'histogram' : True }))
+            else :
+                return HttpResponse("<h3>SKATA</h3>")
+        return HttpResponse(json.dumps({ 'results' : answerDict , 'error' : False, 'histogram' : False }))
 
 @login_required
 def getFiltersAnalyse(request):
