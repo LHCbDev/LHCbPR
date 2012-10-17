@@ -10,4 +10,4 @@ export ROOTSYS="/afs/cern.ch/sw/lcg/app/releases/ROOT/5.32.02/x86_64-slc5-gcc43-
 
 #calling the a python script which uses ROOT
 #/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/bin/python
-python26 $@
+python $@

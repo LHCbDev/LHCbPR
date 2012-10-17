@@ -1,0 +1,6 @@
+message rfdata {
+  required string options = 1;
+  required string version = 2;
+  required string cmtconfig = 3;
+  required float data = 4; 
+}

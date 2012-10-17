@@ -96,7 +96,7 @@ div.Outer {
 		height:auto !important;
 		height: 570; /* for IE cause doesn't support min-height */
         position: relative;
-		overflow: auto;
+		/* overflow: auto; */
         clear: both;
 		display : inline-block;
 }

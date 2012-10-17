@@ -2,10 +2,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>{{ active_tab }} analyse</title>
-		<link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
-		<!-- <link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css" /> -->
-		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
+		<link href="/static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
+		<script src="/static/js/jquery-1.8.2.js"></script>
+		<script src="/static/js/jquery-ui-1.9.0.custom.js"></script>
 		<script type="text/javascript" src="/static/js/generalFunctions.js"></script>
 		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
 		<script type="text/javascript" src="/static/js/json.htmTable.js"></script>
@@ -99,6 +98,7 @@
 				</p>
 				Choose type of analysis: <br><br>
 				<button name="{{ active_tab }}buttonBasic" onclick="location.href='/django/lhcbPR/analyse/basic/{{ active_tab }}/'" style="padding:1.5em;margin-left:1em;">BASIC</button>
+				<button name="TrendButton" onclick='alert("Under construction...")' style="padding:1.5em;margin-left:1em;">TREND</button>
 			</div><!-- active_tab -->
 		</div><!--  /tabs -->
 	</div> <!-- pagebody -->

@@ -2,10 +2,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>{{ active_tab }} basic analysis</title>
-		<link type="text/css" href="/static/css/start/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
-		<!-- <link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css" /> -->
-		<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="/static/js/jquery-ui-1.8.22.custom.min.js"></script>
+
+		<link href="/static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
+		<script src="/static/js/jquery-1.8.2.js"></script>
+		<script src="/static/js/jquery-ui-1.9.0.custom.js"></script>
+
 		<script type="text/javascript" src="/static/js/generalFunctions.js"></script>
 		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
 		<script type="text/javascript" src="/static/js/json.htmTable.js"></script>
@@ -54,88 +55,57 @@
 					function() { $(this).removeClass('ui-state-hover'); }
 				);
 				var atrValues = [  ];
-				{% for atr in attributes %}
-					atrValues.push("{{ atr }}")
-				{% endfor %}
-				$( "#atrs" ).autocomplete({
-					source: atrValues
-				});
+				
+				$( "#atrs" ).combobox();
 
 				$("#HostButton").click(function(){ showHide("HostButton","Host") });
-			  	$("#JobDesButton").click(function(){ showHide("JobDesButton","JobDes") });
+			  	$("#OptionsButton").click(function(){ showHide("OptionsButton","Options") });
 			  	$("#PlatformButton").click(function(){ showHide("PlatformButton","Platform") });
 			  	$("#VersionButton").click(function(){ showHide("VersionButton","Version") });
 
 				$("#HostErase").click(function(){ clearCheckBox2("Host") });
-			 	$("#JobDesErase").click(function(){ clearCheckBox2("JobDes") });
+			 	$("#OptionsErase").click(function(){ clearCheckBox2("Options") });
 			  	$("#PlatformErase").click(function(){ clearCheckBox2("Platform") });
 				$("#VersionErase").click(function(){ clearCheckBox2("Version") });
 
 				$("#execute_query").click(function() { query(); });
-				$("#query_overview").click(function() { queryOverview(); });
-				$("#generate_histogram").attr("checked",false);
+
 				$("#generate_histogram").click(function(){ 
 					var isChecked = $(this).is(':checked');
 					if (isChecked){
-						/*  $("#histogram_configs").show("slide", { direction: "left" }, 1000); */
 						$("#histogram_configs").slideDown("normal"); 
 					}
 					else{
-						/* $("#histogram_configs").hide("slide", { direction: "right" }, 1000); */
 						$("#histogram_configs").slideUp("normal");
+					}
+				 });
+				
+				$("#superimposed").click(function(){ 
+					if($(this).is(':checked')){
+						$("#separately").removeAttr("checked");
+					}
+					else{
+						$(this).attr("checked", "checked");
+					}
+				 });
+				$("#separately").click(function(){ 
+					if($(this).is(':checked')){
+						$("#superimposed").removeAttr("checked");
+					}
+					else{
+						$(this).attr("checked", "checked");
 					}
 				 });
 
 			});
 
-function queryOverview(){
-var platforms = getSelectedChilds("Platform");
-	var hosts = getSelectedChilds("Host");
-	var versions = getSelectedChilds("Version");
-	var jobdes = getSelectedChilds("JobDes");
-	var appName = "{{  active_tab }}";
+function query(){
 	$atr = $.trim($("#atrs").val());
-	
 	if ($atr == "") {
 		alert("Attribute field can not be empty!");
 		return;
 	}
-	if (jobdes == ""){
-		alert("At least one jobDescription must be selected!");
-		return;
-	}
 	
-	$.ajax({
-    	'url' : '/django/lhcbPR/queryOverview/',
-		'type' : 'GET',
-		'data' : {
-		'platforms' : platforms.join(","),
-		'hosts' : hosts.join(","),
-		'versions' : versions.join(","),
-		'jobdes' : jobdes.join(","),
-		'appName' : appName,
-		'atr' : $atr
-		},
-    	'success' : function(data) {
-			removeAllChilds("query_panel");
-			document.getElementById("query_panel").appendChild(document.createElement("pre").appendChild(document.createTextNode(data)));
-			$("#query_panel").dialog({
-    			resizable: false,
-    			height:560,
-    			width: 700,
-   				modal: true,
-				buttons: {
-						"Ok": function() {
-							$(this).dialog("close");
-						},
-					}
-			});
-      	}
-    });/* /ajax*/
-	return;
-}
-
-function query(){
 	$nbins = $("#nbins").val();
 	$xlow = $("#xlow").val();
 	$xup = $("#xup").val();
@@ -162,23 +132,15 @@ function query(){
 		}
 	}
 	
+	var options = getSelectedChilds("Options");
+	var versions = getSelectedChilds("Version");
 	var platforms = getSelectedChilds("Platform");
 	var hosts = getSelectedChilds("Host");
-	var versions = getSelectedChilds("Version");
-	var jobdes = getSelectedChilds("JobDes");
 	var appName = "{{  active_tab }}";
-	$atr = $.trim($("#atrs").val());
 	
-	var isChecked = $("#generate_histogram").is(':checked');
-	
-	if ($atr == "") {
-		alert("Attribute field can not be empty!");
-		return;
-	}
-	if (jobdes == ""){
-		alert("At least one jobDescription must be selected!");
-		return;
-	}
+	var dohistogram = $("#generate_histogram").is(':checked');
+	var separately_hist = $("#separately").is(':checked');
+	var group_by_host = $("#group_by_host").is(':checked');
 	
 	$("#results").mask("Requesting...");
 	
@@ -189,17 +151,68 @@ function query(){
 		'platforms' : platforms.join(","),
 		'hosts' : hosts.join(","),
 		'versions' : versions.join(","),
-		'jobdes' : jobdes.join(","),
+		'options' : options.join(","),
 		'appName' : appName,
 		'atr' : $atr,
-		'histogram' : isChecked,
+		'histogram' : dohistogram,
+		'separately_hist' : separately_hist,
+		'group_host' : group_by_host,
 		'nbins' : $nbins,
 		'xlow' : $xlow,
 		'xup' : $xup
 		},
     	'success' : function(data) {
 			var jsondata = $.parseJSON(data);
-			if (!jsondata.error){
+
+			if(jsondata.error){
+				alert(jsondata.errorMessage);
+				$("#results").unmask();
+				return;
+			}
+			else{
+				removeAllChilds("results");
+				myResultsDiv = document.getElementById("results");
+				
+				if(jsondata.histogram){
+					if(jsondata.separately_hist){
+						results = jsondata.results;
+						for(var i = 0; i < results.length; i++){
+							myPre = document.createElement("pre");
+							histUrl = results[i].histogram;
+							delete results[i].histogram;
+							myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '      ')));
+							myResultsDiv.appendChild(myPre);
+							
+							myImg = document.createElement("img");
+							myImg.src = histUrl + "?"+new Date().getTime();
+							myResultsDiv.appendChild(myImg);
+							myHr = document.createElement("hr");
+							myResultsDiv.appendChild(myHr);
+						}
+					}
+					else{
+						results = jsondata.results;
+						for(var i = 0; i < results.length; i++){
+							myPre = document.createElement("pre");
+							histUrl = results[i].histogramImposed;
+							delete results[i].histogramImposed;
+							myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '      ')));
+							myResultsDiv.appendChild(myPre);
+						}
+						myImg = document.createElement("img");
+						myImg.src = histUrl + "?" +new Date().getTime();
+						myResultsDiv.appendChild(myImg);
+					}
+				}
+				else{
+					myPre = document.createElement("pre");
+					myPre.appendChild(document.createTextNode(JSON.stringify(jsondata.results, null, '      ')));
+					myResultsDiv.appendChild(myPre);
+				}
+				$("#results").unmask();
+			}
+			
+			/*if (!jsondata.error){
 				removeAllChilds("results");
 				myResultsDiv = document.getElementById("results");
 				myPre = document.createElement("pre");
@@ -217,7 +230,8 @@ function query(){
 			else{
 				alert("Results from query more than one! Can not generate histogram.");
 				$("#results").unmask();
-			}
+				
+			} */
       	}
     });/* /ajax*/
 	return;
@@ -228,6 +242,27 @@ function query(){
 			#filter_container { padding-top: 0.5em; padding-bottom: 0.5em; }
 			//#histogram_configs { margin-left: 1em; }
 			#histogram_configs input { width: 60px; }
+
+			.ui-combobox {
+        		position: relative;
+        		display: inline-block;
+    		}
+    		.ui-combobox-toggle {
+        		position: absolute;
+        		top: 0;
+        		bottom: 0;
+        		margin-left: -1px;
+        		padding: 0;
+        		/* adjust styles for IE 6/7 */
+        		*height: 1.7em;
+        		*top: 0.1em;
+    		}
+    		.ui-combobox-input {
+        		margin: 0;
+       			padding: 0.3em;
+    		}
+			#histogram_settings { margin-top: 0.5em; margin-left: 1em;}
+			#group_host { margin-top: 0.5em; }
 		</style>
 </head>
 <div>
@@ -277,61 +312,76 @@ function query(){
 			</ul>
 			<div id="{{ active_tab }}tab">
 				
-					<a  id="execute_query" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Execute query </a>
+					<a  id="execute_query" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Retrieve results </a>
 
 					<div class="Outer">
 
 					<div id="filter_container" class="InnerLeft">	
-						<label>Query on attribute: </label> 
-							<input id="atrs" type="text" value="" /><br><br>
+
+							<div class="ui-widget">
+    							<label>Choose an attribute: </label>
+    							<select id="atrs">
+        							<option value=""></option>
+									{% for atr in attributes %}
+										<option value="{{ atr.0 }},{{ atr.1 }}">{{ atr.0 }}</option>
+									{% endfor %}
+    							</select>
+							</div>
 						
 						<label><input id="generate_histogram" type="checkbox">Generate histogram </label>
 						<div id="histogram_configs" style="display :none;">
 							<label>nbins</label><input id="nbins" type="text" value="" /><label> xlow</label><input id="xlow" type="text" value="" /><label> xup</label><input id="xup" type="text" value="" />
 							<br><label style="font-size: 13px;"> (leave blank to use default values)</label>
+							<div id="histogram_settings">
+								<label><input id="separately" type="checkbox" checked="checked">separately</label><label><input id="superimposed" type="checkbox">superimposed</label>
+							</div>
+						</div>
+						
+						<div id="group_host">
+							<label><input id="group_by_host" type="checkbox">also group results by host</label>
 						</div>
 						
 						<table class="filter" style="margin-top: 1em;">
 						<tr>
-						<td><a href="javascript:;" id="HostButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Host</a>
-								<a href="javascript:;" id="HostErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
+						<td><a href="javascript:;" id="OptionsButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Options</a>
+								<a href="javascript:;" id="OptionsErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
-						    <ul id="Host" name="Host" class="checklist" >
-								{% for h in hosts %}
+						    <ul id="Options" name="Options" class="checklist" >
+								{% for opt in options %}
 								<li>
-										<label id="Host{{ forloop.counter }}">
-											<input id="Host{{ forloop.counter }}a" type="checkbox" value="{{ h.value }}" {% if h.checked %} checked="checked"  {% endif %}>
-												{{ h.value }}
+										<label id="Options{{ forloop.counter }}">
+											<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt.value }}" {% if opt.checked %} checked="checked"  {% endif %}>
+												{{ opt.value }}
 										 </label>
 								</li>
 							{% endfor %}
 						</td>
 						<tr>
-						<td><a href="javascript:;" id="JobDesButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Job Description</a>
-								<a href="javascript:;" id="JobDesErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
-						</td> 
+						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Version</a>
+								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
 						<tr>
 						<td>
-						    <ul id="JobDes" name="JobDes" class="checklist">
-							{% for j in jobdescr %}
+				 		   <ul id="Version" name="Version" class="checklist">
+							{% for v in versions %}
 								<li>
-										<label id="JobDes{{ forloop.counter }}">
-											<input id="JobDes{{ forloop.counter }}a" type="checkbox" value="{{ j.id }}" {% if j.checked %} checked="checked" {% endif %}>
-												{{ j.value }}
+										<label id="Version{{ forloop.counter }}">
+											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ v.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
+												{{ v.value }}
 										 </label>
 								</li>
 							{% endfor %}
 						    </ul>
 						</td>
 						<tr>
-						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
+						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Platform</a>
 								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
-				 		   <ul id="Platform" name="Platform" class="checklist" style="display:none;">
+				 		   <ul id="Platform" name="Platform" class="checklist">
 							{% for plat in platforms %}
 								<li>
 										<label id="Platform{{ forloop.counter }}">
@@ -343,38 +393,31 @@ function query(){
 						    </ul>
 						</td>
 						<tr>
-						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Version (not functional yet)</a>
-								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						<td><a href="javascript:;" id="HostButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Host</a>
+								<a href="javascript:;" id="HostErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
-				 		   <ul id="Version" name="Version" class="checklist" style="display:none;">
-							{% for v in versions %}
+						    <ul id="Host" name="Host" class="checklist" style="display: none;">
+								{% for h in hosts %}
 								<li>
-										<label id="Version{{ forloop.counter }}">
-											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ v.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
-												{{ v.value }}
+										<label id="Host{{ forloop.counter }}">
+											<input id="Host{{ forloop.counter }}a" type="checkbox" value="{{ h.value }}" {% if h.checked %} checked="checked"  {% endif %}>
+												{{ h.value }}
 										 </label>
 								</li>
 							{% endfor %}
-						    </ul>
 						</td>
 						</table><!-- closing div id=myfilter -->
-						<br>
-
-						<a  id="query_overview" class="ui-state-default ui-corner-all simplebutton" href="javascript:;"  title="bookmark your selection"> query overview </a>
 					</div><!-- /filter_container + InnerLeft(has two classes)-->				
 					
-					<div id="results" class="InnerRight" style="margin-top: 1em;margin-left:1em;">
-					</div><!-- /resutls + InnerRight (has two classes)-->
-	
-					</div><!-- /Outer-->
+					<div id="results" class="InnerRight" style="margin-top: 2em;margin-left:1em;"></div><!-- /resutls + InnerRight (has two classes)-->
+					
+				</div><!-- /Outer-->
+					
 			</div><!-- active_tab -->
 		</div><!--  /tabs -->
 	</div> <!-- pagebody -->
-
-<div id="query_panel" title="Query Overview" style="display: none;">
-</div>
 </body>
 
 </html>

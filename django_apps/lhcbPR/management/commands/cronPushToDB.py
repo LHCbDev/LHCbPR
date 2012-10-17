@@ -8,7 +8,6 @@ from django.conf import settings
 from lhcbPR.models import AddedResults
 import pushZip
 
-#results_directory = '/afs/cern.ch/user/e/ekiagias/public/database'
 results_directory = os.path.join(settings.PROJECT_PATH, 'static/uploaded')
 logging.root.setLevel(logging.INFO)
 logger = logging.getLogger('cronPushToDB')

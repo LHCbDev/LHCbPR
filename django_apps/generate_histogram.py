@@ -1,6 +1,8 @@
+import json, os
+
 from ROOT import TFile, TCanvas, TH1D, TH1F, TPad, gROOT
 from ROOT import gDirectory, gPad, gStyle
-import json, os
+
 
 gROOT.SetBatch(True)
 
