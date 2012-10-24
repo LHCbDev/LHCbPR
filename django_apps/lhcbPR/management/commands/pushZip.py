@@ -60,7 +60,8 @@ def pushThis(zipFile):
                                          platform = mycmtconfig,
                                          time_start = re.sub(',', ' ', myDataDict['time_start']),
                                          time_end = re.sub(',', ' ', myDataDict['time_end']),
-                                         status = myDataDict['status']
+                                         status = myDataDict['status'],
+                                         success = True
                                          )
         
         for handres in myDataDict['handlers_info']:

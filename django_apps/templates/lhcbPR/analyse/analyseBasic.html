@@ -145,9 +145,10 @@ function query(){
 	$("#results").mask("Requesting...");
 	
 	$.ajax({
-    	'url' : '/django/lhcbPR/query/',
+    	'url' : '/django/lhcbPR/analysis_function/',
 		'type' : 'GET',
 		'data' : {
+		'analysis_type' : 'basic',
 		'platforms' : platforms.join(","),
 		'hosts' : hosts.join(","),
 		'versions' : versions.join(","),
@@ -172,15 +173,20 @@ function query(){
 			else{
 				removeAllChilds("results");
 				myResultsDiv = document.getElementById("results");
-				
+	
 				if(jsondata.histogram){
+					bins = jsondata.bins;
+					myPre = document.createElement("pre");
+					myPre.appendChild(document.createTextNode(JSON.stringify(bins, null, '  ')));
+					myResultsDiv.appendChild(myPre);
+
 					if(jsondata.separately_hist){
 						results = jsondata.results;
 						for(var i = 0; i < results.length; i++){
 							myPre = document.createElement("pre");
 							histUrl = results[i].histogram;
 							delete results[i].histogram;
-							myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '      ')));
+							myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '  ')));
 							myResultsDiv.appendChild(myPre);
 							
 							myImg = document.createElement("img");
@@ -192,46 +198,27 @@ function query(){
 					}
 					else{
 						results = jsondata.results;
-						for(var i = 0; i < results.length; i++){
-							myPre = document.createElement("pre");
-							histUrl = results[i].histogramImposed;
-							delete results[i].histogramImposed;
-							myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '      ')));
-							myResultsDiv.appendChild(myPre);
-						}
+
+						histUrl = results[0].histogramImposed;
 						myImg = document.createElement("img");
 						myImg.src = histUrl + "?" +new Date().getTime();
 						myResultsDiv.appendChild(myImg);
+
+						for(var i = 0; i < results.length; i++){
+							myPre = document.createElement("pre");
+							delete results[i].histogramImposed;
+							myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '  ')));
+							myResultsDiv.appendChild(myPre);
+						}
 					}
 				}
 				else{
 					myPre = document.createElement("pre");
-					myPre.appendChild(document.createTextNode(JSON.stringify(jsondata.results, null, '      ')));
+					myPre.appendChild(document.createTextNode(JSON.stringify(jsondata.results, null, '  ')));
 					myResultsDiv.appendChild(myPre);
 				}
 				$("#results").unmask();
 			}
-			
-			/*if (!jsondata.error){
-				removeAllChilds("results");
-				myResultsDiv = document.getElementById("results");
-				myPre = document.createElement("pre");
-				myPre.appendChild(document.createTextNode(JSON.stringify(jsondata.results, null, '      ')));
-				myResultsDiv.appendChild(myPre);
-				
-				if (jsondata.histogram){
-					myImg = document.createElement("img");
-					myImg.src = "/static/images/histograms/histogram.png?"+ new Date().getTime();
-
-					myResultsDiv.appendChild(myImg);
-				}
-				$("#results").unmask();
-			}
-			else{
-				alert("Results from query more than one! Can not generate histogram.");
-				$("#results").unmask();
-				
-			} */
       	}
     });/* /ajax*/
 	return;
@@ -263,6 +250,7 @@ function query(){
     		}
 			#histogram_settings { margin-top: 0.5em; margin-left: 1em;}
 			#group_host { margin-top: 0.5em; }
+			#results img { margin-left : 2em; }
 		</style>
 </head>
 <div>
@@ -299,8 +287,8 @@ function query(){
 <body>
 	<div id="pagebody" class="pagebody">
 		<div id="helpMenu" class="fakewindowcontain">
-				<p class="helpText">Choose one attribute on which you want to query on, and also choose at least one job description and press the "execute query" button to get back the results(depending on the selected filters).<br><br>
-				In case you want to generate a histogram click on the corresponding checkbok, but make sure your query produces only one result else the generate histogram function won't work. <br> Also you can customize your histogram by typing your values on the nbins, xlow, xup input texts(only numbers are permitted)</p>
+				<p class="helpText">Choose one attribute on which you want to query on, and also choose at least one job description and press the "Retrieve results" button to get back the results(depending on the selected filters).<br><br>
+				In case you want to generate a histogram click on the corresponding checkbok, but make sure your choices produce less than 4(max limit is 3) results else the generate histogram function won't work. <br> Also you can customize your histogram by typing your values on the nbins, xlow, xup input texts(only numbers are permitted) and choose whether you want the histograms(if more than one) to be separately or superimposed</p>
 				<div class="ui-widget-overlay"></div>
 		</div>
 		
@@ -338,7 +326,7 @@ function query(){
 						</div>
 						
 						<div id="group_host">
-							<label><input id="group_by_host" type="checkbox">also group results by host</label>
+							<label><input id="group_by_host" type="checkbox">group by host</label>
 						</div>
 						
 						<table class="filter" style="margin-top: 1em;">
@@ -376,12 +364,12 @@ function query(){
 						    </ul>
 						</td>
 						<tr>
-						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Platform</a>
+						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
 								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
 						</td>
 						<tr>
 						<td>
-				 		   <ul id="Platform" name="Platform" class="checklist">
+				 		   <ul id="Platform" name="Platform" class="checklist" style="display:none;">
 							{% for plat in platforms %}
 								<li>
 										<label id="Platform{{ forloop.counter }}">

@@ -1,0 +1,9 @@
+. /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh
+
+export CMTCONFIG=x86_64-slc5-gcc46-opt
+
+. SetupProject.sh LHCbDirac
+
+export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.6/site-packages
+
+python $@

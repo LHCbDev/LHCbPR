@@ -45,6 +45,7 @@ class Job(models.Model):
     time_start = models.DateTimeField()
     time_end = models.DateTimeField()
     status = models.CharField(max_length=50)
+    success = models.NullBooleanField()
     
 class Handler(models.Model):
     name = models.CharField(max_length=50)

@@ -1,4 +1,4 @@
-import os
+import os, re
 from django.db.models import Q
 from django.conf import settings
 #extra functions which are used in lhcbPR app, i moved them here in order
@@ -46,14 +46,6 @@ def handle_uploaded_file(f):
         for chunk in f.chunks():
             destination.write(chunk)
             
-def dictfetchall_original(cursor):
-    "Returns all rows from a cursor as a dict"
-    desc = cursor.description
-    return [
-        dict(zip([col[0] for col in desc], row))
-        for row in cursor.fetchall()
-    ]
-
 #change version (make decimal to str) with map function 
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"
@@ -62,3 +54,15 @@ def dictfetchall(cursor):
         dict(zip([col[0] for col in desc], map(str,row)))
         for row in cursor.fetchall()
     ]
+
+def getSplitted(version):
+    """Takes a version and tranforms it like v41r0 ----> ['v', 41, 'r', '0']"""
+    split_regex = re.compile('\d+|[^\d\s]+')
+    splittedElement = []
+    for v in re.findall(split_regex, version):
+        if v.isdigit():
+            splittedElement.append(int(v))
+        else:
+            splittedElement.append(v)
+       
+    return splittedElement
