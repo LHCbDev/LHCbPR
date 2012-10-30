@@ -1,0 +1,324 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>{{ active_tab }} basic analysis</title>
+
+		<link href="/static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
+		<script src="/static/js/jquery-1.8.2.js"></script>
+		<script src="/static/js/jquery-ui-1.9.0.custom.js"></script>
+
+		<script type="text/javascript" src="/static/js/generalFunctions.js"></script>
+		<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
+		<script type="text/javascript" src="/static/js/json.htmTable.js"></script>
+		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
+		<!-- plugin for mask -->
+		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
+		<link type="text/css" href="/static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
+		
+  		<!-- <script type="text/javascript" src="http://jqueryui.com/js/jquery.js"></script> -->
+  		<!-- <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script> -->
+
+		<script type="text/javascript">			
+			function clearCheckBox2(id){
+				nodes = document.getElementById(id).children;
+				for(i=0; i<nodes.length; i+=1) {
+    				if (nodes[i].children[0].children[0].checked == true){
+						nodes[i].children[0].children[0].checked = false;
+					}
+				}
+				return;
+			}
+
+			$(document).ready(function() {
+				/* $('#switcher').themeswitcher({ loadTheme : 'Start' }); */
+				$('#menu').buttonset();
+				/* on click functions for the menus */
+				$('#homeMenu').click(function(){ 
+						document.location.href="/django/lhcbPR/";
+						$("#pagebody").mask("Loading...");
+				});
+				$('#jobDescriptionsMenu').click(function(){ document.location.href="/django/lhcbPR/jobDescriptions/"; $("#pagebody").mask("Loading..."); });
+				$('#analyseMenu').click(function(){  document.location.href="/django/lhcbPR/analyse/"; $("#pagebody").mask("Loading..."); });
+				
+				{% for app in applications %}
+				$('#{{ app }}tabButton').click(function(){ 
+						document.location.href="/django/lhcbPR/analyse/{{ app }}/" ;
+						$("#{{ active_tab }}tab").mask("Loading...");
+					});
+				{% endfor %}
+
+				$('#tabs').tabs({ selected : -1 });
+				$('#tabs').tabs('select', '#{{ active_tab }}tab');
+				
+				$('#execute_query').hover(
+					function() { $(this).addClass('ui-state-hover'); },
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
+				var atrValues = [  ];
+				
+				$( "#atrs" ).combobox();
+
+				$("#HostButton").click(function(){ showHide("HostButton","Host") });
+			  	$("#OptionsButton").click(function(){ showHide("OptionsButton","Options") });
+			  	$("#PlatformButton").click(function(){ showHide("PlatformButton","Platform") });
+			  	$("#VersionButton").click(function(){ showHide("VersionButton","Version") });
+
+				$("#HostErase").click(function(){ clearCheckBox2("Host") });
+			 	$("#OptionsErase").click(function(){ clearCheckBox2("Options") });
+			  	$("#PlatformErase").click(function(){ clearCheckBox2("Platform") });
+				$("#VersionErase").click(function(){ clearCheckBox2("Version") });
+
+				$("#execute_query").click(function() { query();  })
+
+			});
+
+function query(){
+	$atr = $.trim($("#atrs").val());
+	if ($atr == "") {
+		alert("Attribute field can not be empty!");
+		return;
+	}
+	var options = getSelectedChilds("Options");
+	var versions = getSelectedChilds("Version");
+	var platforms = getSelectedChilds("Platform");
+	var hosts = getSelectedChilds("Host");
+	var appName = "{{  active_tab }}";
+	
+	var dohistogram = $("#generate_histogram").is(':checked');
+	var separately_hist = $("#separately").is(':checked');
+	var group_by_host = $("#group_by_host").is(':checked');
+	var group_by_platform = $("#group_by_platform").is(':checked');	
+
+	$("#results").mask("Requesting...");
+	
+	$.ajax({
+    	'url' : '/django/lhcbPR/analysis_function/',
+		'type' : 'GET',
+		'data' : {
+		'analysis_type' : 'histograms',
+		'platforms' : platforms.join(","),
+		'hosts' : hosts.join(","),
+		'versions' : versions.join(","),
+		'options' : options.join(","),
+		'appName' : appName,
+		'atr' : $atr,
+		'group_host' : group_by_host,
+		'group_platform' : group_by_platform
+		},
+    	'success' : function(data) {
+			var jsondata = $.parseJSON(data);
+
+			if(jsondata.error){
+				alert(jsondata.errorMessage);
+				$("#results").unmask();
+				return;
+			}
+			else{
+				removeAllChilds("results");
+				myResultsDiv = document.getElementById("results");
+	
+				bins = jsondata.bins;
+				myPre = document.createElement("pre");
+				myPre.appendChild(document.createTextNode(JSON.stringify(bins, null, '  ')));
+				myResultsDiv.appendChild(myPre);
+
+				results = jsondata.results;
+				for(var i = 0; i < results.length; i++){
+					myPre = document.createElement("pre");
+					histUrl = results[i].histogram;
+					delete results[i].histogram;
+					myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '  ')));
+					myResultsDiv.appendChild(myPre);
+							
+					myImg = document.createElement("img");
+					myImg.src = histUrl + "?"+new Date().getTime();
+					myResultsDiv.appendChild(myImg);
+					myHr = document.createElement("hr");
+					myResultsDiv.appendChild(myHr);
+				}		
+				$("#results").unmask();
+			} 
+      	}
+    });/* /ajax*/
+	return;
+}
+		</script>
+		<style type="text/css">
+			#execute_query { padding: .4em 1em .2em 17px;text-decoration: none;position: relative; float: right;}
+			#filter_container { padding-top: 0.5em; padding-bottom: 0.5em; }
+			//#histogram_configs { margin-left: 1em; }
+			#histogram_configs input { width: 60px; }
+
+			.ui-combobox {
+        		position: relative;
+        		display: inline-block;
+    		}
+    		.ui-combobox-toggle {
+        		position: absolute;
+        		top: 0;
+        		bottom: 0;
+        		margin-left: -1px;
+        		padding: 0;
+        		/* adjust styles for IE 6/7 */
+        		*height: 1.7em;
+        		*top: 0.1em;
+    		}
+    		.ui-combobox-input {
+        		margin: 0;
+       			padding: 0.3em;
+    		}
+			#histogram_settings { margin-top: 0.5em; margin-left: 1em;}
+			#group_host { margin-top: 0.5em; }
+			#results img { margin-left : 2em; }
+		</style>
+</head>
+<div>
+	<div class="ui-widget-header">
+		<table>
+			<tr>
+				<td class="iconspace">
+					<a href="http://cern.ch/lhcb-comp">
+						<img id="lhcblogo"  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
+					</a>
+			</td>
+			<td class="headTitle">
+				<h1><a href="/django/lhcbPR" >LHCb Perfomance & Regression</a></h1>
+				<div id="switcher"></div>
+				<div class="headLogin">
+					{% if myauth %}
+					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR/"> Logout </a>| {{ user.username }}
+					{% else %}
+					<a href="/django/login/"> Login</a>
+					{% endif %}
+				</div><!-- closing div ^^-->
+			</td>
+		</table>
+	</div> <!-- /ui-widget-header -->
+
+	<div id="menu">
+		<input type="radio" id="homeMenu" name="radio" /><label for="homeMenu">Home</label>
+		<input type="radio" id="jobDescriptionsMenu" name="radio" /><label for="jobDescriptionsMenu">Job Descriptions</label>
+		<input type="radio" id="analyseMenu" name="radio" checked="checked"/><label for="analyseMenu">Analyse</label>
+		<a  id="helpButton" href="javascript:;">help</a>
+	</div>
+</div> <!-- /header-->
+
+<body>
+	<div id="pagebody" class="pagebody">
+		<div id="helpMenu" class="fakewindowcontain">
+				<p class="helpText"></p>
+				<div class="ui-widget-overlay"></div>
+		</div>
+		
+		<div id="tabs">
+			<ul>
+				{% for app in applications %}
+				<li><a id="{{ app }}tabButton" href="#{{ app }}tab">{{ app }}</a></li>
+				{% endfor %}
+			</ul>
+			<div id="{{ active_tab }}tab">
+				
+					<a  id="execute_query" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Retrieve results </a>
+
+					<div class="Outer">
+
+					<div id="filter_container" class="InnerLeft">	
+
+							<div class="ui-widget">
+    							<label>Choose an attribute: </label>
+    							<select id="atrs">
+        							<option value=""></option>
+									{% for atr in attributes %}
+										<option value="{{ atr.0 }},{{ atr.1 }}">{{ atr.0 }}</option>
+									{% endfor %}
+    							</select>
+							</div>
+						
+						<div id="group_platform">
+							<label><input id="group_by_platform" type="checkbox" checked="checked">group by platform</label>
+						</div>
+
+						<div id="group_host">
+							<label><input id="group_by_host" type="checkbox">group by host</label>
+						</div>
+						
+						<table class="filter" style="margin-top: 1em;">
+						<tr>
+						<td><a href="javascript:;" id="OptionsButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Options</a>
+								<a href="javascript:;" id="OptionsErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+						    <ul id="Options" name="Options" class="checklist" >
+								{% for opt in options %}
+								<li>
+										<label id="Options{{ forloop.counter }}">
+											<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt.value }}" {% if opt.checked %} checked="checked"  {% endif %}>
+												{{ opt.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Version</a>
+								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+				 		   <ul id="Version" name="Version" class="checklist">
+							{% for v in versions %}
+								<li>
+										<label id="Version{{ forloop.counter }}">
+											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ v.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
+												{{ v.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
+								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+				 		   <ul id="Platform" name="Platform" class="checklist" style="display:none;">
+							{% for plat in platforms %}
+								<li>
+										<label id="Platform{{ forloop.counter }}">
+											<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
+												{{ plat.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="HostButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Host</a>
+								<a href="javascript:;" id="HostErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+						    <ul id="Host" name="Host" class="checklist" style="display: none;">
+								{% for h in hosts %}
+								<li>
+										<label id="Host{{ forloop.counter }}">
+											<input id="Host{{ forloop.counter }}a" type="checkbox" value="{{ h.value }}" {% if h.checked %} checked="checked"  {% endif %}>
+												{{ h.value }}
+										 </label>
+								</li>
+							{% endfor %}
+						</td>
+						</table><!-- closing div id=myfilter -->
+					</div><!-- /filter_container + InnerLeft(has two classes)-->				
+					
+					<div id="results" class="InnerRight" style="margin-top: 2em;margin-left:1em;"></div><!-- /resutls + InnerRight (has two classes)-->
+					
+				</div><!-- /Outer-->
+					
+			</div><!-- active_tab -->
+		</div><!--  /tabs -->
+	</div> <!-- pagebody -->
+</body>
+
+</html>

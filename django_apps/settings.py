@@ -181,3 +181,18 @@ LOGGING = {
         },
     }
 }
+
+
+
+
+HISTOGRAMSGAUSS = {
+              'Num. of primary interaction per bunch' : 'GenMonitorAlg/10',
+              'PrimaryVertex y (mm)' : 'GenMonitorAlg/12',
+              'Multiplicity stable charged particles in LHCb eta' : 'GenMonitorAlg/4',
+              'PrimaryVertex x (mm)' : 'GenMonitorAlg/11',
+              'PrimaryVertex z (mm)' : 'GenMonitorAlg/13',
+              'Pseudorapidity stable charged particles' : 'GenMonitorAlg/44',
+              'Multiplicity stable charged particles' : 'GenMonitorAlg/3',
+              'Pt stable charged particles' : 'GenMonitorAlg/45',
+              'Process type' : 'GenMonitorAlg/5',
+              }

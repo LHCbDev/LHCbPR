@@ -1,3 +1,4 @@
+#!/bin/bash
 . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh
 
 export CMTCONFIG=x86_64-slc5-gcc46-opt

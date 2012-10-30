@@ -1,13 +1,16 @@
 import socket, cPickle, os, sys, inspect, random
 from threading import Thread
 import socket_service as service
-from ROOT import TFile, TCanvas, TH1D, TH1F, TPad, gROOT, TMath, TArrayF
+from ROOT import TFile, TCanvas, TH1D, TH1F, TPad, gROOT, TMath, TArrayF, TList
 from ROOT import gDirectory, gPad, gStyle
+import ROOT
 
 gROOT.SetBatch(True)
-#gStyle.SetOptStat(000000000)
+initialStyle = gStyle.GetOptStat()
+noStyle = 000000000
 #remove the label of imposed histograms   
-gStyle.SetOptStat(000000000)
+#gStyle.SetOptStat(000000000)
+
 #blue , red, green
 colors = [4, 2, 3]
 colorsName = [ 'blue', 'red', 'green' ]
@@ -49,6 +52,30 @@ class GroupDict(dict):
             self[key] = []
         return dict.__getitem__(self, key)
 
+class HistosSum(object):
+    def __init__(self, files, obj):
+        self.files = files
+        self.count = len(files)
+        self.obj = obj
+
+    def getHistogramSum(self):
+        myObj = self.obj
+        
+        # Get the pointer to the current gROOT
+        globalDir = gDirectory.CurrentDirectory()
+        
+        sum = None
+        for dataFile in self.files:
+            dataFile = TFile(dataFile)
+            h = dataFile.Get(myObj)
+            if sum is None:
+                globalDir.cd()
+                sum = h.Clone()
+            else:
+                sum.Add(h)
+        
+        return sum
+
 class Stats(object):
     def __init__(self, data):
         self.data = data
@@ -82,7 +109,8 @@ def Stats_to_dict(key, value, cursor_description):
     
     return datadict
 
-def plot_histogram(histogramObjects):
+def plot_histogram(histogramObjects, style):
+    gStyle.SetOptStat(style)
     c1 = TCanvas("c1","The Histograms",200,10,450,400)
     c1.SetFillColor(18)
      
@@ -91,10 +119,10 @@ def plot_histogram(histogramObjects):
     for i, hist in enumerate(histogramObjects):
         hist.SetLineColor(colors[i])
         if firstLoop:
-            hist.Draw()
+            hist.DrawNormalized()
             firstLoop = False
         else:
-            hist.Draw('same')
+            hist.DrawNormalized('same')
         c1.Update()
     
     serve_path = 'static/images/histograms/histogram{0}{1}.png'.format(random.randint(1, 100),random.randint(1, 100))
@@ -102,7 +130,50 @@ def plot_histogram(histogramObjects):
     
     return '/{0}'.format(serve_path)
 
-def basic_ROOT_service(remoteservice):
+def histograms_service(remoteservice):
+    try:
+        #reading the request info(histogram, nbins, xlow, xup etc)
+        request_info = remoteservice.recv()
+        rootfilespath = request_info['path_to_files']
+ 
+        group_dict = GroupDict()
+        group_names = {}
+        
+        while True:
+            obj = remoteservice.recv()
+            if obj == 'STAHP':
+                print 'user requested stop'
+                break
+            elif obj[0] == 'NEWGROUP':
+                group_names[obj[1]] = obj[2]
+            else:
+                group_id, value = obj
+                group_dict[group_id].append(os.path.join(rootfilespath, value))   
+        
+        objectName = request_info['atr_path']
+        groups_dict = dict((group_names[g], HistosSum(v,objectName)) for g, v in group_dict.iteritems())
+        
+        cursor_description = request_info['description']
+        
+        all_results = []
+        for k, v in groups_dict.iteritems():
+            dataDict = dict(zip(cursor_description, k))
+            dataDict['ADDED HISTOGRAMS'] = v.count
+            dataDict['histogram'] = plot_histogram([v.getHistogramSum()], initialStyle)
+            
+            all_results.append(dataDict)
+        
+        remoteservice.send({ 'results' : all_results })
+        remoteservice.finish()
+        
+    except Exception,e:
+        remoteservice.finish()
+        print '{0}  {1}'.format(Exception,e)
+    finally:
+        print '\nfinished work exiting...'
+        return
+        
+def basic_service(remoteservice):
     try:
         #reading the request info(histogram, nbins, xlow, xup etc)
         request_info = remoteservice.recv()
@@ -131,7 +202,7 @@ def basic_ROOT_service(remoteservice):
             if request_info['separately_hist'] == True:
                 for k, v in groups_dict.iteritems():
                     result = Stats_to_dict(k,v,request_info['description'])
-                    result['histogram'] = plot_histogram([ v.histogramObject(bins,request_info['atr']) ])
+                    result['histogram'] = plot_histogram([ v.histogramObject(bins,request_info['atr']) ], noStyle)
                     all_results.append(result)
 
             else:
@@ -139,7 +210,7 @@ def basic_ROOT_service(remoteservice):
                 for k, v in groups_dict.iteritems():
                     histogramObjects.append(v.histogramObject(bins,request_info['atr']))
                 
-                histogramImposedUrl = plot_histogram(histogramObjects)
+                histogramImposedUrl = plot_histogram(histogramObjects, noStyle)
                 for i, keyvalue in enumerate(groups_dict.iteritems()):
                     k, v = keyvalue
                     result = Stats_to_dict(k,v,request_info['description'])
@@ -161,8 +232,18 @@ def basic_ROOT_service(remoteservice):
     finally:
         print '\nfinished work exiting...'
         return 
-    
 
+functionList = {
+                'histograms_service' : histograms_service,
+                'basic_service' : basic_service
+                }
+  
+def handle_connection(remoteservice):
+    #read which function was called
+    function = remoteservice.recv()
+    #call the correct function giving as argument the remoteservice
+    functionList[function](remoteservice)
+    
 class remoteService(object):
     def __init__(self,connection):
         self.connection = connection
@@ -174,8 +255,10 @@ class remoteService(object):
         self.connection.close()
 
 print "start listening..."
+
+
 while True:
     (clientsocket, address) = serversocket.accept()
     remoteservice = remoteService(clientsocket)
-    t = Thread(target=basic_ROOT_service, args=(remoteservice,))
+    t = Thread(target=handle_connection, args=(remoteservice,))
     t.start()

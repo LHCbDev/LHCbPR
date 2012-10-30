@@ -1,4 +1,5 @@
 from django.db import connection, transaction
+from django.conf import settings
 from django.http import HttpResponse 
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
 import json, socket
@@ -6,18 +7,12 @@ import tools.analysis_engine as engine
 import tools.socket_service as service
 
 def get_queries(request):
-    select_statements = ['apl.appversion as Version' , 'opt.description as Options', 'plat.cmtconfig as Platform' ]
+    select_statements = ['apl.appversion as Version' , 'opt.description as Options' ]
     from_statements = [ 'lhcbpr_job j', 'lhcbpr_jobresults r', 'lhcbpr_jobattribute att', 
-                   'lhcbpr_platform plat',  'lhcbpr_jobdescription jobdes', 
-                   'lhcbpr_application apl', 'lhcbpr_options opt'  ]
+                     'lhcbpr_jobdescription jobdes', 'lhcbpr_application apl', 'lhcbpr_options opt' , 'lhcbpr_resultfile rf' ]
     where_statements = [ 'j.id = r.job_id',  'j.jobdescription_id = jobdes.id', 'jobdes.application_id = apl.id',
                     'jobdes.options_id = opt.id', 'r.jobattribute_id = att.id', 
-                    'rf.jobresults_ptr_id = r.id', 'j.platform_id = plat.id' , 'j.success = 1' ]
-    
-    if request.GET['atr'].split(',')[1] == 'Float':
-        from_statements.append('lhcbpr_resultfloat rf')
-    else:
-        from_statements.append('lhcbpr_resultint rf')
+                    'rf.jobresults_ptr_id = r.id' , 'j.success = 1' ]
     
     secondpart_query = ""
     use_host = False
@@ -32,6 +27,17 @@ def get_queries(request):
         #use the query which joins also the host table
         use_host = True
     
+    use_platform = False
+    platforms = request.GET['platforms'].split(',')
+    if not platforms[0] == "":
+        platforms_temp = []
+        for p in platforms:
+            platforms_temp.append("plat.cmtconfig = '"+p+"'")
+        
+        secondpart_query += ' AND ( '+' OR '.join(platforms_temp)+' )'
+        use_platform = True
+    
+    
     if not request.GET['group_host'] == "true":
         if use_host:
             from_statements.append('lhcbpr_host h')
@@ -41,7 +47,16 @@ def get_queries(request):
         from_statements.append('lhcbpr_host h')
         where_statements.append('j.host_id = h.id')
         
-    query_results = 'select '+' , '.join(select_statements)+' ,rf.data from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
+    if not request.GET['group_platform'] == 'true':
+        if use_platform:
+            from_statements.append('lhcbpr_platform plat')
+            where_statements.append('j.platform_id = plat.id')
+    else:
+        select_statements.append('plat.cmtconfig as Platform')
+        from_statements.append('lhcbpr_platform plat')
+        where_statements.append('j.platform_id = plat.id')
+        
+    query_results = 'select '+' , '.join(select_statements)+' ,rf. "FILE" from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
     query_groups = 'select distinct '+' , '.join(select_statements)+' from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
               
     options = request.GET['options'].split(',')
@@ -58,17 +73,10 @@ def get_queries(request):
             versions_temp.append("apl.appversion = '"+ver+"'")
         
         secondpart_query += ' AND ( '+' OR '.join(versions_temp)+' )'
-    platforms = request.GET['platforms'].split(',')
-    if not platforms[0] == "":
-        platforms_temp = []
-        for p in platforms:
-            platforms_temp.append("plat.cmtconfig = '"+p+"'")
-        
-        secondpart_query += ' AND ( '+' OR '.join(platforms_temp)+' )'
         
     #now we finished generating the filtering in the query attributes
     #we know finalize the queries
-    application_attribute= " and apl.appname='{0}' and att.name='{1}'".format(request.GET['appName'], request.GET['atr'].split(',')[0])
+    application_attribute= " and apl.appname='{0}'".format(request.GET['appName'])
     query_results += application_attribute
     query_groups += application_attribute
     
@@ -110,33 +118,20 @@ def analyse(request):
     logical_data_groups = cursor.fetchall()
     
     if len(logical_data_groups) == 0: 
-        return HttpResponse(json.dumps({ 'error' : False , 'results' : [] , 'histogram' : False, }))
-    if len(logical_data_groups) > 3:
-        if request.GET['histogram'] == "true":
-            return HttpResponse(json.dumps({'error' : True , 
-                'errorMessage' : 'Your choices returned more than 3 results.Can not generate histograms for more than 3 results!'}))
-    
-    if request.GET['histogram'] == 'true':
-        doHistogram = True
-    else:
-        doHistogram = False
-    if request.GET['separately_hist'] == 'true':
-        doSeparate = True
-    else:
-        doSeparate = False
+        return HttpResponse(json.dumps({ 'error' : False , 'results' : [] }))
             
     #then execute the next query_results to fetch the results
     cursor.execute(query_results)
     #fixing the request in order to send it properly through socket
     #can not serialize straightforward the request as it is
     requestDict = {
-               'atr' : request.GET['atr'].split(',')[0], 
+                'atr_name' : request.GET['atr'].split(',')[0],
+               'atr_path' : request.GET['atr'].split(',')[1], 
                'description' : [col[0] for col in cursor.description],
-               'nbins' : request.GET['nbins'],
-               'xlow' : request.GET['xlow'],
-               'xup' : request.GET['xup'],
-               'separately_hist' : doSeparate,
-               'histogram' : doHistogram 
+               'path_to_files' : settings.MEDIA_ROOT
+               #'nbins' : request.GET['nbins'],
+               #'xlow' : request.GET['xlow'],
+               #'xup' : request.GET['xup'],
                }
     #initialize our remote service
     remoteservice = remoteService()
@@ -145,8 +140,7 @@ def analyse(request):
         return HttpResponse(json.dumps({'error' : True , 
                 'errorMessage' : 'Connection with remote service for analysis failed!'}))
     try:
-        #send the name of the function you want to call
-        remoteservice.send('basic_service')
+        remoteservice.send('histograms_service')
         #send to ROOT_service(remote service) histogram info from user's request
         remoteservice.send(requestDict)
         groups = {}
@@ -161,10 +155,12 @@ def analyse(request):
             result = cursor.fetchone()
         #send a message to stop waiting for other packets    
         remoteservice.send('STAHP')
+        #remoteservice.finish()
+        #return HttpResponse()
         #after we finish sending our data we wait for the response(answer)
         answerDict = remoteservice.recv()
     except Exception:
+        remoteservice.finish()
         return HttpResponse(json.dumps({'error' :True , 'errorMessage' : 'An error occurred with the root analysis process, please try again later'}))
     
-    return HttpResponse(json.dumps({ 'error' : False , 'results' : answerDict['results'] , 'histogram' : doHistogram, 
-                                    'separately_hist' : doSeparate, 'bins' : answerDict['bins'] }))
+    return HttpResponse(json.dumps({ 'error' : False , 'results' : answerDict['results'] }))
