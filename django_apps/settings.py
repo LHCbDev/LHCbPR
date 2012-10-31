@@ -130,6 +130,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'shibsso.middleware.ShibSSOMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    #'lhcbPR.middleware.AjaxRedirect'
 )
 
 AUTHENTICATION_BACKENDS = (

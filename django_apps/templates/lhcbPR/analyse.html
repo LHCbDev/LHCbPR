@@ -98,6 +98,9 @@
 				</p>
 				Choose type of analysis: <br><br>
 				<button name="{{ active_tab }}buttonBasic" onclick="location.href='/django/lhcbPR/analyse/basic/{{ active_tab }}/'" style="padding:1.5em;margin-left:1em;">BASIC</button>
+				{% if active_tab == 'GAUSS' %}
+				<button name="{{ active_tab }}buttonHistogram" onclick="location.href='/django/lhcbPR/analyse/histograms/{{ active_tab }}/'" style="padding:1.5em;margin-left:1em;">HISTOGRAMS</button>
+				{% endif %}
 				<button name="TrendButton" onclick='alert("Under construction...")' style="padding:1.5em;margin-left:1em;">TREND</button>
 			</div><!-- active_tab -->
 		</div><!--  /tabs -->

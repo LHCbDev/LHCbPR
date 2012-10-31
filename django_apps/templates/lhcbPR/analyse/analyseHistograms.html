@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<title>{{ active_tab }} basic analysis</title>
+		<title>{{ active_tab }} histogram analysis</title>
 
 		<link href="/static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
 		<script src="/static/js/jquery-1.8.2.js"></script>
@@ -117,10 +117,10 @@ function query(){
 				removeAllChilds("results");
 				myResultsDiv = document.getElementById("results");
 	
-				bins = jsondata.bins;
+				/* bins = jsondata.bins;
 				myPre = document.createElement("pre");
 				myPre.appendChild(document.createTextNode(JSON.stringify(bins, null, '  ')));
-				myResultsDiv.appendChild(myPre);
+				myResultsDiv.appendChild(myPre); */
 
 				results = jsondata.results;
 				for(var i = 0; i < results.length; i++){
@@ -206,7 +206,8 @@ function query(){
 <body>
 	<div id="pagebody" class="pagebody">
 		<div id="helpMenu" class="fakewindowcontain">
-				<p class="helpText"></p>
+				<p class="helpText">In this histogram analysis the "attribute" represents a title of a histogram inside the collected Gauss root files. The user can choose a histogram(attribute) and by clicking on the "retrieve results" he will get the sum of  histograms for each logical group(options-version...) the user defined. <br>If the user leaves the selection checkboxes(options,version..) blank the page will generate the sum of histograms for all the available logical groups , may take long time)<br><br>
+A logical group is defined by a combination of options - version - platform(optional) - host(optional) , so the user can define for which versions, options etc he wants to see the sum(summary) of the histograms<br><br> The page is still under construction, this is a demo(not the finished version)</p>
 				<div class="ui-widget-overlay"></div>
 		</div>
 		

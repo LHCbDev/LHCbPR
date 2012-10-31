@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<title>{{ active_tab }} basic analysis</title>
+		<title>{% block title %} {{ active_tab }} basic analysis {% endblock title %}</title>
 
 		<link href="/static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
 		<script src="/static/js/jquery-1.8.2.js"></script>
@@ -14,21 +14,11 @@
 		<!-- plugin for mask -->
 		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
 		<link type="text/css" href="/static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
-		
+		{% block head %} {% endblock head %}
   		<!-- <script type="text/javascript" src="http://jqueryui.com/js/jquery.js"></script> -->
   		<!-- <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script> -->
 
 		<script type="text/javascript">			
-			function clearCheckBox2(id){
-				nodes = document.getElementById(id).children;
-				for(i=0; i<nodes.length; i+=1) {
-    				if (nodes[i].children[0].children[0].checked == true){
-						nodes[i].children[0].children[0].checked = false;
-					}
-				}
-				return;
-			}
-
 			$(document).ready(function() {
 				/* $('#switcher').themeswitcher({ loadTheme : 'Start' }); */
 				$('#menu').buttonset();
@@ -49,208 +39,11 @@
 
 				$('#tabs').tabs({ selected : -1 });
 				$('#tabs').tabs('select', '#{{ active_tab }}tab');
-				
-				$('#execute_query').hover(
-					function() { $(this).addClass('ui-state-hover'); },
-					function() { $(this).removeClass('ui-state-hover'); }
-				);
-				var atrValues = [  ];
-				
-				$( "#atrs" ).combobox();
-
-				$("#HostButton").click(function(){ showHide("HostButton","Host") });
-			  	$("#OptionsButton").click(function(){ showHide("OptionsButton","Options") });
-			  	$("#PlatformButton").click(function(){ showHide("PlatformButton","Platform") });
-			  	$("#VersionButton").click(function(){ showHide("VersionButton","Version") });
-
-				$("#HostErase").click(function(){ clearCheckBox2("Host") });
-			 	$("#OptionsErase").click(function(){ clearCheckBox2("Options") });
-			  	$("#PlatformErase").click(function(){ clearCheckBox2("Platform") });
-				$("#VersionErase").click(function(){ clearCheckBox2("Version") });
-
-				$("#execute_query").click(function() { query(); });
-
-				$("#generate_histogram").click(function(){ 
-					var isChecked = $(this).is(':checked');
-					if (isChecked){
-						$("#histogram_configs").slideDown("normal"); 
-					}
-					else{
-						$("#histogram_configs").slideUp("normal");
-					}
-				 });
-				
-				$("#superimposed").click(function(){ 
-					if($(this).is(':checked')){
-						$("#separately").removeAttr("checked");
-					}
-					else{
-						$(this).attr("checked", "checked");
-					}
-				 });
-				$("#separately").click(function(){ 
-					if($(this).is(':checked')){
-						$("#superimposed").removeAttr("checked");
-					}
-					else{
-						$(this).attr("checked", "checked");
-					}
-				 });
-
 			});
-
-function query(){
-	$atr = $.trim($("#atrs").val());
-	if ($atr == "") {
-		alert("Attribute field can not be empty!");
-		return;
-	}
-	
-	$nbins = $("#nbins").val();
-	$xlow = $("#xlow").val();
-	$xup = $("#xup").val();
-	
-	var isChecked = $("#generate_histogram").is(':checked');
-	if ( isChecked ){
-		if($nbins != ""){		
-			if( !($.isNumeric($nbins))){
-				alert("All nbins , xlow, up values must be strictly integers!");
-				return;
-			}
-		}
-		if($xlow != ""){		
-			if( !($.isNumeric($xlow))){
-				alert("All nbins , xlow, up values must be strictly integers!");
-				return;
-			}
-		}
-		if($xup != ""){		
-			if( !($.isNumeric($xup))){
-				alert("All nbins , xlow, up values must be strictly integers!");
-				return;
-			}
-		}
-	}
-	
-	var options = getSelectedChilds("Options");
-	var versions = getSelectedChilds("Version");
-	var platforms = getSelectedChilds("Platform");
-	var hosts = getSelectedChilds("Host");
-	var appName = "{{  active_tab }}";
-	
-	var dohistogram = $("#generate_histogram").is(':checked');
-	var separately_hist = $("#separately").is(':checked');
-	var group_by_host = $("#group_by_host").is(':checked');
-	
-	$("#results").mask("Requesting...");
-	
-	$.ajax({
-    	'url' : '/django/lhcbPR/analysis_function/',
-		'type' : 'GET',
-		'data' : {
-		'analysis_type' : 'basic',
-		'platforms' : platforms.join(","),
-		'hosts' : hosts.join(","),
-		'versions' : versions.join(","),
-		'options' : options.join(","),
-		'appName' : appName,
-		'atr' : $atr,
-		'histogram' : dohistogram,
-		'separately_hist' : separately_hist,
-		'group_host' : group_by_host,
-		'nbins' : $nbins,
-		'xlow' : $xlow,
-		'xup' : $xup
-		},
-    	'success' : function(data) {
-			var jsondata = $.parseJSON(data);
-
-			if(jsondata.error){
-				alert(jsondata.errorMessage);
-				$("#results").unmask();
-				return;
-			}
-			else{
-				removeAllChilds("results");
-				myResultsDiv = document.getElementById("results");
-	
-				if(jsondata.histogram){
-					bins = jsondata.bins;
-					myPre = document.createElement("pre");
-					myPre.appendChild(document.createTextNode(JSON.stringify(bins, null, '  ')));
-					myResultsDiv.appendChild(myPre);
-
-					if(jsondata.separately_hist){
-						results = jsondata.results;
-						for(var i = 0; i < results.length; i++){
-							myPre = document.createElement("pre");
-							histUrl = results[i].histogram;
-							delete results[i].histogram;
-							myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '  ')));
-							myResultsDiv.appendChild(myPre);
-							
-							myImg = document.createElement("img");
-							myImg.src = histUrl + "?"+new Date().getTime();
-							myResultsDiv.appendChild(myImg);
-							myHr = document.createElement("hr");
-							myResultsDiv.appendChild(myHr);
-						}
-					}
-					else{
-						results = jsondata.results;
-
-						histUrl = results[0].histogramImposed;
-						myImg = document.createElement("img");
-						myImg.src = histUrl + "?" +new Date().getTime();
-						myResultsDiv.appendChild(myImg);
-
-						for(var i = 0; i < results.length; i++){
-							myPre = document.createElement("pre");
-							delete results[i].histogramImposed;
-							myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '  ')));
-							myResultsDiv.appendChild(myPre);
-						}
-					}
-				}
-				else{
-					myPre = document.createElement("pre");
-					myPre.appendChild(document.createTextNode(JSON.stringify(jsondata.results, null, '  ')));
-					myResultsDiv.appendChild(myPre);
-				}
-				$("#results").unmask();
-			}
-      	}
-    });/* /ajax*/
-	return;
-}
+			{% block script %} {% endblock script %}
 		</script>
 		<style type="text/css">
-			#execute_query { padding: .4em 1em .2em 17px;text-decoration: none;position: relative; float: right;}
-			#filter_container { padding-top: 0.5em; padding-bottom: 0.5em; }
-			//#histogram_configs { margin-left: 1em; }
-			#histogram_configs input { width: 60px; }
-
-			.ui-combobox {
-        		position: relative;
-        		display: inline-block;
-    		}
-    		.ui-combobox-toggle {
-        		position: absolute;
-        		top: 0;
-        		bottom: 0;
-        		margin-left: -1px;
-        		padding: 0;
-        		/* adjust styles for IE 6/7 */
-        		*height: 1.7em;
-        		*top: 0.1em;
-    		}
-    		.ui-combobox-input {
-        		margin: 0;
-       			padding: 0.3em;
-    		}
-			#histogram_settings { margin-top: 0.5em; margin-left: 1em;}
-			#group_host { margin-top: 0.5em; }
-			#results img { margin-left : 2em; }
+			{% block stylecss %} {% endblock stylecss %}
 		</style>
 </head>
 <div>
@@ -287,8 +80,7 @@ function query(){
 <body>
 	<div id="pagebody" class="pagebody">
 		<div id="helpMenu" class="fakewindowcontain">
-				<p class="helpText">Choose one attribute on which you want to query on, and also choose at least one job description and press the "Retrieve results" button to get back the results(depending on the selected filters).<br><br>
-				In case you want to generate a histogram click on the corresponding checkbok, but make sure your choices produce less than 4(max limit is 3) results else the generate histogram function won't work. <br> Also you can customize your histogram by typing your values on the nbins, xlow, xup input texts(only numbers are permitted) and choose whether you want the histograms(if more than one) to be separately or superimposed</p>
+				<p class="helpText">{% block helptext %}{% endblock helptext%}</p>
 				<div class="ui-widget-overlay"></div>
 		</div>
 		
@@ -299,110 +91,7 @@ function query(){
 				{% endfor %}
 			</ul>
 			<div id="{{ active_tab }}tab">
-				
-					<a  id="execute_query" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Retrieve results </a>
-
-					<div class="Outer">
-
-					<div id="filter_container" class="InnerLeft">	
-
-							<div class="ui-widget">
-    							<label>Choose an attribute: </label>
-    							<select id="atrs">
-        							<option value=""></option>
-									{% for atr in attributes %}
-										<option value="{{ atr.0 }},{{ atr.1 }}">{{ atr.0 }}</option>
-									{% endfor %}
-    							</select>
-							</div>
-						
-						<label><input id="generate_histogram" type="checkbox">Generate histogram </label>
-						<div id="histogram_configs" style="display :none;">
-							<label>nbins</label><input id="nbins" type="text" value="" /><label> xlow</label><input id="xlow" type="text" value="" /><label> xup</label><input id="xup" type="text" value="" />
-							<br><label style="font-size: 13px;"> (leave blank to use default values)</label>
-							<div id="histogram_settings">
-								<label><input id="separately" type="checkbox" checked="checked">separately</label><label><input id="superimposed" type="checkbox">superimposed</label>
-							</div>
-						</div>
-						
-						<div id="group_host">
-							<label><input id="group_by_host" type="checkbox">group by host</label>
-						</div>
-						
-						<table class="filter" style="margin-top: 1em;">
-						<tr>
-						<td><a href="javascript:;" id="OptionsButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Options</a>
-								<a href="javascript:;" id="OptionsErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
-						</td>
-						<tr>
-						<td>
-						    <ul id="Options" name="Options" class="checklist" >
-								{% for opt in options %}
-								<li>
-										<label id="Options{{ forloop.counter }}">
-											<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt.value }}" {% if opt.checked %} checked="checked"  {% endif %}>
-												{{ opt.value }}
-										 </label>
-								</li>
-							{% endfor %}
-						</td>
-						<tr>
-						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Version</a>
-								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
-						</td>
-						<tr>
-						<td>
-				 		   <ul id="Version" name="Version" class="checklist">
-							{% for v in versions %}
-								<li>
-										<label id="Version{{ forloop.counter }}">
-											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ v.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
-												{{ v.value }}
-										 </label>
-								</li>
-							{% endfor %}
-						    </ul>
-						</td>
-						<tr>
-						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
-								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
-						</td>
-						<tr>
-						<td>
-				 		   <ul id="Platform" name="Platform" class="checklist" style="display:none;">
-							{% for plat in platforms %}
-								<li>
-										<label id="Platform{{ forloop.counter }}">
-											<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.value }}" {% if plat.checked %} checked="checked"  {% endif %}>
-												{{ plat.value }}
-										 </label>
-								</li>
-							{% endfor %}
-						    </ul>
-						</td>
-						<tr>
-						<td><a href="javascript:;" id="HostButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Host</a>
-								<a href="javascript:;" id="HostErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
-						</td>
-						<tr>
-						<td>
-						    <ul id="Host" name="Host" class="checklist" style="display: none;">
-								{% for h in hosts %}
-								<li>
-										<label id="Host{{ forloop.counter }}">
-											<input id="Host{{ forloop.counter }}a" type="checkbox" value="{{ h.value }}" {% if h.checked %} checked="checked"  {% endif %}>
-												{{ h.value }}
-										 </label>
-								</li>
-							{% endfor %}
-						</td>
-						</table><!-- closing div id=myfilter -->
-					</div><!-- /filter_container + InnerLeft(has two classes)-->				
-					
-					<div id="results" class="InnerRight" style="margin-top: 2em;margin-left:1em;"></div><!-- /resutls + InnerRight (has two classes)-->
-					
-				</div><!-- /Outer-->
-					
+					{% block content %} {% endblock content %}
 			</div><!-- active_tab -->
 		</div><!--  /tabs -->
 	</div> <!-- pagebody -->
