@@ -3,10 +3,11 @@ from django.http import HttpResponse , HttpResponseRedirect
 from django.shortcuts import render_to_response   
 from django.template import RequestContext
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
-import json, socket
+import json, socket, os
 import tools.analysis_engine as engine
 import tools.socket_service as service
 from tools.viewTools import dictfetchall
+from django.conf import settings
 
 def get_query_groups(request):
     select_statements = ['apl.appversion as Version' , 'opt.description as Options', 'plat.cmtconfig as Platform' ]
@@ -78,19 +79,22 @@ def get_tree_query(job_ids_list):
     tree_query = "SELECT att.name AS atr_name, \
   ROUND(AVG(attd.data), 3) AS float_data, \
   avg(resint.data) AS int_data, \
-  min(resstr.data) AS str_data \
+  min(resstr.data) AS str_data, \
+  max(resint2.data) AS id_data \
     FROM lhcbpr_job j, \
   lhcbpr_jobresults r, \
   lhcbpr_jobattribute att, \
   lhcbpr_resultfloat attd, \
   lhcbpr_resultint resint, \
-  lhcbpr_resultstring resstr \
+  lhcbpr_resultstring resstr, \
+  lhcbpr_resultint resint2 \
     WHERE j.id = r.job_id \
     AND r.jobattribute_id = att.id \
     AND attd.jobresults_ptr_id (+) = r.id \
     AND resint.jobresults_ptr_id (+) = r.id \
     AND resstr.jobresults_ptr_id (+) = r.id \
-    AND att ."+' "GROUP" ' +"in ( 'Timing', 'TimingTree', 'TimingCount')"
+    AND resint2.jobresults_ptr_id (+) = r.id \
+    AND att ."+' "GROUP" ' +"in ( 'Timing', 'TimingTree', 'TimingCount', 'TimingID')"
     
     jobids = []
     for id in job_ids_list:
@@ -116,7 +120,7 @@ def analyse(request):
     
     #execute query_groups get the logical groups of the data
     cursor.execute(query_groups)
-    des = [col[0] for col in cursor.description]
+    job_description = [col[0] for col in cursor.description]
     group_dict = GroupDict()
     
     result = cursor.fetchone()
@@ -129,18 +133,20 @@ def analyse(request):
     if len(group_dict) > 1:
         return HttpResponse('</h3>Your selection returned more than 1 results , can not generate timing tree!</h3>')
     
-    description , job_ids = group_dict.popitem()
+    group , job_ids = group_dict.popitem()
     tree_query = get_tree_query(job_ids)
+    
+    description_dict = dict(zip(job_description, group)) 
     
     cursor.execute(tree_query)
     
-    #its row has this format: ATR_NAME , FLOAT_DATA , INT_DATA, STR_DATA
+    #its row has this format: ATR_NAME , FLOAT_DATA , INT_DATA, STR_DATA, ID_DATA
     # its node of tree we want to generate need the attibute name, its parent and its entries
     root = None
     node_data = {}
-    node_childs = GroupDict()
     node_entries = {}
-    
+    node_ids = {}
+    node_childs = GroupDict()
     names = []
     
     result = cursor.fetchone()
@@ -154,9 +160,10 @@ def analyse(request):
                 root = node_name[:-7]
             else:
                 node_childs[parent].append(node_name[:-7])  # STR_DATA
-            
         elif '_count' in node_name:
             node_entries[node_name[:-6]] = int(result[2]) # INT_DATA
+        elif '_id' in node_name:
+            node_ids[node_name[:-3]] = int(result[4]) # ID_DATA
         else:
             node_data[node_name] = float(result[1]) # FLOAT_DATA
                     
@@ -164,25 +171,27 @@ def analyse(request):
         
     from tools.TimingTree import TimingTree
     
-    tree = TimingTree(root, node_data, node_childs, node_entries)
+    tree = TimingTree(root, node_data, node_childs, node_entries, node_ids)
     
-    #yo = tree.getFlatJSON()
+    timing_path = 'static/images/histograms/timing.json'
+    settings
+    
     yo = tree.getHierarchicalJSON()
-    f = open('/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/django_apps/static/images/histograms/timing.json', 'w')
+    f = open(os.path.join(settings.PROJECT_PATH, timing_path), 'w')
     f.write(yo)
     f.close()
-    #return HttpResponse(json.dumps({'aw' : yo}))
     
     myauth = request.user.is_authenticated()
     applicationsList = list(Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct())
     
     dataDict = {
-                'url' : '/static/images/histograms/timing.json',
+                'url' : '/'+timing_path,
                 'active_tab' : 'BRUNEL' ,
                 'myauth' : myauth, 
                 'user' : request.user, 
                 'jobs_num' : len(job_ids),
                 'applications' : applicationsList,
+                'description' : description_dict
                }
       
     return render_to_response('lhcbPR/analyse/timingResults.html', 

@@ -43,12 +43,15 @@
 		because in slc5 yum uses default python2.4 so your mod_wsgi won't play with django.
 		
 		For more information you can also check https://docs.djangoproject.com/en/1.2/howto/deployment/modwsgi/
-		example of http.conf with wsgi: 
+		example of http.conf with wsgi(add also the RewriteEngine to redirect all urls to https, like below): 
 		
 			WSGIDaemonProcess python-path=/home/LHCbPR/django_apps:/usr/lib/python2.6/site-packages
 			WSGIScriptAlias /django /home/LHCbPR/django_apps/wsgi.py
 
 			<Directory /home/LHCbPR/django_apps>
+				RewriteEngine On
+				RewriteCond %{HTTPS} off
+				RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} 
 			<Files wsgi.py>
         		Order deny,allow
         		Allow from all

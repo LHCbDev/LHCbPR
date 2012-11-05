@@ -10,23 +10,21 @@ import re
 class TimingTree:
     """ Class responsible for parsing the TimingAuditor log from the
     Gaudi run  log files """
-    def __init__(self, root_name, node_data, node_childs, node_entries):
+    def __init__(self, root_name, node_data, node_childs, node_entries, node_ids):
         self.finalnodes = []
-        self.code = 0
-        self.generateTree(root_name, self.finalnodes, None, node_data, node_childs, node_entries)
+        self.generateTree(root_name, self.finalnodes, None, node_data, node_childs, node_entries, node_ids)
         self.root = self.finalnodes[0]
         
         self.root.rankChildren()
     
-    def generateTree(self, node_name, finalnodes, lastparent, node_data, node_childs, node_entries):     
-      current_node = Node(self.code, node_name, node_data[node_name], node_entries[node_name], lastparent)
+    def generateTree(self, node_name, finalnodes, lastparent, node_data, node_childs, node_entries, node_ids):     
+      current_node = Node(node_ids[node_name], node_name, node_data[node_name], node_entries[node_name], lastparent)
       finalnodes.append(current_node)
       
       if node_name in node_childs:
           lastparent = current_node
           for child in node_childs[node_name]:
-              self.code += 1
-              self.generateTree(child, finalnodes, lastparent, node_data, node_childs, node_entries)
+              self.generateTree(child, finalnodes, lastparent, node_data, node_childs, node_entries, node_ids)
       else:
           return
 
