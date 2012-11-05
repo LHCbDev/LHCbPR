@@ -1,82 +1,16 @@
+import json, socket
 from django.db import connection, transaction
 from django.http import HttpResponse 
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
-import json, socket
+from django.db.models import Q
+from django.http import HttpResponseNotFound
+from django.shortcuts import render_to_response   
+from django.template import RequestContext
+
+from tools.viewTools import makeCheckedList, getSplitted 
 import tools.analysis_engine as engine
 import tools.socket_service as service
-
-def get_queries(request):
-    select_statements = ['apl.appversion as Version' , 'opt.description as Options', 'plat.cmtconfig as Platform' ]
-    from_statements = [ 'lhcbpr_job j', 'lhcbpr_jobresults r', 'lhcbpr_jobattribute att', 
-                   'lhcbpr_platform plat',  'lhcbpr_jobdescription jobdes', 
-                   'lhcbpr_application apl', 'lhcbpr_options opt'  ]
-    where_statements = [ 'j.id = r.job_id',  'j.jobdescription_id = jobdes.id', 'jobdes.application_id = apl.id',
-                    'jobdes.options_id = opt.id', 'r.jobattribute_id = att.id', 
-                    'rf.jobresults_ptr_id = r.id', 'j.platform_id = plat.id' , 'j.success = 1' ]
-    
-    if request.GET['atr'].split(',')[1] == 'Float':
-        from_statements.append('lhcbpr_resultfloat rf')
-    else:
-        from_statements.append('lhcbpr_resultint rf')
-    
-    secondpart_query = ""
-    use_host = False
-    #check first which query to make , to join the host table or not
-    hosts = request.GET['hosts'].split(',')
-    if not hosts[0] == "":
-        host_temp = []
-        for h in hosts:
-            host_temp.append("h.hostname = '"+h+"'")
-        
-        secondpart_query += ' AND ( '+' OR '.join(host_temp)+' )'
-        #use the query which joins also the host table
-        use_host = True
-    
-    if not request.GET['group_host'] == "true":
-        if use_host:
-            from_statements.append('lhcbpr_host h')
-            where_statements.append('j.host_id = h.id')
-    else:
-        select_statements.append('h.hostname as Host')
-        from_statements.append('lhcbpr_host h')
-        where_statements.append('j.host_id = h.id')
-        
-    query_results = 'select '+' , '.join(select_statements)+' ,rf.data from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
-    query_groups = 'select distinct '+' , '.join(select_statements)+' from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
-              
-    options = request.GET['options'].split(',')
-    if not options[0] == "":
-        options_temp = []
-        for opt in options:
-            options_temp.append("opt.description = '"+opt+"'")
-        
-        secondpart_query += ' AND ( '+' OR '.join(options_temp)+' )'
-    versions = request.GET['versions'].split(',')
-    if not versions[0] == "":
-        versions_temp = []
-        for ver in versions:
-            versions_temp.append("apl.appversion = '"+ver+"'")
-        
-        secondpart_query += ' AND ( '+' OR '.join(versions_temp)+' )'
-    platforms = request.GET['platforms'].split(',')
-    if not platforms[0] == "":
-        platforms_temp = []
-        for p in platforms:
-            platforms_temp.append("plat.cmtconfig = '"+p+"'")
-        
-        secondpart_query += ' AND ( '+' OR '.join(platforms_temp)+' )'
-        
-    #now we finished generating the filtering in the query attributes
-    #we know finalize the queries
-    application_attribute= " and apl.appname='{0}' and att.name='{1}'".format(request.GET['appName'], request.GET['atr'].split(',')[0])
-    query_results += application_attribute
-    query_groups += application_attribute
-    
-    #add the second part of the query which contains the filtering
-    query_results += secondpart_query
-    query_groups += secondpart_query
-    
-    return query_groups, query_results
+from query_builder import get_queries
 
 class remoteService(object):
     def __init__(self):
@@ -96,6 +30,64 @@ class remoteService(object):
     def finish(self):
         self.connection.close()
         
+
+def render(request, app_name):
+    """From the url is takes the requested application(app_name) , example:
+    /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
+    and depending on the app_name it returns the available versions, options, setupprojects"""
+    
+    applicationsList = list(Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct())
+    myauth = request.user.is_authenticated()
+    
+    apps = Application.objects.filter(appName__exact=app_name)
+    if not apps:
+        return HttpResponseNotFound("<h3>Page not found, no such application</h3>")     
+    
+    #atrs = map(str, JobResults.objects.filter(job__jobDescription__application__appName__exact=app_name).values_list('jobAttribute__name', flat=True).distinct())
+    atrs =  JobResults.objects.filter(job__jobDescription__application__appName=app_name,job__success=True).filter(Q(jobAttribute__type='Int') | Q(jobAttribute__type='Float')).values_list('jobAttribute__name','jobAttribute__type').distinct()
+    
+    options = map(str, Job.objects.filter(jobDescription__application__appName=app_name,success=True).values_list('jobDescription__options__description', flat=True).distinct())
+        
+    versions_temp = map(str, Job.objects.filter(jobDescription__application__appName=app_name,success=True).values_list('jobDescription__application__appVersion', flat=True).distinct())
+    versions = reversed(sorted(versions_temp, key = getSplitted))
+
+    platforms = map(str, Job.objects.filter(jobDescription__application__appName=app_name,success=True).values_list('platform__cmtconfig', flat=True).distinct())
+    platforms.sort()
+     
+    hosts = map(str, Job.objects.filter(jobDescription__application__appName=app_name,success=True).values_list('host__hostname', flat=True).distinct())
+    hosts.sort()
+    
+    if 'options' in request.GET:
+        optionsList = makeCheckedList(options, request.GET['options'].split(','))
+    else:
+        optionsList = makeCheckedList(options)
+    if 'versions' in request.GET:
+        versionsList = makeCheckedList(versions, request.GET['versions'].split(','))
+    else:
+        versionsList = makeCheckedList(versions)
+    if 'platforms' in request.GET:
+        platformsList = makeCheckedList(platforms, request.GET['platforms'].split(','))
+    else:
+        platformsList = makeCheckedList(platforms)
+    if 'hosts' in request.GET:
+        hostsList = makeCheckedList(hosts, request.GET['hosts'].split(','))
+    else:
+        hostsList = makeCheckedList(hosts)  
+    
+    dataDict = { 'attributes' : atrs,
+                'platforms' : platformsList,
+                'hosts' : hostsList,
+                'options' : optionsList,
+                'versions' : versionsList,
+                'active_tab' : app_name ,
+                'myauth' : myauth, 
+                'user' : request.user, 
+                'applications' : applicationsList,
+               }
+      
+    return render_to_response('lhcbPR/analyse/basic/analyseBasic.html', 
+                  dataDict,
+                  context_instance=RequestContext(request))
 
 def analyse(request):
     #if request.method == 'GET' and 'hosts' in request.GET and 'jobdes' in request.GET and 'platforms' in request.GET and 'atr' in request.GET:

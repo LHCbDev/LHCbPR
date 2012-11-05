@@ -170,6 +170,35 @@ def analysis_type(request, analysis_type, app_name):
     """This function call the right render_to_response depending on the analysis
     type argument
     """
+    module = 'analysis.{0}.{0}'.format(analysis_type)
+    try:
+        mod = __import__(module, fromlist=[module])
+    except ImportError, e:
+        return HttpResponseNotFound('<h3>Analyse {0} render_to_response(render) was not found</h3>'.format(analysis_type))
+    else:
+       return mod.render(request, app_name)
+    
+@login_required
+def analysis_function(request):
+    """This function call the right render_to_response depending on the analysis
+    type argument
+    """
+    if 'analysis_type' not in request.GET:
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : '"analysis_type" value is not defined in the request.GET dictionary'}))
+    
+    module = 'analysis.{0}.{0}'.format(request.GET['analysis_type'])
+    try:
+        mod = __import__(module, fromlist=[module])
+    except ImportError, e:
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Analysis function: {0} was not found!'.format(request.GET['analysis_type'])}))
+    else:
+       return mod.analyse(request)
+
+@login_required  #login_url="login"
+def analysis_type_old(request, analysis_type, app_name):
+    """This function call the right render_to_response depending on the analysis
+    type argument
+    """
     module = 'analysis.analysisViews.{0}'.format(analysis_type)
     try:
         mod = __import__(module, fromlist=[module])
@@ -179,7 +208,7 @@ def analysis_type(request, analysis_type, app_name):
        return mod.render(request, app_name)
     
 @login_required
-def analysis_function(request):
+def analysis_function_old(request):
     """This function call the right render_to_response depending on the analysis
     type argument
     """
