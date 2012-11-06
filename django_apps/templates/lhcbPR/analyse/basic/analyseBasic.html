@@ -1,8 +1,11 @@
-{% extends "lhcbPR/analyse/analysis_template.html" %}
+{% extends "lhcbPR/analyse/base_analysis_template.html" %}
 
 {% block title %} {{ active_tab }} basic analysis {% endblock %}
 
 {% block script %}
+
+{{ block.super }} 
+
 			function clearCheckBox2(id){
 				nodes = document.getElementById(id).children;
 				for(i=0; i<nodes.length; i+=1) {

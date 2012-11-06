@@ -14,32 +14,14 @@ import json, subprocess, sys, re, copy, os
 from random import choice
 from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList
 
-def test(request):
-    """Just a test view which serves testing hmtl pages,
-    for the moment it serves the jquery ui examples page"""
-    
-    ##return HttpResponse(os.environ['ROOTSYS'])
-    #
-    #myauth = request.user.is_authenticated()
-    #myDict = { 'myauth' : myauth, 'user' : request.user}
-    #
-    #return render_to_response('lhcbPR/index.html', myDict,
-    #              context_instance=RequestContext(request))
-    
-    myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user}
-    
-    return render_to_response('lhcbPR/root.html', myDict,
-                  context_instance=RequestContext(request))
-    
-      
+
 def index(request):
     """This view serves the home page of the application(lhcbPR), along 
     with the page it provides information for the user(if he is authenticated
     or not)"""
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user}
-    return render_to_response('lhcbPR/indexOf.html', myDict,
+    return render_to_response('lhcbPR/index.html', myDict,
                   context_instance=RequestContext(request))
 
 @login_required  #login_url="login"

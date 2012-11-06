@@ -1,93 +1,35 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<title>Analyse</title>
-		<link href="/static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
-		<script src="/static/js/jquery-1.8.2.js"></script>
-		<script src="/static/js/jquery-ui-1.9.0.custom.js"></script>
-		<script type="text/javascript" src="/static/js/bubble-tooltip.js"></script>
-		<script type="text/javascript" src="/static/js/generalFunctions.js"></script>
-		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
-		<!-- plugin for mask -->
-		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
-		<link type="text/css" href="/static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
-		
-  		<!-- <script type="text/javascript" src="http://jqueryui.com/js/jquery.js"></script>  -->
-  		<!--  <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script> -->
-		
-		<script type="text/javascript">
-			$(document).ready(function() {
-				/* $('#switcher').themeswitcher({ loadTheme : 'Start' }); */
-				$("#menu").buttonset();
-				/* on click functions for the menus */
-				$("#homeMenu").click(function(){ 
-						document.location.href="/django/lhcbPR/"; 
-						$("#applications").mask("Loading..."); });
-				$("#jobDescriptionsMenu").click(function(){ 
-							document.location.href="/django/lhcbPR/jobDescriptions/" ;
-							$("#applications").mask("Loading...");
-				});
-				$("#analyseMenu").click(function(){ 
-						 document.location.href="/django/lhcbPR/analyse/"; 
-						$("#applications").mask("Loading...");
-				});
-				
-				$("#tabs").tabs();
-				$("button").button();
-			});
-		</script>
-</head>
-<div>
-	<div class="ui-widget-header">
-		<table>
-			<tr>
-				<td class="iconspace">
-					<a href="http://cern.ch/lhcb-comp">
-						<img id="lhcblogo"  src="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/images/lhcbcomputinglogo.gif" >
-					</a>
-			</td>
-			<td class="headTitle">
-				<h1><a href="/django/lhcbPR/" >LHCb Perfomance & Regression</a></h1>
-				<div id="switcher"></div>
-				<div class="headLogin">
-					{% if myauth %}
-					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR/"> Logout </a>| {{ user.username }}
-					{% else %}
-					<a href="/django/login/"> Login</a>
-					{% endif %}
-				</div><!-- closing div ^^-->
-			</td>
-		</table>
-	</div> <!-- /ui-widget-header -->
+{% extends "lhcbPR/base_template.html" %}
 
+{% block title %} Analyse {% endblock title %}
 
-	<div id="menu">
-			<input type="radio" id="homeMenu" name="radio" /><label for="homeMenu">Home</label>
-			<input type="radio" id="jobDescriptionsMenu" name="radio"/><label for="jobDescriptionsMenu">Job Descriptions</label>
-			<input type="radio" id="analyseMenu" name="radio" checked="checked" /><label for="analyseMenu">Analyse</label>
-			<a  id="helpButton" href="javascript:;">help</a>			
-		</div>
-</div> <!-- /header-->
+{% block head %} {% endblock head %}
 
-<body>
-	<div id="mainbody" class="pagebody">
-		<div id="helpMenu" class="fakewindowcontain">
-				<p class="helpText">Choose one of the applications for which you wiss to perform analysis (here are displayed applications which have runned jobs)</p>
-				<div class="ui-widget-overlay"></div>
-		</div>
+{% block script %}
 
-		<div id="tabs">
-			<ul>
-				<li><a href="#applications">Applications</a></li>
-			</ul>
-			<div id="applications">
-				Choose one of the following applications to make analysis:<br><br>
-					{% for app in applications %}
-					<button name="{{ app }}button" onclick="location.href='/django/lhcbPR/analyse/{{ app }}/'" style="padding:1.5em;margin-left:1em;">{{ app }}</button>
-					{% endfor %}
-			</div>
-		</div>
-	</div> <!-- pagebody -->
-</body>
+$(document).ready(function() {
+	$("#tabs").tabs();
+	$("button").button();
+	$("#analyseMenu").attr('checked', 'checked').button("refresh");
+});
 
-</html>
+{% endblock script %}
+
+{% block stylecss %} {% endblock stylecss %}
+
+{% block helptext %} {% endblock helptext %}
+
+{% block pagebody %} 
+
+<div id="tabs">
+	<ul>
+		<li><a href="#applications">Applications</a></li>
+	</ul>
+	<div id="applications">
+		Choose one of the following applications to make analysis:<br><br>
+			{% for app in applications %}
+			<button name="{{ app }}button" onclick="location.href='/django/lhcbPR/analyse/{{ app }}/'" style="padding:1.5em;margin-left:1em;">{{ app }}</button>
+			{% endfor %}
+	</div>
+</div>
+
+{% endblock pagebody %}

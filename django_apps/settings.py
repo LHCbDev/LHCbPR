@@ -7,7 +7,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+     ('Emmanouil Kiagias', 'emmanouil.kiagias@cern.ch'),
 )
 
 #try to get the hostname(machine)
@@ -130,7 +130,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'shibsso.middleware.ShibSSOMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'lhcbPR.middleware.AjaxRedirect'
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -141,7 +140,6 @@ ROOT_URLCONF = 'django_apps.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates')
-    #'/afs/cern.ch/user/e/ekiagias/workspace/LHCbPR/django_apps/templates',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -184,8 +182,7 @@ LOGGING = {
 }
 
 
-
-
+#soon to be moved from here
 HISTOGRAMSGAUSS = {
               'Num. of primary interaction per bunch' : 'GenMonitorAlg/10',
               'PrimaryVertex y (mm)' : 'GenMonitorAlg/12',
@@ -196,4 +193,4 @@ HISTOGRAMSGAUSS = {
               'Multiplicity stable charged particles' : 'GenMonitorAlg/3',
               'Pt stable charged particles' : 'GenMonitorAlg/45',
               'Process type' : 'GenMonitorAlg/5',
-              }
+}

@@ -24,7 +24,6 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^lhcbPR/script', 'script'),
     url(r'^lhcbPR/upload','upload_file'),
     url(r'^lhcbPR/getRunnedJobs', 'getRunnedJobs'),
-    url(r'^lhcbPR/test', 'test')   
 )
 
 urlpatterns += patterns('',
