@@ -10,7 +10,6 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
 
-import tools.analysis_engine as engine
 import tools.socket_service as service
 from tools.viewTools import dictfetchall
 from tools.viewTools import makeCheckedList, getSplitted 

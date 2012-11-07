@@ -9,7 +9,6 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import render_to_response   
 from django.template import RequestContext
 
-import tools.analysis_engine as engine
 import tools.socket_service as service
 from query_builder import get_queries
 from tools.viewTools import makeCheckedList, getSplitted 

@@ -8,7 +8,6 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from tools.viewTools import makeCheckedList, getSplitted 
-import tools.analysis_engine as engine
 import tools.socket_service as service
 from query_builder import get_queries
 
