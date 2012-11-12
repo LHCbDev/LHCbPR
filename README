@@ -47,8 +47,6 @@ python LHCbPR/django_apps/manage.py pushToDB json_results
 
 
 ****** TODO list (will be soon moved to a proper document)
-
-	* A new way of sending the json_results to the database(done , using DiracStorageElement soon will work)
 	
 	* Initial data to the database(applications-versions , at least one job description in order to produce the other via clone function)
 		
@@ -67,4 +65,4 @@ python LHCbPR/django_apps/manage.py pushToDB json_results
 	
 	* data quality , add a flag "successful" on job(done) , provide "api" for defining which jobs are successful or not
 	
-	* table with one column with the version of schema 
+	* table with one column with the version of schema

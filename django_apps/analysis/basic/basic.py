@@ -1,13 +1,13 @@
 import json, socket
 from django.db import connection, transaction
 from django.http import HttpResponse 
-from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
+from lhcbPR.models import JobAttribute, Host, Platform, Application, Options,  JobResults
 from django.db.models import Q
 from django.http import HttpResponseNotFound
 from django.shortcuts import render_to_response   
 from django.template import RequestContext
 
-from tools.viewTools import makeCheckedList, getSplitted 
+from tools.viewTools import makeCheckedList, getSplitted2 
 import tools.socket_service as service
 from query_builder import get_queries
 
@@ -35,63 +35,40 @@ def render(request, app_name):
     /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
     and depending on the app_name it returns the available versions, options, setupprojects"""
     
-    applicationsList = list(Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct())
-    myauth = request.user.is_authenticated()
-    
     apps = Application.objects.filter(appName__exact=app_name)
     if not apps:
         return HttpResponseNotFound("<h3>Page not found, no such application</h3>")     
     
-    #atrs = map(str, JobResults.objects.filter(job__jobDescription__application__appName__exact=app_name).values_list('jobAttribute__name', flat=True).distinct())
-    atrs =  JobResults.objects.filter(job__jobDescription__application__appName=app_name,job__success=True).filter(Q(jobAttribute__type='Int') | Q(jobAttribute__type='Float')).values_list('jobAttribute__name','jobAttribute__type').distinct()
+    atrs =  JobResults.objects.filter(job__jobDescription__application__appName=app_name,job__success=True).filter(Q(jobAttribute__type='Int') | Q(jobAttribute__type='Float')).values_list('jobAttribute__id','jobAttribute__name','jobAttribute__type').distinct()
     
-    options = map(str, Job.objects.filter(jobDescription__application__appName=app_name,success=True).values_list('jobDescription__options__description', flat=True).distinct())
+    options = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name).distinct()
         
-    versions_temp = map(str, Job.objects.filter(jobDescription__application__appName=app_name,success=True).values_list('jobDescription__application__appVersion', flat=True).distinct())
-    versions = reversed(sorted(versions_temp, key = getSplitted))
-
-    platforms = map(str, Job.objects.filter(jobDescription__application__appName=app_name,success=True).values_list('platform__cmtconfig', flat=True).distinct())
-    platforms.sort()
-     
-    hosts = map(str, Job.objects.filter(jobDescription__application__appName=app_name,success=True).values_list('host__hostname', flat=True).distinct())
-    hosts.sort()
+    versions_temp = Application.objects.filter(jobdescriptions__jobs__success=True, appName=app_name).distinct()
+    versions = reversed(sorted(versions_temp, key = getSplitted2))
     
-    if 'options' in request.GET:
-        optionsList = makeCheckedList(options, request.GET['options'].split(','))
-    else:
-        optionsList = makeCheckedList(options)
-    if 'versions' in request.GET:
-        versionsList = makeCheckedList(versions, request.GET['versions'].split(','))
-    else:
-        versionsList = makeCheckedList(versions)
-    if 'platforms' in request.GET:
-        platformsList = makeCheckedList(platforms, request.GET['platforms'].split(','))
-    else:
-        platformsList = makeCheckedList(platforms)
-    if 'hosts' in request.GET:
-        hostsList = makeCheckedList(hosts, request.GET['hosts'].split(','))
-    else:
-        hostsList = makeCheckedList(hosts)  
+    platforms_temp = Platform.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct()
+    platforms = sorted(platforms_temp, key = lambda plat : plat.cmtconfig)
+     
+    hosts_temp = Host.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct()
+    hosts = sorted(hosts_temp, key = lambda host : host.hostname)
     
     dataDict = { 'attributes' : atrs,
-                'platforms' : platformsList,
-                'hosts' : hostsList,
-                'options' : optionsList,
-                'versions' : versionsList,
-                'active_tab' : app_name ,
-                'myauth' : myauth, 
-                'user' : request.user, 
-                'applications' : applicationsList,
+                'platforms' : platforms,
+                'hosts' : hosts,
+                'options' : options,
+                'versions' : versions,   
                }
       
-    return render_to_response('lhcbPR/analyse/basic/analyseBasic.html', 
-                  dataDict,
-                  context_instance=RequestContext(request))
+    return dataDict
 
 def analyse(request):
+    if request.method == 'GET':
+        requestData = request.GET
+    else:
+        requestData = request.POST
     #if request.method == 'GET' and 'hosts' in request.GET and 'jobdes' in request.GET and 'platforms' in request.GET and 'atr' in request.GET:
     #fetch the right queries depending on user's choices no the request
-    query_groups, query_results = get_queries(request)
+    query_groups, query_results = get_queries(requestData)
     
     #establish connection
     cursor = connection.cursor()
@@ -101,17 +78,19 @@ def analyse(request):
     logical_data_groups = cursor.fetchall()
     
     if len(logical_data_groups) == 0: 
-        return HttpResponse(json.dumps({ 'error' : False , 'results' : [] , 'histogram' : False, }))
+        return { 'error' : json.dumps(False) , 'results' : [] , 'histogram' : False, }
     if len(logical_data_groups) > 3:
-        if request.GET['histogram'] == "true":
-            return HttpResponse(json.dumps({'error' : True , 
-                'errorMessage' : 'Your choices returned more than 3 results.Can not generate histograms for more than 3 results!'}))
+        if requestData['histogram'] == "true":
+            error = True
+            return {'error' : json.dumps(error) , 
+                'errorMessage' : 'Your choices returned more than 3 results.Can not generate histograms for more than 3 results!',
+                'separately_hist' : json.dumps(False), 'histogram' : json.dumps(False), 'bins' : "", 'results' : ''}
     
-    if request.GET['histogram'] == 'true':
+    if requestData['histogram'] == 'true':
         doHistogram = True
     else:
         doHistogram = False
-    if request.GET['separately_hist'] == 'true':
+    if requestData['separately_hist'] == 'true':
         doSeparate = True
     else:
         doSeparate = False
@@ -120,12 +99,13 @@ def analyse(request):
     cursor.execute(query_results)
     #fixing the request in order to send it properly through socket
     #can not serialize straightforward the request as it is
+    yo = JobAttribute.objects.get(pk=requestData['atr'].split(',')[0])
     requestDict = {
-               'atr' : request.GET['atr'].split(',')[0], 
+               'atr' : yo.name, 
                'description' : [col[0] for col in cursor.description],
-               'nbins' : request.GET['nbins'],
-               'xlow' : request.GET['xlow'],
-               'xup' : request.GET['xup'],
+               'nbins' : requestData['nbins'],
+               'xlow' : requestData['xlow'],
+               'xup' : requestData['xup'],
                'separately_hist' : doSeparate,
                'histogram' : doHistogram 
                }
@@ -133,8 +113,10 @@ def analyse(request):
     remoteservice = remoteService()
     #in case it does not connect return an error
     if not remoteservice.connect():
-        return HttpResponse(json.dumps({'error' : True , 
-                'errorMessage' : 'Connection with remote service for analysis failed!'}))
+        error = True
+        return {'error' : json.dumps(error) , 
+                'errorMessage' : 'Connection with remote service for analysis failed!',
+                'histogram' : json.dumps(doHistogram), 'separately_hist' : json.dumps(doSeparate) }
     try:
         #send the name of the function you want to call
         remoteservice.send('basic_service')
@@ -155,7 +137,9 @@ def analyse(request):
         #after we finish sending our data we wait for the response(answer)
         answerDict = remoteservice.recv()
     except Exception:
-        return HttpResponse(json.dumps({'error' :True , 'errorMessage' : 'An error occurred with the root analysis process, please try again later'}))
-    
-    return HttpResponse(json.dumps({ 'error' : False , 'results' : answerDict['results'] , 'histogram' : doHistogram, 
-                                    'separately_hist' : doSeparate, 'bins' : answerDict['bins'] }))
+        error = True
+        return {'error' : json.dumps(error) , 'errorMessage' : 'An error occurred with the root analysis process, please try again later',
+                'separately_hist' : "false", 'histogram' : "false"}
+    error = False
+    return { 'error' : json.dumps(error) , 'results' : json.dumps(answerDict['results']) , 'histogram' : json.dumps(doHistogram), 
+                                    'separately_hist' : json.dumps(doSeparate), 'bins' : answerDict['bins'] }

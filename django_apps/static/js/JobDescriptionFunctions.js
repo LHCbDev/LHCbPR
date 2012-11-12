@@ -340,7 +340,15 @@ function openWindow(job_id){
     			autoResize: true,
     			height: 'auto',
     			width: 860,
-				modal : true
+				show: {
+                        effect: 'drop',
+                        direction: 'up'
+                },
+                hide: {
+                        effect: 'drop',
+                        direction: 'down',
+                }, 
+				modal : true,
 			});
       	}
     });/* /ajax*/
@@ -439,6 +447,14 @@ function openEditWindow(job_id){
     			autoResize: true,
     			height: 'auto',
     			width: 860,
+				show: {
+                        effect: 'drop',
+                        direction: 'up'
+                },
+                hide: {
+                        effect: 'drop',
+                        direction: 'down',
+                }, 
    				modal: true
 			});
       	}
@@ -522,6 +538,14 @@ function openCloneWindow(job_id){
     			autoResize: true,
     			height: 'auto',
     			width: 860,
+				show: {
+                        effect: 'drop',
+                        direction: 'up',
+                },
+                hide: {
+                        effect: 'drop',
+                        direction: 'down',
+                }, 
    				modal: true
 			});
       	}

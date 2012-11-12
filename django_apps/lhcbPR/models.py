@@ -27,8 +27,8 @@ class SetupProject(models.Model):
     description = models.CharField(max_length=200, db_index=True)
 
 class JobDescription(models.Model):
-    application = models.ForeignKey(Application)
-    options = models.ForeignKey(Options,null=True)
+    application = models.ForeignKey(Application, related_name='jobdescriptions')
+    options = models.ForeignKey(Options,null=True, related_name='jobdescriptions')
     setup_project = models.ForeignKey(SetupProject,null=True) 
 
 class Platform(models.Model):
@@ -39,9 +39,9 @@ class Requested_platform(models.Model):
     cmtconfig = models.ForeignKey(Platform)
     
 class Job(models.Model):
-    host = models.ForeignKey(Host,null=True)
-    jobDescription = models.ForeignKey(JobDescription)
-    platform = models.ForeignKey(Platform,null=True)
+    host = models.ForeignKey(Host,null=True, related_name='jobs')
+    jobDescription = models.ForeignKey(JobDescription, related_name='jobs')
+    platform = models.ForeignKey(Platform,null=True, related_name='jobs')
     time_start = models.DateTimeField()
     time_end = models.DateTimeField()
     status = models.CharField(max_length=50)
@@ -62,8 +62,8 @@ class JobAttribute(models.Model):
     description = models.CharField(max_length=100)
     
 class JobResults(models.Model):
-    job = models.ForeignKey(Job)
-    jobAttribute = models.ForeignKey(JobAttribute)
+    job = models.ForeignKey(Job, related_name='jobresults')
+    jobAttribute = models.ForeignKey(JobAttribute, related_name='jobresults')
     
 class ResultString(JobResults):
     data = models.CharField(max_length=100)

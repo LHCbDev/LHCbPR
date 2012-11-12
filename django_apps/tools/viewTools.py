@@ -34,10 +34,10 @@ def makeCheckedList(mylist,are_checked = []):
     """
     List = []
     for myObj in mylist:
-        if myObj in are_checked:
-            List.append({'value' : myObj, 'checked' : True})
+        if str(myObj[0]) in are_checked:
+            List.append({'id': myObj[0] , 'value' : myObj[1], 'checked' : True})
         else:
-            List.append({'value' : myObj, 'checked' : False})
+            List.append({'id': myObj[0] , 'value' : myObj[1], 'checked' : False})
     return List
 
 def handle_uploaded_file(f):
@@ -56,6 +56,19 @@ def dictfetchall(cursor):
     ]
 
 def getSplitted(version):
+    """Takes a version and tranforms it like v41r0 ----> ['v', 41, 'r', '0']"""
+    split_regex = re.compile('\d+|[^\d\s]+')
+    splittedElement = []
+    for v in re.findall(split_regex, version):
+        if v.isdigit():
+            splittedElement.append(int(v))
+        else:
+            splittedElement.append(v)
+       
+    return splittedElement
+
+def getSplitted2(versionobj):
+    version = versionobj.appVersion
     """Takes a version and tranforms it like v41r0 ----> ['v', 41, 'r', '0']"""
     split_regex = re.compile('\d+|[^\d\s]+')
     splittedElement = []

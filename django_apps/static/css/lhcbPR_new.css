@@ -1,12 +1,5 @@
-/*html {
-    zoom: 0.8;
-    -moz-transform: scale(0.8);
-    -webkit-transform: scale(0.8);
-    transform: scale(0.8);
-}
-*/
 body{
-		font: 90% "Trebuchet MS", sans-serif;
+		font: 90% "sans-serif","Trebuchet MS";
 		margin: 50px;
 }
 

@@ -11,6 +11,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
 import json, subprocess, sys, re, copy, os
+from exceptions import AttributeError
 from random import choice
 from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList
 
@@ -38,14 +39,14 @@ def jobDescriptions(request, app_name):
     if not apps:
         return HttpResponseNotFound("<h3>Page not found</h3>")        
     
-    appVersions = JobDescription.objects.filter(application__appName__exact=app_name).values_list('application__appVersion', flat=True).distinct()
+    appVersions = JobDescription.objects.filter(application__appName__exact=app_name).values_list('application_id','application__appVersion').distinct()
     
     if not appVersions:
         return HttpResponseNotFound("<h3>No existing job descriptions for this application yet.</h3>")
     
-    options = Options.objects.values_list('description', flat=True).distinct()
-    platforms = Platform.objects.values_list('cmtconfig', flat=True).distinct()
-    setupProject = SetupProject.objects.values_list('description', flat=True).distinct()
+    options = Options.objects.values_list('id', 'description').distinct()
+    platforms = Platform.objects.values_list('id','cmtconfig').distinct()
+    setupProject = SetupProject.objects.values_list('id','description').distinct()
     
     #the GET request may also have information about which versions,options etc the user wants to 
     #to be checked in the filtering checkboxes(used for bookmarking the jobDescriptions page)
@@ -148,62 +149,88 @@ def analysis_application(request, app_name):
                   context_instance=RequestContext(request))
 
 @login_required  #login_url="login"
-def analysis_type(request, analysis_type, app_name):
+def analysis_render(request, analysis_type, app_name):
     """This function call the right render_to_response depending on the analysis
     type argument
     """
-    module = 'analysis.{0}.{0}'.format(analysis_type)
+    #module = 'analysis.{0}.{0}'.format(analysis_type)
+    module = 'analysis.{0}'.format(analysis_type)
     try:
         mod = __import__(module, fromlist=[module])
     except ImportError, e:
         return HttpResponseNotFound('<h3>Analyse {0} render_to_response(render) was not found</h3>'.format(analysis_type))
     else:
-       return mod.render(request, app_name)
+        user_data = mod.render(request, app_name)
+        if 'template' in user_data:
+            template = user_data['template']
+        else:
+            #else use the default template
+            template = 'analysis/{0}/render.html'.format(analysis_type)
+        
+        if not 'options' in user_data:
+            user_data['options'] = Options.objects.all()
+        if not 'versions' in user_data:
+            user_data['versions'] = Application.objects.filter(appName=app_name)
+        if not 'platforms' in user_data:
+            user_data['platforms'] = Platform.objects.all()
+        if not 'hosts' in user_data:
+            user_data['hosts'] = Host.objects.all()
+        
+        help = mod.__doc__
+        if help is None:
+            help = 'This module is not documented yet.'
+        
+        try:
+            title = mod.title
+        except AttributeError:
+            title = analysis_type+' analysis'
+        
+        applicationsList = list(Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct())
+        myauth = request.user.is_authenticated()
+        dataDict = {
+                    'applications' : applicationsList,
+                    'active_tab' : app_name,
+                    
+                    'title' : title,
+                    'help' : help,
+                    'myauth' : myauth, 
+                    'user' : request.user 
+                    }
+        #include user's data
+        dataDict.update(user_data)
+        return render_to_response(template, 
+                  dataDict,
+                  context_instance=RequestContext(request))
     
 @login_required
-def analysis_function(request):
+def analysis_function(request, analysis_type):
     """This function call the right render_to_response depending on the analysis
     type argument
     """
-    if 'analysis_type' not in request.GET:
-        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : '"analysis_type" value is not defined in the request.GET dictionary'}))
+    if request.method == 'GET':
+        requestData = request.GET
+    else:
+        requestData = request.POST
+        
+    #if 'analysis_type' not in requestData:
+        #return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : '"analysis_type" value is not defined in the request.GET dictionary'}))
     
-    module = 'analysis.{0}.{0}'.format(request.GET['analysis_type'])
+    module = 'analysis.{0}'.format(analysis_type)
     try:
         mod = __import__(module, fromlist=[module])
     except ImportError, e:
-        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Analysis function: {0} was not found!'.format(request.GET['analysis_type'])}))
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Analysis function: {0} was not found!'.format(requestData['analysis_type'])}))
     else:
-       return mod.analyse(request)
-
-@login_required  #login_url="login"
-def analysis_type_old(request, analysis_type, app_name):
-    """This function call the right render_to_response depending on the analysis
-    type argument
-    """
-    module = 'analysis.analysisViews.{0}'.format(analysis_type)
-    try:
-        mod = __import__(module, fromlist=[module])
-    except ImportError, e:
-        return HttpResponseNotFound('<h3>Analyse {0} render_to_response was not found</h3>'.format(analysis_type))
-    else:
-       return mod.render(request, app_name)
-    
-@login_required
-def analysis_function_old(request):
-    """This function call the right render_to_response depending on the analysis
-    type argument
-    """
-    if 'analysis_type' not in request.GET:
-        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : '"analysis_type" value is not defined in the request.GET dictionary'}))
-    
-    module = 'analysis.analysisFunctions.{0}'.format(request.GET['analysis_type'])
-    try:
-        mod = __import__(module, fromlist=[module])
-    except ImportError, e:
-        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Analysis function: {0} was not found!'.format(request.GET['analysis_type'])}))
-    else:
-       return mod.analyse(request)
+        user_data = mod.analyse(request)
+        if 'template' in user_data:
+            template = user_data
+        else:
+            template = 'analysis/{0}/results.html'.format(analysis_type)
+        dataDict = {}
+        dataDict.update(user_data)
+        return render_to_response(template, 
+                  dataDict,
+                  context_instance=RequestContext(request))
     
 @login_required
 def getFilters(request):
@@ -217,11 +244,11 @@ def getFilters(request):
         if request.GET['app']:
             querylist.append(makeQuery('application__appName__exact', request.GET['app'].split(','), Q.OR))
         if request.GET['appVersions']:
-            querylist.append(makeQuery('application__appVersion__exact', request.GET['appVersions'].split(','), Q.OR))
+            querylist.append(makeQuery('application__id__exact', request.GET['appVersions'].split(','), Q.OR))
         if request.GET['Options']:
-            querylist.append(makeQuery('options__description__exact',request.GET['Options'].split(','), Q.OR))
+            querylist.append(makeQuery('options__id__exact',request.GET['Options'].split(','), Q.OR))
         if request.GET['SetupProjects']:
-            querylist.append(makeQuery('setup_project__description__exact',request.GET['SetupProjects'].split(','), Q.OR))
+            querylist.append(makeQuery('setup_project__id__exact',request.GET['SetupProjects'].split(','), Q.OR))
         
         final_query = Q()
         for q in querylist:
@@ -230,7 +257,7 @@ def getFilters(request):
         jobDesTemp = JobDescription.objects.filter(final_query)
         Qplatform = None
         if request.GET['platforms']:
-           Qplatform = makeQuery('cmtconfig__cmtconfig__exact', request.GET['platforms'].split(','), Q.OR)
+           Qplatform = makeQuery('cmtconfig__id__exact', request.GET['platforms'].split(','), Q.OR)
         
         paginator = Paginator(jobDesTemp,results_per_page)
         requested_page = request.GET['page']

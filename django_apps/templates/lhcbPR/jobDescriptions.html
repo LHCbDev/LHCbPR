@@ -21,7 +21,7 @@ $(document).ready(function() {
 				$('#tabs').tabs({ selected : -1 });
 				$('#tabs').tabs('select', '#{{ active_tab }}tab');
 				
-				$('#job_info,#overviewButtonClone,#editPlatformsClone,#editHandlersClone,#overviewButtonEdit,#editHandlersEdit,#editPlatformsEdit,#generatescript, #VersionButton,#OptionsButton,#PlatformButton,#SetupProjectButton,#VersionErase,#OptionsErase,#PlatformErase,#SetupProjectErase,#previous_button,#next_button,#mypermalink,button').hover(
+				$('#job_info,#overviewButtonClone,#editPlatformsClone,#editHandlersClone,#overviewButtonEdit,#editHandlersEdit,#editPlatformsEdit,#generatescript,.filter a,#previous_button,#next_button,#mypermalink,button').hover(
 					function() { $(this).addClass('ui-state-hover'); },
 					function() { $(this).removeClass('ui-state-hover'); }
 				);
@@ -176,7 +176,7 @@ In this page you see the existing job descriptions for the choosed application(h
 							{% for ver in appVersions %}
 								<li>
 										<label id="Version{{ forloop.counter }}">
-											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver.value }}" onchange="doFilter(1)" {% if ver.checked %} checked="checked" {% endif %}>
+											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver.id}}" onchange="doFilter(1)" {% if ver.checked %} checked="checked" {% endif %}>
 												{{ ver.value }}
 										 </label>
 								</li>
@@ -193,7 +193,7 @@ In this page you see the existing job descriptions for the choosed application(h
 								{% for opt in options %}
 								<li>
 										<label id="Options{{ forloop.counter }}">
-											<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt.value }}" onchange="doFilter(1)" {% if opt.checked %} checked="checked"  {% endif %}>
+											<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt.id }}" onchange="doFilter(1)" {% if opt.checked %} checked="checked"  {% endif %}>
 												{{ opt.value }}
 										 </label>
 								</li>
@@ -209,7 +209,7 @@ In this page you see the existing job descriptions for the choosed application(h
 							{% for setup in setupProject %}
 								<li>
 										<label id="SetupProject{{ forloop.counter }}">
-											<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup.value }}" onchange="doFilter(1)" {% if setup.checked %} checked="checked" {% endif %}>
+											<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup.id }}" onchange="doFilter(1)" {% if setup.checked %} checked="checked" {% endif %}>
 												{{ setup.value }}
 										 </label>
 								</li>
@@ -226,7 +226,7 @@ In this page you see the existing job descriptions for the choosed application(h
 							{% for plat in platforms %}
 								<li>
 										<label id="Platform{{ forloop.counter }}">
-											<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.value }}" onchange="doFilter(1)" {% if plat.checked %} checked="checked"  {% endif %}>
+											<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.id }}" onchange="doFilter(1)" {% if plat.checked %} checked="checked"  {% endif %}>
 												{{ plat.value }}
 										 </label>
 								</li>
