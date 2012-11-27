@@ -12,7 +12,7 @@ results_directory = os.path.join(settings.PROJECT_PATH, 'static/uploaded')
 
 logger = logging.getLogger('cronPushToDB')
 filehandler = logging.FileHandler(log_file_path)
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+formatter = logging.Formatter('[ %(asctime)s ]  [ %(levelname)s ]  " %(message)s "')
 filehandler.setFormatter(formatter)
 logger.addHandler(filehandler) 
 logger.setLevel(logging.INFO)

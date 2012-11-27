@@ -79,3 +79,34 @@ def getSplitted2(versionobj):
             splittedElement.append(v)
        
     return splittedElement
+
+#return simple input text html elements
+#(one for each list/tuple in the list parameter)
+def formBuilder(listTexts):
+    help = """
+    <pre>
+Attention:
+    default form builder must take as an input a list at this format:
+    my_text_elements_list = [
+        #id of html element, text of the label, optional default value for the text input
+        ('text_id', 'label content', 'default text value')
+                            ]
+    the items in the list can be either lists or tuple
+    each of them should contain at least 2(id, label) values or 3(id,label,value-optional)
+    </pre>
+    """
+    html_texts = []
+    try:
+        for text in listTexts:
+            if len(text) == 2:
+                id , label = text
+                html_texts.append('<label>{1} </label><input id="{0}" type="text" value="" />'.format(id, label))
+            elif len(text) == 3:
+                id , label, value = text
+                html_texts.append('<label>{1} </label><input id="{0}" type="text" value="{2}" />'.format(id, label, value))
+            else:
+                return help
+    except Exception:
+        return help
+    else:
+        return '<br>'.join(html_texts)

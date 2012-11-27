@@ -11,11 +11,19 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
 import json, subprocess, sys, re, copy, os
+from pprint import pformat
 from exceptions import AttributeError
 from random import choice
-from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList
+from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, formBuilder
 
 
+@login_required
+def test(request):
+    myauth = request.user.is_authenticated()
+    myDict = { 'myauth' : myauth, 'user' : request.user}
+    return render_to_response('lhcbPR/test.html', myDict,
+                  context_instance=RequestContext(request))
+    
 def index(request):
     """This view serves the home page of the application(lhcbPR), along 
     with the page it provides information for the user(if he is authenticated
@@ -44,9 +52,9 @@ def jobDescriptions(request, app_name):
     if not appVersions:
         return HttpResponseNotFound("<h3>No existing job descriptions for this application yet.</h3>")
     
-    options = Options.objects.values_list('id', 'description').distinct()
+    options = Options.objects.filter(jobdescriptions__application__appName=app_name).values_list('id', 'description').distinct()
     platforms = Platform.objects.values_list('id','cmtconfig').distinct()
-    setupProject = SetupProject.objects.values_list('id','description').distinct()
+    setupProject = SetupProject.objects.filter(jobdescriptions__application__appName=app_name).values_list('id','description').distinct()
     
     #the GET request may also have information about which versions,options etc the user wants to 
     #to be checked in the filtering checkboxes(used for bookmarking the jobDescriptions page)
@@ -153,20 +161,45 @@ def analysis_render(request, analysis_type, app_name):
     """This function call the right render_to_response depending on the analysis
     type argument
     """
-    #module = 'analysis.{0}.{0}'.format(analysis_type)
+    if request.method == 'GET':
+        requestData = request.GET
+    else:
+        requestData = request.POST
+    
     module = 'analysis.{0}'.format(analysis_type)
     try:
         mod = __import__(module, fromlist=[module])
     except ImportError, e:
-        return HttpResponseNotFound('<h3>Analyse {0} render_to_response(render) was not found</h3>'.format(analysis_type))
-    else:
-        user_data = mod.render(request, app_name)
+        return HttpResponseNotFound('<h3>Analyse {0} render was not found</h3>'.format(analysis_type))
+    else:   
+        user_data = mod.render(request=request, requestData = requestData, app_name = app_name)
         if 'template' in user_data:
             template = user_data['template']
         else:
-            #else use the default template
+            #else use the provided template
             template = 'analysis/{0}/render.html'.format(analysis_type)
-        
+            template_dir = os.path.join(settings.TEMPLATE_DIRS[0], template)
+            
+            #if the user doesn't provide a template use the default one
+            if not os.path.isfile(template_dir):
+                template = 'analysis/default_render.html'
+                if not 'form' in user_data:
+                    user_data['html_form'] = """
+<pre>
+Attention:
+    No render.html template was provided for this analysis.
+    By using the default  but you must provide at least a 'form' key
+    (at your data dictionary which you return) value which 
+    contains an initial text input form, example:
+                        
+    my_text_elements_list = [
+    #id of html element, text of the label, optional default value for the text input
+    ('text_id', 'label content', 'default text value')
+                                                ]
+    return { 'form' : my_text_elements_list }                 
+</pre> 
+                    """
+                    
         if not 'options' in user_data:
             user_data['options'] = Options.objects.all()
         if not 'versions' in user_data:
@@ -185,11 +218,17 @@ def analysis_render(request, analysis_type, app_name):
         except AttributeError:
             title = analysis_type+' analysis'
         
+        if 'form' in user_data:
+            html_form = formBuilder(user_data['form'])
+            del(user_data['form'])
+            user_data['html_form'] = html_form
+        
         applicationsList = list(Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct())
         myauth = request.user.is_authenticated()
         dataDict = {
                     'applications' : applicationsList,
                     'active_tab' : app_name,
+                    'analysis_type' : analysis_type,
                     
                     'title' : title,
                     'help' : help,
@@ -201,9 +240,24 @@ def analysis_render(request, analysis_type, app_name):
         return render_to_response(template, 
                   dataDict,
                   context_instance=RequestContext(request))
-    
+
 @login_required
-def analysis_function(request, analysis_type):
+def analysis_extras(request, analysis_type, function_name, app_name):
+    if request.method == 'GET':
+        requestData = request.GET
+    else:
+        requestData = request.POST
+    
+    module = 'analysis.{0}'.format(analysis_type)
+    try:
+        called_function = getattr(__import__(module, fromlist=[module]), function_name)
+    except ImportError, e:
+        return HttpResponseNotFound(json.dumps({ 'errorMessage' : 'Analysis function {0} for {1} analysis was not found'.format(function_name, analysis_type) }))
+    else:   
+        return called_function(request = request, requestData = requestData, app_name = app_name )
+ 
+@login_required
+def analysis_function(request, analysis_type, app_name):
     """This function call the right render_to_response depending on the analysis
     type argument
     """
@@ -211,21 +265,30 @@ def analysis_function(request, analysis_type):
         requestData = request.GET
     else:
         requestData = request.POST
-        
-    #if 'analysis_type' not in requestData:
-        #return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : '"analysis_type" value is not defined in the request.GET dictionary'}))
     
     module = 'analysis.{0}'.format(analysis_type)
     try:
         mod = __import__(module, fromlist=[module])
     except ImportError, e:
-        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Analysis function: {0} was not found!'.format(requestData['analysis_type'])}))
-    else:
-        user_data = mod.analyse(request)
+        return render_to_response('analysis/error.html', 
+                  { 'errorMessage' : 'Analysis function: {0} was not found!'.format(requestData['analysis_type']) },
+                  context_instance=RequestContext(request)) 
+    
+    else:   
+        user_data = mod.analyse(request = request, requestData = requestData, app_name = app_name)
         if 'template' in user_data:
-            template = user_data
+            template = user_data['template']
         else:
-            template = 'analysis/{0}/results.html'.format(analysis_type)
+            template = 'analysis/{0}/analyse.html'.format(analysis_type)
+            template_dir = os.path.join(settings.TEMPLATE_DIRS[0], template)
+            if not os.path.isfile(template_dir):
+                #choose the default template
+                template = 'analysis/default_analyse.html'
+                #in case of default template  return str representation of data
+                if not 'str' in user_data:
+                 user_data['str'] = pformat(user_data)
+            
+            
         dataDict = {}
         dataDict.update(user_data)
         return render_to_response(template, 
@@ -566,4 +629,85 @@ def upload_file(request):
     if request.method == 'POST':
         handle_uploaded_file(request.FILES['file'])
         return HttpResponse('Server message: Uploading results zip file was successful')
+
+@csrf_exempt 
+def new_job_description(request):
+    """This view checks if a commit request from the user(add new job description/or edit an existing one) is valid.
+    if it's valid it updates/creates the old/new job description, which means add/edit handler,requested platforms, options etc"""
+    
+    if request.method == 'GET':
+        requestData = request.GET
+    elif request.method == 'POST':
+        requestData = request.POST
+    else:
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'unsupported method, supported GET,POST' }))
+    
+    if 'options' not in requestData or 'optionsD' not in requestData or 'application' not in requestData or 'version' not in requestData:
+        return HttpResponse(json.dumps({ 'error' : True , 'errorMessage' : 'Request data must contain: options,optionsD,application,version,setupproject(optional),setupprojectD(optional),handlers(optional),platforms(optional)' }))
+    
+    optObj = Options.objects.filter(description__exact=requestData['optionsD'])
+    if optObj.count() > 0:
+        if not optObj[0].content == requestData['options']:
+            return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing Options description with wrong corresponding content' , 
+                             'content' : optObj[0].content, 'description' : optObj[0].description  }))
+    
+    optObjD = Options.objects.filter(content__exact=requestData['options'])
+    if optObjD.count() > 0:
+        if not optObjD[0].description == requestData['optionsD']:
+            return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing Options content with wrong corresponding description' , 
+                             'content' : optObjD[0].content, 'description' : optObjD[0].description  }))
+    
+    if 'setupproject' in  requestData and 'setupprojectD' in requestData:
+        setupObj = SetupProject.objects.filter(description__exact=requestData['setupprojectD'])
+        if setupObj.count() > 0:
+            if not setupObj[0].content == requestData['setupproject']:
+                return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing SetupProject description with wrong corresponding content' , 
+                          'content' : setupObj[0].content, 'description' : setupObj[0].description  }))
+        
+        setupObjD = SetupProject.objects.filter(content__exact=requestData['setupproject'])
+        if setupObjD.count() > 0:
+            if not setupObjD[0].description == requestData['setupprojectD']:
+                return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing SetupProject content with wrong corresponding description' , 
+                             'content' : setupObjD[0].content, 'description' : setupObjD[0].description  }))
+    
+    
+    if 'setupproject' in  requestData and 'setupprojectD' in requestData:
+        myjob_id = JobDescription.objects.filter(application__appName__exact=requestData['application'], 
+                                                 application__appVersion__exact=requestData['version'],
+                                                 options__content__exact=requestData['options'],
+                                                 options__description__exact=requestData['optionsD'],
+                                                 setup_project__content__exact=requestData['setupproject'],
+                                                 setup_project__description__exact=requestData['setupprojectD']
+                                                 )
+    else:
+        myjob_id = JobDescription.objects.filter(application__appName__exact=requestData['application'], 
+                                                 application__appVersion__exact=requestData['version'],
+                                                 options__content__exact=requestData['options'],
+                                                 options__description__exact=requestData['optionsD'],
+                                                 )
+    if myjob_id.count() > 0:
+        return HttpResponse(json.dumps({ 'error': False , 'exists' : True, 'jobdescription_id' : myjob_id[0].id  }))
+    else:
+        if 'setupproject' in  requestData and 'setupprojectD' in requestData:
+            setupprojectTemp, created = SetupProject.objects.get_or_create(content=requestData['setupproject'], description=requestData['setupprojectD'])
+        
+        optionsTemp, created = Options.objects.get_or_create(content=requestData['options'], description=requestData['optionsD'])
+        appTemp, created = Application.objects.get_or_create(appName=requestData['application'], appVersion=requestData['version'])
+        
+        if 'setupproject' in  requestData and 'setupprojectD' in requestData:
+            myObj, created = JobDescription.objects.get_or_create(application=appTemp, options=optionsTemp, setup_project=setupprojectTemp)
+        else:
+            myObj, created = JobDescription.objects.get_or_create(application=appTemp, options=optionsTemp)           
+        
+        if 'handlers' in requestData:
+            for handler_name in requestData['handlers'].split(','):
+                handlerTemp = Handler.objects.get(name=handler_name)
+                jobHandlerTemp, created = JobHandler.objects.get_or_create(jobDescription=myObj, handler=handlerTemp)
+        
+        if 'platforms' in requestData:
+            for platform_name in requestData['platforms'].split(','):
+                platformTemp = Platform.objects.get(cmtconfig=platform_name)
+                requestedPlatfromTemp, created = Requested_platform.objects.get_or_create(jobdescription=myObj, cmtconfig=platformTemp)
+        
+        return HttpResponse(json.dumps({'error' : False, 'exists' : False , 'jobdescription_id' : myObj.id }))
     

@@ -4,77 +4,89 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 from lhcbPR.models import AddedResults, ResultFile, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
 from django.db import transaction
-import json, re, logging, zipfile
+import json, re, logging, zipfile, os
+from django.conf import settings
 
-logging.basicConfig(level=logging.INFO)
+log_file_path = os.path.join(settings.PROJECT_PATH, 'static/logs/pushZip_log')
+
 logger = logging.getLogger('pushZip')
+filehandler = logging.FileHandler(log_file_path)
+formatter = logging.Formatter('[ %(asctime)s ] [ %(levelname)s ] " %(message)s "')
+filehandler.setFormatter(formatter)
+logger.addHandler(filehandler) 
+logger.setLevel(logging.INFO)
+log = ''
 
 def pushThis(zipFile):
-    myDataDict = {}
+    DataDict = {}
     try:
+        head, tail = os.path.split(zipFile)
+        log = "[ 'zipFile' : '{0}' ]  ".format(tail)
         unzipper = zipfile.ZipFile(zipFile)
         
-        myDataDict = json.loads(unzipper.read('json_results'))
-    except ValueError:
-        logger.error('Invalid json file in zip folder!Check your input zip folder\n')
+        DataDict = json.loads(unzipper.read('json_results'))
+    except ValueError, e:
+        logger.exception("{0} exception occurred ".format(log))
         return
     except IOError,e:
-        logger.error('No such file or directory!\n')
+        logger.exception("{0} exception occurred ".format(log))
         print str(e)
         return
-    except IndexError:
-        logger.error('No input was given!\n')
+    except IndexError, e:
+        logger.exception("{0} exception occurred ".format(log))
         return
     except Exception, e:
-        logger.error(str(Exception))
-    else:
-        logger.info('Json file from zip folder was valid , processing...')
-      
+        logger.exception("{0} exception occurred ".format(log))
+        return
     
     try:
-        results_unique_id, created = AddedResults.objects.get_or_create(identifier=myDataDict['results_id'])
+        results_unique_id, created = AddedResults.objects.get_or_create(identifier=DataDict['results_id'])
         if not created:
-            logger.warning('Results file '+results_unique_id.identifier+' already added, aborting...')
+            log+= 'Results zip file {0} already added, aborting...'.format(results_unique_id.identifier)
+            logger.warning(log)
             return
         
-        cmtconfigDict = myDataDict['CMTCONFIG']
+        log+= " [ 'job_description_id' : {0} ] ".format(DataDict['id_jobDescription'])
+        log+= " [ 'host' : '{0}' ]".format(DataDict['HOST']['hostname'])
+        log+= " [ 'platform' : '{0}' ] ".format(DataDict['CMTCONFIG']['platform'])
+        log+= " [ 'time_start' : '{0}' ] ".format(DataDict['time_start'])
+        
+        cmtconfigDict = DataDict['CMTCONFIG']
         mycmtconfig, created = Platform.objects.get_or_create(cmtconfig=cmtconfigDict['platform'])
         
-        hostDict = myDataDict['HOST']
+        hostDict = DataDict['HOST']
         myhost, created = Host.objects.get_or_create(hostname=hostDict['hostname'],
                                                    cpu_info=hostDict['cpu_info'],
                                                    memoryinfo=hostDict['memoryinfo'])
         
-        myjobDescription = JobDescription.objects.get(pk=myDataDict['id_jobDescription'])
+        myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
         
-        attributelist = myDataDict['JobAttributes']
+        attributelist = DataDict['JobAttributes']
         
         if not attributelist:
-            logger.warning('No collected results were found in the json input file, perhaps all handlers failed')
-            logger.warning('Aborting saving job...')
+            log+= " No collected results were found in the json_results file, perhaps all handlers failed! Aborting saving job..."
+            logger.error(log)
             return
         
         myjob, created = Job.objects.get_or_create(
                                          host = myhost,
                                          jobDescription = myjobDescription,
                                          platform = mycmtconfig,
-                                         time_start = re.sub(',', ' ', myDataDict['time_start']),
-                                         time_end = re.sub(',', ' ', myDataDict['time_end']),
-                                         status = myDataDict['status'],
+                                         time_start = re.sub(',', ' ', DataDict['time_start']),
+                                         time_end = re.sub(',', ' ', DataDict['time_end']),
+                                         status = DataDict['status'],
                                          success = True
                                          )
         
-        for handres in myDataDict['handlers_info']:
+        for handres in DataDict['handlers_info']:
             myHandler = Handler.objects.get(name__exact=handres['handler'])
             handler_result, created = HandlerResult.objects.get_or_create(
                                                                           job=myjob,
                                                                           handler=myHandler,
                                                                           success=handres['successful']
                                                                           )
-        
-        counter = 0
+
         for atr in attributelist:
-            #logger.info( 'Saving: '+str(counter)+' attribute')
             
             myAtr, created = JobAttribute.objects.get_or_create(
                                                                 name = atr['name'],
@@ -107,18 +119,16 @@ def pushThis(zipFile):
                                       jobAttribute = myAtr,
                                       )
                 finalAtr.file.save(atr['filename'], ContentFile(file), save=True)
-            
-            counter+=1
      
-        logger.info('Zip folder with new job results added successfully\n')
+        log+="[ 'job_id' : {0} ]".format(myjob.id)
+        logger.info(log+' Zip folder with new job results added successfully\n')
         return
     
     except KeyError, e:
-        logger.error('Attributes given in json file are wrong, aborting...\n'+str(e)+'\n')
+        logger.exception(log+' exception occurred!')
         return
     except Exception,e:
-        logger.error(e)
-        logger.error('Aborting...')
+        logger.exception(log+' exception occurred!')
         return
 
 class Command(BaseCommand):
@@ -130,6 +140,5 @@ class Command(BaseCommand):
         """
         
         zipFile = args[0]
-        
         pushThis(zipFile)
         return

@@ -1,0 +1,52 @@
+<script type="text/javascript">
+/* using just javascript, no need linking jquery(extra get request, spend more time) */
+		$(document).ready(function() {	
+			myResultsDiv = document.getElementById("yo");
+
+			if({{ histogram|safe }}){
+				bins = {{ bins|safe }};
+                $('<pre>')
+                    .html(JSON.stringify(bins, null, '  '))
+                    .appendTo('#yo')
+
+				if({{ separately_hist|safe }}){
+					var results ={{ results|safe }};
+					for(var i = 0; i < results.length; i++){
+						histUrl = results[i].histogram;
+						delete results[i].histogram;
+                        myPre = document.createElement("pre");
+						myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '  ')));
+						myResultsDiv.appendChild(myPre);
+							
+						myImg = document.createElement("img");
+						myImg.src = histUrl + "?"+new Date().getTime();
+						myResultsDiv.appendChild(myImg);
+						myHr = document.createElement("hr");
+						myResultsDiv.appendChild(myHr);
+					}
+				}
+				else{
+					var results = {{ results|safe }};
+
+					histUrl = results[0].histogramImposed;
+					myImg = document.createElement("img");
+					myImg.src = histUrl + "?" +new Date().getTime();
+					myResultsDiv.appendChild(myImg);
+
+					for(var i = 0; i < results.length; i++){
+						delete results[i].histogramImposed;
+                        myPre = document.createElement("pre");
+					    myPre.appendChild(document.createTextNode(JSON.stringify(results[i], null, '  ')));
+						myResultsDiv.appendChild(myPre);
+					}
+				}
+			}
+			else{
+                myPre = document.createElement("pre");
+				myPre.appendChild(document.createTextNode(JSON.stringify({{ results|safe }}, null, '  ')));
+				myResultsDiv.appendChild(myPre);
+			}
+		});
+</script>
+<div id="yo">
+</div>

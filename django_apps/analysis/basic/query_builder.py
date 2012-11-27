@@ -1,4 +1,4 @@
-def get_queries(requestData):
+def get_queries(requestData, app_name):
     select_statements = ['apl.appversion as Version' , 'opt.description as Options', 'plat.cmtconfig as Platform' ]
     from_statements = [ 'lhcbpr_job j', 'lhcbpr_jobresults r', 'lhcbpr_jobattribute att', 
                    'lhcbpr_platform plat',  'lhcbpr_jobdescription jobdes', 
@@ -63,7 +63,7 @@ def get_queries(requestData):
     #we know finalize the queries
     application_attribute= "  and att.id={0}".format(requestData['atr'].split(',')[0])
     if versions[0] == "":
-        application_attribute+= " and apl.appname='{0}'".format(requestData['appName'])
+        application_attribute+= " and apl.appname='{0}'".format(app_name)
     query_results += application_attribute
     query_groups += application_attribute
     

@@ -14,7 +14,8 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^lhcbPR/jobDescriptions/$', 'jobDescriptionsHome'),
     url(r'^lhcbPR/jobDescriptions/(?P<app_name>\w+)/$', 'jobDescriptions'),
     url(r'^lhcbPR/analyse/$','analyseHome'),
-    url(r'^lhcbPR/results/analyse/(?P<analysis_type>\w+)/$', 'analysis_function'),
+    url(r'^lhcbPR/analyse/(?P<analysis_type>\w+)/functions/(?P<function_name>\w+)/(?P<app_name>\w+)/$', 'analysis_extras'),
+    url(r'^lhcbPR/analyse/(?P<analysis_type>\w+)/results/(?P<app_name>\w+)/$', 'analysis_function'),
     url(r'^lhcbPR/analyse/(?P<app_name>\w+)/$', 'analysis_application'),
     url(r'^lhcbPR/analyse/(?P<analysis_type>\w+)/(?P<app_name>\w+)/$', 'analysis_render'),
     url(r'^lhcbPR/getFilters/$', 'getFilters'),
@@ -24,6 +25,8 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^lhcbPR/script', 'script'),
     url(r'^lhcbPR/upload','upload_file'),
     url(r'^lhcbPR/getRunnedJobs', 'getRunnedJobs'),
+    url(r'^lhcbPR/test','test'),
+    url(r'^lhcbPR/newjobdescription', 'new_job_description')
 )
 
 urlpatterns += patterns('',

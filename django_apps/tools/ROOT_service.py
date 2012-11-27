@@ -34,7 +34,7 @@ def define_bins(request,groupvalues):
     if request['xup'] == '':
         bins['xup'] = max([ i[1] for i in min_max_values ])
     else:
-        bins['xup'] = int(request['xup'])
+        bins['xup'] = float(request['xup'])
     if request['xlow'] == '':
         bins['xlow'] = min([ i[0] for i in min_max_values ])
     else:
@@ -42,7 +42,10 @@ def define_bins(request,groupvalues):
     if request['nbins'] == '':
         bins['nbins'] = 100
     else:
-        bins['nbins'] = float(request['nbins'])
+        bins['nbins'] = int(request['nbins'])
+    
+    print 'Printing the bins'
+    print bins['xup'], bins['xlow'], bins['nbins']
     
     return bins
 
@@ -94,7 +97,8 @@ class Stats(object):
         self.count = array.GetSize()
         
     def histogramObject(self, bins,name):
-        h0f = TH1F("histogram","{0} values".format(name),bins['nbins'],bins['xlow'],bins['xup'])
+        print name, bins
+        h0f = TH1F("histogram", "{0} values".format(name), bins['nbins'], bins['xlow'], bins['xup'])
         for value in self.data:
             h0f.Fill(value)
         
@@ -156,12 +160,46 @@ def histograms_service(remoteservice):
         cursor_description = request_info['description']
         
         all_results = []
-        for k, v in groups_dict.iteritems():
-            dataDict = dict(zip(cursor_description, k))
-            dataDict['ADDED HISTOGRAMS'] = v.count
-            dataDict['histogram'] = plot_histogram([v.getHistogramSum()], initialStyle)
+        if request_info['hist_separated']:
+            for k, v in groups_dict.iteritems():
+                dataDict = dict(zip(cursor_description, k))
+                dataDict['ADDED HISTOGRAMS'] = v.count
+                dataDict['histogram'] = plot_histogram([v.getHistogramSum()], initialStyle)
+                
+                all_results.append(dataDict)
+        elif request_info['hist_imposed']:
+            histogramObjects = []
+            for k, v in groups_dict.iteritems():
+                histogramObjects.append( v.getHistogramSum() )   
             
-            all_results.append(dataDict)
+            histogramImposedUrl = plot_histogram(histogramObjects, noStyle)
+            
+            for i, keyvalue in enumerate(groups_dict.iteritems()):
+                k, v = keyvalue
+                dataDict = dict(zip(cursor_description, k))
+                dataDict['histogram'] = colorsName[i]
+                dataDict['ADDED HISTOGRAMS'] = v.count
+                dataDict['histogramImposed'] = histogramImposedUrl
+                
+                all_results.append(dataDict)
+        elif request_info['hist_divided']:
+            histogramObjects = []
+            for k, v in groups_dict.iteritems():
+                histogramObjects.append( v.getHistogramSum() )
+            
+            if request_info['hist_divided_reversed']:
+                histogramObjects[0].Divide(histogramObjects[1])
+                histogramDividedUrl = plot_histogram( [ histogramObjects[0] ], initialStyle)
+            else:
+                histogramObjects[1].Divide(histogramObjects[0])
+                histogramDividedUrl = plot_histogram( [ histogramObjects[1] ], initialStyle)
+                
+            for k, v in groups_dict.iteritems():
+                dataDict = dict(zip(cursor_description, k))
+                dataDict['ADDED HISTOGRAMS'] = v.count
+                dataDict['histogramDivided'] = histogramDividedUrl
+                
+                all_results.append(dataDict)
         
         remoteservice.send({ 'results' : all_results })
         remoteservice.finish()
@@ -196,13 +234,13 @@ def basic_service(remoteservice):
         all_results = []
         
         bins = None
-        if request_info['histogram'] == True:
+        if request_info['histogram']:
             bins = define_bins(request_info,groups_dict)
             
-            if request_info['separately_hist'] == True:
+            if request_info['separately_hist']:
                 for k, v in groups_dict.iteritems():
                     result = Stats_to_dict(k,v,request_info['description'])
-                    result['histogram'] = plot_histogram([ v.histogramObject(bins,request_info['atr']) ], noStyle)
+                    result['histogram'] = plot_histogram([ v.histogramObject(bins,request_info['atr']) ], initialStyle)
                     all_results.append(result)
 
             else:

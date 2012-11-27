@@ -1,0 +1,110 @@
+{% extends "analysis/base_analysis_template2.html" %}
+
+{% block head %}
+{{ block.super }}
+<script type="text/javascript" src="/static/js/autocompleteBox.js"></script>
+{% endblock head %}
+
+{% block script %} 
+    {{ block.super }}
+
+    $(document).ready(function() {
+        $( "#atr" ).combobox();
+        
+        $("#hist_imposed").click(function(){ 
+			if($(this).is(':checked')){
+				$("#hist_separated").removeAttr("checked");
+                $("#hist_divided").removeAttr("checked");
+                $("#hist_divided_reversed").removeAttr("checked");
+                $("#division").slideUp();
+			}
+		 });
+		$("#hist_separated").click(function(){ 
+			if($(this).is(':checked')){
+				$("#hist_imposed").removeAttr("checked");
+                $("#hist_divided").removeAttr("checked");
+                $("#hist_divided_reversed").removeAttr("checked");
+                $("#division").slideUp();
+			}
+		 });
+          $("#hist_divided").click(function(){ 
+			if($(this).is(':checked')){
+				$("#hist_separated").removeAttr("checked");
+                $("#hist_imposed").removeAttr("checked");
+                $("#division").slideDown("slow");
+			}
+		 });    
+
+    });
+
+function checkRequestData(requestData){
+	var errors = {}
+ 
+	if (requestData["atr"] == "") {
+		errors["attribute"] = "Histogram field can not be empty!";
+	}
+	
+	return errors;
+}
+
+{% endblock script %}
+
+{% block stylecss %} 
+
+	.ui-combobox {
+        position: relative;
+        display: inline-block;
+    }
+    .ui-combobox-toggle {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin-left: -1px;
+        padding: 0;
+        /* adjust styles for IE 6/7 */
+        *height: 1.7em;
+        *top: 0.1em;
+    }
+    .ui-combobox-input {
+        margin: 0;
+       	padding: 0.3em;
+    }
+	#group_by_host, #hist_options { margin-top: 0.5em; }
+    #histogram_settings { margin-top : 1em; }
+    #division { margin : 0.3em 0 0 1em;}
+    
+{% endblock stylecss %}
+
+{% block content %} 
+
+    <div class="ui-widget">
+    	<label>Choose an attribute: </label>
+    	<select id="atr">
+    		<option value=""></option>
+    		{% for atr in attributes %}
+    			<option value="{{ atr.0 }},{{ atr.1 }}">{{ atr.0 }}</option>
+    		{% endfor %}
+    	</select>
+    </div>
+						
+	<div id="group_platform">
+		<label><input id="group_platform" type="checkbox" checked="checked">group by platform</label>
+	</div>
+
+	<div id="group_by_host">
+		<label><input id="group_host" type="checkbox">group by host</label>
+	</div>
+
+    <div id="histogram_settings">
+    <label>Histogram settings:</label>
+        <div id="hist_options">
+            <label><input id="hist_separated" type="radio" checked="checked">separated</label>
+            <label><input id="hist_imposed" type="radio">superimposed</label>
+            <label><input id="hist_divided" type="radio">divided</label>
+        </div>
+        <div id="division" style="display:none;">
+            <label><input id="hist_divided_reversed" type="checkbox">reversed division</label>
+        </div>
+    </div>
+
+{% endblock content %}

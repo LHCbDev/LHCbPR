@@ -1,0 +1,58 @@
+<script type="text/javascript">
+		$(document).ready(function() {	
+            var results = {{ results|safe }}
+            if( {{ hist_separated|safe }} ){
+    			$.each(results, function(index, result) { 
+    				var histUrl = result.histogram;
+    				delete result.histogram;
+    				$('<pre>')
+                        .html(JSON.stringify(result, null, '  '))                              
+                        .appendTo('#yo');	
+    				$('<img>')
+                        .attr('src' , histUrl + "?"+new Date().getTime())
+                        .appendTo('#yo');
+    				$('<hr>').appendTo('#yo');
+                });
+            }else if({{ hist_imposed|safe }}){
+					var histUrl = results[0].histogramImposed;
+                    $('<img>')
+                        .attr('src', histUrl + "?" +new Date().getTime() )
+    					.appendTo('#yo');
+
+					$.each(results, function(index, result) { 
+						delete result.histogramImposed;
+                        $('<pre>')
+                            .html(JSON.stringify(result, null, '  '))
+					        .appendTo('#yo');
+                    });           
+            }else if({{ hist_divided|safe }}){
+					histUrl = results[0].histogramDivided;
+					$('<img>')
+                        .attr('src', histUrl + "?" +new Date().getTime() )
+					    .appendTo('#yo');
+                    
+                    var first = 0;
+                    var second = 1;
+                    if ({{ host_divided_reversed|safe }}){
+                               first = 1;
+                               second = 0;
+                    }                    
+                                        				                        
+				    delete results[first].histogramDivided;
+                    delete results[second].histogramDivided;
+
+                    $('<pre>')
+                        .html(JSON.stringify(results[first], null, '  '))
+                        .appendTo('#yo');
+                    $('<pre>')
+                        .html('divided with:')
+                        .appendTo('#yo');             
+                    $('<pre>')
+                        .html(JSON.stringify(results[second], null, '  '))
+                        .appendTo('#yo');
+            }
+
+		});
+</script>
+<div id="yo">
+</div>

@@ -10,4 +10,5 @@ Also you can customize your histogram by typing your values on the nbins, xlow, 
 
 title = 'Basic analysis'
 
-from basic import render, analyse
+from basic import render, analyse, filterAtrs
+    
