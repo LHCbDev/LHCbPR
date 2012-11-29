@@ -1,0 +1,11 @@
+Title, axis labels, type of axis, graphics option
+(when None is given leave empty)
+Multiplicity stable charged particles, Npart, dN, x linear, y log, hist
+Multiplicity stable charged particles in LHCb eta, Npart, dN, x linear, y log, hist
+Process type, Process id, None, x linear, y linear, hist
+Num. of primary interaction per bunch, Nint, 1/Nev, x linear, y linear, hist
+PrimaryVertex x (mm), x (mm), Nvert/Nev, x linear, y linear, hist
+PrimaryVertex y (mm), y (mm), Nvert/Nev, x linear, y linear, hist
+PrimaryVertex z (mm), z (mm), Nvert/Nev, x linear, y linear, hist
+Pseudorapidity stable charged particles,  eta, dN/eta, x linear, y linear, hist
+Pt stable charged particles, Pt (MeV), dN/pt, x linear, y log, hist

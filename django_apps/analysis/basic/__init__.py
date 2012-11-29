@@ -12,3 +12,5 @@ title = 'Basic analysis'
 
 from basic import render, analyse, filterAtrs
     
+def isAvailableFor(app_name):
+    return True

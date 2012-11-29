@@ -14,7 +14,7 @@ import json, subprocess, sys, re, copy, os
 from pprint import pformat
 from exceptions import AttributeError
 from random import choice
-from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, formBuilder
+from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, formBuilder, getSplitted3
 
 
 @login_required
@@ -47,15 +47,20 @@ def jobDescriptions(request, app_name):
     if not apps:
         return HttpResponseNotFound("<h3>Page not found</h3>")        
     
-    appVersions = JobDescription.objects.filter(application__appName__exact=app_name).values_list('application_id','application__appVersion').distinct()
+    appVersions_temp = JobDescription.objects.filter(application__appName__exact=app_name).values_list('application_id','application__appVersion').distinct()
+    appVersions = reversed(sorted(appVersions_temp, key = getSplitted3))
     
     if not appVersions:
         return HttpResponseNotFound("<h3>No existing job descriptions for this application yet.</h3>")
     
-    options = Options.objects.filter(jobdescriptions__application__appName=app_name).values_list('id', 'description').distinct()
-    platforms = Platform.objects.values_list('id','cmtconfig').distinct()
-    setupProject = SetupProject.objects.filter(jobdescriptions__application__appName=app_name).values_list('id','description').distinct()
+    options_temp = Options.objects.filter(jobdescriptions__application__appName=app_name).values_list('id', 'description').distinct()
+    options = sorted(options_temp, key = lambda options_temp : options_temp[1] )
     
+    platforms_temp = Platform.objects.values_list('id','cmtconfig').distinct()
+    platforms = sorted(platforms_temp, key = lambda platforms_temp : platforms_temp[1])
+    
+    setupProject_temp = SetupProject.objects.filter(jobdescriptions__application__appName=app_name).values_list('id','description').distinct()
+    setupProject = sorted(setupProject_temp, key = lambda setupProject_temp : setupProject_temp[1])
     #the GET request may also have information about which versions,options etc the user wants to 
     #to be checked in the filtering checkboxes(used for bookmarking the jobDescriptions page)
     #so it gets all versions,options... for the requested application(from app_name) and checks which 
@@ -143,6 +148,19 @@ def analysis_application(request, app_name):
     
     handlers = list(HandlerResult.objects.filter(job__jobDescription__application__appName=app_name).filter(success=True).values_list('handler__name',flat=True).distinct())
     
+    analysis_dir = os.path.join(settings.PROJECT_PATH, 'analysis')
+    modules = os.listdir(analysis_dir)
+    analysisList = []
+    for module in modules:
+        if os.path.isdir(os.path.join(analysis_dir, module)):
+            mod_import = 'analysis.{0}'.format(module)
+            try:
+                mod = __import__(mod_import, fromlist=[mod_import])
+            except ImportError, e:
+                return HttpResponseNotFound('<h3>Error potato happened while checking analysis {0}</h3>'.format(module))
+            else:
+                if mod.isAvailableFor(app_name):
+                    analysisList.append((module, module.upper()))
     
     dataDict = { 
                 'handlers' : handlers,
@@ -150,6 +168,7 @@ def analysis_application(request, app_name):
                 'myauth' : myauth, 
                 'user' : request.user, 
                 'applications' : applicationsList,
+                'analysisList' : analysisList
                }
       
     return render_to_response('lhcbPR/analyse.html', 

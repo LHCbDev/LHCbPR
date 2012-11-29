@@ -8,7 +8,7 @@ import pushZip
 
 #directories for results logging
 log_file_path = os.path.join(settings.PROJECT_PATH, 'static/logs/adding_results_log')
-results_directory = os.path.join(settings.PROJECT_PATH, 'static/uploaded')
+#results_directory = os.path.join(settings.PROJECT_PATH, 'static/uploaded')
 
 logger = logging.getLogger('cronPushToDB')
 filehandler = logging.FileHandler(log_file_path)
@@ -54,6 +54,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
     
         c = CronTab(
-          Event( pushNewResults, min = range(0,60,1) )
+          Event( pushNewResults, min = range(0,60,5) )
         )
         c.run()

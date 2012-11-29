@@ -1,0 +1,20 @@
+<script type="text/javascript">
+$(document).ready(function() {	
+			var results ={{ results|safe }};
+    
+            $('<pre>')
+                .html("{{ msg|safe }}")
+                .appendTo('#yo');
+
+			$.each(results, function(index, result){
+				var histUrl = result.histogram;
+				delete result.histogram;
+                $('<pre>')
+                    .html(JSON.stringify(result, null, '  '))
+                    .appendTo('#yo')
+			});
+		});
+</script>
+
+<div id="yo">
+</div>

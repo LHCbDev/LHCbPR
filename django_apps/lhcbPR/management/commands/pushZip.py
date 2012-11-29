@@ -30,7 +30,6 @@ def pushThis(zipFile):
         return
     except IOError,e:
         logger.exception("{0} exception occurred ".format(log))
-        print str(e)
         return
     except IndexError, e:
         logger.exception("{0} exception occurred ".format(log))
@@ -138,7 +137,6 @@ class Command(BaseCommand):
         """ 
         Pushes the data from the given json file inside the database
         """
-        
         zipFile = args[0]
         pushThis(zipFile)
         return

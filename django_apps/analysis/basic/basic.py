@@ -82,7 +82,7 @@ def analyse(**kwargs):
     logical_data_groups = cursor.fetchall()
     
     if len(logical_data_groups) == 0: 
-        return { 'error' : json.dumps(False) , 'results' : [] , 'histogram' : False, }
+        return { 'errorMessage' : 'No results produced from you choices', 'template' : 'analysis/error.html' }
     if len(logical_data_groups) > 3:
         if requestData['histogram'] == "true":
             return {'errorMessage' : 'Your choices returned more than 3 results.Can not generate histograms for more than 3 results!',
@@ -155,7 +155,7 @@ def filterAtrs(**kargs):
     atrsTemp =  JobResults.objects.filter(job__jobDescription__application__appName=app_name,job__success=True).filter(Q(jobAttribute__type='Float')).filter(filterGroups)
     atrs = atrsTemp.values_list('jobAttribute__id','jobAttribute__name','jobAttribute__type').distinct()
     
-    optionsHtml = '' 
+    optionsHtml = '<option value=""></option>' 
     
     for atr in atrs:
        optionsHtml+=  '<option value="{0},{1}">{2}</option>'.format(atr[0],atr[2],atr[1])

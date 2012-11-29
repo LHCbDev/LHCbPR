@@ -1,0 +1,180 @@
+<!-- <script src="/static/js/jquery-1.8.2.js"></script> -->
+<link rel="stylesheet" type="text/css" href="/static/css/easyui/themes/default/easyui.css" rel="stylesheet" />
+<script type="text/javascript" src="/static/js/jquery.easyui.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {		
+			$('#test').treegrid({
+				title:'Timing Table',
+				iconCls:'icon-save',
+				//width:"120%",
+				height:"600",
+				nowrap: false,
+				rownumbers: true,
+				animate:true,
+				collapsible:true,
+				url : '{{ url }}' ,
+				idField:'code',
+				treeField:'name',
+                 	        rowStyler:function(row){ 
+                                         if (row.rank<10){  
+                                                return 'background-color:red;color:blue;font-weight:bold;';  
+                                          } else if (row.mrank < 10) {
+                                                return 'color:red' 
+                                          }                                         
+                                        },
+				frozenColumns:[[
+				]],
+				columns:[[
+					{field:'name',title:'Name',width:400},
+					{field:'total',title:'CPU Time (ms)',width:100, align:'right'},
+					{field:'rank',title:'Rank',width:100, align:'right' 
+					//, formatter:function(value){
+                                        //if (value < 10) { return '<span style="background:red">'+value+'</span>'; } else { return value }
+                                        //return '<span style="color:red">'+value+'</span>'
+					//return value
+                                        //}, 
+                                        },
+					{field:'entries',title:'Nb Entries',width:100, align:'right'},
+					{field:'perTotal',title:'% Time Total',width:100, align:'right'},
+					{field:'perLevel',title:'% Time Level',width:100, align:'right'},
+					{field:'childrenTotal',title:'Sum Time child.',width:100, align: 'right'},
+				]],
+				onBeforeLoad:function(row,param){
+					if (row){
+						$(this).treegrid('options').url = '{{ url }}';
+					} else {
+						$(this).treegrid('options').url = '{{ url }}';
+					}
+				},
+				onLoadSuccess:function(row,param){
+	                               //$(this).treegrid('collapseAll');
+				},
+				onContextMenu: function(e,row){
+					e.preventDefault();
+					$(this).treegrid('unselectAll');
+					$(this).treegrid('select', row.code);
+					$('#mm').menu('show', {
+						left: e.pageX,
+						top: e.pageY
+					});
+				}
+			});
+	      
+});
+
+		function reload(){
+			var node = $('#test').treegrid('getSelected');
+			if (node){
+				$('#test').treegrid('reload', node.code);
+			} else {
+				$('#test').treegrid('reload');
+			}
+		}
+
+		function getChildren(){
+			var node = $('#test').treegrid('getSelected');
+			if (node){
+				var nodes = $('#test').treegrid('getChildren', node.code);
+			} else {
+				var nodes = $('#test').treegrid('getChildren');
+			}
+			var s = '';
+			for(var i=0; i<nodes.length; i++){
+				s += nodes[i].code + ',';
+			}
+			alert(s);
+		}
+
+		function getSelected(){
+			var node = $('#test').treegrid('getSelected');
+			if (node){
+				alert(node.code+":"+node.name);
+			}
+		}
+		function collapse(){
+			var node = $('#test').treegrid('getSelected');
+			if (node){
+				$('#test').treegrid('collapse', node.code);
+			}
+		}
+
+		function expand(){
+			var node = $('#test').treegrid('getSelected');
+			if (node){
+				$('#test').treegrid('expand', node.code);
+			}
+		}
+		function collapseAll(){
+			var node = $('#test').treegrid('getSelected');
+			if (node){
+				$('#test').treegrid('collapseAll', node.code);
+			} else {
+				$('#test').treegrid('collapseAll');
+			}
+		}
+		function expandAll(){
+			var node = $('#test').treegrid('getSelected');
+			if (node){
+				$('#test').treegrid('expandAll', node.code);
+			} else {
+				$('#test').treegrid('expandAll');
+			}
+		}
+		function expandTo(){
+			$('#test').treegrid('expandTo', '02013');
+			$('#test').treegrid('select', '02013');
+		}
+		var codeIndex = 1000;
+		function append(){
+			codeIndex++;
+			var data = [{
+				code: 'code'+codeIndex,
+				name: 'name'+codeIndex,
+				addr: 'address'+codeIndex,
+				col4: 'col4 data'
+			}];
+			var node = $('#test').treegrid('getSelected');
+			$('#test').treegrid('append', {
+				parent: (node?node.code:null),
+				data: data
+			});
+		}
+		function remove(){
+			var node = $('#test').treegrid('getSelected');
+			if (node){
+				$('#test').treegrid('remove', node.code);
+			}
+		}
+</script>
+<div>
+<pre>Number of jobs: {{ jobs_num }}
+{{ description }} 
+</pre>
+	<table id="test" style="width : 1050px;"></table>
+
+	<div id="log" style="margin:10px 0;">
+	</div>
+
+	
+	<div id="mm" class="easyui-menu" style="width:120px;" style="display:none;">
+		<div onclick="append()">Append</div>
+		<div onclick="remove()">Remove</div>
+	</div>
+
+<div>
+	<!--	<a href="#" onclick="reload()">Reload</a>
+		<a href="#" onclick="getChildren()">GetChildren</a>
+		<a href="#" onclick="getSelected()">GetSelected</a>
+		<a href="#" onclick="collapse()">Collapse</a>
+		<a href="#" onclick="expand()">Expand</a>
+		<a href="reco14.log">Full log</a>  -->
+
+		<a href="#" onclick="collapseAll()" class="">CollapseAll</a>
+		<a href="#" onclick="expandAll()">ExpandAll</a>
+<!--		<a href="#" onclick="expandTo()">ExpandTo</a>
+		<a href="#" onclick="append()">Append</a>
+ -->
+</div>
+
+</div>

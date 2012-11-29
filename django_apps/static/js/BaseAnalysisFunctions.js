@@ -1,9 +1,3 @@
-$(document).ready(function() {
-    $("input").click(function () {
-        $(this).toggleClass('selected');
-    });
-});
-
 function getValue(child, dataObj) {
 	var myvalue = {};
 	if(child.is(":input")) {
@@ -146,14 +140,14 @@ function showHide( button_id, box_id )
 }
 
 function CheckBoxClear(id){
-    $('#'+id+' li label .selected').each(function () {
+    $('#'+id+' li label :checked').each(function () {
             $(this).removeAttr('checked');
       });
 }
 
 function getSelectedChilds(id){
 	var sdValues = [];
-    $('#'+id+' li label .selected').each(function () {
+    $('#'+id+' li label :checked').each(function () {
             sdValues.push($(this).attr('value'));
       });
 	return sdValues;

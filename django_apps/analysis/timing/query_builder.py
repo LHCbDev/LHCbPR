@@ -1,4 +1,5 @@
-def get_query_groups(request):
+def get_query_groups(requestData,app_name):
+
     select_statements = ['apl.appversion as Version' , 'opt.description as Options', 'plat.cmtconfig as Platform' ]
     from_statements = [ 'lhcbpr_job j', 'lhcbpr_jobresults r', 'lhcbpr_jobattribute att', 
                    'lhcbpr_platform plat',  'lhcbpr_jobdescription jobdes', 
@@ -11,17 +12,17 @@ def get_query_groups(request):
     secondpart_query = ""
     use_host = False
     #check first which query to make , to join the host table or not
-    hosts = request.GET['hosts'].split(',')
+    hosts = requestData['hosts'].split(',')
     if not hosts[0] == "":
         host_temp = []
         for h in hosts:
-            host_temp.append("h.hostname = '"+h+"'")
+            host_temp.append("h.id = {0}".format(h))
         
         secondpart_query += ' AND ( '+' OR '.join(host_temp)+' )'
         #use the query which joins also the host table
         use_host = True
     
-    if not request.GET['group_host'] == "true":
+    if not requestData['group_host'] == "true":
         if use_host:
             from_statements.append('lhcbpr_host h')
             where_statements.append('j.host_id = h.id')
@@ -32,32 +33,33 @@ def get_query_groups(request):
     
     query_groups = 'select distinct '+' , '.join(select_statements)+', j.id as job_id from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
               
-    options = request.GET['options'].split(',')
+    options = requestData['options'].split(',')
     if not options[0] == "":
         options_temp = []
         for opt in options:
-            options_temp.append("opt.description = '"+opt+"'")
+            options_temp.append("opt.id = {0}".format(opt))
         
         secondpart_query += ' AND ( '+' OR '.join(options_temp)+' )'
-    versions = request.GET['versions'].split(',')
+    versions = requestData['versions'].split(',')
     if not versions[0] == "":
         versions_temp = []
         for ver in versions:
-            versions_temp.append("apl.appversion = '"+ver+"'")
+            versions_temp.append("apl.id = {0}".format(ver))
         
         secondpart_query += ' AND ( '+' OR '.join(versions_temp)+' )'
-    platforms = request.GET['platforms'].split(',')
+    platforms = requestData['platforms'].split(',')
     if not platforms[0] == "":
         platforms_temp = []
         for p in platforms:
-            platforms_temp.append("plat.cmtconfig = '"+p+"'")
+            platforms_temp.append("plat.id = {0}".format(p))
         
         secondpart_query += ' AND ( '+' OR '.join(platforms_temp)+' )'
         
     #now we finished generating the filtering in the query attributes
     #we know finalize the queries
     #we add the application name 
-    query_groups += " and apl.appname='{0}'".format(request.GET['appName'])
+    if versions[0] == "":
+        query_groups += " and apl.appname='{0}'".format(app_name)
     
     #add the second part of the query which contains the filtering
     query_groups += secondpart_query

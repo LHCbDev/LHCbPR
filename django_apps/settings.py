@@ -185,12 +185,23 @@ LOGGING = {
 #soon to be moved from here
 HISTOGRAMSGAUSS = {
               'Num. of primary interaction per bunch' : 'GenMonitorAlg/10',
-              'PrimaryVertex y (mm)' : 'GenMonitorAlg/12',
+              'PrimaryVertex y (mm)' :  'GenMonitorAlg/12',
               'Multiplicity stable charged particles in LHCb eta' : 'GenMonitorAlg/4',
               'PrimaryVertex x (mm)' : 'GenMonitorAlg/11',
-              'PrimaryVertex z (mm)' : 'GenMonitorAlg/13',
+              'PrimaryVertex z (mm)' :  'GenMonitorAlg/13',
               'Pseudorapidity stable charged particles' : 'GenMonitorAlg/44',
               'Multiplicity stable charged particles' : 'GenMonitorAlg/3',
               'Pt stable charged particles' : 'GenMonitorAlg/45',
               'Process type' : 'GenMonitorAlg/5',
+}
+HISTOGRAMSGAUSSOPTIONS = {
+              'GenMonitorAlg/10' : [ 'Nint', '1/Nev', 'x linear', 'y linear', 'hist' ],
+              'GenMonitorAlg/12': [ 'y (mm)', 'Nvert/Nev', 'x linear', 'y linear', 'hist'],
+              'GenMonitorAlg/4' :[ 'Npart', 'dN', 'x linear', 'y log', 'hist' ],
+              'GenMonitorAlg/11': [ 'x (mm)' ,'Nvert/Nev', 'x linear', 'y linear', 'hist' ],
+              'GenMonitorAlg/13': [ 'z (mm)', 'Nvert/Nev', 'x linear', 'y linear', 'hist' ],
+              'GenMonitorAlg/44': [ 'eta', 'dN/eta', 'x linear', 'y linear', 'hist' ],
+              'GenMonitorAlg/3': [ 'Npart', 'dN', 'x linear', 'y log', 'hist' ],
+              'GenMonitorAlg/45': [  'Pt (MeV)', 'dN/pt', 'x linear', 'y log', 'hist' ],
+              'GenMonitorAlg/5': [  'Process id', '', 'x linear', 'y linear', 'hist' ],
 }

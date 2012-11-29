@@ -56,14 +56,16 @@ class GroupDict(dict):
         return dict.__getitem__(self, key)
 
 class HistosSum(object):
-    def __init__(self, files, obj):
+    def __init__(self, files, obj, draw_options):
         self.files = files
         self.count = len(files)
         self.obj = obj
+        #[ x label, y label , x type , y type , draw option ]
+        self.drawOpts = draw_options
 
     def getHistogramSum(self):
         myObj = self.obj
-        
+        myOpts = self.drawOpts
         # Get the pointer to the current gROOT
         globalDir = gDirectory.CurrentDirectory()
         
@@ -74,6 +76,9 @@ class HistosSum(object):
             if sum is None:
                 globalDir.cd()
                 sum = h.Clone()
+                sum.SetXTitle(myOpts[0])
+                sum.GetYaxis().SetTitleOffset(1.7);
+                sum.SetYTitle(myOpts[1])
             else:
                 sum.Add(h)
         
@@ -115,18 +120,20 @@ def Stats_to_dict(key, value, cursor_description):
 
 def plot_histogram(histogramObjects, style):
     gStyle.SetOptStat(style)
-    c1 = TCanvas("c1","The Histograms",200,10,450,400)
-    c1.SetFillColor(18)
-     
+    c1 = TCanvas("c1","The Histograms",300,30,485,420)
+    c1.SetLeftMargin(0.12)
+    #c1.SetFillColor(18)
+    #c1.SetLogx();
+    
     firstLoop = True
     
     for i, hist in enumerate(histogramObjects):
         hist.SetLineColor(colors[i])
         if firstLoop:
-            hist.DrawNormalized()
+            hist.DrawNormalized("HIST")
             firstLoop = False
         else:
-            hist.DrawNormalized('same')
+            hist.DrawNormalized("HIST SAME")
         c1.Update()
     
     serve_path = 'static/images/histograms/histogram{0}{1}.png'.format(random.randint(1, 100),random.randint(1, 100))
@@ -155,7 +162,7 @@ def histograms_service(remoteservice):
                 group_dict[group_id].append(os.path.join(rootfilespath, value))   
         
         objectName = request_info['atr_path']
-        groups_dict = dict((group_names[g], HistosSum(v,objectName)) for g, v in group_dict.iteritems())
+        groups_dict = dict((group_names[g], HistosSum(v,objectName,request_info['hist_options'][objectName])) for g, v in group_dict.iteritems())
         
         cursor_description = request_info['description']
         

@@ -77,7 +77,7 @@
 
 function getSelectedGroups(id){
 	var sdValues = [];
-    $('#'+id+' label .selected').each(function () {
+    $('#'+id+' label :checked').each(function () {
             sdValues.push($(this).attr('value'));
       });
 	return sdValues;
@@ -86,7 +86,7 @@ function getSelectedGroups(id){
 function getGroups(){   
         var groups = getSelectedGroups("groups_list");
         myUrl= "/django/lhcbPR/analyse/basic/functions/filterAtrs/"+appName+"/?groups="+escape(groups.join(","));
-         
+        
         $("#atr").mask("Requesting...");
 		$("#atr").load(myUrl);
 }
@@ -152,6 +152,7 @@ function checkRequestData(requestData){
         text-indent: -25px;
     }
     #groups { height : 29px;}
+    #hist_div { margin-top : 0.5em; }
 {% endblock stylecss %}
 
 
@@ -179,7 +180,7 @@ function checkRequestData(requestData){
                 </div>
         
         {% endif %}
-        <div>        
+        <div id="hist_div">        
             <label><input id="histogram" type="checkbox">Generate histogram </label>
         </div>
 
@@ -187,7 +188,7 @@ function checkRequestData(requestData){
 			<label>nbins</label><input id="nbins" type="text" value="" /><label> xlow</label><input id="xlow" type="text" value="" /><label> xup</label><input id="xup" type="text" value="" />
 			<br><label style="font-size: 13px;"> (leave blank to use default values)</label>
 			<div id="histogram_settings">
-				<label><input id="separately_hist" type="radio" checked="checked">separately</label><label><input id="superimposed" type="radio">superimposed</label>
+				<label><input id="separately_hist" type="radio" checked="checked">separated</label><label><input id="superimposed" type="radio">superimposed</label>
 			</div>
 		</div>
 						

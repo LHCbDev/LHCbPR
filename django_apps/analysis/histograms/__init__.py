@@ -13,14 +13,11 @@ title = 'Histogram analysis'
 
 import json, socket
 from django.db import connection, transaction
-from django.conf import settings
 from django.http import HttpResponse 
-from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
+from lhcbPR.models import Host, Platform, Application, Options, JobResults
 from django.conf import settings
 from django.db.models import Q
 from django.http import HttpResponseNotFound
-from django.shortcuts import render_to_response   
-from django.template import RequestContext
 
 import tools.socket_service as service
 from query_builder import get_queries
@@ -98,6 +95,10 @@ def analyse(**kwargs):
     if len(logical_data_groups) == 0: 
         return {'errorMessage' : 'No results found for your choices.',
                 'template' : 'analysis/error.html' }
+    if len(logical_data_groups) < 2:
+        if requestData['hist_divided'] == 'true':
+            return {'errorMessage' : 'Your choices produce less than 2 results!\nCan not divide 1 histogram.',
+                'template' : 'analysis/error.html' }
     if len(logical_data_groups) > 2:
         if requestData['hist_divided'] == 'true':
             return {'errorMessage' : 'Your choices produce more than 2 results!\nCan not divide more than 2 histograms.',
@@ -137,7 +138,8 @@ def analyse(**kwargs):
                'hist_separated' : hist_separated,
                'hist_imposed' : hist_imposed,
                'hist_divided' : hist_divided,
-               'hist_divided_reversed' : hist_divided_reversed
+               'hist_divided_reversed' : hist_divided_reversed,
+               'hist_options' : settings.HISTOGRAMSGAUSSOPTIONS 
                }
     #initialize our remote service
     remoteservice = remoteService()
@@ -173,3 +175,9 @@ def analyse(**kwargs):
     return { 'results' : json.dumps(answerDict['results']), 'hist_separated' : json.dumps(hist_separated),
             'hist_imposed' : json.dumps(hist_imposed), 'hist_divided' : json.dumps(hist_divided),
             'host_divided_reversed' : json.dumps(hist_divided_reversed) }
+    
+def isAvailableFor(app_name):
+    if app_name in ['GAUSS']:
+        return True
+    
+    return False
