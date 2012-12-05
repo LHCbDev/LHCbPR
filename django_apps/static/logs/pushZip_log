@@ -348,3 +348,1909 @@ Traceback (most recent call last):
   File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
     raise exceptions.ValidationError(self.error_messages['invalid'])
 ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-11-29 17:40:09,528 ] [ INFO ] " [ 'zipFile' : 'd4189fe0-3a42-11e2-8140-3cd92b53446b.zip' ]   [ 'job_description_id' : 481 ]  [ 'host' : 'pclhcb10' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-11-29,17:13:36' ] [ 'job_id' : 1698 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 11:01:00,905 ] [ INFO ] " [ 'zipFile' : '3ae9279e-3ad4-11e2-9204-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,10:26:08' ] [ 'job_id' : 1718 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 11:30:43,300 ] [ INFO ] " [ 'zipFile' : '78a59870-3ad8-11e2-a2a7-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,10:56:43' ] [ 'job_id' : 1719 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 12:00:39,667 ] [ INFO ] " [ 'zipFile' : 'b3e9920c-3adc-11e2-9bcc-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,11:27:04' ] [ 'job_id' : 1720 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 12:30:41,365 ] [ INFO ] " [ 'zipFile' : 'f5e1cbda-3ae0-11e2-a6be-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,11:57:21' ] [ 'job_id' : 1721 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 13:00:37,597 ] [ INFO ] " [ 'zipFile' : '3c1a876e-3ae5-11e2-af4c-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,12:27:50' ] [ 'job_id' : 1722 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 13:30:37,599 ] [ INFO ] " [ 'zipFile' : '8e027da8-3ae9-11e2-9fb3-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,12:58:26' ] [ 'job_id' : 1723 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 14:00:35,642 ] [ INFO ] " [ 'zipFile' : 'd8a92204-3aed-11e2-b707-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,13:29:21' ] [ 'job_id' : 1724 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 14:35:29,821 ] [ INFO ] " [ 'zipFile' : '32b2a7d0-3af2-11e2-a483-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,14:00:04' ] [ 'job_id' : 1725 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 15:05:46,150 ] [ INFO ] " [ 'zipFile' : '800be01a-3af6-11e2-8da7-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,14:31:14' ] [ 'job_id' : 1726 ] Zip folder with new job results added successfully
+ "
+[ 2012-11-30 15:35:34,887 ] [ INFO ] " [ 'zipFile' : 'd2cd3bce-3afa-11e2-b110-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,15:02:01' ] [ 'job_id' : 1727 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:46:42,333 ] [ INFO ] " [ 'zipFile' : '1c95317c-3b54-11e2-814f-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-01,01:40:37' ] [ 'job_id' : 1738 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:46:43,251 ] [ ERROR ] " [ 'zipFile' : '2afc155e-3c95-11e2-80d2-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:47:18,091 ] [ INFO ] " [ 'zipFile' : 'c50a8f04-3c40-11e2-ab69-003048f0e3f0.zip' ]   [ 'job_description_id' : 601 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,05:54:11' ] [ 'job_id' : 1739 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:47:54,447 ] [ INFO ] " [ 'zipFile' : '69972af6-3c68-11e2-8857-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,10:39:21' ] [ 'job_id' : 1740 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:47:55,347 ] [ ERROR ] " [ 'zipFile' : '234d172c-3c95-11e2-bfdc-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:48:28,437 ] [ INFO ] " [ 'zipFile' : '173b03d8-3c57-11e2-88d5-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,08:34:56' ] [ 'job_id' : 1741 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:49:03,469 ] [ INFO ] " [ 'zipFile' : '7e582b5e-3b58-11e2-aa50-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-01,02:12:10' ] [ 'job_id' : 1742 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:49:04,598 ] [ ERROR ] " [ 'zipFile' : '9ca3452a-3ca8-11e2-a2bd-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:49:05,577 ] [ ERROR ] " [ 'zipFile' : '3030655c-3c95-11e2-bdfa-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:49:38,864 ] [ INFO ] " [ 'zipFile' : 'eecab3dc-3b2d-11e2-bfd8-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,21:07:46' ] [ 'job_id' : 1743 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:50:16,411 ] [ INFO ] " [ 'zipFile' : '41f56cd4-3ba9-11e2-993e-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,11:51:24' ] [ 'job_id' : 1744 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:50:17,327 ] [ ERROR ] " [ 'zipFile' : 'a4452b54-3ca8-11e2-9260-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:51:01,387 ] [ INFO ] " [ 'zipFile' : 'dce57330-3b93-11e2-a813-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,09:18:00' ] [ 'job_id' : 1745 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:51:46,460 ] [ INFO ] " [ 'zipFile' : '5bb1218c-3b03-11e2-bfb9-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,16:03:44' ] [ 'job_id' : 1746 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:51:47,373 ] [ ERROR ] " [ 'zipFile' : '60c806b0-3b06-11e2-a3c9-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '30' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:52:24,114 ] [ INFO ] " [ 'zipFile' : '4ce27026-3b25-11e2-8eee-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,20:06:48' ] [ 'job_id' : 1747 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:52:58,431 ] [ INFO ] " [ 'zipFile' : '299b284e-3b32-11e2-8eb2-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,21:38:50' ] [ 'job_id' : 1748 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:53:30,790 ] [ INFO ] " [ 'zipFile' : '8e38a796-3b18-11e2-a1e6-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,18:35:37' ] [ 'job_id' : 1749 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:54:05,207 ] [ INFO ] " [ 'zipFile' : '8c711700-3b3a-11e2-bf6c-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,22:39:24' ] [ 'job_id' : 1750 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:54:37,801 ] [ INFO ] " [ 'zipFile' : '4d9c7f20-3c79-11e2-8539-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,12:40:46' ] [ 'job_id' : 1751 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:55:13,537 ] [ INFO ] " [ 'zipFile' : '3724f562-3c45-11e2-bb8e-003048f0e3f0.zip' ]   [ 'job_description_id' : 601 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,06:26:17' ] [ 'job_id' : 1752 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:55:49,394 ] [ INFO ] " [ 'zipFile' : '1ee0007e-3aff-11e2-b777-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,15:32:58' ] [ 'job_id' : 1753 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:55:50,358 ] [ ERROR ] " [ 'zipFile' : '22ae2bf4-3b04-11e2-8584-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '30' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:55:51,443 ] [ ERROR ] " [ 'zipFile' : '8fc191fe-3ca8-11e2-86a2-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:56:29,633 ] [ INFO ] " [ 'zipFile' : 'c387e422-3b5c-11e2-b8ea-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,02:43:37' ] [ 'job_id' : 1754 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:57:10,502 ] [ INFO ] " [ 'zipFile' : '1422291a-3b21-11e2-88cd-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,19:36:28' ] [ 'job_id' : 1755 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:57:11,540 ] [ ERROR ] " [ 'zipFile' : '953c029a-3ca8-11e2-83ca-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:57:46,294 ] [ INFO ] " [ 'zipFile' : '21f88f7c-3c64-11e2-b3a8-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,10:08:43' ] [ 'job_id' : 1756 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:58:24,869 ] [ INFO ] " [ 'zipFile' : '19ec4bc2-3b8b-11e2-a1f2-003048f0e3f0.zip' ]   [ 'job_description_id' : 582 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,08:14:27' ] [ 'job_id' : 1757 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:58:25,863 ] [ ERROR ] " [ 'zipFile' : '25d51148-3c95-11e2-b36d-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 20:58:58,595 ] [ INFO ] " [ 'zipFile' : '97855882-3b07-11e2-ab26-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,16:34:03' ] [ 'job_id' : 1758 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 20:59:30,187 ] [ INFO ] " [ 'zipFile' : 'd4025f2e-3c49-11e2-88f7-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-02,06:58:26' ] [ 'job_id' : 1759 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:00:04,374 ] [ INFO ] " [ 'zipFile' : 'e4d32500-3c70-11e2-b7d7-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,11:40:11' ] [ 'job_id' : 1760 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:00:40,539 ] [ INFO ] " [ 'zipFile' : '75f75044-3c5b-11e2-bd86-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,09:06:07' ] [ 'job_id' : 1761 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:01:22,490 ] [ INFO ] " [ 'zipFile' : '1c718068-3b10-11e2-a3a0-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,17:35:14' ] [ 'job_id' : 1762 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:01:23,411 ] [ ERROR ] " [ 'zipFile' : '28997054-3c95-11e2-87f3-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:02:13,738 ] [ INFO ] " [ 'zipFile' : '18a4fcec-3c75-11e2-9a8e-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,12:10:43' ] [ 'job_id' : 1763 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:03:04,555 ] [ INFO ] " [ 'zipFile' : '17d1d28c-3b98-11e2-a404-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,09:48:35' ] [ 'job_id' : 1764 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:04:01,074 ] [ INFO ] " [ 'zipFile' : '0f914338-3b7e-11e2-bfaa-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-01,06:39:34' ] [ 'job_id' : 1765 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:04:02,105 ] [ ERROR ] " [ 'zipFile' : '19762b94-3c95-11e2-8208-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:04:49,854 ] [ INFO ] " [ 'zipFile' : '65aeb3e2-3b36-11e2-9adb-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,22:09:06' ] [ 'job_id' : 1766 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:05:39,349 ] [ INFO ] " [ 'zipFile' : '6fe81226-3b4b-11e2-b034-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,00:39:50' ] [ 'job_id' : 1767 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:06:34,382 ] [ INFO ] " [ 'zipFile' : '629f675c-3bb6-11e2-a071-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,13:24:10' ] [ 'job_id' : 1768 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:07:25,852 ] [ INFO ] " [ 'zipFile' : 'd9e85f0e-3c5f-11e2-b075-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,09:37:16' ] [ 'job_id' : 1769 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:07:26,783 ] [ ERROR ] " [ 'zipFile' : '210ed69e-3c95-11e2-a258-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:07:27,699 ] [ ERROR ] " [ 'zipFile' : '99ecdd6e-3ca8-11e2-8de0-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:08:19,076 ] [ INFO ] " [ 'zipFile' : 'fdc4d01e-3bb1-11e2-92f6-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,12:52:51' ] [ 'job_id' : 1770 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:09:10,190 ] [ INFO ] " [ 'zipFile' : 'e75a66d2-3b0b-11e2-be9f-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,17:04:22' ] [ 'job_id' : 1771 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:09:58,408 ] [ INFO ] " [ 'zipFile' : 'b5d33eba-3b86-11e2-83e5-003048f0e3f0.zip' ]   [ 'job_description_id' : 582 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,07:43:18' ] [ 'job_id' : 1772 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:09:59,441 ] [ ERROR ] " [ 'zipFile' : 'a2044b2c-3ca8-11e2-90e3-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:10:00,465 ] [ ERROR ] " [ 'zipFile' : '1e610d7c-3c95-11e2-8245-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:10:00,633 ] [ ERROR ] " [ 'zipFile' : 'e387b4dc-3b02-11e2-8400-003048f0e3f0.zip' ]   [ 'job_description_id' : Usage: ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '30' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'Usage:'
+[ 2012-12-02 21:10:51,724 ] [ INFO ] " [ 'zipFile' : '575ac6c2-3b14-11e2-8638-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,18:05:21' ] [ 'job_id' : 1773 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:10:52,660 ] [ ERROR ] " [ 'zipFile' : '8d0b7600-3ca8-11e2-8c0e-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:11:38,095 ] [ INFO ] " [ 'zipFile' : '3864516a-3b47-11e2-b7f7-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,00:09:21' ] [ 'job_id' : 1774 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:12:19,853 ] [ INFO ] " [ 'zipFile' : 'be722e06-3c52-11e2-9804-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,08:02:36' ] [ 'job_id' : 1775 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:12:20,031 ] [ ERROR ] " [ 'zipFile' : 'e56444fa-3b02-11e2-8cba-003048f0e3f0.zip' ]   [ 'job_description_id' : Usage: ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '30' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'Usage:'
+[ 2012-12-02 21:12:21,297 ] [ ERROR ] " [ 'zipFile' : '44181b34-3b08-11e2-8dd4-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'None' ]  [ 'time_start' : '30' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:12:22,231 ] [ ERROR ] " [ 'zipFile' : '2d972308-3c95-11e2-a88a-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:12:23,156 ] [ ERROR ] " [ 'zipFile' : '92615e6c-3ca8-11e2-88e9-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:12:24,035 ] [ ERROR ] " [ 'zipFile' : '97927150-3ca8-11e2-be5b-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:13:11,264 ] [ INFO ] " [ 'zipFile' : 'ad984366-3ba0-11e2-b0a4-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,10:49:47' ] [ 'job_id' : 1776 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:13:12,276 ] [ ERROR ] " [ 'zipFile' : '9f57c08e-3ca8-11e2-8607-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:14:00,179 ] [ INFO ] " [ 'zipFile' : 'f5d257d8-3b42-11e2-9753-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,23:39:00' ] [ 'job_id' : 1777 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:14:51,918 ] [ INFO ] " [ 'zipFile' : '983998b6-3b29-11e2-8fd1-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,20:37:01' ] [ 'job_id' : 1778 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:15:51,584 ] [ INFO ] " [ 'zipFile' : 'd71ef52e-3b1c-11e2-ad69-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,19:05:48' ] [ 'job_id' : 1779 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:16:51,975 ] [ INFO ] " [ 'zipFile' : '0842f334-3ba5-11e2-8146-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,11:20:14' ] [ 'job_id' : 1780 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:17:46,159 ] [ INFO ] " [ 'zipFile' : '9a7cc254-3b8f-11e2-9516-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,08:45:59' ] [ 'job_id' : 1781 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:18:35,805 ] [ INFO ] " [ 'zipFile' : '55ff3dd0-3b82-11e2-a02e-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-01,07:12:26' ] [ 'job_id' : 1782 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:19:25,965 ] [ INFO ] " [ 'zipFile' : 'b8dcd1cc-3b3e-11e2-bb79-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-11-30,23:09:07' ] [ 'job_id' : 1783 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:20:19,257 ] [ INFO ] " [ 'zipFile' : 'a8e11a1a-3b4f-11e2-b0e9-003048f0e3f0.zip' ]   [ 'job_description_id' : 541 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,01:10:01' ] [ 'job_id' : 1784 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:20:20,143 ] [ ERROR ] " [ 'zipFile' : '1c1e8fda-3c95-11e2-a86a-003048f0e3f0.zip' ]   [ 'job_description_id' : 23 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:21:21,039 ] [ INFO ] " [ 'zipFile' : '3628b794-3c4e-11e2-bc53-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-02,07:31:09' ] [ 'job_id' : 1785 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:22:23,904 ] [ INFO ] " [ 'zipFile' : 'a183ec16-3c6c-11e2-b798-003048f0e3f0.zip' ]   [ 'job_description_id' : 602 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-02,11:10:02' ] [ 'job_id' : 1786 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:23:15,873 ] [ INFO ] " [ 'zipFile' : '9d5f4122-3bad-11e2-b27c-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,12:21:39' ] [ 'job_id' : 1787 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:24:05,614 ] [ INFO ] " [ 'zipFile' : '6a682ace-3b9c-11e2-8334-003048f0e3f0.zip' ]   [ 'job_description_id' : 581 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-01,10:18:46' ] [ 'job_id' : 1788 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-02 21:24:07,004 ] [ ERROR ] " [ 'zipFile' : '252a3ba2-3b04-11e2-a453-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '30' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:08,423 ] [ ERROR ] " [ 'zipFile' : 'e41a88c0-3cba-11e2-a91a-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:11,939 ] [ ERROR ] " [ 'zipFile' : 'f0b43676-3cba-11e2-ac98-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:13,789 ] [ ERROR ] " [ 'zipFile' : 'e8eda5bc-3cba-11e2-9cdf-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:14,928 ] [ ERROR ] " [ 'zipFile' : 'e6acea9c-3cba-11e2-9801-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:16,430 ] [ ERROR ] " [ 'zipFile' : 'f5ccd3ac-3cba-11e2-bdba-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:18,979 ] [ ERROR ] " [ 'zipFile' : 'de94cdc0-3cba-11e2-99be-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:22,449 ] [ ERROR ] " [ 'zipFile' : 'ee2d6760-3cba-11e2-901e-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:24,297 ] [ ERROR ] " [ 'zipFile' : 'f2fa8066-3cba-11e2-b554-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:25,911 ] [ ERROR ] " [ 'zipFile' : 'eb9ac830-3cba-11e2-91ea-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-02 21:24:27,343 ] [ ERROR ] " [ 'zipFile' : 'e11581e8-3cba-11e2-aa7b-003048f0e3f0.zip' ]   [ 'job_description_id' : 621 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 06:55:36,953 ] [ INFO ] " [ 'zipFile' : '8802c388-3d0d-11e2-9071-003048f0e3f0.zip' ]   [ 'job_description_id' : 641 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,06:19:29' ] [ 'job_id' : 1798 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 07:32:41,269 ] [ INFO ] " [ 'zipFile' : 'dc5e95e8-3d11-11e2-b5e7-003048f0e3f0.zip' ]   [ 'job_description_id' : 641 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,06:51:58' ] [ 'job_id' : 1799 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 09:00:55,093 ] [ INFO ] " [ 'zipFile' : '45cdbf8e-3d1e-11e2-8dd7-003048f0e3f0.zip' ]   [ 'job_description_id' : 661 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,08:19:52' ] [ 'job_id' : 1800 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 09:25:30,474 ] [ INFO ] " [ 'zipFile' : '7670c54c-3d22-11e2-9454-003048f0e3f0.zip' ]   [ 'job_description_id' : 661 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,08:51:53' ] [ 'job_id' : 1801 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 10:35:37,754 ] [ INFO ] " [ 'zipFile' : '8164a824-3d2c-11e2-8fd3-003048f0e3f0.zip' ]   [ 'job_description_id' : 641 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,10:02:05' ] [ 'job_id' : 1802 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 11:05:40,164 ] [ INFO ] " [ 'zipFile' : 'd62dde12-3d30-11e2-8993-003048f0e3f0.zip' ]   [ 'job_description_id' : 641 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,10:33:44' ] [ 'job_id' : 1803 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 11:40:33,879 ] [ INFO ] " [ 'zipFile' : '528907f8-3d35-11e2-a9eb-003048f0e3f0.zip' ]   [ 'job_description_id' : 641 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-03,11:04:42' ] [ 'job_id' : 1804 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 12:10:39,608 ] [ INFO ] " [ 'zipFile' : '935da4a6-3d39-11e2-9466-003048f0e3f0.zip' ]   [ 'job_description_id' : 641 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-03,11:36:48' ] [ 'job_id' : 1805 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 13:10:01,605 ] [ ERROR ] " [ 'zipFile' : '3078f68e-3d42-11e2-862e-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 13:10:02,683 ] [ ERROR ] " [ 'zipFile' : '387f4ebe-3d42-11e2-b8a8-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 13:10:03,931 ] [ ERROR ] " [ 'zipFile' : '35fa70a6-3d42-11e2-aab6-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 13:10:04,942 ] [ ERROR ] " [ 'zipFile' : '2df7f11c-3d42-11e2-be34-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 13:10:05,957 ] [ ERROR ] " [ 'zipFile' : '3ace647a-3d42-11e2-a5fe-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 13:10:06,855 ] [ ERROR ] " [ 'zipFile' : '3fad14e6-3d42-11e2-ae97-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 13:10:07,759 ] [ ERROR ] " [ 'zipFile' : '337e8146-3d42-11e2-b68d-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 13:10:08,670 ] [ ERROR ] " [ 'zipFile' : '426bf8b4-3d42-11e2-a249-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 13:10:09,684 ] [ ERROR ] " [ 'zipFile' : '2b8febb4-3d42-11e2-8ed0-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 13:10:10,899 ] [ ERROR ] " [ 'zipFile' : '3d0c81f4-3d42-11e2-ad69-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 14:37:49,004 ] [ INFO ] " [ 'zipFile' : 'df939e48-3d4d-11e2-9cd7-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,14:32:14' ] [ 'job_id' : 1806 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 14:42:16,531 ] [ INFO ] " [ 'zipFile' : '8b52a60c-3d4e-11e2-8921-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,14:37:02' ] [ 'job_id' : 1807 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 15:22:52,602 ] [ INFO ] " [ 'zipFile' : '62e605d2-3d54-11e2-b996-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,15:18:51' ] [ 'job_id' : 1808 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 15:42:13,688 ] [ INFO ] " [ 'zipFile' : '038ee2fe-3d57-11e2-9f10-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,15:37:39' ] [ 'job_id' : 1809 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 15:44:40,084 ] [ INFO ] " [ 'zipFile' : 'd67e859e-3d56-11e2-a008-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,15:36:24' ] [ 'job_id' : 1810 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 15:47:06,597 ] [ INFO ] " [ 'zipFile' : 'c785b6ca-3d56-11e2-a41d-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,15:35:58' ] [ 'job_id' : 1811 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 15:57:27,752 ] [ INFO ] " [ 'zipFile' : '60dd1992-3d59-11e2-9c79-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,15:54:35' ] [ 'job_id' : 1812 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 16:02:36,700 ] [ INFO ] " [ 'zipFile' : '74553a2c-3d59-11e2-9a0a-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,15:55:07' ] [ 'job_id' : 1813 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 16:05:17,219 ] [ INFO ] " [ 'zipFile' : 'b051b5e6-3d59-11e2-8316-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,15:56:48' ] [ 'job_id' : 1814 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 16:08:08,542 ] [ INFO ] " [ 'zipFile' : '99f9c158-3d59-11e2-8ebd-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,15:56:10' ] [ 'job_id' : 1815 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 16:10:52,315 ] [ INFO ] " [ 'zipFile' : '2e842d36-3d5a-11e2-96d6-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,16:00:20' ] [ 'job_id' : 1816 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 16:13:13,019 ] [ INFO ] " [ 'zipFile' : '1d554680-3d5a-11e2-983c-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-03,15:59:51' ] [ 'job_id' : 1817 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-03 16:20:02,265 ] [ ERROR ] " [ 'zipFile' : '54c5e4ce-3d5c-11e2-9e20-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 16:20:04,092 ] [ ERROR ] " [ 'zipFile' : '597ac0ca-3d5c-11e2-9376-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 16:20:05,004 ] [ ERROR ] " [ 'zipFile' : '5bb73fb2-3d5c-11e2-ae87-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 16:20:06,164 ] [ ERROR ] " [ 'zipFile' : '60ae55f0-3d5c-11e2-816e-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 16:20:07,534 ] [ ERROR ] " [ 'zipFile' : '524b6818-3d5c-11e2-8399-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 16:20:08,451 ] [ ERROR ] " [ 'zipFile' : '4ce699e2-3d5c-11e2-aca0-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 16:20:09,423 ] [ ERROR ] " [ 'zipFile' : '4fb80c1e-3d5c-11e2-957e-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 16:20:10,711 ] [ ERROR ] " [ 'zipFile' : '5e1531ce-3d5c-11e2-99bf-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 16:20:11,747 ] [ ERROR ] " [ 'zipFile' : '63572e76-3d5c-11e2-8e47-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-03 16:20:12,914 ] [ ERROR ] " [ 'zipFile' : '573a4bf0-3d5c-11e2-bf38-003048f0e3f0.zip' ]   [ 'job_description_id' : 441 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 77, in pushThis
+    success = True
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 378, in get_or_create
+    return self.get(**lookup), False
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 644, in get_prep_lookup
+    return super(DateField, self).get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 721, in get_prep_value
+    return self.to_python(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 710, in to_python
+    raise exceptions.ValidationError(self.error_messages['invalid'])
+ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.']
+[ 2012-12-04 02:36:04,333 ] [ INFO ] " [ 'zipFile' : 'af5d0f9c-3db2-11e2-b0a7-003048f0e3f0.zip' ]   [ 'job_description_id' : 681 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-04,02:04:05' ] [ 'job_id' : 1818 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-04 03:05:38,585 ] [ INFO ] " [ 'zipFile' : 'e48b2af6-3db6-11e2-bef8-003048f0e3f0.zip' ]   [ 'job_description_id' : 681 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-04,02:34:10' ] [ 'job_id' : 1819 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-04 03:40:44,473 ] [ INFO ] " [ 'zipFile' : '3af35cde-3dbb-11e2-b2ab-003048f0e3f0.zip' ]   [ 'job_description_id' : 681 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-04,03:04:18' ] [ 'job_id' : 1820 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-04 04:10:39,671 ] [ INFO ] " [ 'zipFile' : '8f82daf0-3dbf-11e2-af91-003048f0e3f0.zip' ]   [ 'job_description_id' : 681 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-04,03:35:20' ] [ 'job_id' : 1821 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-04 14:12:17,120 ] [ INFO ] " [ 'zipFile' : 'bf0fa6d2-3e13-11e2-a520-003048f0e3f0.zip' ]   [ 'job_description_id' : 603 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-04,14:04:44' ] [ 'job_id' : 1838 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-05 09:06:13,789 ] [ INFO ] " [ 'zipFile' : 'eb70fdd6-3eb1-11e2-8068-003048f0e3f0.zip' ]   [ 'job_description_id' : 721 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-05,08:29:24' ] [ 'job_id' : 1858 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-05 09:35:39,582 ] [ INFO ] " [ 'zipFile' : '5ee8cd6c-3eb6-11e2-8d87-003048f0e3f0.zip' ]   [ 'job_description_id' : 721 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-05,09:01:13' ] [ 'job_id' : 1859 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-05 12:20:47,108 ] [ INFO ] " [ 'zipFile' : '84e8ce1a-3ecd-11e2-8b27-003048f0e3f0.zip' ]   [ 'job_description_id' : 741 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-05,11:45:56' ] [ 'job_id' : 1860 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-05 12:50:37,277 ] [ INFO ] " [ 'zipFile' : 'd501dd8e-3ed1-11e2-adcd-003048f0e3f0.zip' ]   [ 'job_description_id' : 741 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-05,12:18:49' ] [ 'job_id' : 1861 ] Zip folder with new job results added successfully
+ "
