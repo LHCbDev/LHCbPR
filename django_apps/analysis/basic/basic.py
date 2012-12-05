@@ -155,10 +155,11 @@ def filterAtrs(**kargs):
     atrsTemp =  JobResults.objects.filter(job__jobDescription__application__appName=app_name,job__success=True).filter(Q(jobAttribute__type='Float')).filter(filterGroups)
     atrs = atrsTemp.values_list('jobAttribute__id','jobAttribute__name','jobAttribute__type').distinct()
     
-    optionsHtml = '<option value=""></option>' 
-    
+    optionsHtml = '<label>Choose an attribute: </label><select id="atr"><option value=""></option>'
+            
     for atr in atrs:
        optionsHtml+=  '<option value="{0},{1}">{2}</option>'.format(atr[0],atr[2],atr[1])
     
-       
+    optionsHtml+= '</select>'
+     
     return HttpResponse(optionsHtml)

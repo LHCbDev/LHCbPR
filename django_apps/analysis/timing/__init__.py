@@ -143,17 +143,19 @@ def analyse(**kwargs):
     tree = TimingTree(root, node_data, node_childs, node_entries, node_ids)
     
     if settings.HOSTNAME == 'alamages':
-        timing_path = 'static/images/histograms/timing{0}{1}{2}.json'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
+        timing_path = 'static/images/histograms/timing{0}{1}{2}CSV'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
     else:
-        timing_path = 'static/timingJson/timing{0}{1}{2}.json'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
+        timing_path = 'static/timingJson/timing{0}{1}{2}CSV'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
     
     jsonTree = tree.getHierarchicalJSON()
+    csv = tree.getFullCSV()
     f = open(os.path.join(settings.PROJECT_PATH, timing_path), 'w')
-    f.write(jsonTree)
+    f.write(csv)
     f.close()
     
     dataDict = {
-                'url' : '/'+timing_path, # json.dumps(jsonTree)
+                'csv_url' : '/'+timing_path,
+                'data' : jsonTree,
                 'jobs_num' : len(job_ids),
                 'description' : description_dict
                }

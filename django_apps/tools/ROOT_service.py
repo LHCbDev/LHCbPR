@@ -81,7 +81,8 @@ class HistosSum(object):
                 sum.SetYTitle(myOpts[1])
             else:
                 sum.Add(h)
-        
+        entries = sum.GetEntries()
+        sum.Scale(1/entries)
         return sum
 
 class Stats(object):
@@ -107,6 +108,8 @@ class Stats(object):
         for value in self.data:
             h0f.Fill(value)
         
+        entries = h0f.GetEntries()
+        h0f.Scale(1/entries)
         return h0f
 
 def Stats_to_dict(key, value, cursor_description):
@@ -118,22 +121,26 @@ def Stats_to_dict(key, value, cursor_description):
     
     return datadict
 
-def plot_histogram(histogramObjects, style):
+def plot_histogram(histogramObjects, style,logx = False,logy = False):
     gStyle.SetOptStat(style)
     c1 = TCanvas("c1","The Histograms",300,30,485,420)
     c1.SetLeftMargin(0.12)
     #c1.SetFillColor(18)
-    #c1.SetLogx();
+    
+    if logx:
+        c1.SetLogx()
+    if logy:
+        c1.SetLogy()
     
     firstLoop = True
     
     for i, hist in enumerate(histogramObjects):
         hist.SetLineColor(colors[i])
         if firstLoop:
-            hist.DrawNormalized("HIST")
+            hist.Draw("HIST")
             firstLoop = False
         else:
-            hist.DrawNormalized("HIST SAME")
+            hist.Draw("HIST SAME")
         c1.Update()
     
     serve_path = 'static/images/histograms/histogram{0}{1}.png'.format(random.randint(1, 100),random.randint(1, 100))
@@ -171,15 +178,21 @@ def histograms_service(remoteservice):
             for k, v in groups_dict.iteritems():
                 dataDict = dict(zip(cursor_description, k))
                 dataDict['ADDED HISTOGRAMS'] = v.count
-                dataDict['histogram'] = plot_histogram([v.getHistogramSum()], initialStyle)
+                dataDict['histogram'] = plot_histogram([v.getHistogramSum()], initialStyle, v.drawOpts[2],v.drawOpts[3])
                 
                 all_results.append(dataDict)
         elif request_info['hist_imposed']:
             histogramObjects = []
+            
+            Xaxis, Yaxis = None, None
+            
             for k, v in groups_dict.iteritems():
+                if not Xaxis and not Yaxis:
+                    Xaxis, Yaxis = v.drawOpts[2], v.drawOpts[3]
+                    
                 histogramObjects.append( v.getHistogramSum() )   
             
-            histogramImposedUrl = plot_histogram(histogramObjects, noStyle)
+            histogramImposedUrl = plot_histogram(histogramObjects, noStyle, Xaxis, Yaxis)
             
             for i, keyvalue in enumerate(groups_dict.iteritems()):
                 k, v = keyvalue
