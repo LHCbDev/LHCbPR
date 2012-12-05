@@ -9,12 +9,12 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
+from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults
 import json, subprocess, sys, re, copy, os
 from pprint import pformat
 from exceptions import AttributeError
 from random import choice
-from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, formBuilder, getSplitted3
+from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, formBuilder, getSplitted3, jobdescription
 
 
 @login_required
@@ -629,7 +629,6 @@ def getRunnedJobs(request):
     details+='{0:30} ===> {1:30}\n'.format('Attribute Name', 'Value')
     attributesList = []
     attributesList.extend(JobResults.objects.filter(job__pk=jobTemp.pk))
-    #attributesList.extend(ResultBinary.objects.filter(job__pk=jobTemp.pk))
     
     for attr in attributesList:
         if attr.jobAttribute.type == 'Float':
@@ -661,72 +660,27 @@ def new_job_description(request):
     else:
         return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'unsupported method, supported GET,POST' }))
     
-    if 'options' not in requestData or 'optionsD' not in requestData or 'application' not in requestData or 'version' not in requestData:
-        return HttpResponse(json.dumps({ 'error' : True , 'errorMessage' : 'Request data must contain: options,optionsD,application,version,setupproject(optional),setupprojectD(optional),handlers(optional),platforms(optional)' }))
+    if not set(['application', 'version', 'optionsD']).issubset(requestData):
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Your HTTP request must contain at least an application,version and optionsD(options_description)' }))
     
-    optObj = Options.objects.filter(description__exact=requestData['optionsD'])
-    if optObj.count() > 0:
-        if not optObj[0].content == requestData['options']:
-            return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing Options description with wrong corresponding content' , 
-                             'content' : optObj[0].content, 'description' : optObj[0].description  }))
+    dataDict = {}
+    dataDict['application'] = requestData['application']
+    dataDict['version'] = requestData['version']
+    dataDict['options_description'] = requestData['optionsD']
+    if 'options' in requestData:
+        dataDict['options_content'] = requestData['options']
+    if 'setupprojectD' in requestData:
+        dataDict['setupproject_description'] = requestData['setupprojectD']
+    if 'setupproject' in requestData:
+        dataDict['setupproject_content'] = requestData['setupproject']
+    if 'handlers' in requestData:
+        dataDict['handlers'] = requestData['handlers']
+    if 'platforms' in requestData:
+        dataDict['platforms'] = requestData['platforms']
     
-    optObjD = Options.objects.filter(content__exact=requestData['options'])
-    if optObjD.count() > 0:
-        if not optObjD[0].description == requestData['optionsD']:
-            return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing Options content with wrong corresponding description' , 
-                             'content' : optObjD[0].content, 'description' : optObjD[0].description  }))
-    
-    if 'setupproject' in  requestData and 'setupprojectD' in requestData:
-        setupObj = SetupProject.objects.filter(description__exact=requestData['setupprojectD'])
-        if setupObj.count() > 0:
-            if not setupObj[0].content == requestData['setupproject']:
-                return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing SetupProject description with wrong corresponding content' , 
-                          'content' : setupObj[0].content, 'description' : setupObj[0].description  }))
-        
-        setupObjD = SetupProject.objects.filter(content__exact=requestData['setupproject'])
-        if setupObjD.count() > 0:
-            if not setupObjD[0].description == requestData['setupprojectD']:
-                return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Using existing SetupProject content with wrong corresponding description' , 
-                             'content' : setupObjD[0].content, 'description' : setupObjD[0].description  }))
-    
-    
-    if 'setupproject' in  requestData and 'setupprojectD' in requestData:
-        myjob_id = JobDescription.objects.filter(application__appName__exact=requestData['application'], 
-                                                 application__appVersion__exact=requestData['version'],
-                                                 options__content__exact=requestData['options'],
-                                                 options__description__exact=requestData['optionsD'],
-                                                 setup_project__content__exact=requestData['setupproject'],
-                                                 setup_project__description__exact=requestData['setupprojectD']
-                                                 )
+    try:
+        result = jobdescription(dataDict)
+    except Exception, e:
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage': str(e)}))
     else:
-        myjob_id = JobDescription.objects.filter(application__appName__exact=requestData['application'], 
-                                                 application__appVersion__exact=requestData['version'],
-                                                 options__content__exact=requestData['options'],
-                                                 options__description__exact=requestData['optionsD'],
-                                                 )
-    if myjob_id.count() > 0:
-        return HttpResponse(json.dumps({ 'error': False , 'exists' : True, 'jobdescription_id' : myjob_id[0].id  }))
-    else:
-        if 'setupproject' in  requestData and 'setupprojectD' in requestData:
-            setupprojectTemp, created = SetupProject.objects.get_or_create(content=requestData['setupproject'], description=requestData['setupprojectD'])
-        
-        optionsTemp, created = Options.objects.get_or_create(content=requestData['options'], description=requestData['optionsD'])
-        appTemp, created = Application.objects.get_or_create(appName=requestData['application'], appVersion=requestData['version'])
-        
-        if 'setupproject' in  requestData and 'setupprojectD' in requestData:
-            myObj, created = JobDescription.objects.get_or_create(application=appTemp, options=optionsTemp, setup_project=setupprojectTemp)
-        else:
-            myObj, created = JobDescription.objects.get_or_create(application=appTemp, options=optionsTemp)           
-        
-        if 'handlers' in requestData:
-            for handler_name in requestData['handlers'].split(','):
-                handlerTemp = Handler.objects.get(name=handler_name)
-                jobHandlerTemp, created = JobHandler.objects.get_or_create(jobDescription=myObj, handler=handlerTemp)
-        
-        if 'platforms' in requestData:
-            for platform_name in requestData['platforms'].split(','):
-                platformTemp = Platform.objects.get(cmtconfig=platform_name)
-                requestedPlatfromTemp, created = Requested_platform.objects.get_or_create(jobdescription=myObj, cmtconfig=platformTemp)
-        
-        return HttpResponse(json.dumps({'error' : False, 'exists' : False , 'jobdescription_id' : myObj.id }))
-    
+        return HttpResponse(json.dumps(result))

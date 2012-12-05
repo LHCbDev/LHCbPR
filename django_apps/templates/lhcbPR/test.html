@@ -1,67 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<!--
-  Created using jsbin.com
-  Source can be edited via http://jsbin.com/eqape/1/edit
--->
-<head>
-<meta charset="UTF-8" />
-<title>Toggle Panels (not accordion) using ui-accordion  styles</title>
+{% extends "lhcbPR/analyse/base_analysis_template.html" %}
 
-<!-- jQuery UI  |  http://jquery.com/  http://jqueryui.com/  http://jqueryui.com/docs/Theming  -->
-<style type="text/css">body{font:62.5% Verdana,Arial,sans-serif}</style>
-<link href="/static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
-		<script src="/static/js/jquery-1.8.2.js"></script>
-		<script src="/static/js/jquery-ui-1.9.0.custom.js"></script>
+{% block head %} {{ block.super }}{% endblock head %}
 
-<style type="text/css">
-.accordion { height: auto }
-</style>
-</head>
-<body>
+{% block title %} {{ active_tab }} basic analysis {% endblock %}
 
-<h1>Accordion</h1>
-<div>
-<div class="accordion" style="height:auto">
-  <h3><a href="#">Section 1</a></h3>
+{% block script %} {{ block.super }}{% endblock script %}
 
-  <div>
-    <p>
-    Mauris mauris  ante, blandit et, ultrices a, suscipit eget, quam. Integer we fhd
-      <br>
-    mjfghiofhsjf hfhsohfgsdzfghsdujkhv
-    <br>
-    jdfiohsdovgoisehv
+{% block stylecss %} {% endblock stylecss %}
 
-    </p>
-  </div>
-</div>
-
-<div class="accordion" style="height:auto">
-  <h3><a href="#">Section 2</a></h3>
-
-  <div>
-    <p>
-    Mauris mauris  ante, blandit et, ultrices a, suscipit eget, quam. Integer we fhd
-      <br>
-    mjfghiofhsjf hfhsohfgsdzfghsdujkhv
-    <br>
-    jdfiohsdovgoisehv
-
-    </p>
-  </div>
-</div>
-
-<div>
-<pre>potato</pre>
-</div>
-</div>
-
-<script>
-$(".accordion").accordion({ collapsible: true, autoheight: true});
-</script>
+{% block helptext %} {% endblock helptext %}
 
 
-</body>
-</html>
-
+{% block content %} {% endblock content %}

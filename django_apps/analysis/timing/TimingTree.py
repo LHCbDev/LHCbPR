@@ -45,6 +45,17 @@ class TimingTree:
             ct += 1
         json += "]"
         return json 
+    
+    def getFullCSV(self):
+        ct = 1
+        
+        csv="code,name,rank,mrank,childrenTotal,perTotal,perLevel,avgtime,total,entries,parentCode \n"
+        for c in self.root.getAllChildren():
+            if ct > 1:
+                csv += "\n"
+            csv += c.getCSV()
+            ct += 1
+        return csv 
 
     def findByName(self, name):
         return self.root.findByName(name)
@@ -181,7 +192,19 @@ class Node:
 
         return tmpl % tuple(vals)
 
+    
+    def getCSV(self, hierarchical=True):
+        """ Returns CSV representation of this node """
 
+        tmpl = '%d,%s,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d'
+        vals =  [ self.id, self.name, self.rank, self.getMinChildrenRank(), self.getSumChildrenTime(), self.perTotal(), 
+                  self.perLevel(), self.value, self.total, self.entries ]
+        if self.parent != None:
+            tmpl += ',%d'
+            vals.append(self.parent.id)
+
+        return tmpl % tuple(vals)
+    
     def _childrenjson(self):
         """ Util function to return the JSON reprentation of the children of the node """
         ct = 1

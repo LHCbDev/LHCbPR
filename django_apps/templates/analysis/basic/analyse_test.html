@@ -1,0 +1,135 @@
+<!-- <script src="/static/js/jquery-1.8.2.js"></script>  -->
+<link rel="stylesheet" type="text/css" href="/static/css/easyui/themes/default/easyui.css" rel="stylesheet" />
+<script type="text/javascript" src="/static/js/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+		$(document).ready(function() {	
+			var results ={{ results|safe }};
+
+			if({{ histogram|safe }}){
+				bins = {{ bins|safe }};
+                $('<table>')
+                            .appendTo('#yo')
+                            .propertygrid({ scrollbarSize: 0,
+                                                     showGroup : true,
+                                                     showHeader : false,
+                                                    width : 600,
+                                                    height : 'auto',
+                                                     columns:[[
+                                                		{field:'name',title:'Name',width:20,resizable:true},
+                                                		{field:'value',title:'Value',width:70,resizable:false},
+                                                	]]   
+                                                        })
+                            .propertygrid('loadData', bins);
+                $('<br>').appendTo('#yo');
+
+				if({{ separately_hist|safe }}){
+                    $.each(results, function(index, result){
+						$('<table>')
+                            .appendTo('#yo')
+                            .propertygrid({ scrollbarSize: 0,
+                                                     showGroup : true,
+                                                     showHeader : false,
+                                                    width : 600,
+                                                    height : 'auto',
+                                                     columns:[[
+                                                		{field:'name',title:'Name',width:50,resizable:true},
+                                                		{field:'value',title:'Value',width:200,resizable:false},
+                                                	]]   
+                                                        })
+                            .propertygrid('loadData', result['data']);
+                        $('<img>')
+                            .attr('src', result['extras']['histogram'] + "?"+new Date().getTime() )
+						    .appendTo('#yo');
+						$('<hr>')
+                            .appendTo('#yo');
+					});
+					/* $.each(results, function(index, result){
+						var histUrl = result.histogram;
+						delete result.histogram;
+                        $('<pre>')
+                            .html(JSON.stringify(result, null, '  '))
+                            .appendTo('#yo')
+						$('<img>')
+                            .attr('src', histUrl + "?"+new Date().getTime() )
+						    .appendTo('#yo');
+						$('<hr>')
+                            .appendTo('#yo');
+					}); */
+				}
+				else{
+					var histUrl = results[0]['extras']['histogramImposed']
+                    $('<img>')
+                            .attr('src', histUrl + "?"+new Date().getTime() )
+						    .appendTo('#yo');
+
+					$.each(results, function(index, result){
+						$('<table>')
+                        .appendTo('#yo')
+                        .propertygrid({ scrollbarSize: 0,
+                                                 showGroup : true,
+                                                 showHeader : false,
+                                                width : 600,
+                                                height : 'auto',
+                                                 columns:[[
+                                            		{field:'name',title:'Name',width:50,resizable:true},
+                                            		{field:'value',title:'Value',width:200,resizable:false},
+                                            	]]   
+                                                    })
+                        .propertygrid('loadData', result['data']);
+                        $('<br>').appendTo('#yo');
+					});
+				}
+			}
+			else{
+                $.each(results, function(index, result){
+                    $('<table>')
+                        .appendTo('#yo')
+                        .propertygrid({ scrollbarSize: 0,
+                                                 showGroup : true,
+                                                 showHeader : false,
+                                                width : 550,
+                                                height : 'auto',
+                                                 columns:[[
+                                            		{field:'name',title:'Name',width:50,resizable:true},
+                                            		{field:'value',title:'Value',width:200,resizable:false},
+                                            	]]   
+                                                    })
+                        .propertygrid('loadData', result['data']);  
+                    
+                    $('<br>').appendTo('#yo');
+                });
+                /*$('<pre>')
+                    .html(JSON.stringify(results, null, '  '))
+                    .appendTo('#yo') */
+			}
+             var mydata = [ {  "group" : "Job description", "name" : "potato", "value" : "value potato" ,"potato" : "yeah potato"}, 
+                                     { "name" : "potato2", "value" : "value potato2", "group" : "Job description" },
+                                      { "name" : "yolo", "value" : "my property whatever", "group" : "Properties"} , 
+                                      ];          
+            //var mydata = results[0];            
+            
+            /*$('#pg').propertygrid({ scrollbarSize: 0,
+                                                showGroup : true,
+                                                showHeader : false,
+                                                })
+                        .propertygrid('loadData', mydata);
+
+            //$('#pg').propertygrid('loadData', mydata);
+
+             /*   var row = {  
+                  name:'AddName',  
+                  value:'',  
+                  group:'Marketing Settings',  
+                  editor:'text'  
+                };  
+                $('#pg').propertygrid('appendRow',row);  
+            		 */
+         });
+</script>
+<style type="text/css">
+		</style>
+<div id="yo">
+
+    <!-- <table id="pg" style="width:800px;"></table> -->
+
+</div>

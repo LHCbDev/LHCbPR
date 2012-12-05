@@ -1,6 +1,8 @@
 import os, re
 from django.db.models import Q
 from django.conf import settings
+from django.db import transaction
+from lhcbPR.models import  JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler
 #extra functions which are used in lhcbPR app, i moved them here in order
 #to keep the views clean
 
@@ -123,3 +125,118 @@ Attention:
         return help
     else:
         return '<br>'.join(html_texts)
+    
+@transaction.commit_on_success
+def jobdescription(dataDict, update=False):
+    request = None
+    """This view checks if a commit request from the user(add new job description/or edit an existing one) is valid.
+    if it's valid it updates/creates the old/new job description, which means add/edit handler,requested platforms, options etc"""
+    
+    
+    optObj = Options.objects.filter(description__exact=dataDict['options_description'])
+    if optObj.count() > 0:
+        if 'options_content' in dataDict:
+            if not optObj[0].content == dataDict['options_content']:
+                raise Exception('Using existing Options description with wrong corresponding content')
+        else:
+            dataDict['options_content'] = optObj[0].content
+        
+    
+    if not 'options_content' in dataDict:
+        raise Exception('No options content was provided, and the options description you provided did not match with any existing options')
+    
+    optObjD = Options.objects.filter(content__exact=dataDict['options_content'])
+    if optObjD.count() > 0:
+        if not optObjD[0].description == dataDict['options_description']:
+            raise Exception('Using existing Options content with wrong corresponding description')
+    
+    if 'setupproject_description' in dataDict:
+        setupObj = SetupProject.objects.filter(description__exact=dataDict['setupproject_description'])
+        if setupObj.count() > 0:
+            if 'setupproject_content' in dataDict:
+                if not setupObj[0].content == dataDict['setupproject_content']:
+                    raise Exception('Using existing SetupProject description with wrong corresponding content')
+            else:
+                dataDict['setupproject_content'] = setupObj[0].content
+        else:
+            if not 'setupproject_content' in dataDict:
+                raise Exception('You did not provide a setupproject content, and the setupproject description you provided did not match with any existing setupprojects')
+    
+    if 'setupproject_content' in dataDict and 'setupproject_description' in dataDict:   
+        setupObjD = SetupProject.objects.filter(content__exact=dataDict['setupproject_content'])
+        if setupObjD.count() > 0:
+            if not setupObjD[0].description == dataDict['setupproject_description']:
+                raise Exception('Using existing SetupProject content with wrong corresponding description')
+    
+    #if the request is an edit request
+    if update:
+        myObj = JobDescription.objects.get(pk=dataDict['id'])
+        myObj.setup_project = None
+        if 'setupproject_content' in dataDict and 'setupproject_description' in dataDict:
+            setupprojectTemp, created = SetupProject.objects.get_or_create(content=dataDict['setupproject_content'], description=dataDict['setupproject_description'])
+            myObj.setup_project=setupprojectTemp
+        
+        
+        optionsTemp, created = Options.objects.get_or_create(content=dataDict['options_content'], description=dataDict['options_description'])
+        appTemp, created = Application.objects.get_or_create(appName=dataDict['application'], appVersion=dataDict['version'])
+        
+        
+        myObj.options = optionsTemp
+        myObj.application = appTemp
+        
+        myObj.save()
+        
+        if 'handlers' in dataDict:
+            JobHandler.objects.filter(jobDescription__pk=dataDict['id']).delete()
+            
+            for handler_name in dataDict['handlers'].split(','):
+                handlerTemp = Handler.objects.get(name=handler_name)
+                jobHandlerTemp, created = JobHandler.objects.get_or_create(jobDescription=myObj, handler=handlerTemp)
+        
+        if 'platforms' in dataDict:
+            Requested_platform.objects.filter(jobdescription__pk=dataDict['id']).delete()
+            
+            for platform_name in dataDict['platforms'].split(','):
+                platformTemp = Platform.objects.get(cmtconfig=platform_name)
+                requestedPlatfromTemp, created = Requested_platform.objects.get_or_create(jobdescription=myObj, cmtconfig=platformTemp)
+            
+        return { 'error' : False, 'updated' : True, 'job_id' : myObj.id }
+    
+    
+    if 'setupproject_content' in dataDict and 'setupproject_description' in dataDict:
+        myjob_id = JobDescription.objects.filter(application__appName__exact=dataDict['application'], 
+                                                 application__appVersion__exact=dataDict['version'],
+                                                 options__content__exact=dataDict['options_content'],
+                                                 options__description__exact=dataDict['options_description'],
+                                                 setup_project__content__exact=dataDict['setupproject_content'],
+                                                 setup_project__description__exact=dataDict['setupproject_description']
+                                                 )
+    else:
+        myjob_id = JobDescription.objects.filter(application__appName__exact=dataDict['application'], 
+                                                 application__appVersion__exact=dataDict['version'],
+                                                 options__content__exact=dataDict['options_content'],
+                                                 options__description__exact=dataDict['options_description'],
+                                                 )
+    if myjob_id.count() > 0:
+        return { 'error': False , 'exists': True , 'jobdescription_id' : myjob_id[0].pk}
+    else:   
+        optionsTemp, created = Options.objects.get_or_create(content=dataDict['options_content'], description=dataDict['options_description'])
+        appTemp, created = Application.objects.get_or_create(appName=dataDict['application'], appVersion=dataDict['version'])
+        
+        if 'setupproject_content' in dataDict and 'setupproject_description' in dataDict:
+            setupprojectTemp, created = SetupProject.objects.get_or_create(content=dataDict['setupproject_content'], description=dataDict['setupproject_description'])
+            myObj, created = JobDescription.objects.get_or_create(application=appTemp, options=optionsTemp, setup_project=setupprojectTemp)
+        else:
+            myObj, created = JobDescription.objects.get_or_create(application=appTemp, options=optionsTemp)           
+        
+        if 'handlers' in dataDict:
+            for handler_name in dataDict['handlers'].split(','):
+                handlerTemp = Handler.objects.get(name=handler_name)
+                jobHandlerTemp, created = JobHandler.objects.get_or_create(jobDescription=myObj, handler=handlerTemp)
+        
+        if 'platforms' in dataDict:            
+            for platform_name in dataDict['platforms'].split(','):
+                platformTemp = Platform.objects.get(cmtconfig=platform_name)
+                requestedPlatfromTemp, created = Requested_platform.objects.get_or_create(jobdescription=myObj, cmtconfig=platformTemp)
+        
+        return {'error' : False,  'exists' : False, 'jobdescription_id' : myObj.id }

@@ -90,7 +90,7 @@ function getGroups(){
         //$("#atr").next().val('');
         //alert("potato");
         $("#atr_holder").mask("Requesting...");
-		$("#atr_holder").load(myUrl, function(){ jQuery("#atr").combobox(); });
+		$("#atr_holder").load(myUrl, function(){ $("#atr").combobox(); });
 }
 
 function checkRequestData(requestData){

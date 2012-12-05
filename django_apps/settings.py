@@ -195,13 +195,13 @@ HISTOGRAMSGAUSS = {
               'Process type' : 'GenMonitorAlg/5',
 }
 HISTOGRAMSGAUSSOPTIONS = {
-              'GenMonitorAlg/10' : [ 'Nint', '1/Nev', 'x linear', 'y linear', 'hist' ],
-              'GenMonitorAlg/12': [ 'y (mm)', 'Nvert/Nev', 'x linear', 'y linear', 'hist'],
-              'GenMonitorAlg/4' :[ 'Npart', 'dN', 'x linear', 'y log', 'hist' ],
-              'GenMonitorAlg/11': [ 'x (mm)' ,'Nvert/Nev', 'x linear', 'y linear', 'hist' ],
-              'GenMonitorAlg/13': [ 'z (mm)', 'Nvert/Nev', 'x linear', 'y linear', 'hist' ],
-              'GenMonitorAlg/44': [ 'eta', 'dN/eta', 'x linear', 'y linear', 'hist' ],
-              'GenMonitorAlg/3': [ 'Npart', 'dN', 'x linear', 'y log', 'hist' ],
-              'GenMonitorAlg/45': [  'Pt (MeV)', 'dN/pt', 'x linear', 'y log', 'hist' ],
-              'GenMonitorAlg/5': [  'Process id', '', 'x linear', 'y linear', 'hist' ],
+              'GenMonitorAlg/10' : [ 'Nint', '1/Nev', False, False, 'hist' ],
+              'GenMonitorAlg/12': [ 'y (mm)', 'Nvert/Nev', False, False, 'hist'],
+              'GenMonitorAlg/4' :[ 'Npart', 'dN', False, True, 'hist' ],
+              'GenMonitorAlg/11': [ 'x (mm)' ,'Nvert/Nev', False, False, 'hist' ],
+              'GenMonitorAlg/13': [ 'z (mm)', 'Nvert/Nev', False, False, 'hist' ],
+              'GenMonitorAlg/44': [ 'eta', 'dN/eta', False, False, 'hist' ],
+              'GenMonitorAlg/3': [ 'Npart', 'dN', False, True, 'hist' ],
+              'GenMonitorAlg/45': [  'Pt (MeV)', 'dN/pt', False, True, 'hist' ],
+              'GenMonitorAlg/5': [  'Process id', '', False, False, 'hist' ],
 }
