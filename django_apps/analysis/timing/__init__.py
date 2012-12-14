@@ -9,16 +9,14 @@ from django.db import connection, transaction
 from django.http import HttpResponse , HttpResponseRedirect
 from django.shortcuts import render_to_response   
 from django.template import RequestContext
-from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults, ResultString, ResultFloat, ResultInt, ResultBinary
+from lhcbPR.models import Host, Platform, Application, Options, JobResults
 from django.db.models import Q
 from django.http import HttpResponseNotFound
 from django.shortcuts import render_to_response   
 from django.template import RequestContext
 from django.conf import settings
 
-import tools.socket_service as service
-from tools.viewTools import dictfetchall
-from tools.viewTools import makeCheckedList, getSplitted2 
+from tools.viewTools import getSplitted 
 from query_builder import get_query_groups, get_tree_query
 
 class GroupDict(dict):
@@ -33,15 +31,12 @@ def render(**kwargs):
     and depending on the app_name it returns the available versions, options, setupprojects"""
     app_name = kwargs['app_name']
     
-    if not app_name == 'BRUNEL':
-        return HttpResponse("<h3>Sorry this type of analysis is not supported for {0}  application</h3>".format(app_name))
-    
     options = map(str, JobResults.objects.filter(job__jobDescription__application__appName=app_name,
                 jobAttribute__group='TimingTree',
                 job__success=True).values_list('job__jobDescription__options__description', flat=True).distinct())
     
     if not options:
-        return HttpResponse("<h3>No proper timing results to generate tree timing analysis</h3>")
+        return { "template" : "analysis/error.html", "errorMessage" : "No proper timing results to generate tree timing analysis" }
     
     
     options = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name,
@@ -49,7 +44,7 @@ def render(**kwargs):
         
     versions_temp = Application.objects.filter(jobdescriptions__jobs__success=True, appName=app_name,
                                                jobdescriptions__jobs__jobresults__jobAttribute__group='TimingTree').distinct()
-    versions = reversed(sorted(versions_temp, key = getSplitted2))
+    versions = sorted(versions_temp, key = lambda ver : getSplitted(ver.appVersion), reverse = True)
     
     platforms_temp = Platform.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name,
                                              jobs__jobresults__jobAttribute__group='TimingTree').distinct()
@@ -137,15 +132,21 @@ def analyse(**kwargs):
             node_data[node_name] = float(result[1]) # FLOAT_DATA
                     
         result = cursor.fetchone()
-        
+    
+    myitems = node_childs.iteritems()
+    
+    for parent, childs in myitems:
+        child_list = childs
+        node_childs[parent] = sorted(child_list, key = lambda mykey : node_ids[mykey])
+       
     from TimingTree import TimingTree
     
     tree = TimingTree(root, node_data, node_childs, node_entries, node_ids)
     
     if settings.HOSTNAME == 'alamages':
-        timing_path = 'static/images/histograms/timing{0}{1}{2}CSV'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
+        timing_path = 'static/images/histograms/timing{0}{1}{2}.csv'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
     else:
-        timing_path = 'static/timingJson/timing{0}{1}{2}CSV'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
+        timing_path = 'static/timingJson/timing{0}{1}{2}.csv'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
     
     jsonTree = tree.getHierarchicalJSON()
     csv = tree.getFullCSV()
@@ -163,7 +164,7 @@ def analyse(**kwargs):
     return dataDict
     
 def isAvailableFor(app_name):
-    if app_name in [ 'BRUNEL' ]:
+    if app_name in [ 'BRUNEL', 'GAUSS', 'MOORE' ]:
         return True
     
     return False

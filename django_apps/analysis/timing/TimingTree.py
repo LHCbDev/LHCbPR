@@ -145,6 +145,8 @@ class Node:
         """ Percentage of time spent in this algo/seq over the
         time used by the parent """
         if self.parent != None:
+            if self.parent.total == 0:
+                return 0.0
             return round((self.total * 100.0)/self.parent.total,2)        
         else:
             return 100.0

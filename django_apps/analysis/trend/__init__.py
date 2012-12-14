@@ -11,24 +11,11 @@ from tools.viewTools import makeCheckedList, getSplitted, makeQuery
 import tools.socket_service as service
 from query_builder import get_queries
 
-class remoteService(object):
-    def __init__(self):
-        self.connection = socket.socket(
-            socket.AF_INET, socket.SOCK_STREAM)
-    def connect(self):
-        try:
-            self.connection.connect(("localhost", 4321))
-        except Exception:
-            return False
-        else:
-            return True
-    def send(self, data):
-        service.send(self.connection, data)
-    def recv(self):
-        return service.recv(self.connection)
-    def finish(self):
-        self.connection.close()
-        
+class GroupDict(dict):
+    def __getitem__(self, key):
+        if key not in self:
+            self[key] = []
+        return dict.__getitem__(self, key)
 
 def render(**kwargs):
     """From the url is takes the requested application(app_name) , example:
@@ -76,72 +63,35 @@ def analyse(**kwargs):
     
     #establish connection
     cursor = connection.cursor()
-    
-    #execute query_groups get the logical groups of the data
-    cursor.execute(query_groups)
-    logical_data_groups = cursor.fetchall()
-    
-    if len(logical_data_groups) == 0: 
-        return { 'errorMessage' : 'No results produced from you choices', 'template' : 'analysis/error.html' }
-    if len(logical_data_groups) > 3:
-        if requestData['histogram'] == "true":
-            return {'errorMessage' : 'Your choices returned more than 3 results.Can not generate histograms for more than 3 results!',
-                'template' : 'analysis/error.html' }
-    
-    if requestData['histogram'] == 'true':
-        doHistogram = True
-    else:
-        doHistogram = False
-    if requestData['separately_hist'] == 'true':
-        doSeparate = True
-    else:
-        doSeparate = False
-            
+                
     #then execute the next query_results to fetch the results
     cursor.execute(query_results)
-    #fixing the request in order to send it properly through socket
-    #can not serialize straightforward the request as it is
-    yo = JobAttribute.objects.get(pk=requestData['atr'].split(',')[0])
-    requestDict = {
-               'atr' : yo.name, 
-               'description' : [col[0] for col in cursor.description],
-               'nbins' : requestData['nbins'],
-               'xlow' : requestData['xlow'],
-               'xup' : requestData['xup'],
-               'separately_hist' : doSeparate,
-               'histogram' : doHistogram 
-               }
-    #initialize our remote service
-    remoteservice = remoteService()
-    #in case it does not connect return an error
-    if not remoteservice.connect():
-        return { 'errorMessage' : 'Connection with remote service for analysis failed!', 
-                'template' : 'analysis/error.html' }
-    try:
-        #send the name of the function you want to call
-        remoteservice.send('basic_service')
-        #send to ROOT_service(remote service) histogram info from user's request
-        remoteservice.send(requestDict)
-        groups = {}
+    cursor_description = cursor.description
     
+    groups = GroupDict()
+
+    result = cursor.fetchone()
+    while not result == None:
+        group = tuple(result[:-4])
+        groups[group].append(tuple(result[-4:]))
+        
         result = cursor.fetchone()
-        while not result == None:
-            group = tuple(result[:-1])
-            if not group in groups:
-                groups[group] = len(groups)
-                remoteservice.send(('NEWGROUP', groups[group], group))
-            remoteservice.send((groups[group], result[-1]))
-            result = cursor.fetchone()
-        #send a message to stop waiting for other packets    
-        remoteservice.send('STAHP')
-        #after we finish sending our data we wait for the response(answer)
-        answerDict = remoteservice.recv()
-    except Exception:
-        return {'errorMessage' : 'An error occurred with the root analysis process, please try again later',
-                'template' : 'analysis/error.html' }
-    error = False
-    return { 'results' : json.dumps(answerDict['results']) , 'histogram' : json.dumps(doHistogram), 
-                'separately_hist' : json.dumps(doSeparate), 'bins' : answerDict['bins'] }
+    
+    trends = []
+    for g,values in groups.iteritems():
+        dataDict = {}
+        datatable_temp = []
+        for res in values:
+            # -3(version), -2(average value), -1(std)
+            datatable_temp.append([ res[-4], float(res[-3]), float(res[-3])-float(res[-2]), float(res[-3])+float(res[-2]), 'info' , 'entries: {0}'.format(int(res[-1])) ])
+        datatable = sorted(datatable_temp, key = lambda t : getSplitted(t[0]))
+        dataDict['description'] = dict(zip([col[0] for col in cursor.description[:-4]], g))
+        dataDict['platform'] = dataDict['description']['PLATFORM']
+        dataDict['datatable'] = datatable
+        
+        trends.append(dataDict)
+        
+    return { 'trends': json.dumps(trends) }
 
 def filterAtrs(**kargs):
     dataDict = kargs['requestData']
@@ -163,3 +113,6 @@ def filterAtrs(**kargs):
     optionsHtml+= '</select>'
      
     return HttpResponse(optionsHtml)
+
+def isAvailableFor(app_name):
+    return False

@@ -3,20 +3,21 @@
 {% block head %}
 {{ block.super }}
 <script type="text/javascript" src="/static/js/autocompleteBox.js"></script>
+<script src="http://www.google.com/jsapi"></script>
 {% endblock head %}
 
 {% block script %}
     {{ block.super }}
 			$(document).ready(function() {			
+				$('#execute_query').hover(
+					function() { $(this).addClass('ui-state-hover'); },
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
 				var atrValues = [  ];
                 
                 /* prefill the data for elements in the  */
                 prefillAll();
-                /* after the prefill trigger (if must) some functions */
-                ShowHistogramConfigs();
-
-				$("#histogram").click(function(){ ShowHistogramConfigs() });
-                
+                                
                 $("#groups").click(function(){ showHide("groups","groups_list") });
                 
                 $('#groupErase,button').hover(
@@ -45,16 +46,6 @@
                 
         });
 
-function ShowHistogramConfigs(){
-	var isChecked = $("#histogram").is(':checked');
-	if (isChecked){
-		$("#histogram_configs").slideDown("normal"); 
-	}
-	else{
-		$("#histogram_configs").slideUp("normal");
-	}
-}
-
 function getSelectedGroups(id){
 	var sdValues = [];
     $('#'+id+' li label :checked').each(function () {
@@ -76,30 +67,11 @@ function checkRequestData(requestData){
 	if (requestData["atr"] == "") {
 		errors["attribute"] = "Attribute field can not be empty!";
 	}
-	
-	if ( requestData["histogram"] ){
-		if(requestData["nbins"] != ""){		
-			if( !($.isNumeric(requestData["nbins"] ))){
-				errors["nbins"]= "nbins value must be strictly integer!";
-			}
-		}
-		if(requestData["xlow"] != ""){		
-			if( !($.isNumeric(requestData["xlow"]))){
-				errors["xlow"] = "xlow value must be strictly integer!";
-			}
-		}
-		if(requestData["xup"]  != ""){		
-			if( !($.isNumeric(requestData["xup"]))){
-				errors["xup"] = "xup value must be strictly integer!";
-			}
-		}
-	}
 	return errors;
 }
 {% endblock script %}
 
 {% block stylecss %}
-	#histogram_configs input { width: 60px; }
 
 	.ui-combobox {
         position: relative;
@@ -121,8 +93,6 @@ function checkRequestData(requestData){
     }
 	#histogram_settings { margin-top: 1em; margin-left: 1em;}
 	#group_host_div { margin-top: 0.3em; }
-
-    #hist_div { margin-top : 0.5em; }
     #atr_holder { margin-top : 1em; }
 {% endblock stylecss %}
 
@@ -158,21 +128,6 @@ function checkRequestData(requestData){
 					<option value="{{ atr.0 }},{{ atr.2 }}">{{ atr.1 }}</option>
 				{% endfor %}
     		</select>
-		</div>
-
-        <div id="hist_div">        
-            <label><input id="histogram" type="checkbox">Generate histogram </label>
-        </div>
-
-		<div id="histogram_configs" style="display :none;">
-			<label>nbins</label><input id="nbins" type="text" value="" /><label> xlow</label><input id="xlow" type="text" value="" /><label> xup</label><input id="xup" type="text" value="" />
-			<br><label style="font-size: 13px;"> (leave blank to use default values)</label>
-			<div id="histogram_settings">
-                <form>
-				<input id="separately_hist" type="radio" name="myhistogram" checked="checked">separated
-                <input id="superimposed" type="radio" name="myhistogram">superimposed
-                </form>
-			</div>
 		</div>
 						
 		<div id="group_host_div">

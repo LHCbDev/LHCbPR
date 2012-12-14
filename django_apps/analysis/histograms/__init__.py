@@ -21,7 +21,7 @@ from django.http import HttpResponseNotFound
 
 import tools.socket_service as service
 from query_builder import get_queries
-from tools.viewTools import makeCheckedList, getSplitted2 
+from tools.viewTools import getSplitted 
 
 class remoteService(object):
     def __init__(self):
@@ -58,7 +58,7 @@ def render(**kwargs):
     options = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name).distinct()
         
     versions_temp = Application.objects.filter(jobdescriptions__jobs__success=True, appName=app_name).distinct()
-    versions = reversed(sorted(versions_temp, key = getSplitted2))
+    versions = sorted(versions_temp, key = lambda ver : getSplitted(ver.appVersion), reverse = True)
     
     platforms_temp = Platform.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct()
     platforms = sorted(platforms_temp, key = lambda plat : plat.cmtconfig)

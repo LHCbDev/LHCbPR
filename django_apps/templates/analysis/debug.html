@@ -1,3 +1,24 @@
-<pre>
-    {{ str }}
-</pre>
+<link href="/static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
+<script src="/static/js/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+
+var bookmark = {{ str|safe }};
+
+$(document).ready(function () {
+
+$("#yo").click(function(){ 
+    var aw = $(this).is(':checked');
+    alert(aw);
+    return false;
+});
+
+$("#yo").trigger("click");
+});
+
+</script>
+
+<div>
+    <label>
+    	<input id="yo" type="checkbox" value="aw" >Test input
+    </label>
+</div>

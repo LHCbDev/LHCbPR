@@ -1,4 +1,4 @@
-{% extends "analysis/base_analysis_template2.html" %}
+{% extends "analysis/base_analysis_template.html" %}
 
 {% block stylecss %} 
 
@@ -6,10 +6,17 @@
 
 {% endblock stylecss %}
 
+{% block script %}
+    {{ block.super }}
+
+    $(document).ready(function() {
+        $("#group_host").prefill();    
+    });
+{% endblock script %}
 
 {% block content %} 
 
-<div id="group_host">
+<div id="group_host_div">
 		<label><input id="group_host" type="checkbox">group by host</label>
 </div>
 
