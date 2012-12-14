@@ -33,7 +33,8 @@
                              $(':first-child:first-child', this).removeAttr('checked');                               
                         }
                     });
-                    fixGroups(groups);
+                    var groups_empty = [];
+                    fixGroups(groups_empty);
                 });
 
                 $("#atr").combobox();

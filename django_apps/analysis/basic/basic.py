@@ -147,18 +147,28 @@ def filterAtrs(**kargs):
     dataDict = kargs['requestData']
     app_name = kargs['app_name']
     
-    filterGroups = Q()
-    if not dataDict['groups'] == "": 
-        filterGroups = makeQuery('jobAttribute__group__exact',dataDict['groups'].split(','), Q.OR)
-
+    query_groups = "SELECT distinct att.id ,att.name, att.type FROM lhcbpr_job j ,\
+    lhcbpr_jobresults r , lhcbpr_jobattribute att , lhcbpr_jobdescription jobdes ,\
+    lhcbpr_application apl WHERE j.id = r.job_id AND j.jobdescription_id   = jobdes.id\
+    AND jobdes.application_id = apl.id AND r.jobattribute_id = att.id\
+    AND ( att.type = 'Float' ) AND j.success = 1\
+    AND apl.appname = '{0}'".format(app_name)
     
-    atrsTemp =  JobResults.objects.filter(job__jobDescription__application__appName=app_name,job__success=True).filter(Q(jobAttribute__type='Float')).filter(filterGroups)
-    atrs = atrsTemp.values_list('jobAttribute__id','jobAttribute__name','jobAttribute__type').distinct()
+    if not dataDict['groups'] == "":
+        groups_temp = []
+        for group in dataDict['groups'].split(','):
+            groups_temp.append('att. "GROUP"='+"'{0}'".format(group))
+        query_groups += ' AND ( '+' OR '.join(groups_temp)+' )'
+    
+    cursor = connection.cursor()
+    cursor.execute(query_groups)
     
     optionsHtml = '<label>Choose an attribute: </label><select id="atr"><option value=""></option>'
-            
-    for atr in atrs:
-       optionsHtml+=  '<option value="{0},{1}">{2}</option>'.format(atr[0],atr[2],atr[1])
+    
+    result = cursor.fetchone()
+    while not result == None:
+        optionsHtml+=  '<option value="{0},{1}">{2}</option>'.format(result[0],result[2],result[1])
+        result = cursor.fetchone()
     
     optionsHtml+= '</select>'
      
