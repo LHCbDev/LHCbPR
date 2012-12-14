@@ -1,4 +1,4 @@
-{% extends "analysis/base_analysis_template2.html" %}
+{% extends "analysis/base_analysis_template.html" %}
 
 {% block head %}
 {{ block.super }}
@@ -9,32 +9,18 @@
     {{ block.super }}
 
     $(document).ready(function() {
+        /* prefill with the bookmark parameters */        
+        prefillAll();        
+
         $( "#atr" ).combobox();
         
-        $("#hist_imposed").click(function(){ 
-			if($(this).is(':checked')){
-				$("#hist_separated").removeAttr("checked");
-                $("#hist_divided").removeAttr("checked");
-                $("#hist_divided_reversed").removeAttr("checked");
-                $("#division").slideUp();
-			}
-		 });
-		$("#hist_separated").click(function(){ 
-			if($(this).is(':checked')){
-				$("#hist_imposed").removeAttr("checked");
-                $("#hist_divided").removeAttr("checked");
-                $("#hist_divided_reversed").removeAttr("checked");
-                $("#division").slideUp();
-			}
-		 });
-          $("#hist_divided").click(function(){ 
-			if($(this).is(':checked')){
-				$("#hist_separated").removeAttr("checked");
-                $("#hist_imposed").removeAttr("checked");
-                $("#division").slideDown("slow");
-			}
-		 });    
-
+        $("#hist_imposed").click(function(){  $("#division").slideUp(); });
+		$("#hist_separated").click(function(){  $("#division").slideUp();  });
+        $("#hist_divided").click(function(){ $("#division").slideDown("slow"); });    
+        
+        if($("#hist_divided").is(":checked")){
+            $("#division").slideDown("slow");     
+        }
     });
 
 function checkRequestData(requestData){
@@ -98,9 +84,11 @@ function checkRequestData(requestData){
     <div id="histogram_settings">
     <label>Histogram settings:</label>
         <div id="hist_options">
-            <label><input id="hist_separated" type="radio" checked="checked">separated</label>
-            <label><input id="hist_imposed" type="radio">superimposed</label>
-            <label><input id="hist_divided" type="radio">divided</label>
+            <form>
+                <label><input id="hist_separated" name="histo_conf" type="radio" checked="checked">separated</label>
+                <label><input id="hist_imposed" name="histo_conf" type="radio">superimposed</label>
+                <label><input id="hist_divided" name="histo_conf" type="radio">divided</label>
+            </form>
         </div>
         <div id="division" style="display:none;">
             <label><input id="hist_divided_reversed" type="checkbox">reversed division</label>

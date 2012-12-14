@@ -69,32 +69,6 @@ def getSplitted(version):
        
     return splittedElement
 
-def getSplitted2(versionobj):
-    version = versionobj.appVersion
-    """Takes a version and tranforms it like v41r0 ----> ['v', 41, 'r', '0']"""
-    split_regex = re.compile('\d+|[^\d\s]+')
-    splittedElement = []
-    for v in re.findall(split_regex, version):
-        if v.isdigit():
-            splittedElement.append(int(v))
-        else:
-            splittedElement.append(v)
-       
-    return splittedElement
-
-def getSplitted3(versionobj):
-    version = versionobj[1]
-    """Takes a version and tranforms it like v41r0 ----> ['v', 41, 'r', '0']"""
-    split_regex = re.compile('\d+|[^\d\s]+')
-    splittedElement = []
-    for v in re.findall(split_regex, version):
-        if v.isdigit():
-            splittedElement.append(int(v))
-        else:
-            splittedElement.append(v)
-       
-    return splittedElement
-
 #return simple input text html elements
 #(one for each list/tuple in the list parameter)
 def formBuilder(listTexts):

@@ -1,14 +1,17 @@
 {% extends "lhcbPR/base_template.html" %}
 
-{% block title %} {% endblock title %}
+{% block title %} {{ active_tab }} {{ title }} {% endblock title %}
 
 {% block head %} 
-<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
-<script type="text/javascript" src="/static/js/autocompleteBox.js"></script>
+<script type="text/javascript" src="/static/js/BaseAnalysisFunctions.js"></script>
+<script type="text/javascript" src="/static/js/analysisBookmark.js"></script>
 {% endblock head %}
 
 {% block script %} 
-
+var appName = "{{ active_tab }}";
+var requestUrl = "/django/lhcbPR/analyse/{{ analysis_type }}/results/{{  active_tab }}/";
+var currentUrl = "/django/lhcbPR/analyse/{{ analysis_type }}/{{ active_tab }}/"
+var prefillData = {{ bookmark|safe }};
 $(document).ready(function() {
 		$("#analyseMenu").attr('checked', 'checked').button("refresh");
 		{% for app in applications %}
@@ -18,16 +21,59 @@ $(document).ready(function() {
 			});
 		{% endfor %}
 
-		$('#tabs').tabs({ selected : -1 });
-		$('#tabs').tabs('select', '#{{ active_tab }}tab');
+		$('#tabs')
+            .tabs({ selected : -1 })
+            .tabs('select', '#{{ active_tab }}tab');
+	
+		$('.filter a,#bookmark,#execute_query').hover(
+					function() { $(this).addClass('ui-state-hover'); },
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
+		$("#HostButton").click(function(){ showHide("HostButton","hosts") });
+		$("#OptionsButton").click(function(){ showHide("OptionsButton","options") });
+		$("#PlatformButton").click(function(){ showHide("PlatformButton","platforms") });
+		$("#VersionButton").click(function(){ showHide("VersionButton","versions") });
+
+		$("#HostErase").click(function(){ CheckBoxClear("hosts") });
+		$("#OptionsErase").click(function(){ CheckBoxClear("options") });
+		$("#PlatformErase").click(function(){ CheckBoxClear("platforms") });
+		$("#VersionErase").click(function(){ CheckBoxClear("versions") });
+
+		$("#execute_query").click(function() { sendRequest(); });
+        $("#bookmark").click(function(){ window.open( currentUrl+"?"+getBookmarkUrl() ) });
+        
+        /* call the bookmark prefill */
+        $("#options").prefillBox();
+        $("#hosts").prefillBox();
+        $("#versions").prefillBox();
+        $("#platforms").prefillBox();
 });
 {% endblock script %}
 
 {% block stylecss %} {% endblock stylecss %}
 
-{% block helptext %} {% endblock helptext %}
+{% block helptext %} <pre> {{ help }} </pre> {% endblock helptext %}
 
 {% block pagebody %}
+<style type="text/css">
+div.outer {
+    width : auto;
+	clear: both;
+	display : inline-block;
+}
+div.innerLeft {
+    width: auto;	
+    position: relative;     
+    float: left;
+ }
+.innerRight {
+    width : auto;
+	position: relative;        
+    float: right;
+	margin-left: 10px;
+} 
+#button_div a{ padding: .4em 1em .2em 17px;text-decoration: none;position: relative; float: right; margin-left:0.2em;}
+</style>
 <div id="tabs">
 			<ul>
 				{% for app in applications %}
@@ -35,7 +81,93 @@ $(document).ready(function() {
 				{% endfor %}
 			</ul>
 			<div id="{{ active_tab }}tab">
-					{% block content %} {% endblock content %}
+	
+            <div id="button_div">
+                <a  id="bookmark" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Bookmark </a>
+                <a  id="execute_query" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Retrieve results </a>
+            </div>
+
+				<div class="outer">
+					<div class="innerLeft">
+
+						<div id="users_html">
+						{% block content %} {% endblock content %}
+						</div>
+
+						<table class="filter" style="margin-top: 1em;">
+						<tr>
+						<td><a href="javascript:;" id="OptionsButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Options</a>
+								<a href="javascript:;" id="OptionsErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+						    <ul id="options" class="checklist" >
+								{% for opt in options %}
+								<li>
+										<label>
+											<input type="checkbox" value="{{ opt.pk }}" >
+												{{ opt.description }}
+										 </label>
+								</li>
+							{% endfor %}
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="VersionButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Version</a>
+								<a href="javascript:;" id="VersionErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+				 		   <ul id="versions" class="checklist">
+							{% for v in versions %}
+								<li>
+										<label>
+											<input type="checkbox" value="{{ v.pk }}" >
+												{{ v.appVersion }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="PlatformButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Platform</a>
+								<a href="javascript:;" id="PlatformErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+				 		   <ul id="platforms" class="checklist" style="display:none;">
+							{% for plat in platforms %}
+								<li>
+										<label>
+											<input type="checkbox" value="{{ plat.pk }}" >
+												{{ plat.cmtconfig }}
+										 </label>
+								</li>
+							{% endfor %}
+						    </ul>
+						</td>
+						<tr>
+						<td><a href="javascript:;" id="HostButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Host</a>
+								<a href="javascript:;" id="HostErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
+						</td>
+						<tr>
+						<td>
+						    <ul id="hosts" class="checklist" style="display: none;">
+								{% for h in hosts %}
+								<li>
+										<label>
+											<input type="checkbox" value="{{ h.pk }}" >
+												{{ h.hostname }}
+										 </label>
+								</li>
+							{% endfor %}
+						</td>
+						</table><!-- closing div id=myfilter -->
+
+					</div><!-- /filter_container + InnerLeft(has two classes)-->				
+					
+				<div id="results" class="innerRight" style="margin-top: 2em;margin-left:1em;"></div><!-- /resutls + InnerRight (has two classes)-->
+					
+				</div><!-- /outer-->					
 			</div><!-- active_tab -->
 </div><!--  /tabs -->
 {% endblock pagebody %}

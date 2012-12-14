@@ -1,3 +1,5 @@
+var request_method = "GET";
+
 function getValue(child, dataObj) {
 	var myvalue = {};
 	if(child.is(":input")) {
@@ -33,11 +35,12 @@ function walk(children, dataObj) {
 	});
 }
 
-function objToArray(obj){
+function objToArray(obj, keepNull){
 	var myArray = []
 	for(var key in obj) {
     	if(obj.hasOwnProperty(key))
-        	myArray.push(key+"="+obj[key]);
+            if(obj[key] != "" || keepNull)
+            	myArray.push(key+"="+obj[key]);
 	}
 	return myArray;
 }
@@ -50,8 +53,6 @@ function isEmpty(map) {
 	}
 	return true;
 }
-
-var request_method = "GET";
 
 function collectRequestData(){
 	dataObj = {}
@@ -74,10 +75,10 @@ function sendRequest(){
 		return;
 	}
 	
-	requestData["options"] = getSelectedChilds("Options").join(",");
-	requestData["versions"] = getSelectedChilds("Version").join(",");
-	requestData["platforms"] = getSelectedChilds("Platform").join(",");
-	requestData["hosts"] = getSelectedChilds("Host").join(",");	
+	requestData["options"] = getSelectedChilds("options").join(",");
+	requestData["versions"] = getSelectedChilds("versions").join(",");
+	requestData["platforms"] = getSelectedChilds("platforms").join(",");
+	requestData["hosts"] = getSelectedChilds("hosts").join(",");	
 	
 	/* here is the errors checking, the errors can be a list
 	 with the problematic fields or an object with the format :
@@ -108,7 +109,7 @@ function sendRequest(){
 	/* requestUrl be will provided from the base analysis template  */
 	if (request_method == "GET"){
 		$("#results").mask("Requesting...");
-		var requestDataArray = objToArray(requestData);
+		var requestDataArray = objToArray(requestData,true);
 		$("#results").load(requestUrl+"?"+requestDataArray.join("&"));
 	}
 	else if(request_method == "POST"){
@@ -151,4 +152,22 @@ function getSelectedChilds(id){
             sdValues.push($(this).attr('value'));
       });
 	return sdValues;
+}
+
+function getBookmarkUrl(){
+    var requestData = collectRequestData();
+
+	if(requestData == null){
+		alert("collectRequestData method must return a javascript object!");
+		return;
+	}
+	
+	requestData["options"] = getSelectedChilds("options").join(",");
+	requestData["versions"] = getSelectedChilds("versions").join(",");
+	requestData["platforms"] = getSelectedChilds("platforms").join(",");
+	requestData["hosts"] = getSelectedChilds("hosts").join(",");
+
+    var requestDataArray = objToArray(requestData,false);
+
+    return requestDataArray.join("&");
 }

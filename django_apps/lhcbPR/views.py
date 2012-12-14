@@ -14,14 +14,16 @@ import json, subprocess, sys, re, copy, os
 from pprint import pformat
 from exceptions import AttributeError
 from random import choice
-from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, formBuilder, getSplitted3, jobdescription
+from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, formBuilder, getSplitted, jobdescription
 
 
 @login_required
 def test(request):
+    datadict = json.dumps(request.GET)
     myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user}
-    return render_to_response('lhcbPR/test.html', myDict,
+    myDict = { 'myauth' : myauth, 'user' : request.user,
+              'str' : datadict }
+    return render_to_response('analysis/debug.html', myDict,
                   context_instance=RequestContext(request))
     
 def index(request):
@@ -48,7 +50,7 @@ def jobDescriptions(request, app_name):
         return HttpResponseNotFound("<h3>Page not found</h3>")        
     
     appVersions_temp = JobDescription.objects.filter(application__appName__exact=app_name).values_list('application_id','application__appVersion').distinct()
-    appVersions = reversed(sorted(appVersions_temp, key = getSplitted3))
+    appVersions = reversed(sorted(appVersions_temp, key = lambda ver : getSplitted(ver[1])))
     
     if not appVersions:
         return HttpResponseNotFound("<h3>No existing job descriptions for this application yet.</h3>")
@@ -157,7 +159,7 @@ def analysis_application(request, app_name):
             try:
                 mod = __import__(mod_import, fromlist=[mod_import])
             except ImportError, e:
-                return HttpResponseNotFound('<h3>Error potato happened while checking analysis {0}</h3>'.format(module))
+                return HttpResponseNotFound(e)#'<h3>Error potato happened while checking analysis {0}</h3>'.format(module)
             else:
                 if mod.isAvailableFor(app_name):
                     analysisList.append((module, module.upper()))
@@ -248,6 +250,7 @@ Attention:
                     'applications' : applicationsList,
                     'active_tab' : app_name,
                     'analysis_type' : analysis_type,
+                    'bookmark' : json.dumps(requestData), 
                     
                     'title' : title,
                     'help' : help,
@@ -648,7 +651,8 @@ def upload_file(request):
         handle_uploaded_file(request.FILES['file'])
         return HttpResponse('Server message: Uploading results zip file was successful')
 
-@csrf_exempt 
+#@login_required
+@csrf_exempt
 def new_job_description(request):
     """This view checks if a commit request from the user(add new job description/or edit an existing one) is valid.
     if it's valid it updates/creates the old/new job description, which means add/edit handler,requested platforms, options etc"""
@@ -659,6 +663,9 @@ def new_job_description(request):
         requestData = request.POST
     else:
         return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'unsupported method, supported GET,POST' }))
+    
+    
+    return HttpResponse(json.dumps(requestData))
     
     if not set(['application', 'version', 'optionsD']).issubset(requestData):
         return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Your HTTP request must contain at least an application,version and optionsD(options_description)' }))
