@@ -1,8 +1,0 @@
-#!/bin/bash
-
-#fix the enviroment 
-. /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh --no-cache
-/afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.02/$CMTCONFIG/root/bin/thisroot.sh
-
-python $@
-
