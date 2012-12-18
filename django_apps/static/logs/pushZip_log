@@ -2344,3 +2344,1355 @@ ValidationError: [u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] fo
  "
 [ 2012-12-13 14:10:35,245 ] [ INFO ] " [ 'zipFile' : '479f5268-4526-11e2-844f-003048f0e3f0.zip' ]   [ 'job_description_id' : 1041 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-13,13:39:14' ] [ 'job_id' : 2101 ] Zip folder with new job results added successfully
  "
+[ 2012-12-14 16:15:03,894 ] [ ERROR ] " [ 'zipFile' : '59245cce-4600-11e2-8a9f-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-14,15:38:45' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-14 16:45:01,514 ] [ ERROR ] " [ 'zipFile' : '92877d3a-4604-11e2-842c-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-14,16:10:16' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-14 17:15:00,995 ] [ ERROR ] " [ 'zipFile' : 'e31bc59a-4608-11e2-bb14-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-14,16:40:36' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-15 13:15:04,644 ] [ ERROR ] " [ 'zipFile' : '3144097c-460d-11e2-a782-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-14,17:11:24' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-15 13:15:05,011 ] [ ERROR ] " [ 'zipFile' : '6d33e06c-46ab-11e2-bb8e-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-15,12:03:57' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-15 13:15:05,407 ] [ ERROR ] " [ 'zipFile' : 'b12f99d8-46af-11e2-b9b1-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-15,12:34:55' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-15 14:45:01,128 ] [ ERROR ] " [ 'zipFile' : '0da9b7d6-46bd-11e2-8fac-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-15,14:10:19' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-15 15:15:01,205 ] [ ERROR ] " [ 'zipFile' : '6f5ed3e0-46c1-11e2-8762-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-15,14:41:05' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-16 13:35:02,831 ] [ ERROR ] " [ 'zipFile' : 'df400fe2-477c-11e2-b85a-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-16,13:04:00' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-16 14:05:00,876 ] [ ERROR ] " [ 'zipFile' : '26d93c6c-4781-11e2-8e01-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-16,13:34:14' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-16 15:00:04,143 ] [ ERROR ] " [ 'zipFile' : 'dfc4c4a6-4788-11e2-bcf8-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-16,14:29:05' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-16 15:35:02,900 ] [ ERROR ] " [ 'zipFile' : '15434504-478d-11e2-8a66-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-16,15:00:05' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 11:00:01,957 ] [ ERROR ] " [ 'zipFile' : 'e75ef8b0-482f-11e2-9fb2-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,10:23:19' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 11:30:02,270 ] [ ERROR ] " [ 'zipFile' : '383914a6-4834-11e2-9ae2-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,10:55:45' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 12:00:02,105 ] [ ERROR ] " [ 'zipFile' : 'c987ae46-4838-11e2-9bea-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,11:27:19' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 12:35:01,760 ] [ ERROR ] " [ 'zipFile' : '1f42c740-483d-11e2-8bac-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,11:59:18' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 16:30:03,228 ] [ ERROR ] " [ 'zipFile' : 'ee812540-485d-11e2-a508-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,15:54:27' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 16:55:02,981 ] [ ERROR ] " [ 'zipFile' : '02780a4c-4862-11e2-97bd-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,16:25:14' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 17:25:01,659 ] [ ERROR ] " [ 'zipFile' : '1be1e88c-4866-11e2-982e-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,16:54:25' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 17:55:01,494 ] [ ERROR ] " [ 'zipFile' : '34ab7af0-486a-11e2-8db0-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,17:23:45' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 18:25:02,028 ] [ ERROR ] " [ 'zipFile' : '48c5a1ec-486e-11e2-83bb-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,17:53:05' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 18:55:02,637 ] [ ERROR ] " [ 'zipFile' : '5bcef87a-4872-11e2-8b38-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,18:22:17' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 19:25:02,057 ] [ ERROR ] " [ 'zipFile' : '7703dd28-4876-11e2-9cd1-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,18:51:28' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 19:55:01,235 ] [ ERROR ] " [ 'zipFile' : '915067a6-487a-11e2-ab26-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,19:20:50' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 20:25:03,122 ] [ ERROR ] " [ 'zipFile' : 'c040dd9e-487e-11e2-9ea5-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,19:50:13' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 20:55:03,455 ] [ ERROR ] " [ 'zipFile' : 'f05815de-4882-11e2-9e37-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,20:20:10' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 21:20:03,058 ] [ ERROR ] " [ 'zipFile' : '0bca8492-4887-11e2-9ea7-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,20:50:09' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 21:50:01,596 ] [ ERROR ] " [ 'zipFile' : '2ae91718-488b-11e2-b741-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,21:19:32' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 22:20:01,152 ] [ ERROR ] " [ 'zipFile' : '5f7a0f9c-488f-11e2-b439-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,21:49:02' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 22:50:02,654 ] [ ERROR ] " [ 'zipFile' : '70a4d2da-4893-11e2-83f9-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,22:19:09' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-17 23:20:00,807 ] [ ERROR ] " [ 'zipFile' : 'a17ad16c-4897-11e2-801b-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,22:48:15' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:04,197 ] [ ERROR ] " [ 'zipFile' : '5c70d81c-48d5-11e2-ae02-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,06:10:33' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:04,609 ] [ ERROR ] " [ 'zipFile' : '82b2ad46-48b4-11e2-8408-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,02:15:58' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:05,612 ] [ ERROR ] " [ 'zipFile' : 'bba17436-48bc-11e2-82d7-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,03:14:23' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:05,920 ] [ ERROR ] " [ 'zipFile' : '285ff74a-48cd-11e2-bf28-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,05:12:20' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:06,212 ] [ ERROR ] " [ 'zipFile' : '7526a2f8-48b0-11e2-a8bc-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,01:46:30' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:06,518 ] [ ERROR ] " [ 'zipFile' : '1891f1b4-48c9-11e2-a269-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,04:42:37' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:07,096 ] [ ERROR ] " [ 'zipFile' : '24e6baa6-48a8-11e2-baeb-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,00:46:50' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:07,599 ] [ ERROR ] " [ 'zipFile' : 'd89567d6-489f-11e2-8068-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,23:47:47' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:08,277 ] [ ERROR ] " [ 'zipFile' : '014e83f2-48a4-11e2-9a5b-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,00:17:03' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:09,039 ] [ ERROR ] " [ 'zipFile' : 'f15e5564-48c4-11e2-b468-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,04:12:51' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:09,578 ] [ ERROR ] " [ 'zipFile' : '570af700-48ac-11e2-8b54-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,01:16:28' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:09,874 ] [ ERROR ] " [ 'zipFile' : 'c10e0572-489b-11e2-8e36-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-17,23:18:16' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:10,383 ] [ ERROR ] " [ 'zipFile' : 'c8bb5a7a-48c0-11e2-829d-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,03:43:51' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:10,901 ] [ ERROR ] " [ 'zipFile' : '9e2e32bc-48b8-11e2-9e37-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,02:44:59' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 09:25:11,206 ] [ ERROR ] " [ 'zipFile' : '3a504eec-48d1-11e2-ae4e-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,05:41:25' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 12:46:02,771 ] [ ERROR ] " [ 'zipFile' : '1713c874-4907-11e2-98c9-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,12:05:21' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 12:46:03,024 ] [ ERROR ] " [ 'zipFile' : 'c9b0117c-4902-11e2-9aa4-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,11:34:15' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 13:25:02,001 ] [ ERROR ] " [ 'zipFile' : '526ae46a-490d-11e2-a0cf-003048f0e3f0.zip' ]   [ 'job_description_id' : {"application": ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,13:07:55' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: '{"application":'
+[ 2012-12-18 14:10:01,245 ] [ ERROR ] " [ 'zipFile' : '24b16998-4914-11e2-ae00-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,13:38:04' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 14:20:02,904 ] [ ERROR ] " [ 'zipFile' : '42783226-4915-11e2-81a1-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,13:46:49' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 14:30:13,565 ] [ INFO ] " [ 'zipFile' : '79c79516-4913-11e2-9974-3cd92b53446b.zip' ]   [ 'job_description_id' : 481 ]  [ 'host' : 'pclhcb10' ] [ 'platform' : 'x86_64-slc5-gcc43-opt' ]  [ 'time_start' : '2012-12-18,13:43:51' ] [ 'job_id' : 2118 ] Zip folder with new job results added successfully
+ "
+[ 2012-12-18 14:45:01,653 ] [ ERROR ] " [ 'zipFile' : '8755a218-4918-11e2-a0f3-003048f0e3f0.zip' ]   [ 'job_description_id' : ERROR ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,14:09:31' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'ERROR'
+[ 2012-12-18 14:55:04,528 ] [ ERROR ] " [ 'zipFile' : '573de21e-491a-11e2-ac64-003048f0e3f0.zip' ]   [ 'job_description_id' : {"application": ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,14:29:40' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: '{"application":'
+[ 2012-12-18 14:55:06,840 ] [ ERROR ] " [ 'zipFile' : '59d854b4-491a-11e2-9118-003048f0e3f0.zip' ]   [ 'job_description_id' : {"application": ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2012-12-18,14:41:51' ]  exception occurred! "
+Traceback (most recent call last):
+  File "/home/LHCbPR/django_apps/lhcbPR/management/commands/pushZip.py", line 61, in pushThis
+    myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
+  File "/usr/lib/python2.6/site-packages/django/db/models/manager.py", line 132, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 341, in get
+    clone = self.filter(*args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 550, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/usr/lib/python2.6/site-packages/django/db/models/query.py", line 568, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1194, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/query.py", line 1129, in add_filter
+    connector)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 67, in add
+    value = obj.prepare(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/sql/where.py", line 316, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 292, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/usr/lib/python2.6/site-packages/django/db/models/fields/__init__.py", line 479, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: '{"application":'
