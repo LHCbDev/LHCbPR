@@ -1,4 +1,4 @@
-import json, socket
+import json, socket, math
 from django.db import connection, transaction
 from django.http import HttpResponse 
 from lhcbPR.models import JobAttribute, Host, Platform, Application, Options,  JobResults
@@ -53,7 +53,7 @@ def render(**kwargs):
       
     return dataDict
 
-def analyse(**kwargs):
+def analyse_1(**kwargs):
     requestData = kwargs['requestData']
     app_name = kwargs['app_name']
     
@@ -85,6 +85,69 @@ def analyse(**kwargs):
             # -3(version), -2(average value), -1(std)
             datatable_temp.append([ res[-4], float(res[-3]), float(res[-3])-float(res[-2]), float(res[-3])+float(res[-2]), 'info' , 'entries: {0}'.format(int(res[-1])) ])
         datatable = sorted(datatable_temp, key = lambda t : getSplitted(t[0]))
+        dataDict['description'] = dict(zip([col[0] for col in cursor.description[:-4]], g))
+        dataDict['platform'] = dataDict['description']['PLATFORM']
+        dataDict['datatable'] = datatable
+        
+        trends.append(dataDict)
+        
+    return { 'trends': json.dumps(trends) }
+
+def analyse(**kwargs):
+    requestData = kwargs['requestData']
+    app_name = kwargs['app_name']
+    
+    #if request.method == 'GET' and 'hosts' in request.GET and 'jobdes' in request.GET and 'platforms' in request.GET and 'atr' in request.GET:
+    #fetch the right queries depending on user's choices no the request
+    query_groups, query_results = get_queries(requestData, app_name)
+    
+    #establish connection
+    cursor = connection.cursor()
+                
+    #then execute the next query_results to fetch the results
+    cursor.execute(query_results)
+    cursor_description = cursor.description
+    
+    groups = GroupDict()
+
+    result = cursor.fetchone()
+    while not result == None:
+        group = tuple(result[:-4])
+        groups[group].append(tuple(result[-4:]))
+        
+        result = cursor.fetchone()
+    
+    trends = []
+    for g,values in groups.iteritems():
+        dataDict = {}
+        datatable_temp = []
+        for res in values:
+            # -4(version), -3(average value), -2(std), -1 entries
+            error = float(res[-2]) /  math.sqrt( float(res[-1]) ) 
+            version = res[-4]
+            down_value = float(res[-3]) - float(res[-2])
+            down_error = float(res[-3]) - error
+            up_error = float(res[-3]) + error
+            up_value = float(res[-3]) + float(res[-2])
+            
+            datatable_temp.append([ version, down_value, down_error, up_error, up_value, 'Average: {0}, -+{1}'.format(res[-3],res[-2]) ])
+        datatable_temp2 = sorted(datatable_temp, key = lambda t : getSplitted(t[0]))
+        
+        saved_index = None
+        only_heads = True
+        for index, dat in enumerate(datatable_temp2): 
+            saved_index = index
+            if dat[0].startswith('v'):
+                only_heads = False
+                break
+        
+        datatable = []
+        if not only_heads:
+            datatable.extend(datatable_temp2[saved_index:])
+            datatable.extend(datatable_temp2[:saved_index])
+        else:
+            datatable = datatable_temp2
+        
         dataDict['description'] = dict(zip([col[0] for col in cursor.description[:-4]], g))
         dataDict['platform'] = dataDict['description']['PLATFORM']
         dataDict['datatable'] = datatable
@@ -125,4 +188,4 @@ def filterAtrs(**kargs):
     return HttpResponse(optionsHtml)
 
 def isAvailableFor(app_name):
-    return False
+    return True

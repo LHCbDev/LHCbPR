@@ -10,24 +10,28 @@ var trends = {{ trends|safe }};
                 .appendTo('#yo');            
             
             $('<div>')
-                .attr('id','trend'+index).css('width',600).css('height',470)
+                .attr('id','trend'+index).css('width',700).css('height',570)
                 .appendTo('#yo');        
                 
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Versions'); // Implicit domain label col.
-            data.addColumn('number', trend['platform']); // Implicit series 1 data col.
-            data.addColumn({type:'number', role:'interval'});  // interval role col.
-            data.addColumn({type:'number', role:'interval'});  // interval role col.
-            data.addColumn({type:'string', role:'annotation'});
-            data.addColumn({type:'string', role:'annotationText'});
-            data.addRows(trend['datatable']);  // Create and draw the visualization.
-            new google.visualization.LineChart(document.getElementById('trend'+index)).
-                draw(data, {curveType: "function",
-                            width: 600, height: 470,
-                            }
-                    );
+            //var data = google.visualization.arrayToDataTable( trend['datatable'] , true);
+            data = new google.visualization.DataTable()
+            data.addColumn('string', 'Version');
+            data.addColumn('number');
+            data.addColumn('number');
+            data.addColumn('number');
+            data.addColumn('number');
+            data.addColumn({type:'string',role:'tooltip'});
+            data.addRows(trend['datatable']);
+            new google.visualization.CandlestickChart(document.getElementById('trend'+index)).
+                draw(data, {legend : 'none', 
+                                        width: 700, 
+                                        height: 570, 
+                                        bar : { groupWidth : '15%' },
+                                        title : "Platform: "+trend['description']['PLATFORM']
+                });
                 
-            $('<hr>').appendTo('#yo') ;           
+            $('<hr>').appendTo('#yo');
+           
         });
     }
 </script>

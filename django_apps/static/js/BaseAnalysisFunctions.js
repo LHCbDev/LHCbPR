@@ -106,15 +106,20 @@ function sendRequest(){
 		}
 	}
 
+    $("#results").mask("Requesting...");
+    $("#users_plus_filter").mask("Requesting...")
 	/* requestUrl be will provided from the base analysis template  */
 	if (request_method == "GET"){
-		$("#results").mask("Requesting...");
+		
 		var requestDataArray = objToArray(requestData,true);
-		$("#results").load(requestUrl+"?"+requestDataArray.join("&"));
+		$("#results").load(requestUrl+"?"+requestDataArray.join("&"), function(){
+            $("#users_plus_filter").unmask();
+        });
 	}
 	else if(request_method == "POST"){
-		$("#results").mask("Requesting...");
-		$("#results").load(requestUrl, requestData);
+		$("#results").load(requestUrl, requestData, function(){
+            $("#users_plus_filter").unmask();
+        });
 	}
 	else{
 		alert("Invalid request method, request_method variable must be POST or GET , not "+request_method+" !");

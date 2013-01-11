@@ -10,9 +10,26 @@
 {% block script %} 
 var appName = "{{ active_tab }}";
 var requestUrl = "/django/lhcbPR/analyse/{{ analysis_type }}/results/{{  active_tab }}/";
-var currentUrl = "/django/lhcbPR/analyse/{{ analysis_type }}/{{ active_tab }}/"
 var prefillData = {{ bookmark|safe }};
-$(document).ready(function() {
+var triggerResults = false;
+jQuery(document).ready(function() {
+        jQuery( "#bookmarkDialog" ).dialog({
+            //modal: true,
+            autoOpen: false,
+            show: "blind",
+            hide: "blind",
+            position: { 
+                my: 'top',
+                at: 'right',
+                of: jQuery('#dummy')
+              },
+            buttons: {
+                Ok: function() {
+                    jQuery( this ).dialog( "close" );
+                }
+            }
+        });
+        
 		$("#analyseMenu").attr('checked', 'checked').button("refresh");
 		{% for app in applications %}
 		$('#{{ app }}tabButton').click(function(){ 
@@ -40,14 +57,36 @@ $(document).ready(function() {
 		$("#VersionErase").click(function(){ CheckBoxClear("versions") });
 
 		$("#execute_query").click(function() { sendRequest(); });
-        $("#bookmark").click(function(){ window.open( currentUrl+"?"+getBookmarkUrl() ) });
-        
+
+        $.fx.speeds._default = 800;
+        $("#bookmark").click(function(){ 
+            var mytrigger = $("#triggerResults").is(":checked");
+            $("#bookmark_url").val( "https://"+ window.location.host + window.location.pathname +"?"+getBookmarkUrl()+"&trigger="+mytrigger );
+            jQuery("#bookmarkDialog").dialog( "open" );
+            return false;
+        });
+
+        $("#goo").click(function(){
+            var url_to_short = $("#bookmark_url").val();
+            alert('https://webservices.web.cern.ch/webservices/Services/ShortenUrl/Default.aspx?shorten='+url_to_short);
+            //window.open( 'https://webservices.web.cern.ch/webservices/Services/ShortenUrl/Default.aspx?shorten='+url_to_short );
+        });
+        $("#triggerResults").click(function(){
+                var mytrigger = $(this).is(":checked");
+               $("#bookmark_url").val( "https://"+ window.location.host + window.location.pathname +"?"+getBookmarkUrl()+"&trigger="+mytrigger );     
+        });
+
         /* call the bookmark prefill */
         $("#options").prefillBox();
         $("#hosts").prefillBox();
         $("#versions").prefillBox();
         $("#platforms").prefillBox();
+        
+        
 });
+
+
+
 {% endblock script %}
 
 {% block stylecss %} {% endblock stylecss %}
@@ -72,7 +111,10 @@ div.innerLeft {
     float: right;
 	margin-left: 10px;
 } 
-#button_div a{ padding: .4em 1em .2em 17px;text-decoration: none;position: relative; float: right; margin-left:0.2em;}
+#button_div a{ padding: .4em 1em .2em 17px;text-decoration: none; position: relative; float: right; margin-left:0.2em;}
+#dummy {  float: right; margin-left:0.2em; clear: both; margin-top : 0.5em; }
+
+#goo:hover { color: blue; }
 </style>
 <div id="tabs">
 			<ul>
@@ -85,10 +127,14 @@ div.innerLeft {
             <div id="button_div">
                 <a  id="bookmark" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Bookmark </a>
                 <a  id="execute_query" class="ui-state-default ui-corner-all" href="javascript:;"  title="bookmark your selection"> Retrieve results </a>
-            </div>
+
+                <!-- bookmark holder -->
+                <div id="dummy"></div>
+
+            </div><!-- /button_div -->
 
 				<div class="outer">
-					<div class="innerLeft">
+					<div id="users_plus_filter" class="innerLeft">
 
 						<div id="users_html">
 						{% block content %} {% endblock content %}
@@ -165,9 +211,20 @@ div.innerLeft {
 
 					</div><!-- /filter_container + InnerLeft(has two classes)-->				
 					
-				<div id="results" class="innerRight" style="margin-top: 2em;margin-left:1em;"></div><!-- /resutls + InnerRight (has two classes)-->
+				<div id="results" class="innerRight" style="margin-top: 2em;margin-left:1em;"></div><!-- /results + InnerRight (has two classes)-->
 					
 				</div><!-- /outer-->					
 			</div><!-- active_tab -->
 </div><!--  /tabs -->
+
+ <!--  bookmark dialog(captain obvious) -->
+<div id="bookmarkDialog" title="Bookmark url">
+        <label>
+            <a id="goo" href="javascript:;">Shorten url</a>
+        </label><br>
+        <label><input id="triggerResults" type="checkbox" checked="checked">Retrieve results on bookmark url</label>
+
+        <input id="bookmark_url" type="text" value="" style="width: 100%;margin-top : 0.5em;" />
+
+</div>
 {% endblock pagebody %}

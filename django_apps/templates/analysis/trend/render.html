@@ -17,7 +17,8 @@
                 
                 /* prefill the data for elements in the  */
                 prefillAll();
-                                
+                trigger();                 
+               
                 $("#groups").click(function(){ showHide("groups","groups_list") });
                 
                 $('#groupErase,button').hover(
@@ -111,7 +112,7 @@ function checkRequestData(requestData){
     				{% for group in atrGroups %}
     				<li>
                             <label>
-        							<input type="checkbox" value="{{ group }}" >{{ group }}
+        							<input type="checkbox" value="{{ group }}" checked="checked" >{{ group }}
             			    </label>
     				</li>
     			{% endfor %}

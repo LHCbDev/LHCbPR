@@ -46,7 +46,7 @@ Choose the type of analysis you want. ,  "TREND" is under construction
         {% for analysis in analysisList %}
             <button name="{{ active_tab }}buttonHistogram" onclick="location.href='/django/lhcbPR/analyse/{{ analysis.0 }}/{{ active_tab }}/'" style="padding:1em;margin-left:1em;">{{ analysis.1 }}</button>
         {% endfor %}
-		<button name="TrendButton" onclick='alert("Under construction...")' style="padding:1em;margin-left:1em;">TREND</button>
+		<!-- <button name="TrendButton" onclick='alert("Under construction...")' style="padding:1em;margin-left:1em;">TREND</button> -->
 	</div><!-- active_tab -->
 </div><!--  /tabs -->
 

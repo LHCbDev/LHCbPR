@@ -665,7 +665,7 @@ def new_job_description(request):
         return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'unsupported method, supported GET,POST' }))
     
     
-    return HttpResponse(json.dumps(requestData))
+    #return HttpResponse(json.dumps(requestData))
     
     if not set(['application', 'version', 'optionsD']).issubset(requestData):
         return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Your HTTP request must contain at least an application,version and optionsD(options_description)' }))
