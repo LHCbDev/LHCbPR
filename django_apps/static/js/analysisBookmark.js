@@ -21,6 +21,11 @@ function prefillAll(){
    });
 }
 
+function trigger(){
+    if (prefillData['trigger'] == "true")
+        $("#execute_query").trigger("click");
+}
+
 $.fn.prefill = function (){
     var myelement = $(this);
     var key = myelement.attr('id');
@@ -54,4 +59,5 @@ $.fn.prefillBox = function(){
     	});
     }
 }
+
 

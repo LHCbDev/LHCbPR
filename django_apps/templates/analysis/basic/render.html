@@ -14,6 +14,7 @@
                 prefillAll();
                 /* after the prefill trigger (if must) some functions */
                 ShowHistogramConfigs();
+                trigger();
 
 				$("#histogram").click(function(){ ShowHistogramConfigs() });
                 
@@ -142,7 +143,7 @@ function checkRequestData(requestData){
     				{% for group in atrGroups %}
     				<li>
                             <label>
-        							<input type="checkbox" value="{{ group }}" >{{ group }}
+        							<input type="checkbox" value="{{ group }}" checked="checked">{{ group }}
             			    </label>
     				</li>
     			{% endfor %}
