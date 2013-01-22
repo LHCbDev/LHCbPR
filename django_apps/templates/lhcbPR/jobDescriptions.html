@@ -3,17 +3,18 @@
 {% block title %} {{ active_tab }} job description {% endblock title %}
 
 {% block head %}
-<script type="text/javascript" src="/static/js/JobDescriptionFunctions.js"></script>
+<script type="text/javascript" src="{{ rootbaseurl }}static/js/JobDescriptionFunctions.js"></script>
 {% endblock head %}
 
 {% block script %} 
 
+var rootbaseurl = "{{ rootbaseurl }}";
 $(document).ready(function() {
 				$("#jobDescriptionsMenu").attr('checked', 'checked').button("refresh");
 				
 				{% for app in applications %}
 				$('#{{ app }}tabButton').click(function(){ 
-						document.location.href="/django/lhcbPR/jobDescriptions/{{ app }}/" ;
+						document.location.href="{{ rootbaseurl }}django/lhcbPR/jobDescriptions/{{ app }}/" ;
 						$("#{{ active_tab }}tab").mask("Loading...");
 					});
 				{% endfor %}
@@ -103,7 +104,7 @@ $(document).ready(function() {
 			$("#JobDescriptions").mask("Requesting...");
 	
 			$.ajax({
-    			'url' : '/django/lhcbPR/getFilters/',
+    			'url' : rootbaseurl+'django/lhcbPR/getFilters/',
 				'type' : 'GET',
 				'data' : {
 				'page' : requested_page,

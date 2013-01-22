@@ -1,10 +1,19 @@
-import os, re
+import os, re, socket, subprocess
+import tools.socket_service as service
+from  cPickle import dump, load, loads
 from django.db.models import Q
 from django.conf import settings
 from django.db import transaction
 from lhcbPR.models import  JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler
 #extra functions which are used in lhcbPR app, i moved them here in order
 #to keep the views clean
+
+#a custom dictionary setup the environment for using the afs ROOT
+ROOTdict = os.environ.copy()
+ROOTdict['LD_LIBRARY_PATH'] = '/afs/cern.ch/sw/lcg/app/releases/ROOT/5.32.02/x86_64-slc5-gcc43-opt/root/lib:/afs/cern.ch/sw/lcg/external/xrootd/3.1.0p2/x86_64-slc5-gcc43-opt/lib64:/afs/cern.ch/sw/lcg/external/gcc/4.3.5/x86_64-slc5/lib64:/afs/cern.ch/lhcb/software/releases/COMPAT/COMPAT_v1r10/CompatSys/x86_64-slc5-gcc43-opt/lib:/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/lib'
+ROOTdict['PATH'] = '/afs/cern.ch/sw/lcg/app/releases/ROOT/5.32.02/x86_64-slc5-gcc43-opt/root/bin:/afs/cern.ch/sw/lcg/external/xrootd/3.1.0p2/x86_64-slc5-gcc43-opt/bin:/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/bin:/afs/cern.ch/sw/lcg/external/gccxml/0.9.0_20110825/x86_64-slc5-gcc43-opt/bin:/afs/cern.ch/sw/lcg/external/gcc/4.3.5/x86_64-slc5/bin:/afs/cern.ch/lhcb/software/releases/COMPAT/COMPAT_v1r10/CompatSys/x86_64-slc5-gcc43-opt/bin:/afs/cern.ch/sw/contrib/CMT/v1r20p20090520/Linux-x86_64:/afs/cern.ch/lhcb/software/releases/LBSCRIPTS/LBSCRIPTS_v6r7p4/InstallArea/scripts:/afs/cern.ch/lhcb/bin:/usr/sue/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/kerberos/bin:/usr/X11R6/bin'
+ROOTdict['PYTHONPATH'] = '/afs/cern.ch/sw/lcg/app/releases/ROOT/5.32.02/x86_64-slc5-gcc43-opt/root/lib:/afs/cern.ch/lhcb/software/releases/LBSCRIPTS/LBSCRIPTS_v6r7p4/InstallArea/python'
+ROOTdict['ROOTSYS'] = '/afs/cern.ch/sw/lcg/app/releases/ROOT/5.32.02/x86_64-slc5-gcc43-opt/root'
 
 def combineStatements(StatementsDict, operator):
     """Takes a dictionary with statements, combines them depending on the
@@ -214,3 +223,37 @@ def jobdescription(dataDict, update=False):
                 requestedPlatfromTemp, created = Requested_platform.objects.get_or_create(jobdescription=myObj, cmtconfig=platformTemp)
         
         return {'error' : False,  'exists' : False, 'jobdescription_id' : myObj.id }
+
+#socket ROOT service
+class remoteService(object):
+    def __init__(self):
+        self.connection = socket.socket(
+            socket.AF_INET, socket.SOCK_STREAM)
+    def connect(self,port=4321):
+        try:
+            self.connection.connect(("localhost", port))
+        except Exception:
+            return False
+        else:
+            return True
+    def send(self, data):
+        service.send(self.connection, data)
+    def recv(self):
+        return service.recv(self.connection)
+    def finish(self):
+        self.connection.close()
+
+#subProcess ROOT service
+class subService(object):
+    def __init__(self):
+        self.connection = subprocess.Popen(['python', os.path.join(settings.PROJECT_PATH,'tools/ROOT_service.py'), 
+                                            'subprocess'], 
+                 env = ROOTdict , stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+    def connect(self):
+        return True
+    def send(self, data):
+        dump(data,self.connection.stdin,2)
+    def recv(self):
+        return loads(self.connection.communicate()[0])
+    def finish(self):
+        pass

@@ -1,4 +1,4 @@
-import json, socket
+import json
 from django.db import connection, transaction
 from django.http import HttpResponse 
 from lhcbPR.models import JobAttribute, Host, Platform, Application, Options,  JobResults
@@ -6,28 +6,8 @@ from django.db.models import Q
 from django.http import HttpResponseNotFound
 from django.shortcuts import render_to_response   
 from django.template import RequestContext
-
-from tools.viewTools import makeCheckedList, getSplitted, makeQuery
-import tools.socket_service as service
+from tools.viewTools import getSplitted, subService as service #,remoteService
 from query_builder import get_queries
-
-class remoteService(object):
-    def __init__(self):
-        self.connection = socket.socket(
-            socket.AF_INET, socket.SOCK_STREAM)
-    def connect(self):
-        try:
-            self.connection.connect(("localhost", 4321))
-        except Exception:
-            return False
-        else:
-            return True
-    def send(self, data):
-        service.send(self.connection, data)
-    def recv(self):
-        return service.recv(self.connection)
-    def finish(self):
-        self.connection.close()
         
 
 def render(**kwargs):
@@ -112,7 +92,7 @@ def analyse(**kwargs):
                'histogram' : doHistogram 
                }
     #initialize our remote service
-    remoteservice = remoteService()
+    remoteservice = service()
     #in case it does not connect return an error
     if not remoteservice.connect():
         return { 'errorMessage' : 'Connection with remote service for analysis failed!', 
@@ -136,9 +116,11 @@ def analyse(**kwargs):
         remoteservice.send('STAHP')
         #after we finish sending our data we wait for the response(answer)
         answerDict = remoteservice.recv()
-    except Exception:
-        return {'errorMessage' : 'An error occurred with the root analysis process, please try again later',
+    except Exception, e:
+        return {'errorMessage' : e,
                 'template' : 'analysis/error.html' }
+        #return {'errorMessage' : 'An error occurred with the root analysis process, please try again later',
+        #        'template' : 'analysis/error.html' }
     error = False
     return { 'results' : json.dumps(answerDict['results']) , 'histogram' : json.dumps(doHistogram), 
                 'separately_hist' : json.dumps(doSeparate), 'bins' : answerDict['bins'] }
