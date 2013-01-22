@@ -8,24 +8,24 @@
 		{% csrf_token %}
 
 		<title>{% block title %}{% endblock title %}</title>
-		<link href="/static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
-		<script src="/static/js/jquery-1.8.2.js"></script>
-		<script src="/static/js/jquery-ui-1.9.0.custom.js"></script>
+		<link href="{{ rootbaseurl }}static/css/start/jquery-ui-1.9.0.custom.css" rel="stylesheet">
+		<script src="{{ rootbaseurl }}static/js/jquery-1.8.2.js"></script>
+		<script src="{{ rootbaseurl }}static/js/jquery-ui-1.9.0.custom.js"></script>
 
 		<!-- fix the ajax post request to have the csrftoken -->
-		<script src="/static/js/csrf_setup.js"></script>
+		<script src="{{ rootbaseurl }}static/js/csrf_setup.js"></script>
 
-		<link rel="stylesheet" href="/static/css/lhcbPR_new.css" media="screen">
+		<link rel="stylesheet" href="{{ rootbaseurl }}static/css/lhcbPR_new.css" media="screen">
 		<!-- plugin for mask -->
-		<script type="text/javascript" src="/static/plugins/mask/js/jquery.loadmask.js"></script>
-		<link type="text/css" href="/static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
+		<script type="text/javascript" src="{{ rootbaseurl }}static/plugins/mask/js/jquery.loadmask.js"></script>
+		<link type="text/css" href="{{ rootbaseurl }}static/plugins/mask/css/jquery.loadmask.css" rel="stylesheet" />
 		{% block head %} {% endblock head %}
 		<script type="text/javascript">
 			$(document).ready(function () {
 				$("#menu").buttonset();
-				$("#homeMenu").click(function(){ document.location.href="/django/lhcbPR/";  $("#pagebody").mask("Loading..."); });
-				$("#jobDescriptionsMenu").click(function(){ document.location.href="/django/lhcbPR/jobDescriptions/" ; $("#pagebody").mask("Loading..."); });
-				$("#analyseMenu").click(function(){  document.location.href="/django/lhcbPR/analyse/"; $("#pagebody").mask("Loading...");  });
+				$("#homeMenu").click(function(){ document.location.href="{{ rootbaseurl }}django/lhcbPR/";  $("#pagebody").mask("Loading..."); });
+				$("#jobDescriptionsMenu").click(function(){ document.location.href="{{ rootbaseurl }}django/lhcbPR/jobDescriptions/" ; $("#pagebody").mask("Loading..."); });
+				$("#analyseMenu").click(function(){  document.location.href="{{ rootbaseurl }}django/lhcbPR/analyse/"; $("#pagebody").mask("Loading...");  });
 				$("#helpButton").click(function () {
 				// check visibility
 					if ($("#helpMenu").is(":hidden")) {
@@ -59,13 +59,13 @@
 					</a>
 			</td>
 			<td class="headTitle">
-				<h1><a href="/django/lhcbPR/" >LHCb Performance & Regression</a></h1>
+				<h1><a href="{{ rootbaseurl }}django/lhcbPR/" >LHCb Performance & Regression</a></h1>
 				<div id="switcher"></div>
 				<div class="headLogin">
 					{% if myauth %}
-					<a href="/django/lhcbPR/logout/?next=/django/lhcbPR/"> Logout </a>| {{ user.username }}
+					<a href="{{ rootbaseurl }}django/lhcbPR/logout/?next=/django/lhcbPR/"> Logout </a>| {{ user.username }}
 					{% else %}
-					<a href="/django/login/"> Login</a>
+					<a href="{{ rootbaseurl }}django/login/"> Login</a>
 					{% endif %}
 				</div><!-- closing div ^^-->
 			</td>

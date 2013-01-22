@@ -1,6 +1,7 @@
 import socket, cPickle, os, sys, inspect, random
 from threading import Thread
 import socket_service as service
+from cPickle import load, dump
 from ROOT import TFile, TCanvas, TH1D, TH1F, TPad, gROOT, TMath, TArrayF, TList
 from ROOT import gDirectory, gPad, gStyle
 import ROOT
@@ -17,13 +18,6 @@ colorsName = [ 'blue', 'red', 'green' ]
 
 parent_work_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 write_path = 'static/images/histograms/'
-#create an INET, STREAMing socket
-serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#bind the socket to a public host,
-# and a well-known port
-serversocket.bind(('localhost', 4321))
-#become a server socket
-serversocket.listen(5)
 
 #those methods/classes are used for the basic analysis
 def define_bins(request,groupvalues):
@@ -44,8 +38,8 @@ def define_bins(request,groupvalues):
     else:
         bins['nbins'] = int(request['nbins'])
     
-    print 'Printing the bins'
-    print bins['xup'], bins['xlow'], bins['nbins']
+    #print 'Printing the bins'
+    #print bins['xup'], bins['xlow'], bins['nbins']
     
     return bins
 
@@ -103,7 +97,7 @@ class Stats(object):
         self.count = array.GetSize()
         
     def histogramObject(self, bins,name):
-        print name, bins
+        ##print name, bins
         h0f = TH1F("histogram", "{0} values".format(name), bins['nbins'], bins['xlow'], bins['xup'])
         for value in self.data:
             h0f.Fill(value)
@@ -160,7 +154,7 @@ def histograms_service(remoteservice):
         while True:
             obj = remoteservice.recv()
             if obj == 'STAHP':
-                print 'user requested stop'
+                #print 'user requested stop'
                 break
             elif obj[0] == 'NEWGROUP':
                 group_names[obj[1]] = obj[2]
@@ -226,23 +220,24 @@ def histograms_service(remoteservice):
         
     except Exception,e:
         remoteservice.finish()
-        print '{0}  {1}'.format(Exception,e)
+        #print '{0}  {1}'.format(Exception,e)
     finally:
-        print '\nfinished work exiting...'
+        #print '\nfinished work exiting...'
         return
         
 def basic_service(remoteservice):
     try:
         #reading the request info(histogram, nbins, xlow, xup etc)
         request_info = remoteservice.recv()
-
+        
         group_dict = GroupDict()
         group_names = {}
         
         while True:
             obj = remoteservice.recv()
+            
             if obj == 'STAHP':
-                print 'user requested stop'
+                #print 'user requested stop'
                 break
             elif obj[0] == 'NEWGROUP':
                 group_names[obj[1]] = obj[2]
@@ -252,7 +247,7 @@ def basic_service(remoteservice):
                 
         groups_dict = dict((group_names[g], Stats(v)) for g, v in group_dict.iteritems())
         all_results = []
-        
+    
         bins = None
         if request_info['histogram']:
             bins = define_bins(request_info,groups_dict)
@@ -286,9 +281,9 @@ def basic_service(remoteservice):
         
     except Exception,e:
         remoteservice.finish()
-        print '{0}  {1}'.format(Exception,e)
+        print >> sys.stderr , '{0}  {1}'.format(Exception,e)
     finally:
-        print '\nfinished work exiting...'
+        print >> sys.stderr , '\nfinished working...'
         return 
 
 functionList = {
@@ -297,12 +292,11 @@ functionList = {
                 }
   
 def handle_connection(remoteservice):
-    #read which function was called
     function = remoteservice.recv()
     #call the correct function giving as argument the remoteservice
     functionList[function](remoteservice)
     
-class remoteService(object):
+class socketService(object):
     def __init__(self,connection):
         self.connection = connection
     def send(self, data):
@@ -312,11 +306,39 @@ class remoteService(object):
     def finish(self):
         self.connection.close()
 
-print "start listening..."
+class subService(object):
+    def send(self, data):
+        dump(data, sys.stdout,2)
+    def recv(self):
+        return load(sys.stdin)
+    def finish(self):
+        pass
 
-
-while True:
-    (clientsocket, address) = serversocket.accept()
-    remoteservice = remoteService(clientsocket)
-    t = Thread(target=handle_connection, args=(remoteservice,))
-    t.start()
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print >> sys.stderr, "Please specify mode, 'subprocess' or 'socket' following port number(optional)"
+        sys.exit(1)
+    
+    if sys.argv[1] == 'socket':
+        if len(sys.argv) == 3:
+            port = sys.argv[2]
+        else:
+            port = 4321
+        #create an INET, STREAMing socket
+        serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #bind the socket to a public host,
+        # and a well-known port
+        serversocket.bind(('localhost', port))
+        #become a server socket
+        serversocket.listen(5)
+        
+        while True:
+            (clientsocket, address) = serversocket.accept()
+            remoteservice = socketService(clientsocket)
+            t = Thread(target=handle_connection, args=(remoteservice,))
+            t.start()
+    elif sys.argv[1] == 'subprocess':
+        remoteservice = subService()
+        handle_connection(remoteservice)
+    else:
+        print >> sys.stderr,  "No such mode, modes can be 'subprocess' or 'socket'(following port number, optional)"

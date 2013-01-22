@@ -1,11 +1,17 @@
 # Django settings for database_test project.
 
-import dbconf
+import myconf
 import os, socket
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+#Added extra, root url fix, to be used with shared machines
+URL_ROOT = myconf.rootbaseurl
+
+#custom LOGIN_URL
+LOGIN_URL = URL_ROOT+'accounts/login'
 
 ADMINS = (
      ('Emmanouil Kiagias', 'emmanouil.kiagias@cern.ch'),
@@ -22,9 +28,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': dbconf.dbname,                      # Or path to database file if using sqlite3.
-        'USER': dbconf.dbuser,                      # Not used with sqlite3.
-        'PASSWORD': dbconf.dbpass,                  # Not used with sqlite3.
+        'NAME': myconf.dbname,                      # Or path to database file if using sqlite3.
+        'USER': myconf.dbuser,                      # Not used with sqlite3.
+        'PASSWORD': myconf.dbpass,                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -84,7 +90,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
-LOGIN_REDIRECT_URL = '/django/lhcbPR'
+LOGIN_REDIRECT_URL = URL_ROOT+'django/lhcbPR'
 SHIB_SSO_ADMIN = True
 SHIB_SSO_CREATE_ACTIVE = True
 SHIB_SSO_CREATE_STAFF = False
@@ -106,7 +112,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '@-h+b4bed6jk&9ef5ky^q98chxg!*sbn5evtpr8n1fnxh&d@=3'
+SECRET_KEY = myconf.key
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

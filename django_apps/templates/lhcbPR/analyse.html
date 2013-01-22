@@ -10,7 +10,7 @@ $(document).ready(function() {
 		$("#analyseMenu").attr('checked', 'checked').button("refresh");
 		{% for app in applications %}
 		$('#{{ app }}tabButton').click(function(){ 
-				document.location.href="/django/lhcbPR/analyse/{{ app }}/" ;
+				document.location.href="{{ rootbaseurl }}django/lhcbPR/analyse/{{ app }}/" ;
 				$("#{{ active_tab }}tab").mask("Loading...");
 			});
 		{% endfor %}
@@ -44,7 +44,7 @@ Choose the type of analysis you want. ,  "TREND" is under construction
 		</p>
 		Choose type of analysis: <br><br>
         {% for analysis in analysisList %}
-            <button name="{{ active_tab }}buttonHistogram" onclick="location.href='/django/lhcbPR/analyse/{{ analysis.0 }}/{{ active_tab }}/'" style="padding:1em;margin-left:1em;">{{ analysis.1 }}</button>
+            <button name="{{ active_tab }}buttonHistogram" onclick="location.href='{{ rootbaseurl }}django/lhcbPR/analyse/{{ analysis.0 }}/{{ active_tab }}/'" style="padding:1em;margin-left:1em;">{{ analysis.1 }}</button>
         {% endfor %}
 		<!-- <button name="TrendButton" onclick='alert("Under construction...")' style="padding:1em;margin-left:1em;">TREND</button> -->
 	</div><!-- active_tab -->

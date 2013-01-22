@@ -29,7 +29,7 @@ Choose one of the applications(click button) to see the existing job description
 			<div id="applications">
 				Choose one of the following applications:<br><br>
 					{% for app in applications %}
-					<button name="{{ app }}button" onclick="location.href='/django/lhcbPR/jobDescriptions/{{ app }}/'" style="padding:1.5em;margin-left:1em;">{{ app }}</button>
+					<button name="{{ app }}button" onclick="location.href='{{ rootbaseurl }}django/lhcbPR/jobDescriptions/{{ app }}/'" style="padding:1.5em;margin-left:1em;">{{ app }}</button>
 					{% endfor %}
 			</div>
 		</div>

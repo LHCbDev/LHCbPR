@@ -11,35 +11,15 @@ The page is still under construction, this is a demo(not the finished version)
 
 title = 'Histogram analysis'
 
-import json, socket
+import json
 from django.db import connection, transaction
 from django.http import HttpResponse 
 from lhcbPR.models import Host, Platform, Application, Options, JobResults
 from django.conf import settings
 from django.db.models import Q
 from django.http import HttpResponseNotFound
-
-import tools.socket_service as service
 from query_builder import get_queries
-from tools.viewTools import getSplitted 
-
-class remoteService(object):
-    def __init__(self):
-        self.connection = socket.socket(
-            socket.AF_INET, socket.SOCK_STREAM)
-    def connect(self):
-        try:
-            self.connection.connect(("localhost", 4321))
-        except Exception:
-            return False
-        else:
-            return True
-    def send(self, data):
-        service.send(self.connection, data)
-    def recv(self):
-        return service.recv(self.connection)
-    def finish(self):
-        self.connection.close()
+from tools.viewTools import getSplitted , subService as remoteService
 
 def render(**kwargs):
     """From the url is takes the requested application(app_name) , example:

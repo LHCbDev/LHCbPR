@@ -22,7 +22,8 @@ def test(request):
     datadict = json.dumps(request.GET)
     myauth = request.user.is_authenticated()
     myDict = { 'myauth' : myauth, 'user' : request.user,
-              'str' : datadict }
+              'str' : datadict,
+              'rootbaseurl' : settings.URL_ROOT }
     return render_to_response('analysis/debug.html', myDict,
                   context_instance=RequestContext(request))
     
@@ -31,7 +32,7 @@ def index(request):
     with the page it provides information for the user(if he is authenticated
     or not)"""
     myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user}
+    myDict = { 'myauth' : myauth, 'user' : request.user, 'rootbaseurl' : settings.URL_ROOT}
     return render_to_response('lhcbPR/index.html', myDict,
                   context_instance=RequestContext(request))
 
@@ -41,7 +42,7 @@ def jobDescriptions(request, app_name):
     /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
     and depending on the app_name it returns the available versions, options, setupprojects"""
     
-    applicationsList = map(str,Application.objects.values_list('appName', flat=True).distinct())
+    applicationsList = Application.objects.values_list('appName', flat=True).distinct().order_by('appName')
         
     myauth = request.user.is_authenticated()
     
@@ -98,7 +99,8 @@ def jobDescriptions(request, app_name):
                'myauth' : myauth, 
                'user' : request.user, 
                'applications' : applicationsList,
-               'current_page' : requested_page
+               'current_page' : requested_page,
+               'rootbaseurl' : settings.URL_ROOT
                }
       
     return render_to_response('lhcbPR/jobDescriptions.html', 
@@ -108,13 +110,11 @@ def jobDescriptions(request, app_name):
 @login_required 
 def jobDescriptionsHome(request):
     """Serves the jobDescriptions home page with the available applications"""
-    applications = Application.objects.values('appName').distinct('appName')
+    applicationsList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
     
-    applicationsList = []
-    for dict in applications:  
-        applicationsList.append(dict['appName'])
     myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
+    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList,
+              'rootbaseurl' : settings.URL_ROOT }
       
     return render_to_response('lhcbPR/jobDescriptionsHome.html', 
                   myDict,
@@ -125,12 +125,13 @@ def analyseHome(request):
     lhcbpr application"""
     
     #find for which applications there are runned jobs
-    applicationsList = list(Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct())
+    applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
         
     myauth = request.user.is_authenticated()
     
     myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList }
+    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList,
+              'rootbaseurl' : settings.URL_ROOT }
       
     return render_to_response('lhcbPR/analyseHome.html', 
                   myDict,
@@ -141,14 +142,14 @@ def analysis_application(request, app_name):
     """From the url is takes the requested application(app_name) , example:
     /django/lhcbPR/analyse/BRUNEL ==> app_name = 'BRUNEL' 
     and depending on the app_name it returns the available versions, options, setupprojects"""
-    applicationsList = list(Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct())
+    applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
     myauth = request.user.is_authenticated()
     
     apps = Application.objects.filter(appName__exact=app_name)
     if not apps:
         return HttpResponseNotFound("<h3>Page not found, no such application</h3>")     
     
-    handlers = list(HandlerResult.objects.filter(job__jobDescription__application__appName=app_name).filter(success=True).values_list('handler__name',flat=True).distinct())
+    handlers = HandlerResult.objects.filter(job__jobDescription__application__appName=app_name).filter(success=True).values_list('handler__name',flat=True).distinct().order_by('handler__name')
     
     analysis_dir = os.path.join(settings.PROJECT_PATH, 'analysis')
     modules = os.listdir(analysis_dir)
@@ -163,11 +164,13 @@ def analysis_application(request, app_name):
             else:
                 if mod.isAvailableFor(app_name):
                     analysisList.append((module, module.upper()))
-    
+            
+            analysisList.sort()
     dataDict = { 
                 'handlers' : handlers,
                 'active_tab' : app_name ,
                 'myauth' : myauth, 
+                'rootbaseurl' : settings.URL_ROOT,
                 'user' : request.user, 
                 'applications' : applicationsList,
                 'analysisList' : analysisList
@@ -244,7 +247,7 @@ Attention:
             del(user_data['form'])
             user_data['html_form'] = html_form
         
-        applicationsList = list(Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct())
+        applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
         myauth = request.user.is_authenticated()
         dataDict = {
                     'applications' : applicationsList,
@@ -255,7 +258,8 @@ Attention:
                     'title' : title,
                     'help' : help,
                     'myauth' : myauth, 
-                    'user' : request.user 
+                    'user' : request.user,
+                    'rootbaseurl' : settings.URL_ROOT 
                     }
         #include user's data
         dataDict.update(user_data)
@@ -313,6 +317,7 @@ def analysis_function(request, analysis_type, app_name):
             
         dataDict = {}
         dataDict.update(user_data)
+        dataDict['rootbaseurl'] = settings.URL_ROOT
         return render_to_response(template, 
                   dataDict,
                   context_instance=RequestContext(request))

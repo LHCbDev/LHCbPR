@@ -5892,3 +5892,59 @@ ValueError: invalid literal for int() with base 10: 'ERROR'
  "
 [ 2013-01-10 13:40:38,832 ] [ INFO ] " [ 'zipFile' : 'cf318e6e-5b22-11e2-96fe-003048f0e3f0.zip' ]   [ 'job_description_id' : 1201 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-10,13:08:39' ] [ 'job_id' : 2240 ] Zip folder with new job results added successfully
  "
+[ 2013-01-11 20:21:51,630 ] [ INFO ] " [ 'zipFile' : 'bc1f3eb4-5c23-11e2-87af-003048f0e3f0.zip' ]   [ 'job_description_id' : 1222 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-11,19:48:23' ] [ 'job_id' : 2258 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-11 20:55:50,076 ] [ INFO ] " [ 'zipFile' : '214c9a44-5c28-11e2-b243-003048f0e3f0.zip' ]   [ 'job_description_id' : 1222 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-11,20:19:04' ] [ 'job_id' : 2259 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-11 21:26:05,469 ] [ INFO ] " [ 'zipFile' : 'cddcd3ba-5c2c-11e2-820a-003048f0e3f0.zip' ]   [ 'job_description_id' : 1223 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-11,20:51:05' ] [ 'job_id' : 2260 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-11 21:55:46,894 ] [ INFO ] " [ 'zipFile' : '13a22edc-5c31-11e2-b306-003048f0e3f0.zip' ]   [ 'job_description_id' : 1223 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-11,21:23:57' ] [ 'job_id' : 2261 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-12 12:56:26,059 ] [ INFO ] " [ 'zipFile' : '92f7441a-5cae-11e2-afb2-003048f0e3f0.zip' ]   [ 'job_description_id' : 1241 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-12,12:21:55' ] [ 'job_id' : 2278 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-12 13:25:42,968 ] [ INFO ] " [ 'zipFile' : 'd0bf21b0-5cb2-11e2-ba8b-003048f0e3f0.zip' ]   [ 'job_description_id' : 1241 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-12,12:52:53' ] [ 'job_id' : 2279 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-12 14:25:40,753 ] [ INFO ] " [ 'zipFile' : '4a45e408-5cbb-11e2-b681-003048f0e3f0.zip' ]   [ 'job_description_id' : 1242 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-12,13:52:55' ] [ 'job_id' : 2280 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-12 14:55:52,748 ] [ INFO ] " [ 'zipFile' : '8f850220-5cbf-11e2-aab5-003048f0e3f0.zip' ]   [ 'job_description_id' : 1242 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-12,14:23:53' ] [ 'job_id' : 2281 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-13 13:20:54,891 ] [ INFO ] " [ 'zipFile' : '17d2cb60-5d7b-11e2-b34b-003048f0e3f0.zip' ]   [ 'job_description_id' : 1261 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-13,12:45:54' ] [ 'job_id' : 2298 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-13 16:05:46,642 ] [ INFO ] " [ 'zipFile' : '815ad12e-5d92-11e2-849a-003048f0e3f0.zip' ]   [ 'job_description_id' : 1281 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-13,15:32:55' ] [ 'job_id' : 2299 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-14 08:35:44,880 ] [ INFO ] " [ 'zipFile' : 'c5ab0f62-5e1c-11e2-8a2b-003048f0e3f0.zip' ]   [ 'job_description_id' : 1301 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-14,08:03:01' ] [ 'job_id' : 2318 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-14 12:05:43,987 ] [ INFO ] " [ 'zipFile' : '96b09980-5e39-11e2-ad4b-003048f0e3f0.zip' ]   [ 'job_description_id' : 1301 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-14,11:28:41' ] [ 'job_id' : 2319 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-14 12:35:45,524 ] [ INFO ] " [ 'zipFile' : 'fe31fa6e-5e3d-11e2-be77-003048f0e3f0.zip' ]   [ 'job_description_id' : 1301 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-14,12:00:49' ] [ 'job_id' : 2320 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-14 13:35:42,986 ] [ INFO ] " [ 'zipFile' : '40fd0052-5e46-11e2-b523-003048f0e3f0.zip' ]   [ 'job_description_id' : 1321 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-14,12:59:40' ] [ 'job_id' : 2321 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-14 14:05:50,706 ] [ INFO ] " [ 'zipFile' : 'a5a6d77c-5e4a-11e2-b994-003048f0e3f0.zip' ]   [ 'job_description_id' : 1321 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-14,13:31:10' ] [ 'job_id' : 2322 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-15 13:51:03,501 ] [ INFO ] " [ 'zipFile' : '47776d14-5f0e-11e2-a76b-003048f0e3f0.zip' ]   [ 'job_description_id' : 1341 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-15,12:52:32' ] [ 'job_id' : 2338 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-15 13:51:53,868 ] [ INFO ] " [ 'zipFile' : '0681c11e-5f0a-11e2-8c09-003048f0e3f0.zip' ]   [ 'job_description_id' : 1341 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-15,12:21:40' ] [ 'job_id' : 2339 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-15 17:40:36,596 ] [ INFO ] " [ 'zipFile' : '84b3fa1c-5f31-11e2-8dc7-003048f0e3f0.zip' ]   [ 'job_description_id' : 1361 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-15,17:03:45' ] [ 'job_id' : 2340 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-15 18:10:37,160 ] [ INFO ] " [ 'zipFile' : 'd103c8ee-5f35-11e2-8d9a-003048f0e3f0.zip' ]   [ 'job_description_id' : 1361 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-15,17:35:16' ] [ 'job_id' : 2341 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-16 21:55:49,561 ] [ INFO ] " [ 'zipFile' : 'f45908ce-601e-11e2-a203-003048f0e3f0.zip' ]   [ 'job_description_id' : 1381 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-16,21:22:53' ] [ 'job_id' : 2358 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-16 22:31:27,176 ] [ INFO ] " [ 'zipFile' : '5fbb9786-6023-11e2-bb8c-003048f0e3f0.zip' ]   [ 'job_description_id' : 1381 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-16,21:55:01' ] [ 'job_id' : 2359 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-17 00:10:52,555 ] [ INFO ] " [ 'zipFile' : 'c0ff6726-6031-11e2-8d9b-003048f0e3f0.zip' ]   [ 'job_description_id' : 1401 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-17,00:09:00' ] [ 'job_id' : 2360 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-17 00:46:03,042 ] [ INFO ] " [ 'zipFile' : 'af25da76-6036-11e2-9a47-003048f0e3f0.zip' ]   [ 'job_description_id' : 1401 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-17,00:11:16' ] [ 'job_id' : 2361 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-17 08:46:03,040 ] [ INFO ] " [ 'zipFile' : '5d202b08-6079-11e2-b903-003048f0e3f0.zip' ]   [ 'job_description_id' : 1401 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-17,08:10:49' ] [ 'job_id' : 2362 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-17 09:15:58,689 ] [ INFO ] " [ 'zipFile' : 'ab12f18e-607d-11e2-8110-003048f0e3f0.zip' ]   [ 'job_description_id' : 1401 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-17,08:42:09' ] [ 'job_id' : 2363 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-17 17:45:47,419 ] [ INFO ] " [ 'zipFile' : '185a4782-60c5-11e2-93df-003048f0e3f0.zip' ]   [ 'job_description_id' : 1421 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-17,17:12:42' ] [ 'job_id' : 2378 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-17 18:16:05,577 ] [ INFO ] " [ 'zipFile' : '672459a8-60c9-11e2-aba4-003048f0e3f0.zip' ]   [ 'job_description_id' : 1421 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-17,17:44:13' ] [ 'job_id' : 2379 ] Zip folder with new job results added successfully
+ "
+[ 2013-01-21 16:46:19,345 ] [ INFO ] " [ 'zipFile' : 'e4a53d1a-63e0-11e2-b3ef-003048f0e3f0.zip' ]   [ 'job_description_id' : 1501 ]  [ 'host' : 'volhcb34.cern.ch' ] [ 'platform' : 'x86_64-slc5-gcc46-opt' ]  [ 'time_start' : '2013-01-21,16:09:31' ] [ 'job_id' : 2398 ] Zip folder with new job results added successfully
+ "

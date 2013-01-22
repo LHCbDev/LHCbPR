@@ -3,13 +3,13 @@
 {% block title %} {{ active_tab }} {{ title }} {% endblock title %}
 
 {% block head %} 
-<script type="text/javascript" src="/static/js/BaseAnalysisFunctions.js"></script>
-<script type="text/javascript" src="/static/js/analysisBookmark.js"></script>
+<script type="text/javascript" src="{{ rootbaseurl }}static/js/BaseAnalysisFunctions.js"></script>
+<script type="text/javascript" src="{{ rootbaseurl }}static/js/analysisBookmark.js"></script>
 {% endblock head %}
 
 {% block script %} 
 var appName = "{{ active_tab }}";
-var requestUrl = "/django/lhcbPR/analyse/{{ analysis_type }}/results/{{  active_tab }}/";
+var requestUrl = "{{ rootbaseurl }}django/lhcbPR/analyse/{{ analysis_type }}/results/{{  active_tab }}/";
 var prefillData = {{ bookmark|safe }};
 var triggerResults = false;
 jQuery(document).ready(function() {
@@ -33,7 +33,7 @@ jQuery(document).ready(function() {
 		$("#analyseMenu").attr('checked', 'checked').button("refresh");
 		{% for app in applications %}
 		$('#{{ app }}tabButton').click(function(){ 
-				document.location.href="/django/lhcbPR/analyse/{{ app }}/" ;
+				document.location.href="{{ rootbaseurl }}django/lhcbPR/analyse/{{ app }}/" ;
 				$("#{{ active_tab }}tab").mask("Loading...");
 			});
 		{% endfor %}
@@ -61,15 +61,16 @@ jQuery(document).ready(function() {
         $.fx.speeds._default = 800;
         $("#bookmark").click(function(){ 
             var mytrigger = $("#triggerResults").is(":checked");
-            $("#bookmark_url").val( "https://"+ window.location.host + window.location.pathname +"?"+getBookmarkUrl()+"&trigger="+mytrigger );
+            var mypathname = window.location.pathname;
+            $("#bookmark_url").val( "https://"+ window.location.host + mypathname.slice(0,-1) +"?"+getBookmarkUrl()+"&trigger="+mytrigger );
             jQuery("#bookmarkDialog").dialog( "open" );
             return false;
         });
 
         $("#goo").click(function(){
             var url_to_short = $("#bookmark_url").val();
-            alert('https://webservices.web.cern.ch/webservices/Services/ShortenUrl/Default.aspx?shorten='+url_to_short);
-            //window.open( 'https://webservices.web.cern.ch/webservices/Services/ShortenUrl/Default.aspx?shorten='+url_to_short );
+            var bookmarkshort = "https://webservices.web.cern.ch/webservices/Services/ShortenUrl/Default.aspx?shorten="+url_to_short;
+            window.open( bookmarkshort );
         });
         $("#triggerResults").click(function(){
                 var mytrigger = $(this).is(":checked");
