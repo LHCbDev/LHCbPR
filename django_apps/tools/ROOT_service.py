@@ -6,6 +6,10 @@ from ROOT import TFile, TCanvas, TH1D, TH1F, TPad, gROOT, TMath, TArrayF, TList
 from ROOT import gDirectory, gPad, gStyle
 import ROOT
 
+parent_work_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(parent_work_path)
+import myconf as conf
+
 gROOT.SetBatch(True)
 initialStyle = gStyle.GetOptStat()
 noStyle = 000000000
@@ -16,7 +20,7 @@ noStyle = 000000000
 colors = [4, 2, 3]
 colorsName = [ 'blue', 'red', 'green' ]
 
-parent_work_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+
 write_path = 'static/images/histograms/'
 
 #those methods/classes are used for the basic analysis
@@ -140,7 +144,7 @@ def plot_histogram(histogramObjects, style,logx = False,logy = False):
     serve_path = 'static/images/histograms/histogram{0}{1}.png'.format(random.randint(1, 100),random.randint(1, 100))
     c1.Print(os.path.join(parent_work_path , serve_path))
     
-    return '/{0}'.format(serve_path)
+    return '{0}{1}'.format(conf.rootbaseurl,serve_path)
 
 def histograms_service(remoteservice):
     try:

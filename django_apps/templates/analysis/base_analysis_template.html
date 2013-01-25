@@ -3,13 +3,13 @@
 {% block title %} {{ active_tab }} {{ title }} {% endblock title %}
 
 {% block head %} 
-<script type="text/javascript" src="{{ rootbaseurl }}static/js/BaseAnalysisFunctions.js"></script>
-<script type="text/javascript" src="{{ rootbaseurl }}static/js/analysisBookmark.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/BaseAnalysisFunctions.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/analysisBookmark.js"></script>
 {% endblock head %}
 
 {% block script %} 
 var appName = "{{ active_tab }}";
-var requestUrl = "{{ rootbaseurl }}django/lhcbPR/analyse/{{ analysis_type }}/results/{{  active_tab }}/";
+var requestUrl = "{{ ROOT_URL }}analyse/{{ analysis_type }}/results/{{  active_tab }}/";
 var prefillData = {{ bookmark|safe }};
 var triggerResults = false;
 jQuery(document).ready(function() {
@@ -33,7 +33,7 @@ jQuery(document).ready(function() {
 		$("#analyseMenu").attr('checked', 'checked').button("refresh");
 		{% for app in applications %}
 		$('#{{ app }}tabButton').click(function(){ 
-				document.location.href="{{ rootbaseurl }}django/lhcbPR/analyse/{{ app }}/" ;
+				document.location.href="{{ ROOT_URL }}analyse/{{ app }}/" ;
 				$("#{{ active_tab }}tab").mask("Loading...");
 			});
 		{% endfor %}

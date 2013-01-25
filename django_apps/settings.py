@@ -2,16 +2,16 @@
 
 import myconf
 import os, socket
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG = True
+LOCAL = myconf.LOCAL
+DEBUG = myconf.DEBUG
 TEMPLATE_DEBUG = DEBUG
 
 #Added extra, root url fix, to be used with shared machines
-URL_ROOT = myconf.rootbaseurl
-
-#custom LOGIN_URL
-LOGIN_URL = URL_ROOT+'accounts/login'
+ROOT_URL = myconf.ROOT_URL
 
 ADMINS = (
      ('Emmanouil Kiagias', 'emmanouil.kiagias@cern.ch'),
@@ -77,7 +77,7 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = ROOT_URL+'static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -89,8 +89,14 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_PATH, 'static'),
 )
-LOGIN_REDIRECT_URL = URL_ROOT+'django/lhcbPR'
+
+#custom LOGOUT_URL, LOGIN_URL
+LOGIN_URL = ROOT_URL+'login'
+LOGOUT_URL = ROOT_URL+'logout'
+
+LOGIN_REDIRECT_URL = ROOT_URL
 SHIB_SSO_ADMIN = True
 SHIB_SSO_CREATE_ACTIVE = True
 SHIB_SSO_CREATE_STAFF = False
@@ -179,6 +185,9 @@ LOGGING = {
     }
 }
 
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'lhcbPR.context_processors.base_variables',
+)
 
 #soon to be moved from here
 HISTOGRAMSGAUSS = {

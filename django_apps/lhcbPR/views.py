@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
 from django.template import RequestContext
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required as default_login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults
@@ -16,24 +16,23 @@ from exceptions import AttributeError
 from random import choice
 from tools.viewTools import handle_uploaded_file, makeQuery, makeCheckedList, formBuilder, getSplitted, jobdescription
 
+if settings.LOCAL:
+    def login_required(*args):
+        return args[0]
+else:
+    login_required = default_login_required
 
-@login_required
+#@login_required
 def test(request):
     datadict = json.dumps(request.GET)
-    myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user,
-              'str' : datadict,
-              'rootbaseurl' : settings.URL_ROOT }
-    return render_to_response('analysis/debug.html', myDict,
+    return render_to_response('yo.html',
                   context_instance=RequestContext(request))
     
 def index(request):
     """This view serves the home page of the application(lhcbPR), along 
     with the page it provides information for the user(if he is authenticated
     or not)"""
-    myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user, 'rootbaseurl' : settings.URL_ROOT}
-    return render_to_response('lhcbPR/index.html', myDict,
+    return render_to_response('lhcbPR/index.html',
                   context_instance=RequestContext(request))
 
 @login_required  #login_url="login"
@@ -43,8 +42,6 @@ def jobDescriptions(request, app_name):
     and depending on the app_name it returns the available versions, options, setupprojects"""
     
     applicationsList = Application.objects.values_list('appName', flat=True).distinct().order_by('appName')
-        
-    myauth = request.user.is_authenticated()
     
     apps = Application.objects.filter(appName__exact=app_name)
     if not apps:
@@ -95,12 +92,9 @@ def jobDescriptions(request, app_name):
                'options' : optionsList,
                'platforms' : cmtconfigsList,
                'setupProject' : setupProjectList,
-               'active_tab' : app_name ,
-               'myauth' : myauth, 
-               'user' : request.user, 
+               'active_tab' : app_name , 
                'applications' : applicationsList,
                'current_page' : requested_page,
-               'rootbaseurl' : settings.URL_ROOT
                }
       
     return render_to_response('lhcbPR/jobDescriptions.html', 
@@ -111,10 +105,7 @@ def jobDescriptions(request, app_name):
 def jobDescriptionsHome(request):
     """Serves the jobDescriptions home page with the available applications"""
     applicationsList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
-    
-    myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList,
-              'rootbaseurl' : settings.URL_ROOT }
+    myDict = { 'applications' : applicationsList }
       
     return render_to_response('lhcbPR/jobDescriptionsHome.html', 
                   myDict,
@@ -126,12 +117,7 @@ def analyseHome(request):
     
     #find for which applications there are runned jobs
     applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
-        
-    myauth = request.user.is_authenticated()
-    
-    myauth = request.user.is_authenticated()
-    myDict = { 'myauth' : myauth, 'user' : request.user, 'applications' : applicationsList,
-              'rootbaseurl' : settings.URL_ROOT }
+    myDict = { 'applications' : applicationsList }
       
     return render_to_response('lhcbPR/analyseHome.html', 
                   myDict,
@@ -143,7 +129,6 @@ def analysis_application(request, app_name):
     /django/lhcbPR/analyse/BRUNEL ==> app_name = 'BRUNEL' 
     and depending on the app_name it returns the available versions, options, setupprojects"""
     applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
-    myauth = request.user.is_authenticated()
     
     apps = Application.objects.filter(appName__exact=app_name)
     if not apps:
@@ -168,10 +153,7 @@ def analysis_application(request, app_name):
             analysisList.sort()
     dataDict = { 
                 'handlers' : handlers,
-                'active_tab' : app_name ,
-                'myauth' : myauth, 
-                'rootbaseurl' : settings.URL_ROOT,
-                'user' : request.user, 
+                'active_tab' : app_name , 
                 'applications' : applicationsList,
                 'analysisList' : analysisList
                }
@@ -248,7 +230,6 @@ Attention:
             user_data['html_form'] = html_form
         
         applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
-        myauth = request.user.is_authenticated()
         dataDict = {
                     'applications' : applicationsList,
                     'active_tab' : app_name,
@@ -257,9 +238,6 @@ Attention:
                     
                     'title' : title,
                     'help' : help,
-                    'myauth' : myauth, 
-                    'user' : request.user,
-                    'rootbaseurl' : settings.URL_ROOT 
                     }
         #include user's data
         dataDict.update(user_data)
@@ -317,7 +295,6 @@ def analysis_function(request, analysis_type, app_name):
             
         dataDict = {}
         dataDict.update(user_data)
-        dataDict['rootbaseurl'] = settings.URL_ROOT
         return render_to_response(template, 
                   dataDict,
                   context_instance=RequestContext(request))
