@@ -27,7 +27,7 @@ $(document).ready(function() {
 	<div id="applications">
 		Choose one of the following applications to make analysis:<br><br>
 			{% for app in applications %}
-			<button name="{{ app }}button" onclick="location.href='{{ rootbaseurl }}django/lhcbPR/analyse/{{ app }}/'" style="padding:1.5em;margin-left:1em;">{{ app }}</button>
+			<button name="{{ app }}button" onclick="location.href='{{ ROOT_URL }}analyse/{{ app }}/'" style="padding:1.5em;margin-left:1em;">{{ app }}</button>
 			{% endfor %}
 	</div>
 </div>

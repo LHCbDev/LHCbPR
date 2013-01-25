@@ -155,7 +155,7 @@ def analyse(**kwargs):
     f.close()
     
     dataDict = {
-                'csv_url' : '/'+timing_path,
+                'csv_url' : settings.URL_ROOT+timing_path,
                 'data' : jsonTree,
                 'jobs_num' : len(job_ids),
                 'description' : description_dict

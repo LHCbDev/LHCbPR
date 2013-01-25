@@ -49,7 +49,7 @@ $(document).ready(function () {
 				return;
 			}
 			$.ajax({
-    			'url' : rootbaseurl+'django/lhcbPR/commitClone/',
+    			'url' : rootbaseurl+'commitClone/',
 				'type' : 'GET',
 				'data' : {
 				'application' : $application,
@@ -118,7 +118,7 @@ $(document).ready(function () {
 			}
 
 			$.ajax({
-    			'url' : rootbaseurl+'django/lhcbPR/commitClone/',
+    			'url' : rootbaseurl+'commitClone/',
 				'type' : 'GET',
 				'data' : {
 				'id' : myChoosedJob_id,
@@ -279,7 +279,7 @@ function openWindow(job_id){
 	if (job_id == "")
 		return;
 	$.ajax({
-    	'url' : rootbaseurl+'django/lhcbPR/getJobDetails/',
+    	'url' : rootbaseurl+'getJobDetails/',
 		'type' : 'GET',
 		'data' : {
 		'job_id' : job_id,	
@@ -330,8 +330,8 @@ function openWindow(job_id){
 			myChoosedJob_id = job_id;
 			
 			$("#pagebody").unmask();
-			$("#generatescript").attr('href',rootbaseurl+'django/lhcbPR/script?pk='+myChoosedJob_id);
-			$("#job_info").attr('href',rootbaseurl+'django/lhcbPR/getRunnedJobs?pk='+myChoosedJob_id);
+			$("#generatescript").attr('href',rootbaseurl+'script?pk='+myChoosedJob_id);
+			$("#job_info").attr('href',rootbaseurl+'getRunnedJobs?pk='+myChoosedJob_id);
 			
 			if(jsondata.runned_job)
 				$("#job_info").show();		
@@ -359,7 +359,7 @@ function openEditWindow(job_id){
 	if (job_id == "")
 		return;
 	$.ajax({
-    	'url' : rootbaseurl+'django/lhcbPR/getJobDetails/',
+    	'url' : rootbaseurl+'getJobDetails/',
 		'type' : 'GET',
 		'data' : {
 		'job_id' : job_id,
@@ -467,7 +467,7 @@ function openCloneWindow(job_id){
 		return;
 
 	$.ajax({
-    	'url' : rootbaseurl+'django/lhcbPR/getJobDetails/',
+    	'url' : rootbaseurl+'getJobDetails/',
 		'type' : 'GET',
 		'data' : {
 		'job_id' : job_id,
@@ -582,7 +582,7 @@ function openPanel(id, service,mybox_id){
 		$("#requestedTitle").text("Requested handlers");
 	}
 	$.ajax({
-    	'url' : rootbaseurl+'django/lhcbPR/editPanel/',
+    	'url' : rootbaseurl+'editPanel/',
 		'type' : 'GET',
 		'data' : {
 		'service' : service,

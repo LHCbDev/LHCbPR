@@ -2,7 +2,7 @@
 
 {% block head %}
 {{ block.super }}
-<script type="text/javascript" src="{{ rootbaseurl }}static/js/autocompleteBox.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/autocompleteBox.js"></script>
 {% endblock head %}
 
 {% block script %}
@@ -66,7 +66,7 @@ function getSelectedGroups(id){
 }
 
 function fixGroups(groups){ 
-        myUrl= "{{ rootbaseurl }}django/lhcbPR/analyse/basic/functions/filterAtrs/"+appName+"/?groups="+escape(groups.join(","));
+        myUrl= "{{ ROOT_URL }}analyse/basic/functions/filterAtrs/"+appName+"/?groups="+escape(groups.join(","));
         
         $("#atr_holder").mask("Requesting...");
 		$("#atr_holder").load(myUrl, function(){ jQuery("#atr").combobox(); });
