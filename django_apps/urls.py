@@ -5,6 +5,10 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+)
+
+urlpatterns += patterns('',
     url(r'^login/$', 'shibsso.views.login'),
     url(r'^logout/$', 'shibsso.views.logout'),
 )
@@ -23,11 +27,6 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^commitClone', 'commitClone'),
     url(r'^editPanel', 'editPanel'),
     url(r'^script', 'script'),
-    url(r'^getRunnedJobs', 'getRunnedJobs'),
     url(r'^test','test'),
     url(r'^newjobdescription', 'new_job_description')
-)
-
-urlpatterns += patterns('',
-    url(r'^admin/', include(admin.site.urls)),
 )

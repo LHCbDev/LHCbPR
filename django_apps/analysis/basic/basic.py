@@ -1,4 +1,4 @@
-import json
+import json, logging
 from django.db import connection, transaction
 from django.http import HttpResponse 
 from lhcbPR.models import JobAttribute, Host, Platform, Application, Options,  JobResults
@@ -6,9 +6,10 @@ from django.db.models import Q
 from django.http import HttpResponseNotFound
 from django.shortcuts import render_to_response   
 from django.template import RequestContext
-from tools.viewTools import getSplitted, subService as service #,remoteService
+from tools.viewTools import getSplitted, subService as service
 from query_builder import get_queries
-        
+
+logger = logging.getLogger('analysis_logger')     
 
 def render(**kwargs):
     """From the url is takes the requested application(app_name) , example:
@@ -95,6 +96,7 @@ def analyse(**kwargs):
     remoteservice = service()
     #in case it does not connect return an error
     if not remoteservice.connect():
+        logger.error('Could not connect to remote service')
         return { 'errorMessage' : 'Connection with remote service for analysis failed!', 
                 'template' : 'analysis/error.html' }
     try:
@@ -117,7 +119,8 @@ def analyse(**kwargs):
         #after we finish sending our data we wait for the response(answer)
         answerDict = remoteservice.recv()
     except Exception, e:
-        return {'errorMessage' : e,
+        logger.exception()
+        return {'errorMessage' : 'An exception occurred please try again later',
                 'template' : 'analysis/error.html' }
         #return {'errorMessage' : 'An error occurred with the root analysis process, please try again later',
         #        'template' : 'analysis/error.html' }

@@ -1,4 +1,6 @@
 import socket, cPickle, os, sys, inspect, random
+import logging
+from logging.handlers import RotatingFileHandler
 from threading import Thread
 import socket_service as service
 from cPickle import load, dump
@@ -10,6 +12,21 @@ parent_work_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 sys.path.append(parent_work_path)
 import myconf as conf
 
+#logging stuff
+LOG_FILENAME = os.path.join(parent_work_path, 'static/logs/ROOT_service.log')
+logger = logging.getLogger('ROOT_service')
+filehandler = RotatingFileHandler(LOG_FILENAME, maxBytes=2000, backupCount=5)
+formatter = logging.Formatter('[%(asctime)s ]  [%(levelname)s]  %(message)s')
+filehandler.setFormatter(formatter)
+logger.addHandler(filehandler) 
+logger.setLevel(logging.INFO)
+
+#dirac stuff
+diracStorageElementName = 'StatSE'
+#uploaded/ <--- this will be the official one
+diracStorageElementFolder = 'uploaded_test'
+
+#ROOT configs
 gROOT.SetBatch(True)
 initialStyle = gStyle.GetOptStat()
 noStyle = 000000000
@@ -41,9 +58,6 @@ def define_bins(request,groupvalues):
         bins['nbins'] = 100
     else:
         bins['nbins'] = int(request['nbins'])
-    
-    #print 'Printing the bins'
-    #print bins['xup'], bins['xlow'], bins['nbins']
     
     return bins
 
@@ -144,7 +158,7 @@ def plot_histogram(histogramObjects, style,logx = False,logy = False):
     serve_path = 'static/images/histograms/histogram{0}{1}.png'.format(random.randint(1, 100),random.randint(1, 100))
     c1.Print(os.path.join(parent_work_path , serve_path))
     
-    return '{0}{1}'.format(conf.rootbaseurl,serve_path)
+    return '{0}{1}'.format(conf.ROOT_URL,serve_path)
 
 def histograms_service(remoteservice):
     try:
@@ -224,9 +238,10 @@ def histograms_service(remoteservice):
         
     except Exception,e:
         remoteservice.finish()
-        #print '{0}  {1}'.format(Exception,e)
+        logger.exception()
+        sys.exit(1)
     finally:
-        #print '\nfinished work exiting...'
+        logger.info('Finished working')
         return
         
 def basic_service(remoteservice):
@@ -285,9 +300,10 @@ def basic_service(remoteservice):
         
     except Exception,e:
         remoteservice.finish()
-        print >> sys.stderr , '{0}  {1}'.format(Exception,e)
+        logger.exception()
+        sys.exit(1)
     finally:
-        print >> sys.stderr , '\nfinished working...'
+        logger.info('Finished working')
         return 
 
 functionList = {
@@ -297,6 +313,7 @@ functionList = {
   
 def handle_connection(remoteservice):
     function = remoteservice.recv()
+    logger.info('{0} function was called'.format(function))
     #call the correct function giving as argument the remoteservice
     functionList[function](remoteservice)
     
@@ -320,12 +337,17 @@ class subService(object):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print >> sys.stderr, "Please specify mode, 'subprocess' or 'socket' following port number(optional)"
+        logger.error("Please specify mode, 'subprocess' or 'socket' following port number(optional)")
         sys.exit(1)
     
     if sys.argv[1] == 'socket':
+        logger.info('Starting socket service')
         if len(sys.argv) == 3:
-            port = sys.argv[2]
+            try:
+                port = int(sys.argv[2])
+            except Exception:
+                logger.exception()
+                sys.exit(1)
         else:
             port = 4321
         #create an INET, STREAMing socket
@@ -342,7 +364,9 @@ if __name__ == "__main__":
             t = Thread(target=handle_connection, args=(remoteservice,))
             t.start()
     elif sys.argv[1] == 'subprocess':
+        logger.info('Starting subprocess service')
         remoteservice = subService()
         handle_connection(remoteservice)
     else:
-        print >> sys.stderr,  "No such mode, modes can be 'subprocess' or 'socket'(following port number, optional)"
+        logger.error("No such mode, modes can be 'subprocess' or 'socket'(following port number, optional)")
+        sys.exit(1)

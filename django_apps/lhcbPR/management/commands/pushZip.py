@@ -4,17 +4,11 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 from lhcbPR.models import AddedResults, ResultFile, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
 from django.db import transaction
-import json, re, logging, zipfile, os
+import json, re, logging, zipfile, os, sys
 from django.conf import settings
 
-log_file_path = os.path.join(settings.PROJECT_PATH, 'static/logs/pushZip_log')
-
-logger = logging.getLogger('pushZip')
-filehandler = logging.FileHandler(log_file_path)
-formatter = logging.Formatter('[ %(asctime)s ] [ %(levelname)s ] " %(message)s "')
-filehandler.setFormatter(formatter)
-logger.addHandler(filehandler) 
-logger.setLevel(logging.INFO)
+#get the logger from the django settings
+logger = logging.getLogger('push_logger')
 log = ''
 
 def pushThis(zipFile):
@@ -27,16 +21,16 @@ def pushThis(zipFile):
         DataDict = json.loads(unzipper.read('json_results'))
     except ValueError, e:
         logger.exception("{0} exception occurred ".format(log))
-        return
+        sys.exit(1)
     except IOError,e:
         logger.exception("{0} exception occurred ".format(log))
-        return
+        sys.exit(1)
     except IndexError, e:
         logger.exception("{0} exception occurred ".format(log))
-        return
+        sys.exit(1)
     except Exception, e:
         logger.exception("{0} exception occurred ".format(log))
-        return
+        sys.exit(1)
     
     try:
         results_unique_id, created = AddedResults.objects.get_or_create(identifier=DataDict['results_id'])
@@ -123,12 +117,9 @@ def pushThis(zipFile):
         logger.info(log+' Zip folder with new job results added successfully\n')
         return
     
-    except KeyError, e:
-        logger.exception(log+' exception occurred!')
-        return
     except Exception,e:
         logger.exception(log+' exception occurred!')
-        return
+        sys.exit(1)
 
 class Command(BaseCommand):
 

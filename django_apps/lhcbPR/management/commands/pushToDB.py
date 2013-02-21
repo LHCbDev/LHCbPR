@@ -6,16 +6,8 @@ from django.conf import settings
 from lhcbPR.models import AddedResults
 import pushZip
 
-#directories for results logging
-log_file_path = os.path.join(settings.PROJECT_PATH, 'static/logs/adding_results_log')
-#results_directory = os.path.join(settings.PROJECT_PATH, 'static/uploaded')
-
-logger = logging.getLogger('cronPushToDB')
-filehandler = logging.FileHandler(log_file_path)
-formatter = logging.Formatter('[ %(asctime)s ]  [ %(levelname)s ]  " %(message)s "')
-filehandler.setFormatter(formatter)
-logger.addHandler(filehandler) 
-logger.setLevel(logging.INFO)
+#get the logger from the django settings
+logger = logging.getLogger('check_logger')
 
 diracStorageElementName = 'StatSE'
 #uploaded/ <--- this will be the official one

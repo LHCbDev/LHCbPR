@@ -6,20 +6,14 @@ from django.conf import settings
 from lhcbPR.models import AddedResults
 import pushZip
 
-#directories for results logging
-log_file_path = os.path.join(settings.PROJECT_PATH, 'static/logs/adding_results_log')
-#results_directory = os.path.join(settings.PROJECT_PATH, 'static/uploaded')
-
-logger = logging.getLogger('cronPushToDB')
-filehandler = logging.FileHandler(log_file_path)
-formatter = logging.Formatter('[ %(asctime)s ]  [ %(levelname)s ]  " %(message)s "')
-filehandler.setFormatter(formatter)
-logger.addHandler(filehandler) 
-logger.setLevel(logging.INFO)
+#get the logger from the django settings
+logger = logging.getLogger('check_logger')
 
 diracStorageElementName = 'StatSE'
 #uploaded/ <--- this will be the official one
 diracStorageElementFolder = 'uploaded_test'
+addedDiracStorageFolder = 'added'
+
 temp_save_path = os.path.join(settings.PROJECT_PATH, 'static/images/histograms')
 
 def pushNewResults():
@@ -41,19 +35,29 @@ def pushNewResults():
     for zipResult in dirDict['Value']['Successful'][diracStorageElementFolder]['Files']:
         fileName, fileExtension = os.path.splitext(zipResult)
         
-        statSE.getFile('{0}{1}{2}'.format(diracStorageElementFolder, os.sep, zipResult))
-    
+        #get the File
+        statSE.getFile(os.path.join(diracStorageElementFolder, zipResult))
+        
         results_list = AddedResults.objects.filter(identifier__exact=fileName)
         if not results_list:
             logger.info('New zip: {0}, founded in results directory, calling pushZip command...'.format(zipResult))
             pushZip.pushThis('{0}{1}{2}'.format(temp_save_path, os.sep, zipResult))
+        
+        #remove it from the upload_test folder
+        statSE.removeFile(os.path.join(diracStorageElementFolder, zipResult))
+        #put the file into the added folder
+        statSE.putFile({ os.path.join(addedDiracStorageFolder, zipResult) : zipResult})
+        #also remove the file from the current directory
         os.remove(zipResult)
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
     
-        c = CronTab(
-          Event( pushNewResults, min = range(0,60,5) )
-        )
-        c.run()
+        if len(args) == 1 and args[0] == 'pythoncron':
+            c = CronTab(
+              Event( pushNewResults, min = range(0,60,5) )
+            )
+            c.run()
+        else:
+            pushNewResults()

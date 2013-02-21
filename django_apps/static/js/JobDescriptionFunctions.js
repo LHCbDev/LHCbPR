@@ -254,28 +254,28 @@ function clearCheckBox(id){
 }
 
 function permalink(){
-	var setupprojects = getSelectedChilds("SetupProject");
-	var appVersions = getSelectedChilds("Version");
-	var options = getSelectedChilds("Options");
-	var cmts = getSelectedChilds("Platform");	
+	var setupprojects = getSelectedChilds("setupproject");
+	var appVersions = getSelectedChilds("version");
+	var options = getSelectedChilds("options");
+	var cmts = getSelectedChilds("platform");	
 
 	mypermalink = "?page="+myCurrent_page;
 	if (appVersions.length >= 1)
-		mypermalink+= "&appVersions="+escape(appVersions.join(","));
+		mypermalink+= "&version="+escape(appVersions.join(","));
 	if (setupprojects.length >=1)
-		mypermalink+= "&SetupProjects="+escape(setupprojects.join(","));
+		mypermalink+= "&setupproject="+escape(setupprojects.join(","));
 	if (options.length >= 1)
-		mypermalink+= "&Options="+escape(options.join(","));
+		mypermalink+= "&options="+escape(options.join(","));
 	if (cmts.length >= 1)
-		 mypermalink+= "&platforms="+escape(cmts.join(","));
+		 mypermalink+= "&platform="+escape(cmts.join(","));
 	//location.hash = mypermalink;
-	document.getElementById("mypermalink").href = window.location.href.split("?")[0]+mypermalink;
+	//document.getElementById("mypermalink").href = window.location.href.split("?")[0]+mypermalink;
 	
-	return;
+	return mypermalink;
 }
 
 function openWindow(job_id){
-	$("#job_info").hide();
+	//$("#job_info").hide();
 	if (job_id == "")
 		return;
 	$.ajax({
@@ -331,10 +331,11 @@ function openWindow(job_id){
 			
 			$("#pagebody").unmask();
 			$("#generatescript").attr('href',rootbaseurl+'script?pk='+myChoosedJob_id);
-			$("#job_info").attr('href',rootbaseurl+'getRunnedJobs?pk='+myChoosedJob_id);
+			/*$("#job_info").attr('href',rootbaseurl+'getRunnedJobs?pk='+myChoosedJob_id);
 			
 			if(jsondata.runned_job)
 				$("#job_info").show();		
+            */
 		
 			$("#dialog").dialog({
     			autoResize: true,

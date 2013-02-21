@@ -1,4 +1,4 @@
-import os, re, socket, subprocess
+import os, re, socket, subprocess, logging
 import tools.socket_service as service
 from  cPickle import dump, load, loads
 from django.db.models import Q
@@ -36,20 +36,6 @@ def makeQuery(statement,arguments,operator):
         dataDict[arg] = statement
         
     return combineStatements(dataDict, operator)
-
-def makeCheckedList(mylist,are_checked = []):
-    """For each dictionary in mylist check if the dictionary[key] 
-    exists in the checked values, if yes/no it saves it as checked/unchecked 
-    in a final dictionary list, this method is used for bookmarking the 
-    filtering values in /jobDescriptions/APP_NAME page
-    """
-    List = []
-    for myObj in mylist:
-        if str(myObj[0]) in are_checked:
-            List.append({'id': myObj[0] , 'value' : myObj[1], 'checked' : True})
-        else:
-            List.append({'id': myObj[0] , 'value' : myObj[1], 'checked' : False})
-    return List
 
 def handle_uploaded_file(f):
     path_to_save = os.path.join(settings.PROJECT_PATH, 'static/uploaded/'+f.name)

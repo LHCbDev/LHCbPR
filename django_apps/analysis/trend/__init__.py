@@ -7,7 +7,7 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import render_to_response   
 from django.template import RequestContext
 
-from tools.viewTools import makeCheckedList, getSplitted, makeQuery
+from tools.viewTools import getSplitted, makeQuery
 import tools.socket_service as service
 from query_builder import get_queries
 
@@ -130,7 +130,7 @@ def analyse(**kwargs):
             up_error = float(res[-3]) + error
             up_value = float(res[-3]) + float(res[-2])
             
-            datatable_temp.append([ version, down_value, down_error, up_error, up_value, 'Average: {0}, -+{1}'.format(res[-3],res[-2]) ])
+            datatable_temp.append([ '{0}({1})'.format(version,res[-1]), down_value, down_error, up_error, up_value, 'Average: {0}, -+{1}'.format(res[-3],res[-2]) ])
         datatable_temp2 = sorted(datatable_temp, key = lambda t : getSplitted(t[0]))
         
         saved_index = None
