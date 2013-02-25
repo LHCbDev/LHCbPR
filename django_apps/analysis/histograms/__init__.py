@@ -11,7 +11,7 @@ The page is still under construction, this is a demo(not the finished version)
 
 title = 'Histogram analysis'
 
-import json
+import json, logging
 from django.db import connection, transaction
 from django.http import HttpResponse 
 from lhcbPR.models import Host, Platform, Application, Options, JobResults
@@ -20,6 +20,8 @@ from django.db.models import Q
 from django.http import HttpResponseNotFound
 from query_builder import get_queries
 from tools.viewTools import getSplitted , subService as remoteService
+
+logger = logging.getLogger('analysis_logger') 
 
 def render(**kwargs):
     """From the url is takes the requested application(app_name) , example:
@@ -125,6 +127,7 @@ def analyse(**kwargs):
     remoteservice = remoteService()
     #in case it does not connect return an error
     if not remoteservice.connect():
+        logger.error('Could not connect to remote service')
         return {'errorMessage' : 'Connection with remote service for analysis failed!',
                 'template' : 'analysis/error.html' }
         
@@ -148,6 +151,7 @@ def analyse(**kwargs):
         #after we finish sending our data we wait for the response(answer)
         answerDict = remoteservice.recv()
     except Exception:
+        logger.exception()
         remoteservice.finish()
         return {'errorMessage' : 'An error occurred with the root analysis process, please try again later',
                 'template' : 'analysis/error.html' }

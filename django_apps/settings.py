@@ -1,5 +1,4 @@
 # Django settings for database_test project.
-
 import myconf
 import os, socket
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
@@ -62,7 +61,8 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_PATH, 'static/files/')
+#MEDIA_ROOT = os.path.join(PROJECT_PATH, 'static/files/')
+MEDIA_ROOT = '/afs/cern.ch/lhcb/software/webapps/LHCbPR/data/files/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -82,7 +82,7 @@ STATIC_URL = ROOT_URL+'static/'
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/no_static/admin/'
+ADMIN_MEDIA_PREFIX = ROOT_URL+'no_static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -170,10 +170,53 @@ INSTALLED_APPS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(levelname)s]  [%(asctime)s]  [%(module)s]  [%(process)d]  [%(thread)d]  %(message)s'
+        },
+        'simple': {
+            'format': '[%(levelname)s]  %(message)s'
+        },
+        'general' : {
+            'format' : '[%(asctime)s]  [%(levelname)s]  %(message)s'
+        }
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'push_handler' : {
+            'level' : 'INFO',
+            'formatter' : 'general',
+            'class' : 'logging.handlers.RotatingFileHandler',
+            'filename' : os.path.join(PROJECT_PATH, 'static/logs/pushToDB.log'),
+            'maxBytes' : 2000,
+            'backupCount' : 5
+        },
+        'check_handler' : {#to check if cron job to read results is working
+            'level' : 'INFO',
+            'formatter' : 'general',
+            'class' : 'logging.handlers.RotatingFileHandler',
+            'filename' : os.path.join(PROJECT_PATH, 'static/logs/checkcron.log'),
+            'maxBytes' : 2000,
+            'backupCount' : 5
+        },
+        'views_handler' : {
+            'level' : 'INFO',
+            'formatter' : 'verbose',
+            'class' : 'logging.handlers.RotatingFileHandler',
+            'filename' : os.path.join(PROJECT_PATH, 'static/logs/views.log'),
+            'maxBytes' : 2000,
+            'backupCount' : 5
+        },
+        'analysis_handler' : {
+            'level' : 'INFO',
+            'formatter' : 'verbose',
+            'class' : 'logging.handlers.RotatingFileHandler',
+            'filename' : os.path.join(PROJECT_PATH, 'static/logs/analysis.log'),
+            'maxBytes' : 2000,
+            'backupCount' : 5
         }
     },
     'loggers': {
@@ -182,6 +225,22 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'analysis_logger' : {
+            'handlers' : ['analysis_handler'],
+            'level' : 'INFO'
+        },
+        'views_logger' : {
+            'handlers' : ['views_handler'],
+            'level' : 'INFO'              
+        },
+        'push_logger' : {
+            'handlers' : ['push_handler'],
+            'level' : 'INFO'                
+        },
+        'check_logger' : {
+            'handlers' : ['check_handler'],
+            'level' : 'INFO'                
+        }       
     }
 }
 

@@ -2,7 +2,7 @@
 
 #fix the enviroment 
 . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh --no-cache
-. SetupProject.sh LCGCMT ROOT
+. SetupProject.sh LCGCMT ROOT python
 
 python $@
 

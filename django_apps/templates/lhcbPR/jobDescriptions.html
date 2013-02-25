@@ -4,12 +4,31 @@
 
 {% block head %}
 <script type="text/javascript" src="{{ STATIC_URL }}js/JobDescriptionFunctions.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/analysisBookmark.js"></script>
 {% endblock head %}
 
 {% block script %} 
 
 var rootbaseurl = "{{ ROOT_URL }}";
+var prefillData = {{ bookmark|safe }};
 $(document).ready(function() {
+                 $( "#bookmarkDialog" ).dialog({
+                    //modal: true,
+                    autoOpen: false,
+                    show: "blind",
+                    hide: "blind",
+                    position: { 
+                        my: 'top',
+                        at: 'right',
+                        of: jQuery('#dummy')
+                      },
+                    buttons: {
+                        Ok: function() {
+                            jQuery( this ).dialog( "close" );
+                        }
+                    }
+                });
+
 				$("#jobDescriptionsMenu").attr('checked', 'checked').button("refresh");
 				
 				{% for app in applications %}
@@ -34,14 +53,14 @@ $(document).ready(function() {
 				$("commitEdit").button();
 				$("goBackToDialogEdit").button();
 			
-			  	$("#VersionButton").click(function(){ showHide("VersionButton","Version") });
-			  	$("#OptionsButton").click(function(){ showHide("OptionsButton","Options") });
-			  	$("#PlatformButton").click(function(){ showHide("PlatformButton","Platform") });
-			 	$("#SetupProjectButton").click(function(){ showHide("SetupProjectButton","SetupProject") });
-			 	$("#VersionErase").click(function(){ clearCheckBox("Version") });
-			 	$("#OptionsErase").click(function(){ clearCheckBox("Options") });
-			  	$("#PlatformErase").click(function(){ clearCheckBox("Platform") });
-			  	$("#SetupProjectErase").click(function(){ clearCheckBox("SetupProject") });
+			  	$("#VersionButton").click(function(){ showHide("VersionButton","version") });
+			  	$("#OptionsButton").click(function(){ showHide("OptionsButton","options") });
+			  	$("#PlatformButton").click(function(){ showHide("PlatformButton","platform") });
+			 	$("#SetupProjectButton").click(function(){ showHide("SetupProjectButton","setupproject") });
+			 	$("#VersionErase").click(function(){ clearCheckBox("version") });
+			 	$("#OptionsErase").click(function(){ clearCheckBox("options") });
+			  	$("#PlatformErase").click(function(){ clearCheckBox("platform") });
+			  	$("#SetupProjectErase").click(function(){ clearCheckBox("setupproject") });
 
 				$( "#JobDescriptions" ).selectable({
 					stop: function() { $( ".ui-selected", this ).each(function() { 
@@ -65,8 +84,14 @@ $(document).ready(function() {
 						$("#availableAttributes").append($(this)); 
 						$("#requestedAttributes").find("#"+$(this).attr('id')).remove(); }) }
 				});
+                
+                /* call the bookmark prefill */
+                $("#options").prefillBox();
+                $("#setupproject").prefillBox();
+                $("#version").prefillBox();
+                $("#platform").prefillBox();
 
-				doFilter({{ current_page}});
+				doFilter({{ current_page }});
 				
 				$("#next_button").click(function(){ doFilter(myCurrent_page+1); });
 				$("#previous_button").click(function(){ doFilter(myCurrent_page-1); });
@@ -75,6 +100,22 @@ $(document).ready(function() {
 				$("#editHandlersClone").click(function() { openPanel(myChoosedJob_id, "handlers","handlersClone"); });
 				$("#editPlatformsEdit").click(function() { openPanel(myChoosedJob_id, "platforms","platformsEdit"); });
 				$("#editHandlersEdit").click(function() { openPanel(myChoosedJob_id, "handlers","handlersEdit"); });
+
+
+                $.fx.speeds._default = 800;
+                $("#mypermalink").click(function(){ 
+                    var mypathname = window.location.pathname;
+                    $("#bookmark_url").val( "https://"+ window.location.host + mypathname.slice(0,-1) +permalink());
+                    $("#bookmarkDialog").dialog( "open" );
+                    return false;
+                });
+
+                $("#goo").click(function(){
+                    var url_to_short = $("#bookmark_url").val();
+                    var bookmarkshort = "https://webservices.web.cern.ch/webservices/Services/ShortenUrl/Default.aspx?shorten="+url_to_short;
+                    window.open( bookmarkshort );
+                });            
+
 			});	
 		
 		function addJobs(box,apps){
@@ -96,10 +137,10 @@ $(document).ready(function() {
 		function doFilter(requested_page){
 			box = document.getElementById("JobDescriptions");
 
-			var setupprojects = getSelectedChilds("SetupProject");
-			var appVersions = getSelectedChilds("Version");
-			var options = getSelectedChilds("Options");
-			var cmts = getSelectedChilds("Platform");	
+			var setupprojects = getSelectedChilds("setupproject");
+			var appVersions = getSelectedChilds("version");
+			var options = getSelectedChilds("options");
+			var cmts = getSelectedChilds("platform");	
 	
 			$("#JobDescriptions").mask("Requesting...");
 	
@@ -137,7 +178,7 @@ $(document).ready(function() {
 						$("#next_button").show();
 					}			
 					//fix the permalink
-					permalink();
+					//permalink();
 			
 					$("#JobDescriptions").unmask();
 					addHover("JobDescriptions li");
@@ -147,10 +188,23 @@ $(document).ready(function() {
 
 {% endblock script %}
 
-{% block stylecss %} {% endblock stylecss %}
+{% block stylecss %} 
+
+#dummy {  float: right; margin-left:0.2em; clear: both; margin-top : 0.5em; }
+#goo:hover { color: blue; }
+
+{% endblock stylecss %}
 
 {% block helptext %} 
-In this page you see the existing job descriptions for the choosed application(highlighted tab). The menu on the right provides you the ability to filter the jobDescriptions, by choosing(clicking) specific/multiple Version,Options or SetupProject(Platform choices are not  functional yet), in order to shorten the list with the results(existing jobDescriptions). <br><br>By clicking on one job description a  new dialog will open. This dialog contains the full details for the choosed jobDescription along with some available actions(buttons) : "Run" , "Edit"  and "Clone".<br><b>Run button</b> : run the job description(not functional yet, under construction).<br><br><b>Edit button</b>: you can edit the job description(only if there are no jobs runned for this job description), after you finish your modify what you want, to save your changes you can click the  "Commit" button, or in you can just go backby clicking the "Cancel" button.<br><br><b>Clone button</b>: you can clone(copy) the choosed jobdescription and create a new one, and after you modify your jobDescription to save/create the new one click "Commit" or "Cancel" to go back. <br><br>In the first dialog you can click on "Generate script" to generate a script which you can use to run locally the jobdescription(download and run the script to your computer) . The script will run the job description with the selected handlers, will collect the requested data ,depending on the handlers, and will send the results to the database. More details about the handler click <a id="handlers_info" href="/static/README_handler" target="_blank" > here </a>(link doesn't work yet)
+<pre>
+In this page you see the existing job descriptions for the choosed application(highlighted tab). The menu on the right provides you the ability to filter the jobDescriptions, 
+by choosing(clicking) specific/multiple Version,Options or SetupProject(Platform choices are not  functional yet), in order to shorten the list with the results(existing jobDescriptions). <br><br>
+By clicking on one job description a  new dialog will open. This dialog contains the full details for the choosed jobDescription along with some available actions(buttons) : "Run" , "Edit"  and "Clone".<br><b>Run button</b> : run the job description(not functional yet, under construction).<br><br><b>Edit button</b>: 
+you can edit the job description(only if there are no jobs runned for this job description), after you finish your modify what you want, to save your changes you can click the  "Commit" button, or in you can just go back by 
+clicking the "Cancel" button.<br><br><b>Clone button</b>: you can clone(copy) the choosed jobdescription and create a new one, and after you modify your jobDescription to save/create the new one click "Commit" or "Cancel" to go back. <br><br>In the first dialog you can click on "Generate script" to generate a script which you can use to run locally the jobdescription(download and run the script to your computer) . 
+The script will run the job description with the selected handlers, will collect the requested data ,depending on the handlers, and will send the results to the database. 
+More details about the handler click <a id="handlers_info" href="/static/README_handler" target="_blank" > here </a>(link doesn't work yet)
+</pre>
 {% endblock helptext %}
 
 {% block pagebody %} 
@@ -162,8 +216,9 @@ In this page you see the existing job descriptions for the choosed application(h
 			</ul>
 			<div id="{{ active_tab }}tab">
 
-			<a  id="mypermalink" class="ui-state-default ui-corner-all" href="" target="_blank" title="bookmark your selection"> Permalink to selection </a>
-
+			<a  id="mypermalink" class="ui-state-default ui-corner-all" href="javascript:;" title="bookmark your selection"> Bookmark </a>
+            <div id="dummy"></div>
+    
 			 <div class="Outer">
 				<div class="InnerLeft">
 						<table class="filter">
@@ -173,12 +228,12 @@ In this page you see the existing job descriptions for the choosed application(h
 						</td>
 						<tr>
 						<td>
-				 		   <ul id="Version" name="Version" class="checklist"  >
+				 		   <ul id="version" name="Version" class="checklist"  >
 							{% for ver in appVersions %}
 								<li>
-										<label id="Version{{ forloop.counter }}">
-											<input id="Version{{ forloop.counter }}a" type="checkbox" value="{{ ver.id}}" onchange="doFilter(1)" {% if ver.checked %} checked="checked" {% endif %}>
-												{{ ver.value }}
+										<label>
+											<input id="{{ ver.0 }}" type="checkbox" value="{{ ver.0}}" onchange="doFilter(1)" >
+												{{ ver.1 }}
 										 </label>
 								</li>
 							{% endfor %}
@@ -190,12 +245,12 @@ In this page you see the existing job descriptions for the choosed application(h
 						</td>
 						<tr>
 						<td>
-						    <ul id="Options" name="Options" class="checklist" >
+						    <ul id="options" name="Options" class="checklist" >
 								{% for opt in options %}
 								<li>
-										<label id="Options{{ forloop.counter }}">
-											<input id="Options{{ forloop.counter }}a" type="checkbox" value="{{ opt.id }}" onchange="doFilter(1)" {% if opt.checked %} checked="checked"  {% endif %}>
-												{{ opt.value }}
+										<label>
+											<input id="{{ opt.0 }}" type="checkbox" value="{{ opt.0 }}" onchange="doFilter(1)">
+												{{ opt.1 }}
 										 </label>
 								</li>
 							{% endfor %}
@@ -206,12 +261,12 @@ In this page you see the existing job descriptions for the choosed application(h
 						</td> 
 						<tr>
 						<td>
-						    <ul id="SetupProject" name="SetupProject" class="checklist" style="display:none;">
+						    <ul id="setupproject" name="SetupProject" class="checklist" style="display:none;">
 							{% for setup in setupProject %}
 								<li>
-										<label id="SetupProject{{ forloop.counter }}">
-											<input id="SetupProject{{ forloop.counter }}a" type="checkbox" value="{{ setup.id }}" onchange="doFilter(1)" {% if setup.checked %} checked="checked" {% endif %}>
-												{{ setup.value }}
+										<label>
+											<input id="{{ setup.0 }}" type="checkbox" value="{{ setup.0 }}" onchange="doFilter(1)">
+												{{ setup.1 }}
 										 </label>
 								</li>
 							{% endfor %}
@@ -223,12 +278,12 @@ In this page you see the existing job descriptions for the choosed application(h
 						</td>
 						<tr>
 						<td>
-				 		   <ul id="Platform" name="Platform" class="checklist" style="display:none;">
+				 		   <ul id="platform" name="Platform" class="checklist" style="display:none;">
 							{% for plat in platforms %}
 								<li>
-										<label id="Platform{{ forloop.counter }}">
-											<input id="Platform{{ forloop.counter }}a" type="checkbox" value="{{ plat.id }}" onchange="doFilter(1)" {% if plat.checked %} checked="checked"  {% endif %}>
-												{{ plat.value }}
+										<label>
+											<input id="{{ plat.0 }}" type="checkbox" value="{{ plat.0 }}" onchange="doFilter(1)" >
+												{{ plat.1 }}
 										 </label>
 								</li>
 							{% endfor %}
@@ -285,7 +340,7 @@ In this page you see the existing job descriptions for the choosed application(h
 			<a id="generatescript" class="ui-state-default ui-corner-all simplebutton" target="_blank" href="javascript:;" title="generate script">
 				<span class="ui-icon ui-icon-script"></span>Generate script
 			</a>
-			<a id="job_info" class="ui-state-default ui-corner-all simplebutton" href="javascript:;" target="_blank" title="Open tab with runned jobs information">
+			<a id="job_info" class="ui-state-default ui-corner-all simplebutton"  style="display:none;" href="javascript:;" target="_blank" title="Open tab with runned jobs information">
 				Runned jobs<span class="ui-icon ui-icon-lightbulb"></span>
 			</a>
 		</div> <!-- closing the JobDescriptionDetails-->
@@ -444,5 +499,14 @@ In this page you see the existing job descriptions for the choosed application(h
 </div>
 
 <div id="alert" title="Attention" style="display:none;">
+</div>
+
+<div id="bookmarkDialog" title="Bookmark url">
+        <label>
+            <a id="goo" href="javascript:;">Shorten url</a>
+        </label><br>
+
+        <input id="bookmark_url" type="text" value="" style="width: 100%;margin-top : 0.5em;" />
+
 </div>
 {% endblock pagebody %}
