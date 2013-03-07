@@ -1,0 +1,47 @@
+{% extends "analysis/base_analysis_template.html" %}
+
+{% block head %} {{ block.super }}{% endblock head %}
+
+{% block script %} 
+{{ block.super }}
+$(document).ready(function() {		
+	prefillAll();	
+	trigger();	
+});
+
+function checkRequestData(requestData){
+	var errors = {}
+ 
+	var myoptions = requestData["options"].split(",");
+	var myversions = requestData["versions"].split(",");
+	var myplatforms = requestData["platforms"].split(",");
+
+	if (myoptions[0] == ""){
+		errors["options"] = "One option must be selected!";
+	}	
+	if (myoptions.length > 1){
+		errors["options"] = "Only one option must be selected, no more, no less!";
+	}	
+	if (myversions.length < 2){
+		errors["versions"] = "Two versions must be selected!";
+	}
+	if (myversions.length > 2){
+		errors["versions"] = "Only two versions must be selected, no more, no less!";
+	}	
+	if (myplatforms[0] == ""){
+		errors["platforms"] = "One platform must be selected!";
+	}	
+	if (myplatforms.length > 1){
+		errors["platforms"] = "Only one platform must be selected, no more, no less!";
+	}	
+
+	return errors;
+}
+
+{% endblock script %}
+
+{% block stylecss %} {% endblock stylecss %}
+
+{% block content %} 
+
+{% endblock content %}

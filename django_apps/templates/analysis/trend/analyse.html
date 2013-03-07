@@ -1,19 +1,25 @@
-<script src="http://www.google.com/jsapi"></script>
+<!-- 
+we already have it from the render.html template
+<script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
 <script type="text/javascript">
-google.load('visualization', '1', {packages: ['corechart'],  callback:drawChart});
-var trends = {{ trends|safe }};
-
+	google.load('visualization', '1', {packages: ['corechart'],  callback:drawChart});
     function drawChart() {
-        $.each(trends, function(index, trend){
-            $('<pre>')
-                .html(JSON.stringify(trend['description'], null, '  '))
-                .appendTo('#yo');            
-            
-            $('<div>')
-                .attr('id','trend'+index).css('width',700).css('height',570)
-                .appendTo('#yo');        
-                
-            //var data = google.visualization.arrayToDataTable( trend['datatable'] , true);
+	   var trends = {{ trends|safe }};
+	   var myYo = document.getElementById("yo");
+       for (var i = 0; i < trends.length; i++) {
+            var mypre = document.createElement("pre");
+			var myText = document.createTextNode(JSON.stringify(trends[i]['description'], null, '  '));
+			mypre.appendChild(myText);
+
+			myYo.appendChild(mypre);			
+
+			var mydiv = document.createElement("div");
+			mydiv.id = "trend"+i;
+			mydiv.style.width = 700;
+			mydiv.style.height = 570;
+
+			myYo.appendChild(mydiv);
+			
             data = new google.visualization.DataTable()
             data.addColumn('string', 'Version');
             data.addColumn('number');
@@ -21,24 +27,27 @@ var trends = {{ trends|safe }};
             data.addColumn('number');
             data.addColumn('number');
             data.addColumn({type:'string',role:'tooltip'});
-            data.addRows(trend['datatable']);
-            new google.visualization.CandlestickChart(document.getElementById('trend'+index)).
+            data.addRows(trends[i]['datatable']);
+            new google.visualization.CandlestickChart(document.getElementById("trend"+i)).
                 draw(data, {legend : 'none', 
                                         width: 700, 
                                         height: 570, 
                                         bar : { groupWidth : '15%' },
-                                        title : "Platform: "+trend['description']['PLATFORM']
+                                        title : "Platform: "+trends[i]['description']['PLATFORM']
                 });
-                
-            $('<hr>').appendTo('#yo');
+            
+			var myhr = document.createElement("hr");
+			myYo.appendChild(myhr);    
            
-        });
+        }
     }
+//google.setOnLoadCallback(initialize);
 </script>
-
 <style type="text/css">
 	pre { margin-left: 2em; }
 </style>
+
+
 
 <div id="yo">
 <!-- <div id="trend0" style="width: 500px; height: 400px;"></div> -->

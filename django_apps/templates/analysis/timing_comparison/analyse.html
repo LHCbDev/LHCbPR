@@ -1,0 +1,75 @@
+<!-- <script src="{{ STATIC_URL }}js/jquery-1.8.2.js"></script> -->
+<script type="text/javascript">
+		$(document).ready(function() {	
+			var results ={{ results|safe }};
+			var columns = {{ columns_names|safe }};
+			var cts = {{ cts|safe }}
+			$('<tr>').attr('id', 'ct1').appendTo('#yocts');
+
+			$('<td>').html("<b>"+cts[0][0]+"</b>").appendTo('#ct1');
+			$('<td>').html("<b>"+cts[0][1]+"</b>").appendTo('#ct1');
+
+			$('<tr>').attr('id', 'ct2').appendTo('#yocts');
+			$('<td>').html(cts[1][0]).appendTo('#ct2');
+			$('<td>').html(cts[1][1]).appendTo('#ct2');
+			
+			$('<tr>').attr('id', 'ct3').appendTo('#yocts');
+			$('<td>').html(cts[2][0]).appendTo('#ct3');
+			$('<td>').html(cts[2][1]).appendTo('#ct3');
+
+
+			$('<td>').html("<b>"+columns[0]+"</b>").appendTo('#yodog');
+			$('<td>').html("<b>"+columns[1]+"</b>").appendTo('#yodog');
+			$('<td>').html("<b>"+columns[2]+"</b>").appendTo('#yodog');
+			$('<td>').html("<b>"+columns[3]+"</b>").appendTo('#yodog');
+			$('<td>').html("<b>"+columns[4]+"</b>").appendTo('#yodog');
+			$('<td>').html("<b>"+columns[5]+"</b>").appendTo('#yodog');
+			$('<td>').html("<b>"+columns[6]+"</b>").appendTo('#yodog');
+			$('<td>').html("<b>"+columns[7]+"</b>").appendTo('#yodog');
+			//$('<td>').html("<b>"+columns[8]+"</b>").appendTo('#yodog');
+
+			$('<tr>').appendTo('#yodog');
+
+
+			$.each(results, function(index, result){
+				
+				$('<tr>').attr('id', "id"+index).appendTo('#yodog');				
+
+                $('<td>').html(result[0]).appendTo('#id'+index);
+				$('<td>').html(result[1]).appendTo('#id'+index);
+				$('<td>').html(result[2]).appendTo('#id'+index);
+				$('<td>').html(result[3]).appendTo('#id'+index);
+				$('<td>').html(result[4]).appendTo('#id'+index);
+				$('<td>').html(result[5]).appendTo('#id'+index);
+				$('<td>').html(result[6]).appendTo('#id'+index);
+				$('<td>').html(result[7]).appendTo('#id'+index);
+				//$('<td>').html(result[8]).appendTo('#id'+index);
+			});
+
+		});
+</script>
+<style type="text/css">
+.likesir {
+	border-width: 1px;
+	border-spacing: 2px;
+	border-style: none;
+	border-color: gray;
+	border-collapse: separate;
+	background-color: white;
+}
+.likesir th, .likesir td {
+	border-width: 1px;
+	padding: 2px;
+	border-style: dotted;
+	border-color: gray;
+	background-color: white;
+	-moz-border-radius: ;
+}
+</style>
+
+<div id="yo">
+<table id="yocts" class="likesir">
+</table><br>
+<table id="yodog" class="likesir">
+</table>
+</div>

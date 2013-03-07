@@ -568,7 +568,7 @@ def script(request):
     script += '#runned LbLogin and lhcb-proxy-init to get a proxy\n'
     script += 'proxy=`lhcb-proxy-info`\nOUT=$?\nif [ ! $OUT -eq 0 ];then\n'
     script += '   echo "lhcb-proxy invalid, please make sure you used the command: lhcb-proxy-init, aborting..."\n'
-    script += '   exit 0\nfi\n\n'
+    script += '   exit 1\nfi\n\n'
     script += '\n#job description id\n'
     script += 'JOB_DESCRIPTION_ID={0}\n\n'.format(myJobDes.pk)
     script += 'HANDLERS="'+','.join(handlers)+'"\n'
@@ -588,7 +588,7 @@ def script(request):
     
     return HttpResponse(script, mimetype="text/plain")
 
-@login_required
+#@login_required
 @csrf_exempt
 def new_job_description(request):
     """This view checks if a commit request from the user(add new job description/or edit an existing one) is valid.
@@ -600,6 +600,8 @@ def new_job_description(request):
         requestData = request.POST
     else:
         return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'unsupported method, supported GET,POST' }))
+    
+    #return HttpResponse(request.POST['application'])
     
     if not set(['application', 'version', 'optionsD']).issubset(requestData):
         return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'Your HTTP request must contain at least an application,version and optionsD(options_description)' }))
