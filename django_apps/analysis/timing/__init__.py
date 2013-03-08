@@ -4,7 +4,7 @@ This the timing analysis page, more documentation will come
 
 title = 'Timing analysis'
 
-import json, socket, os, random
+import json, socket, os, random, logging
 from django.db import connection, transaction
 from django.http import HttpResponse , HttpResponseRedirect
 from django.shortcuts import render_to_response   
@@ -18,6 +18,8 @@ from django.conf import settings
 
 from tools.viewTools import getSplitted 
 from query_builder import get_query_groups, get_tree_query
+
+#logger = logging.getLogger('analysis_logger')
 
 class GroupDict(dict):
     def __getitem__(self, key):
@@ -63,6 +65,17 @@ def render(**kwargs):
       
     return dataDict
 
+def makeTreeMap(node_name, finalnodes, lastparent, node_data, node_childs):     
+    current_node = node_name
+    finalnodes.append([ node_name, lastparent, node_data[node_name] ])
+    
+    if node_name in node_childs:
+        lastparent = current_node
+        for child in node_childs[node_name]:
+            makeTreeMap(child, finalnodes, lastparent, node_data, node_childs)
+    else:
+          return
+
 def analyse(**kwargs):
     #if request.method == 'GET' and 'hosts' in request.GET and 'jobdes' in request.GET and 'platforms' in request.GET and 'atr' in request.GET:
     #fetch the right queries depending on user's choices no the request
@@ -104,6 +117,7 @@ def analyse(**kwargs):
     
     cursor.execute(tree_query)
     
+    #return { 'template' : 'analysis/error.html' , 'errorMessage' : tree_query }
     #its row has this format: ATR_NAME , FLOAT_DATA , INT_DATA, STR_DATA, ID_DATA
     # its node of tree we want to generate need the attibute name, its parent and its entries
     root = None
@@ -138,10 +152,23 @@ def analyse(**kwargs):
     for parent, childs in myitems:
         child_list = childs
         node_childs[parent] = sorted(child_list, key = lambda mykey : node_ids[mykey])
+    
+    if requestData['treeMap'] == "true":
+        treeList = []
+        treeList.append(['Algorithm', 'Parent', 'Time'])
+        
+        makeTreeMap(root, treeList, None, node_data, node_childs)
+        
+        return {'template' : 'analysis/timing/analyseTreeMap.html' , 'treeData' : json.dumps(treeList), 'perDict' : json.dumps({'dummy' : 'dictonary'})}
        
     from TimingTree import TimingTree
     
     tree = TimingTree(root, node_data, node_childs, node_entries, node_ids)
+    
+    if requestData['singleLevel'] == "true":
+        actualTimeTree, perTotalDict = tree.getActualTimeTree()
+        
+        return {'template' : 'analysis/timing/analyseTreeMap.html' , 'treeData' : json.dumps(actualTimeTree), 'perDict' : json.dumps(perTotalDict)}
     
     if settings.HOSTNAME == 'alamages':
         timing_path = 'static/images/histograms/timing{0}{1}{2}.csv'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
@@ -150,6 +177,8 @@ def analyse(**kwargs):
     
     jsonTree = tree.getHierarchicalJSON()
     csv = tree.getFullCSV()
+    
+    #csv = tree.getActualTimeTree()
     f = open(os.path.join(settings.PROJECT_PATH, timing_path), 'w')
     f.write(csv)
     f.close()

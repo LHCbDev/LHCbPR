@@ -56,7 +56,31 @@ class TimingTree:
             csv += c.getCSV()
             ct += 1
         return csv 
-
+    
+    def getActualTimeTree_old(self):
+        ct = 1
+        
+        csv="Algname,parent,ActualTime\n"
+        for c in self.root.getAllChildren():
+            if ct > 1:
+                csv += "\n"
+            csv += c.getActualTimeData()
+            ct += 1
+        return csv 
+    
+    def getActualTimeTree(self):
+        singleLevelData = []
+        perTotalDict = {}
+        
+        singleLevelData.append([ "Algname", "Parent", "ActualTime"])
+        for c in self.root.getAllChildren():
+            #perTotal List is just a list like : [ 'EVENT_LOOP' , '100%' ]
+            treeData, perTotalList = c.getActualTimeData(self.root.name)
+            singleLevelData.append(treeData)
+            perTotalDict[perTotalList[0]] = perTotalList[1]
+            
+        return ( singleLevelData, perTotalDict )
+    
     def findByName(self, name):
         return self.root.findByName(name)
 
@@ -99,7 +123,13 @@ class Node:
         self.eventTotal = None
         if parent != None:
             parent.children.append(self)
-
+    
+    def getParentName(self):
+        if not self.parent:
+            return None
+        
+        return self.parent.name
+    
     def findByName(self, name):
         """ Find an algorithm in the subtree related to the Node  """
         if self.name == name:
@@ -115,7 +145,11 @@ class Node:
     def actualTimeUsed(self):
         """ returns the CPU time actually used in the sequence,
         excluding time used by the children """
-        return self.total - self.getSumChildrenTime() 
+        actualTime = self.total - self.getSumChildrenTime()
+        if actualTime < 0:
+            return 0
+        else:
+            return actualTime 
 
     def getAllChildren(self):
         """ Navigate the tree to rturn all the children"""
@@ -206,6 +240,21 @@ class Node:
             vals.append(self.parent.id)
 
         return tmpl % tuple(vals)
+    
+    def getActualTimeData(self, customParent=None):
+        """ Returns CSV representation of this node """
+
+        if not customParent:
+            parentName = self.getParentName()
+        else:
+            parentName = customParent
+        
+        if self.name == customParent:
+            parentName = None
+        
+        #return the actualTreeMap data and also a list with the name and the perTotal,
+        #this will be used to display a tooltip in the analyse template showing the persetange of the time
+        return ( [ self.name, parentName, self.actualTimeUsed() ], [ self.name, str(self.perTotal())+'%' ] )
     
     def _childrenjson(self):
         """ Util function to return the JSON reprentation of the children of the node """

@@ -1,8 +1,13 @@
 {% extends "analysis/base_analysis_template.html" %}
 
+{% block head %}
+{{ block.super }}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{% endblock head %}
+
 {% block stylecss %} 
 
-#group_host { margin-top: 0.5em; }
+#group_host { margin-top: 1em; }
 
 {% endblock stylecss %}
 
@@ -10,12 +15,21 @@
     {{ block.super }}
 
     $(document).ready(function() {
-        $("#group_host").prefill();    
+        //$("#group_host").prefill();
+		prefillAll(); 
         trigger();
     });
 {% endblock script %}
 
 {% block content %} 
+
+<div id="viewOptions">
+	<form>
+    	<label><input id="treeGrid" name="optionview" type="radio" checked="checked">TreeGrid</label><br>
+        <label><input id="treeMap" name="optionview" type="radio">TreeMap</label><br>
+		<label><input id="singleLevel" name="optionview" type="radio">SingleLevel</label>
+    </form>
+</div>
 
 <div id="group_host_div">
 		<label><input id="group_host" type="checkbox">group by host</label>
