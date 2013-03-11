@@ -159,7 +159,7 @@ def analyse(**kwargs):
         
         makeTreeMap(root, treeList, None, node_data, node_childs)
         
-        return {'template' : 'analysis/timing/analyseTreeMap.html' , 'treeData' : json.dumps(treeList), 'perDict' : json.dumps({'dummy' : 'dictonary'})}
+        return {'template' : 'analysis/timing/analyseTreeMap.html' , 'treeData' : json.dumps(treeList), 'perDict' : json.dumps({}), 'tooltip' : "false"}
        
     from TimingTree import TimingTree
     
@@ -168,7 +168,7 @@ def analyse(**kwargs):
     if requestData['singleLevel'] == "true":
         actualTimeTree, perTotalDict = tree.getActualTimeTree()
         
-        return {'template' : 'analysis/timing/analyseTreeMap.html' , 'treeData' : json.dumps(actualTimeTree), 'perDict' : json.dumps(perTotalDict)}
+        return {'template' : 'analysis/timing/analyseTreeMap.html' , 'treeData' : json.dumps(actualTimeTree), 'perDict' : json.dumps(perTotalDict), 'tooltip' : "true"}
     
     if settings.HOSTNAME == 'alamages':
         timing_path = 'static/images/histograms/timing{0}{1}{2}.csv'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
