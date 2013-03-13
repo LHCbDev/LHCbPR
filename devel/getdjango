@@ -1,0 +1,35 @@
+#!/bin/bash
+
+Django_url="https://www.djangoproject.com/download/1.3.7/tarball/"
+Django_tarball="django_tarball.tar.gz"
+Django_folder="Django-1.3.7"
+
+#first check if a directory of Django alreadt exists, if yes do not download it again
+if [ -d ${Django_folder} ]; then
+	echo "Django already exists, ready to go."
+	exit 0
+fi
+
+#first get the Django source version 1.3.7 (same as the cernonly repo)
+wget ${Django_url} -O ${Django_tarball}
+
+OUT=$?
+if [ ! $OUT -eq 0 ];then
+	echo "Wget fetching django failed, please check the given url"
+	exit 1
+fi
+
+#then extract the downloaded tarball 
+tar -xvf ${Django_tarball}
+
+#check if extraction was successful
+OUT=$?
+if [ ! $OUT -eq 0 ];then
+   	echo "Extraction failed, please check if file is corrupted"
+	exit 1
+fi
+
+#after the extraction remove the no longer needed tarball
+rm  ${Django_tarball}
+
+

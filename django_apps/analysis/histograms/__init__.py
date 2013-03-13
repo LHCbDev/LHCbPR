@@ -12,24 +12,18 @@ The page is still under construction, this is a demo(not the finished version)
 title = 'Histogram analysis'
 
 import json, logging
-from django.db import connection, transaction
+from django.db import connection
 from django.http import HttpResponse 
 from lhcbPR.models import Host, Platform, Application, Options, JobResults
 from django.conf import settings
 from django.db.models import Q
-from django.http import HttpResponseNotFound
 from query_builder import get_queries
 from tools.viewTools import getSplitted , subService as remoteService
 
 logger = logging.getLogger('analysis_logger') 
 
 def render(**kwargs):
-    """From the url is takes the requested application(app_name) , example:
-    /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
-    and depending on the app_name it returns the available versions, options, setupprojects"""
     app_name = kwargs['app_name']
-    if not app_name == 'GAUSS':
-        return HttpResponseNotFound("<h3>Histogram analysis is not yet supported for {0} application</h3>".format(app_name))
     
     if not JobResults.objects.filter(job__jobDescription__application__appName=app_name,jobAttribute__type='File').count() > 0:
         return HttpResponse('<h3>Not root files were saved</h3>')  
@@ -37,23 +31,7 @@ def render(**kwargs):
     #atrs = map(str, JobResults.objects.filter(job__jobDescription__application__appName__exact=app_name).values_list('jobAttribute__name', flat=True).distinct())
     atrs =  [ (k, v) for k, v in settings.HISTOGRAMSGAUSS.iteritems() ]
     
-    options = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name).distinct()
-        
-    versions_temp = Application.objects.filter(jobdescriptions__jobs__success=True, appName=app_name).distinct()
-    versions = sorted(versions_temp, key = lambda ver : getSplitted(ver.appVersion), reverse = True)
-    
-    platforms_temp = Platform.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct()
-    platforms = sorted(platforms_temp, key = lambda plat : plat.cmtconfig)
-     
-    hosts_temp = Host.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct()
-    hosts = sorted(hosts_temp, key = lambda host : host.hostname)
-    
-    dataDict = { 'attributes' : atrs,
-                'platforms' : platforms,
-                'hosts' : hosts,
-                'options' : options,
-                'versions' : versions,
-               }
+    dataDict = { 'attributes' : atrs }
       
     return dataDict
 

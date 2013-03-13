@@ -1,42 +1,21 @@
 import json
 from django.db import connection
-from django.http import HttpResponse 
-from lhcbPR.models import JobAttribute, Host, Platform, Application, Options,  JobResults
-from django.db.models import Q
-from django.http import HttpResponseNotFound
-from django.shortcuts import render_to_response   
-from django.template import RequestContext
+from django.http import Http404
+from lhcbPR.models import JobAttribute, Application
+from django.db.models import Q   
 from tools.viewTools import getSplitted
 
 title = 'Timing comparison'
 
 def render(**kwargs):
-    """From the url is takes the requested application(app_name) , example:
-    /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
-    and depending on the app_name it returns the available versions, options, setupprojects"""
     app_name = kwargs['app_name']
     
     apps = Application.objects.filter(appName__exact=app_name)
     if not apps:
-        return HttpResponseNotFound("<h3>Page not found, no such application</h3>")     
+        return Http404     
     
-    options = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name).distinct().order_by('description')
-        
-    versions_temp = Application.objects.filter(jobdescriptions__jobs__success=True, appName=app_name).distinct()
-    versions = sorted(versions_temp, key = lambda ver : getSplitted(ver.appVersion), reverse = True)
-    
-    platforms = Platform.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct().order_by('cmtconfig')
-     
-    hosts = Host.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct().order_by('hostname')
-    
-    dataDict = {
-                'platforms' : platforms,
-                'hosts' : hosts,
-                'options' : options,
-                'versions' : versions, 
-               }
-      
-    return dataDict
+    #we don't need any extra data in our render.html so we return an empty dictionary
+    return {}
 
 def analyse(**kwargs):
     requestData = kwargs['requestData']
@@ -153,6 +132,7 @@ ORDER BY t.oldavg - t.newavg
     algorithm_entries = {}
     cursor.execute(myqueryentries)
     
+    #get one results from the cursor
     result = cursor.fetchone()
     
     while not result == None:

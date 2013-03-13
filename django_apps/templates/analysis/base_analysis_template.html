@@ -58,23 +58,23 @@ jQuery(document).ready(function() {
 
 		$("#execute_query").click(function() { sendRequest(); });
 
-        $.fx.speeds._default = 800;
-        $("#bookmark").click(function(){ 
-            var mytrigger = $("#triggerResults").is(":checked");
+        jQuery.fx.speeds._default = 800;
+        jQuery("#bookmark").click(function(){ 
+            var mytrigger = jQuery("#triggerResults").is(":checked");
             var mypathname = window.location.pathname;
-            $("#bookmark_url").val( "https://"+ window.location.host + mypathname.slice(0,-1) +"?"+getBookmarkUrl()+"&trigger="+mytrigger );
+            jQuery("#bookmark_url").val( "https://"+ window.location.host + mypathname.slice(0,-1) +"?"+getBookmarkUrl()+"&trigger="+mytrigger );
             jQuery("#bookmarkDialog").dialog( "open" );
             return false;
         });
 
-        $("#goo").click(function(){
+        jQuery("#goo").click(function(){
             var url_to_short = $("#bookmark_url").val();
             var bookmarkshort = "https://webservices.web.cern.ch/webservices/Services/ShortenUrl/Default.aspx?shorten="+url_to_short;
             window.open( bookmarkshort );
         });
-        $("#triggerResults").click(function(){
+        jQuery("#triggerResults").click(function(){
                 var mytrigger = $(this).is(":checked");
-               $("#bookmark_url").val( "https://"+ window.location.host + window.location.pathname +"?"+getBookmarkUrl()+"&trigger="+mytrigger );     
+               jQuery("#bookmark_url").val( "https://"+ window.location.host + window.location.pathname +"?"+getBookmarkUrl()+"&trigger="+mytrigger );     
         });
 
         /* call the bookmark prefill */

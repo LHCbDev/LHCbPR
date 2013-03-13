@@ -1,129 +1,74 @@
-<!-- <script src="/static/js/jquery-1.8.2.js"></script> -->
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/easyui/themes/default/easyui.css" rel="stylesheet" />
-<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.easyui.min.js"></script>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Demonstrate how to use Tree Grid for the Adjacency Set Model</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<script type="text/javascript">
-$(document).ready(function() {		
-			$('#test')
-                .treegrid({
-    				title:'Timing Table',
-    				iconCls:'icon-save',
-    				//width:"120%",
-    				height:"600",
-    				nowrap: false,
-    				rownumbers: true,
-    				animate:true,
-    				collapsible:true,
-    				idField:'code',
-    				treeField:'name',
-                     	        rowStyler:function(row){ 
-                                             if (row.rank<10){  
-                                                    return 'background-color:red;color:blue;font-weight:bold;';  
-                                              } else if (row.mrank < 10) {
-                                                    return 'color:red' 
-                                              }                                         
-                                            },
-    				frozenColumns:[[
-    				]],
-    				columns:[[
-    					{field:'name',title:'Name',width:400},
-    					{field:'total',title:'CPU Time (ms)',width:100, align:'right'},
-    					{field:'rank',title:'Rank',width:100, align:'right' },
-    					{field:'entries',title:'Nb Entries',width:100, align:'right'},
-    					{field:'perTotal',title:'% Time Total',width:100, align:'right'},
-    					{field:'perLevel',title:'% Time Level',width:100, align:'right'},
-    					{field:'childrenTotal',title:'Sum Time child.',width:100, align: 'right'},
-    				]],
-    				onContextMenu: function(e,row){
-    					e.preventDefault();
-    					$(this).treegrid('unselectAll');
-    					$(this).treegrid('select', row.code);
-    				}
-			    })
-                .treegrid('loadData', {{  data|safe }});
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/redmond/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.ok-soft-gmbh.com/jqGrid/jquery.jqGrid-4.1.1/css/ui.jqgrid.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
+    <script type="text/javascript" src="http://www.ok-soft-gmbh.com/jqGrid/jquery.jqGrid-4.1.1/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="http://www.ok-soft-gmbh.com/jqGrid/jquery.jqGrid-4.1.1/js/jquery.jqGrid.min.js"></script>
 
-                $('#collapse,#expand,#getcsv').button();
-	      
-});
+    <script type="text/javascript">
+        jQuery(function(){
 
-		function reload(){
-			var node = $('#test').treegrid('getSelected');
-			if (node){
-				$('#test').treegrid('reload', node.code);
-			} else {
-				$('#test').treegrid('reload');
-			}
-		}
+var mydata = {
+    //"total": "1",
+    //"page": "1",
+    //"records": "2",
+    "rows": [
+           {"id": "1", "cell": ["1", "Super Item", "300", "0", "null", "false", "true",  "true"]},
+           {"id": "2", "cell": ["2", "Item 1", "100", "1", "1", "false", "true",  "true"]},
+           {"id": "3", "cell": ["3", "Sub Item 1", "50", "2", "2", "true", "true",  "true"]},
+           {"id": "4", "cell": ["4", "Sub Item 2", "25", "2", "2", "false", "true", "true"]},
+           {"id": "5", "cell": ["5", "Sub-sub Item 1", "25", "3", "4", "true", "true",  "true"]},
+           {"id": "6", "cell": ["6", "Sub Item 3", "25", "2", "2", "true", "true",  "true"]},
+           {"id": "7", "cell": ["7", "Item 2", "200", "1", "1", "false", "true",  "true"]},
+           {"id": "8", "cell": ["8", "Sub Item 1", "100", "2", "7", "false", "true",  "true"]},
+           {"id": "9", "cell": ["9", "Sub-sub Item 1", "50", "3", "8", "true", "true",  "true"]},
+           {"id": "10", "cell": ["10", "Sub-sub Item 2", "50", "3", "8", "true", "true",  "true"]},
+           {"id": "11", "cell": ["11", "Sub Item 2", "100", "2", "7", "true", "true",  "true"]}
+    ]
+};
 
-		function getChildren(){
-			var node = $('#test').treegrid('getSelected');
-			if (node){
-				var nodes = $('#test').treegrid('getChildren', node.code);
-			} else {
-				var nodes = $('#test').treegrid('getChildren');
-			}
-			var s = '';
-			for(var i=0; i<nodes.length; i++){
-				s += nodes[i].code + ',';
-			}
-			alert(s);
-		}
+            jQuery("#structureBuilderTable").jqGrid({
+                //url: 'AdjacencyTreeNicolayHvidsten0.json',
+                //datatype:'json',
+                //mtype:'GET',
+				datatype : 'jsonstring',
+				datastr : {{ data|safe }},
+                colNames: [ "ID", "Name", "CPU Time (ms)", "Rank", "Nb Entries", "% Time Total",  "% Time Level", "Sum Time child." ],
+                colModel: [
+                    {name:'id', index:'id', width: 1, hidden: true, key: true},
+                    {name:'name', width:400, sortable:false},
+    				{name:'total', width:100, sortable:false, align:'right'},
+    				{name:'rank', width:100, sortable:false, align:'right' },
+    				{name:'entries' ,width:100, sortable:false, align:'right'},
+    				{name:'perTotal' ,width:100, sortable:false, align:'right'},
+    				{name:'perLevel' ,width:100, sortable:false, align:'right'},
+    				{name:'childrenTotal' ,width:100, sortable:false, align: 'right'}
+                ],
+                treeGridModel:'adjacency',
+                height:'auto',
+                //width:'500',
+                //pager:"#ptreegrid",
+                treeGrid: true,
+				gridview: true,
+				rowNum : 2000,
+                ExpandColumn:'name',
+                ExpandColClick: true,
+                caption:"TreeGrid Test"
+            });
 
-		function getSelected(){
-			var node = $('#test').treegrid('getSelected');
-			if (node){
-				alert(node.code+":"+node.name);
-			}
-		}
-		function collapse(){
-			var node = $('#test').treegrid('getSelected');
-			if (node){
-				$('#test').treegrid('collapse', node.code);
-			}
-		}
-
-		function expand(){
-			var node = $('#test').treegrid('getSelected');
-			if (node){
-				$('#test').treegrid('expand', node.code);
-			}
-		}
-		function collapseAll(){
-			var node = $('#test').treegrid('getSelected');
-			if (node){
-				$('#test').treegrid('collapseAll', node.code);
-			} else {
-				$('#test').treegrid('collapseAll');
-			}
-		}
-		function expandAll(){
-			var node = $('#test').treegrid('getSelected');
-			if (node){
-				$('#test').treegrid('expandAll', node.code);
-			} else {
-				$('#test').treegrid('expandAll');
-			}
-		}
-		function expandTo(){
-			$('#test').treegrid('expandTo', '02013');
-			$('#test').treegrid('select', '02013');
-		}
-</script>
-<div>
-<pre>Number of jobs: {{ jobs_num }}
-{{ description }} 
-</pre>
-
-<style type="text/css">
-#buttons { margin-top : 0.5em; }
-</style>
-
-<table id="test" style="width : 1060px;"></table>
-
-<div id="buttons">
-		<button id="collapse" onclick="collapseAll()">CollapseAll</button>
-		<button id="expand" onclick="expandAll()">ExpandAll</button>
-        <button id="getcsv"  onclick="window.open('{{ csv_url }}')">Get CSV</button>
-</div>
-
-</div>
+			//for(var i=0;i<=mydata.length;i++) 
+			//	jQuery("#structureBuilderTable").jqGrid('addRowData',i+1,mydata[i]);
+			
+        });
+    </script>
+</head>
+<body>
+    <table id="structureBuilderTable"><tr><td/></tr></table>
+    <div id="ptreegrid"/>
+</body>
+</html>

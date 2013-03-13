@@ -12,19 +12,20 @@ class TimingTree:
     Gaudi run  log files """
     def __init__(self, root_name, node_data, node_childs, node_entries, node_ids):
         self.finalnodes = []
-        self.generateTree(root_name, self.finalnodes, None, node_data, node_childs, node_entries, node_ids)
+        self.generateTree(root_name, self.finalnodes, None, node_data, node_childs, node_entries, node_ids, 0)
         self.root = self.finalnodes[0]
         
         self.root.rankChildren()
     
-    def generateTree(self, node_name, finalnodes, lastparent, node_data, node_childs, node_entries, node_ids):     
-      current_node = Node(node_ids[node_name], node_name, node_data[node_name], node_entries[node_name], lastparent)
+    def generateTree(self, node_name, finalnodes, lastparent, node_data, node_childs, node_entries, node_ids, level):     
+      current_node = Node(node_ids[node_name], node_name, node_data[node_name], node_entries[node_name], level, lastparent)
       finalnodes.append(current_node)
       
+      level +=1
       if node_name in node_childs:
           lastparent = current_node
           for child in node_childs[node_name]:
-              self.generateTree(child, finalnodes, lastparent, node_data, node_childs, node_entries, node_ids)
+              self.generateTree(child, finalnodes, lastparent, node_data, node_childs, node_entries, node_ids, level)
       else:
           return
 
@@ -57,16 +58,15 @@ class TimingTree:
             ct += 1
         return csv 
     
-    def getActualTimeTree_old(self):
-        ct = 1
+    def getjqGrid(self):
+        grid = {}
         
-        csv="Algname,parent,ActualTime\n"
+        rows = []
         for c in self.root.getAllChildren():
-            if ct > 1:
-                csv += "\n"
-            csv += c.getActualTimeData()
-            ct += 1
-        return csv 
+            rows.append(c.getjqGridCell())
+        
+        grid['rows'] = rows
+        return grid
     
     def getActualTimeTree(self):
         singleLevelData = []
@@ -110,7 +110,7 @@ class Node:
         return o.rank
 
 
-    def __init__(self, id, name, value, entries, parent=None):
+    def __init__(self, id, name, value, entries, level, parent=None):
         """ Constructor """
         self.id = id
         self.name = name
@@ -120,6 +120,7 @@ class Node:
         self.total = self.value * self.entries
         self.children = []
         self.parent = parent
+        self.level = level
         self.eventTotal = None
         if parent != None:
             parent.children.append(self)
@@ -129,6 +130,12 @@ class Node:
             return None
         
         return self.parent.name
+    
+    def getParentID(self):
+        if not self.parent:
+            return None
+        
+        return self.parent.id
     
     def findByName(self, name):
         """ Find an algorithm in the subtree related to the Node  """
@@ -255,6 +262,18 @@ class Node:
         #return the actualTreeMap data and also a list with the name and the perTotal,
         #this will be used to display a tooltip in the analyse template showing the persetange of the time
         return ( [ self.name, parentName, self.actualTimeUsed() ], [ self.name, str(self.perTotal())+'%' ] )
+    
+    def doesNotHaveChildren(self):
+        if self.children:
+            return False
+        
+        return True
+    
+    def getjqGridCell(self):
+        return { 'id' : str(self.id), 'cell' : [ str(self.id), self.name, self.value , self.rank, self.entries,
+                                                self.perTotal(), self.perLevel(), self.getSumChildrenTime(),
+                                                self.level, self.getParentID(), self.doesNotHaveChildren(), 
+                                                self.doesNotHaveChildren() ] }
     
     def _childrenjson(self):
         """ Util function to return the JSON reprentation of the children of the node """

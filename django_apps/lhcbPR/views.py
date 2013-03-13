@@ -199,13 +199,15 @@ Attention:
                     """
                     
         if not 'options' in user_data:
-            user_data['options'] = Options.objects.all()
+            user_data['options'] = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name).distinct().order_by('description')
         if not 'versions' in user_data:
-            user_data['versions'] = Application.objects.filter(appName=app_name)
+            versions_temp = Application.objects.filter(jobdescriptions__jobs__success=True, appName=app_name).distinct()
+            versions = sorted(versions_temp, key = lambda ver : getSplitted(ver.appVersion), reverse = True)
+            user_data['versions'] = versions
         if not 'platforms' in user_data:
-            user_data['platforms'] = Platform.objects.all()
+            user_data['platforms'] = Platform.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct().order_by('cmtconfig')
         if not 'hosts' in user_data:
-            user_data['hosts'] = Host.objects.all()
+            user_data['hosts'] = Host.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct().order_by('hostname')
         
         help = mod.__doc__
         if help is None:
@@ -232,7 +234,8 @@ Attention:
                     'help' : help,
                     }
         #include user's data
-        dataDict.update(user_data)
+        if user_data:
+            dataDict.update(user_data)
         return render_to_response(template, 
                   dataDict,
                   context_instance=RequestContext(request))

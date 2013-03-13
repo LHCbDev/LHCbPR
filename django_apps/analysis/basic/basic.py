@@ -1,11 +1,8 @@
 import json, logging
 from django.db import connection, transaction
-from django.http import HttpResponse 
-from lhcbPR.models import JobAttribute, Host, Platform, Application, Options,  JobResults
-from django.db.models import Q
-from django.http import HttpResponseNotFound
-from django.shortcuts import render_to_response   
-from django.template import RequestContext
+from django.http import HttpResponse, Http404
+from lhcbPR.models import JobAttribute, Application,  JobResults
+from django.db.models import Q   
 from tools.viewTools import getSplitted, subService as service
 from query_builder import get_queries
 
@@ -19,29 +16,14 @@ def render(**kwargs):
     
     apps = Application.objects.filter(appName__exact=app_name)
     if not apps:
-        return HttpResponseNotFound("<h3>Page not found, no such application</h3>")     
+        raise Http404  
     
     #Q(jobAttribute__type='Integer') | 
     atrsTemp =  JobResults.objects.filter(job__jobDescription__application__appName=app_name,job__success=True).filter(Q(jobAttribute__type='Float'))
     atrs = atrsTemp.values_list('jobAttribute__id','jobAttribute__name','jobAttribute__type').distinct()
     atrGroups = atrsTemp.values_list('jobAttribute__group', flat=True).distinct()
-
-    options = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name).distinct()
-        
-    versions_temp = Application.objects.filter(jobdescriptions__jobs__success=True, appName=app_name).distinct()
-    versions = sorted(versions_temp, key = lambda ver : getSplitted(ver.appVersion), reverse = True)
-    
-    platforms_temp = Platform.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct()
-    platforms = sorted(platforms_temp, key = lambda plat : plat.cmtconfig)
-     
-    hosts_temp = Host.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct()
-    hosts = sorted(hosts_temp, key = lambda host : host.hostname)
     
     dataDict = { 'attributes' : atrs,
-                'platforms' : platforms,
-                'hosts' : hosts,
-                'options' : options,
-                'versions' : versions, 
                 'atrGroups' : filter (lambda a: a != "", atrGroups)  
                }
       

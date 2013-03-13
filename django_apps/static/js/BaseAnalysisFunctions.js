@@ -4,7 +4,7 @@ function getValue(child, dataObj) {
 	var myvalue = {};
 	if(child.is(":input")) {
     	if(child.attr("type") == "text" || child.attr("type") == "textarea"){
-			dataObj[child.attr("id") ] = escape($.trim(child.val()));
+			dataObj[child.attr("id") ] = escape(jQuery.trim(child.val()));
 			return;
 		}
 		else if(child.attr("type") == "radio" || child.attr("type") == "checkbox"){
@@ -12,7 +12,7 @@ function getValue(child, dataObj) {
 			return;
 		}
 		else if(child.is("select")){
-			dataObj[child.attr("id")] = escape($.trim(child.val()));
+			dataObj[child.attr("id")] = escape(jQuery.trim(child.val()));
 			return;
 		}
 	}
@@ -56,7 +56,7 @@ function isEmpty(map) {
 
 function collectRequestData(){
 	dataObj = {}
-	walk($("#users_html").children(), dataObj);
+	walk(jQuery("#users_html").children(), dataObj);
 
 	return dataObj;
 }
@@ -106,8 +106,8 @@ function sendRequest(){
 		}
 	}
 
-    $("#results").mask("Requesting...");
-    $("#users_plus_filter").mask("Requesting...")
+    jQuery("#results").mask("Requesting...");
+    jQuery("#users_plus_filter").mask("Requesting...")
 	/* requestUrl be will provided from the base analysis template  */
 	if (request_method == "GET"){
 		
@@ -117,8 +117,8 @@ function sendRequest(){
         });
 	}
 	else if(request_method == "POST"){
-		$("#results").load(requestUrl, requestData, function(){
-            $("#users_plus_filter").unmask();
+		jQuery("#results").load(requestUrl, requestData, function(){
+            jQuery("#users_plus_filter").unmask();
         });
 	}
 	else{
@@ -129,32 +129,32 @@ function sendRequest(){
 
 function showHide( button_id, box_id )
 {
-     $(document).ready(function() {
+     jQuery(document).ready(function() {
 		// check visibility
-		if ($("#"+box_id).is(":hidden")) {
+		if (jQuery("#"+box_id).is(":hidden")) {
 			// it's hidden - show it
-				$("#"+box_id).slideDown("slow");
-				$("#"+button_id).find('span').removeClass('ui-icon-plusthick');
-				$("#"+button_id).find('span').addClass('ui-icon-minusthick');
+				jQuery("#"+box_id).slideDown("slow");
+				jQuery("#"+button_id).find('span').removeClass('ui-icon-plusthick');
+				jQuery("#"+button_id).find('span').addClass('ui-icon-minusthick');
 		} else {
 			// it's not hidden - slide it down
-				$("#"+box_id).slideUp("slow");
-				$("#"+button_id).find('span').removeClass('ui-icon-minusthick');
-				$("#"+button_id).find('span').addClass('ui-icon-plusthick');
+				jQuery("#"+box_id).slideUp("slow");
+				jQuery("#"+button_id).find('span').removeClass('ui-icon-minusthick');
+				jQuery("#"+button_id).find('span').addClass('ui-icon-plusthick');
 			}
 		});
 }
 
 function CheckBoxClear(id){
-    $('#'+id+' li label :checked').each(function () {
-            $(this).removeAttr('checked');
+    jQuery('#'+id+' li label :checked').each(function () {
+            jQuery(this).removeAttr('checked');
       });
 }
 
 function getSelectedChilds(id){
 	var sdValues = [];
-    $('#'+id+' li label :checked').each(function () {
-            sdValues.push($(this).attr('value'));
+    jQuery('#'+id+' li label :checked').each(function () {
+            sdValues.push(jQuery(this).attr('value'));
       });
 	return sdValues;
 }
