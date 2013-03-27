@@ -7,9 +7,14 @@
 
 {% block script %}
     {{ block.super }}
+
+var atrs = {{ atrs|safe }}
+var groups = {{ groups|safe }};
+var types = {{ types|safe }};
+
 			$(document).ready(function() {			
 				var atrValues = [  ];
-                
+                fill_attributes([]);
                 /* prefill the data for elements in the  */
                 prefillAll();
                 /* after the prefill trigger (if must) some functions */
@@ -47,6 +52,35 @@
                 
         });
 
+function contains(myarray, myvalue){
+	for (var i = 0; i < myarray.length; i++){
+		if (parseInt(myarray[i]) == parseInt(myvalue))
+			return true;
+	}
+	return false;
+}
+
+function fill_attributes(allowed_groups){
+	for (var i = 0; i < atrs.length; i++){
+		if (isEmpty(allowed_groups)  ||  contains( allowed_groups, atrs[i][3] ) )
+		{
+			$('<option>')
+							.attr('value', atrs[i][0]+","+types[atrs[i][2]])
+							.html(atrs[i][1])
+							.appendTo('#atr');
+		}
+	}
+}
+
+function isEmpty(map) {
+	for(var key in map) {
+		if (map.hasOwnProperty(key)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 function ShowHistogramConfigs(){
 	var isChecked = $("#histogram").is(':checked');
 	if (isChecked){
@@ -65,11 +99,28 @@ function getSelectedGroups(id){
 	return sdValues;
 }
 
-function fixGroups(groups){ 
-        myUrl= "{{ ROOT_URL }}analyse/basic/functions/filterAtrs/"+appName+"/?groups="+escape(groups.join(","));
-        
-        $("#atr_holder").mask("Requesting...");
-		$("#atr_holder").load(myUrl, function(){ jQuery("#atr").combobox(); });
+function fixGroups(groups){
+		$("#atr_holder").mask("Requesting...");
+
+	    //delete it completely so it will refresh the input !!!
+		$("#atr_holder").empty();
+		$('<label>')
+						.html('Choose an attribute:')
+						.appendTo("#atr_holder");
+		$('<select>')
+						.attr('id', 'atr')
+						.appendTo("#atr_holder");
+
+		//erase all children
+		//add the initial one which should be empty
+		$('<option>')
+						.appendTo('#atr');
+
+		$( "#atr" ).next().val('');
+
+		fill_attributes(groups);
+		$("#atr").combobox();
+		$("#atr_holder").unmask();
 }
 
 function checkRequestData(requestData){
@@ -143,7 +194,7 @@ function checkRequestData(requestData){
     				{% for group in atrGroups %}
     				<li>
                             <label>
-        							<input type="checkbox" value="{{ group }}" checked="checked">{{ group }}
+        							<input type="checkbox" value="{{ group.1 }}" checked="checked">{{ group.0 }}
             			    </label>
     				</li>
     			{% endfor %}
@@ -156,9 +207,6 @@ function checkRequestData(requestData){
     		<label>Choose an attribute: </label>
     		<select id="atr">
         		<option value=""></option>
-				{% for atr in attributes %}
-					<option value="{{ atr.0 }},{{ atr.2 }}">{{ atr.1 }}</option>
-				{% endfor %}
     		</select>
 		</div>
 

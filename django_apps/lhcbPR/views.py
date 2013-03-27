@@ -135,7 +135,7 @@ def analysis_application(request, app_name):
             try:
                 mod = __import__(mod_import, fromlist=[mod_import])
             except ImportError, e:
-                logger_analysis.exception()
+                logger_analysis.exception(e)
                 return HttpResponseNotFound('<h3>An exception occured please try again later</h3>')
             else:
                 if mod.isAvailableFor(app_name):
@@ -167,7 +167,7 @@ def analysis_render(request, analysis_type, app_name):
     try:
         mod = __import__(module, fromlist=[module])
     except ImportError, e:
-        logger_analysis.exception()
+        logger_analysis.exception(e)
         return HttpResponseNotFound('<h3>Analyse {0} render was not found</h3>'.format(analysis_type))
     else:   
         user_data = mod.render(request=request, requestData = requestData, app_name = app_name)

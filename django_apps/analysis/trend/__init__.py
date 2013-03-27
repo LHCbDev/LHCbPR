@@ -22,13 +22,33 @@ def render(**kwargs):
     if not apps:
         raise Http404     
     
-    #Q(jobAttribute__type='Integer') | 
     atrsTemp =  JobResults.objects.filter(job__jobDescription__application__appName=app_name,job__success=True).filter(Q(jobAttribute__type='Float'))
-    atrs = atrsTemp.values_list('jobAttribute__id','jobAttribute__name','jobAttribute__type').distinct()
-    atrGroups = atrsTemp.values_list('jobAttribute__group', flat=True).distinct()
+    atrs_temp = atrsTemp.values_list('jobAttribute__id','jobAttribute__name','jobAttribute__type','jobAttribute__group').distinct()
+    atrs = []
+    groups = {}
+    types = {}
+    for i, at in enumerate(atrs_temp):
+        #if type in types
+        if not at[2] in types:
+            types[at[2]] = len(types)
+        
+        #if group in groups
+        if not at[3] in groups:
+            groups[at[3]] = len(groups)
+        
+        atrs.append([ at[0], at[1], types[at[2]], groups[at[3]] ])
+        
+        atrGroups = []
+        for k, v in groups.iteritems():
+            if k != "":
+                atrGroups.append([k, v])
     
-    dataDict = { 'attributes' : atrs, 
-                'atrGroups' : filter (lambda a: a != "", atrGroups)  
+    
+    dataDict = { 'atrs' : json.dumps(atrs),
+                'atrGroups' : atrGroups,
+                #get the reversed dictionaries
+                'groups' : json.dumps(dict((v,k) for k, v in groups.iteritems())),
+                'types' : json.dumps(dict((v,k) for k, v in types.iteritems()))  
                }
       
     return dataDict
@@ -135,37 +155,6 @@ def analyse(**kwargs):
         trends.append(dataDict)
         
     return { 'trends': json.dumps(trends) }
-
-def filterAtrs(**kargs):
-    dataDict = kargs['requestData']
-    app_name = kargs['app_name']
-    
-    query_groups = "SELECT distinct att.id ,att.name, att.type FROM lhcbpr_job j ,\
-    lhcbpr_jobresults r , lhcbpr_jobattribute att , lhcbpr_jobdescription jobdes ,\
-    lhcbpr_application apl WHERE j.id = r.job_id AND j.jobdescription_id   = jobdes.id\
-    AND jobdes.application_id = apl.id AND r.jobattribute_id = att.id\
-    AND ( att.type = 'Float' ) AND j.success = 1\
-    AND apl.appname = '{0}'".format(app_name)
-    
-    if not dataDict['groups'] == "":
-        groups_temp = []
-        for group in dataDict['groups'].split(','):
-            groups_temp.append('att. "GROUP"='+"'{0}'".format(group))
-        query_groups += ' AND ( '+' OR '.join(groups_temp)+' )'
-    
-    cursor = connection.cursor()
-    cursor.execute(query_groups)
-    
-    optionsHtml = '<label>Choose an attribute: </label><select id="atr"><option value=""></option>'
-    
-    result = cursor.fetchone()
-    while not result == None:
-        optionsHtml+=  '<option value="{0},{1}">{2}</option>'.format(result[0],result[2],result[1])
-        result = cursor.fetchone()
-    
-    optionsHtml+= '</select>'
-     
-    return HttpResponse(optionsHtml)
 
 def isAvailableFor(app_name):
     return True

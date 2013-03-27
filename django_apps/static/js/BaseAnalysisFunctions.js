@@ -4,7 +4,8 @@ function getValue(child, dataObj) {
 	var myvalue = {};
 	if(child.is(":input")) {
     	if(child.attr("type") == "text" || child.attr("type") == "textarea"){
-			dataObj[child.attr("id") ] = escape(jQuery.trim(child.val()));
+			//dataObj[child.attr("id") ] = escape(jQuery.trim(child.val()));
+			dataObj[child.attr("id") ] = jQuery.trim(child.val());
 			return;
 		}
 		else if(child.attr("type") == "radio" || child.attr("type") == "checkbox"){
@@ -12,7 +13,8 @@ function getValue(child, dataObj) {
 			return;
 		}
 		else if(child.is("select")){
-			dataObj[child.attr("id")] = escape(jQuery.trim(child.val()));
+			//dataObj[child.attr("id")] = escape(jQuery.trim(child.val()));
+			dataObj[child.attr("id")] = jQuery.trim(child.val());
 			return;
 		}
 	}
@@ -62,7 +64,11 @@ function collectRequestData(){
 }
 
 function checkRequestData(requestData) {
-	/* no implemented, its up to the user */
+	/* not implemented, its up to the user */
+}
+
+function changeRequestData(requestData){
+	/* not implemented, its up to the user, in case you want to change the collected data */
 }
 
 function sendRequest(){
@@ -82,8 +88,11 @@ function sendRequest(){
 	
 	/* here is the errors checking, the errors can be a list
 	 with the problematic fields or an object with the format :
-	problematic field : cause of problem */
-	var errors = checkRequestData(requestData)
+	problematic field : cause of problem, 
+	also before that call the changeRequestData in order to change 
+	the request data if its needed */
+	changeRequestData(requestData);
+	var errors = checkRequestData(requestData);
 	if(errors != null){
 		if(errors instanceof Array ){
 			if(errors.length != 0){
@@ -161,6 +170,10 @@ function getSelectedChilds(id){
 
 function getBookmarkUrl(){
     var requestData = collectRequestData();
+
+	/* its up to the user if he wants to implement this function
+	in case he wants to change any data in the requestData object*/
+	changeRequestData(requestData);
 
 	if(requestData == null){
 		alert("collectRequestData method must return a javascript object!");
