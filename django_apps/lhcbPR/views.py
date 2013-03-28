@@ -591,6 +591,32 @@ def script(request):
     
     return HttpResponse(script, mimetype="text/plain")
 
+@csrf_exempt
+def get_content(request):
+    """Gets an option description or setupproject description and returns the content"""
+    if request.method == 'GET':
+        requestData = request.GET
+    elif request.method == 'POST':
+        requestData = request.POST
+    else:
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'unsupported method, supported GET,POST' }))
+    
+    
+    if 'optionsD' in requestData:
+        try:
+            myopt = Options.objects.get(description=requestData['optionsD'])
+            return HttpResponse( json.dumps( { 'error' : False, 'content' : myopt.content } ) )
+        except Exception, e:
+            return HttpResponse( json.dumps( { 'error' : True, 'errorMessage' : 'Such options description do not exist' } ) )
+    elif 'setupprojectD' in requestData:
+        try:
+            myset = SetupProject.objects.get(description=requestData['setupprojectD'])
+            return HttpResponse( json.dumps( { 'error' : False, 'content' : myset.content } ) )
+        except Exception, e:
+            return HttpResponse( json.dumps( { 'error' : True, 'errorMessage' : 'Such setupproject description do not exist' } ) )
+    else:
+        return HttpResponse( json.dumps( { 'error' : True, 'errorMessage' : 'You must at least provide an options value or setupproject value in your request to the content.' } ) )
+    
 #@login_required
 @csrf_exempt
 def new_job_description(request):
@@ -627,7 +653,9 @@ def new_job_description(request):
     try:
         result = jobdescription(dataDict)
     except Exception, e:
-        logger.exception()
-        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage': str(e)}))
+         #TODO look up for the logger cause they do not work from times to times damn 
+         logger.exception(e)
+         return HttpResponse('{0} {1}'.format(Exception, e))
+         #return HttpResponse( json.dumps({ 'error' : True, 'errorMessage': '{0}'.format(e) }) )
     else:
         return HttpResponse(json.dumps(result))
