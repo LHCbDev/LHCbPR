@@ -165,8 +165,8 @@ def analyse(**kwargs):
         timing_path = 'static/timingJson/timing{0}{1}{2}.csv'.format(random.randint(1, 100), random.randint(1, 100),random.randint(1, 100))
     
     #this was previously used to generate the tree using easyui
-    #jsonTree = tree.getHierarchicalJSON()
-    jsonTree = tree.getjqGrid()
+    jsonTree = tree.getHierarchicalJSON()
+    #jsonTree = tree.getjqGrid()
     csv = tree.getFullCSV()
     
     #csv = tree.getActualTimeTree()
@@ -178,7 +178,7 @@ def analyse(**kwargs):
     
     dataDict = {
                 'csv_url' : settings.ROOT_URL+timing_path,
-                'data' : json.dumps(jsonTree),
+                'data' : jsonTree,
                 'jobs_num' : len(job_ids),
                 'description' : description_dict
                }
