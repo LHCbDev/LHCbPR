@@ -1,3 +1,4 @@
+import logging
 from django.db.models import Q
 from django.db import connection, transaction
 from django.http import HttpResponse, HttpResponseNotFound
@@ -10,7 +11,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults
 import json, subprocess, sys, re, copy, os
-import logging
 from pprint import pformat
 from exceptions import AttributeError
 from random import choice
@@ -27,11 +27,15 @@ if settings.LOCAL:
 else:
     login_required = default_login_required
 
+@csrf_exempt
 @login_required
 def test(request):
-    datadict = json.dumps(request.GET)
-    return render_to_response('yo.html',
-                  context_instance=RequestContext(request))
+    #requestData = request.POST
+    #datadict = json.dumps(request.GET)
+    #return render_to_response('yo.html',
+    #              context_instance=RequestContext(request))
+    #return HttpResponse(json.dumps(requestData))
+    return HttpResponse('dummy_response')
     
 def index(request):
     """This view serves the home page of the application(lhcbPR), along 
@@ -251,7 +255,7 @@ def analysis_extras(request, analysis_type, function_name, app_name):
     try:
         called_function = getattr(__import__(module, fromlist=[module]), function_name)
     except ImportError, e:
-        logger_analysis.exception()
+        logger_analysis.exception(e)
         return HttpResponseNotFound(json.dumps({ 'errorMessage' : 'Analysis function {0} for {1} analysis was not found'.format(function_name, analysis_type) }))
     else:   
         return called_function(request = request, requestData = requestData, app_name = app_name )
@@ -270,7 +274,7 @@ def analysis_function(request, analysis_type, app_name):
     try:
         mod = __import__(module, fromlist=[module])
     except ImportError, e:
-        logger_analysis.exception()
+        logger_analysis.exception(e)
         return render_to_response('analysis/error.html', 
                   { 'errorMessage' : 'Analysis function: {0} was not found!'.format(requestData['analysis_type']) },
                   context_instance=RequestContext(request)) 
@@ -551,7 +555,7 @@ def script(request):
     try:
         int(request.GET['pk'])
     except Exception:
-        logger.exception()
+        logger.exception(e)
         return HttpResponse("<h3>Not valid integer primary key was given lol.</h3>")
     
     myJobDes = JobDescription.objects.get(pk=request.GET['pk'])

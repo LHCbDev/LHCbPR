@@ -191,7 +191,7 @@ LOGGING = {
             'formatter' : 'general',
             'class' : 'logging.handlers.RotatingFileHandler',
             'filename' : os.path.join(PROJECT_PATH, 'static/logs/pushToDB.log'),
-            'maxBytes' : 2000,
+            'maxBytes' : 40000,
             'backupCount' : 5
         },
         'check_handler' : {#to check if cron job to read results is working
@@ -199,7 +199,7 @@ LOGGING = {
             'formatter' : 'general',
             'class' : 'logging.handlers.RotatingFileHandler',
             'filename' : os.path.join(PROJECT_PATH, 'static/logs/checkcron.log'),
-            'maxBytes' : 2000,
+            'maxBytes' : 40000,
             'backupCount' : 5
         },
         'views_handler' : {
@@ -207,7 +207,7 @@ LOGGING = {
             'formatter' : 'verbose',
             'class' : 'logging.handlers.RotatingFileHandler',
             'filename' : os.path.join(PROJECT_PATH, 'static/logs/views.log'),
-            'maxBytes' : 2000,
+            'maxBytes' : 40000,
             'backupCount' : 5
         },
         'analysis_handler' : {
@@ -215,7 +215,7 @@ LOGGING = {
             'formatter' : 'verbose',
             'class' : 'logging.handlers.RotatingFileHandler',
             'filename' : os.path.join(PROJECT_PATH, 'static/logs/analysis.log'),
-            'maxBytes' : 2000,
+            'maxBytes' : 40000,
             'backupCount' : 5
         }
     },

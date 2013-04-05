@@ -5,7 +5,7 @@ CURRENT_DIR=$( cd "$( dirname "${0}" )" && pwd )
 
 . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh
 
-. SetupProject LCGCMT oracle pytools
+. SetupProject.sh LCGCMT oracle pytools
 
 if [ ! -d "${CURRENT_DIR}/${Django_foler}" ]; then
     echo "Django do not exist, gonna download it."

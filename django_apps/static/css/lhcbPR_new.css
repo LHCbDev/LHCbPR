@@ -24,7 +24,7 @@ a { text-decoration: none; }
 #menu { margin-top : 4px; float : left;}
 
 /*------------------------------------------------ PAGEBODY ------------------------------------------------ */
-.fakewindowcontain { position: relative; width: 90%; height: 200px; padding:1% 4%; overflow:hidden; }
+.fakewindowcontain { position: relative; width: 90%; height: auto; padding:1% 4%;  }
 
 .pagebody { 
   position: relative;

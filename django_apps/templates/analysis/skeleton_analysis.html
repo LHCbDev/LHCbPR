@@ -1,78 +1,79 @@
-/*
-* ATTENTION the {{ block.super }} are mandatory for the template, 
-* if you remove them then your code between the corresponding blocks 
-* will completely override the "father's" template contents
-*/
-
-/*
-* This tag means that this template will inherit the analysis/base_analysis_template.html
-* so it will inherit the header, the login/logout button,  the navigation menu etc also it will inherit the selection menu 
-* which contains the available Versions, Options, Platforms and Hosts for the selected Application 
-* and the "Bookmark" and "Retreive results" buttons
-*/
 {% extends "analysis/base_analysis_template.html" %}
 
+<!--
+ ATTENTION the {{ block.super }} are mandatory for the template, 
+ if you remove them then your code between the corresponding blocks 
+ will completely override the "father's" template contents
+
+ This tag means that this template will inherit the analysis/base_analysis_template.html
+ so it will inherit the header, the login/logout button,  the navigation menu etc also it will inherit the selection menu 
+ which contains the available Versions, Options, Platforms and Hosts for the selected Application 
+ and the "Bookmark" and "Retreive results" buttons
+
+-->
 {% block head %} {{ block.super }}
-/* 
-* Here should reside any links you want to add to your  html page(js, css files etc) anything you add here will be placed 
-* between the "father's" template <head></head> tag
-* note: this template already contains jquery-1.8.2.js from the father template
-*/
+<!--
+ Here should reside any links you want to add to your  html page(js, css files etc) anything you add here will be placed 
+ between the "father's" template <head></head> tag
+ note: this template already contains jquery-1.8.2.js from the father template
+-->
 {% endblock head %}
 
+<!--
+ Below you can add your javascript code functions etc , remember that you already have jquery-1.8.2.js 
+ anything you add here will be placed between the "father's" template 
+ <script type="text/css"></script> tag
+ 
+In case you want to enable the automatic bookmarking you can have function like this :
+
+$(document).ready(function() {
+ in case you want to prefill a single element you can 
+ you can use this jquery function .prefill() :
+ $("#my_element_id").prefill();
+
+ or else you can just call prefillAll();  
+ prefillAll(); 
+ this method will take the values from the url(GET request data)
+ and will prefill all the available elements with the specified values
+ 
+ also if you want to automatic retreive the results in the 
+ bookmarking url call trigger in your code :
+ trigger();
+ this will "click" the retreive results if the url contains trigger=true
+});
+-->
+
 {% block script %} {{ block.super }}
-/*
-* Here you can add your javascript code functions etc , remember that you already have jquery-1.8.2.js 
-* anything you add here will be placed between the "father's" template 
-* <script type="text/css"></script> tag
-* 
-*In case you want to enable the automatic bookmarking you can have function like this :
-*
-*$(document).ready(function() {
-* in case you want to prefill a single element you can 
-* you can use this jquery function .prefill() :
-* $("#my_element_id").prefill();
-*
- *or else you can just call prefillAll();  
- * prefillAll(); 
- * this method will take the values from the url(GET request data)
- * and will prefill all the available elements with the specified values
- *
- * also if you want to automatic retreive the results in the 
- * bookmarking url call trigger in your code :
- * trigger();
- * this will "click" the retreive results if the url contains trigger=true
-*});
-*/
+
 {% endblock script %}
 
 {% block stylecss %} 
-/*
-* Here you can add any styling css rules
-* anything you add here will be placed between the "father's" template 
-* <style type="text/css"></style> tag
-*/
+<!-- 
+ Here you can add any styling css rules
+ anything you add here will be placed between the "father's" template 
+ <style type="text/css"></style> tag
+-->
 {% endblock stylecss %}
 
-/*
-* This page will automatically take as helptext the docstring of your python analysis module
-* If you don't provide a docstring to your module then the helptext will "This module is not documented yet"
-* In case you want to hardcode the helptext through the template and not through the docstring then comment out
-* the following block :
-* {% block helptext %} your hardcoded helptext of the page here {% endblock helptext %}
-*
-*/
+<!--
+ This page will automatically take as helptext the docstring of your python analysis module
+ If you don't provide a docstring to your module then the helptext will "This module is not documented yet"
+ In case you want to hardcode the helptext through the template and not through the docstring then comment out
+ the following block :
+ {% block helptext %} your hardcoded helptext of the page here {% endblock helptext %}
+
+-->
 
 {% block content %} 
-/*
-* Finally here you can add any html element you want(spans, buttons, divs)
-* anything you add here will appear on the top of the 
-* Version, Options, Platforms,Hosts selection menu
-*
-* REMEMBER , you can access your elements' data in the analyse(**kwargs) from the
-* kwargs['requestData'], the request will contain the ids of your element as keys and their values
-* as the values of the dictionary, for example if you have an element:
-* First name: <input type="text" id="firstName" value="Emmanouil">, after you press the retreive results button
-* the page automatically will call the def analyse(**kwargs) will kwargs['requestData']['id'] <-- has the value Emmanouil
-*/
+<!-- 
+ Finally here you can add any html element you want(spans, buttons, divs)
+ anything you add here will appear on the top of the 
+ Version, Options, Platforms,Hosts selection menu
+
+ REMEMBER , you can access your elements' data in the analyse(**kwargs) from the
+ kwargs['requestData'], the request will contain the ids of your element as keys and their values
+ as the values of the dictionary, for example if you have an element:
+ First name: <input type="text" id="firstName" value="Emmanouil">, after you press the retreive results button
+ the page automatically will call the def analyse(**kwargs) will kwargs['requestData']['id'] <-- has the value Emmanouil
+-->
 {% endblock content %}

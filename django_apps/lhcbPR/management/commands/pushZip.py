@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files import File
 from django.core.files.base import ContentFile
-from lhcbPR.models import AddedResults, ResultFile, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, ResultBinary, JobDescription, HandlerResult, Handler
+from lhcbPR.models import AddedResults, ResultFile, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, JobDescription, HandlerResult, Handler
 from django.db import transaction
 import json, re, logging, zipfile, os, sys
 from django.conf import settings
@@ -21,16 +21,20 @@ def pushThis(zipFile):
         DataDict = json.loads(unzipper.read('json_results'))
     except ValueError, e:
         logger.exception("{0} exception occurred ".format(log))
-        sys.exit(1)
+        return
+        #sys.exit(1)
     except IOError,e:
         logger.exception("{0} exception occurred ".format(log))
-        sys.exit(1)
+        return
+        #sys.exit(1)
     except IndexError, e:
         logger.exception("{0} exception occurred ".format(log))
-        sys.exit(1)
+        return 
+        #sys.exit(1)
     except Exception, e:
         logger.exception("{0} exception occurred ".format(log))
-        sys.exit(1)
+        return
+        #sys.exit(1)
     
     try:
         results_unique_id, created = AddedResults.objects.get_or_create(identifier=DataDict['results_id'])
@@ -119,7 +123,8 @@ def pushThis(zipFile):
     
     except Exception,e:
         logger.exception(log+' exception occurred!')
-        sys.exit(1)
+        return
+        #sys.exit(1)
 
 class Command(BaseCommand):
 

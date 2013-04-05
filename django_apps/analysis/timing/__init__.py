@@ -186,7 +186,7 @@ def analyse(**kwargs):
     return dataDict
     
 def isAvailableFor(app_name):
-    if app_name in [ 'BRUNEL', 'GAUSS', 'MOORE' ]:
+    if app_name in [ 'BRUNEL', 'GAUSS', 'MOORE' , 'DAVINCI']:
         return True
     
     return False

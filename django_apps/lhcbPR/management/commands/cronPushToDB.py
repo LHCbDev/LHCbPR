@@ -6,6 +6,8 @@ from django.conf import settings
 from lhcbPR.models import AddedResults
 import pushZip
 
+os.environ['X509_USER_PROXY'] = '/afs/cern.ch/user/l/lhcbpr/private/myProxyFile'
+
 #get the logger from the django settings
 logger = logging.getLogger('check_logger')
 

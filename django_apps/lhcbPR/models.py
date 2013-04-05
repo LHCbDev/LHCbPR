@@ -9,8 +9,8 @@ class Host(models.Model):
         return self.hostname
  
 class Application(models.Model):
-    appName = models.CharField(max_length=50, db_index=True)
-    appVersion = models.CharField(max_length=50, db_index=True)
+    appName = models.CharField(max_length=50)
+    appVersion = models.CharField(max_length=50)
     
     class Meta:
         unique_together = ('appName', 'appVersion',)
@@ -20,14 +20,14 @@ class Application(models.Model):
 
 class Options(models.Model):
     content = models.CharField(max_length=2000)
-    description = models.CharField(max_length=2000, db_index=True)
+    description = models.CharField(max_length=2000)
     
     def __unicode__(self):
         return self.description
 
 class SetupProject(models.Model):
     content = models.CharField(max_length=200)
-    description = models.CharField(max_length=200, db_index=True)
+    description = models.CharField(max_length=200)
     
     def __unicode__(self):
         return self.description
@@ -82,10 +82,10 @@ class JobHandler(models.Model):
         return '{0} (job_description_id) -- -- {1}'.format(self.jobDescription.id, self.handler)
  
 class JobAttribute(models.Model):
-    name = models.CharField(max_length=50)
-    type = models.CharField(max_length=20)
-    group = models.CharField(max_length=50)
-    description = models.CharField(max_length=100)
+    name = models.CharField(max_length=500)
+    type = models.CharField(max_length=200)
+    group = models.CharField(max_length=200)
+    description = models.CharField(max_length=500)
     
     def __unicode__(self):
         return '{0} (id)  {1}  --  {2}  {3}'.format(self.id, self.name, self.type, self.description)

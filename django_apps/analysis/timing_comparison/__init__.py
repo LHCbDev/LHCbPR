@@ -175,7 +175,7 @@ ORDER BY t.oldavg - t.newavg
 #for the moment we just keep it for the BRUNEL
 def isAvailableFor(app_name):
     
-    if app_name == 'BRUNEL':
+    if app_name in [ 'BRUNEL', 'MOORE', 'GAUSS', 'DAVINCI' ]:
         return True
     
     return False
