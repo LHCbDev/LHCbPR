@@ -4,8 +4,8 @@ function getValue(child, dataObj) {
 	var myvalue = {};
 	if(child.is(":input")) {
     	if(child.attr("type") == "text" || child.attr("type") == "textarea"){
-			//dataObj[child.attr("id") ] = escape(jQuery.trim(child.val()));
-			dataObj[child.attr("id") ] = jQuery.trim(child.val());
+			dataObj[child.attr("id") ] = escape(jQuery.trim(child.val()));
+			//dataObj[child.attr("id") ] = jQuery.trim(child.val());
 			return;
 		}
 		else if(child.attr("type") == "radio" || child.attr("type") == "checkbox"){
@@ -13,8 +13,8 @@ function getValue(child, dataObj) {
 			return;
 		}
 		else if(child.is("select")){
-			//dataObj[child.attr("id")] = escape(jQuery.trim(child.val()));
-			dataObj[child.attr("id")] = jQuery.trim(child.val());
+			dataObj[child.attr("id")] = escape(jQuery.trim(child.val()));
+			//dataObj[child.attr("id")] = jQuery.trim(child.val());
 			return;
 		}
 	}

@@ -554,11 +554,15 @@ def script(request):
         return HttpResponse("<h3>Only one GET attribute is allowed lol.</h3>")
     try:
         int(request.GET['pk'])
-    except Exception:
+    except Exception, e:
         logger.exception(e)
         return HttpResponse("<h3>Not valid integer primary key was given lol.</h3>")
     
-    myJobDes = JobDescription.objects.get(pk=request.GET['pk'])
+    try:
+        myJobDes = JobDescription.objects.get(pk=request.GET['pk'])
+    except Exception, e:
+        return HttpResponse("<h3>Not such job description id</h3>")
+    
     application = myJobDes.application.appName
     version = myJobDes.application.appVersion
     try:

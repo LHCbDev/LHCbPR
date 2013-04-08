@@ -15,6 +15,8 @@ logger = logging.getLogger('check_logger')
 diracStorageElementName = 'StatSE'
 #uploaded/ <--- this will be the official one
 diracStorageElementFolder = 'uploaded_test'
+addedDiracStorageFolder = 'added'
+
 temp_save_path = os.path.join(settings.PROJECT_PATH, 'static/images/histograms')
 
 def pushNewResults():
