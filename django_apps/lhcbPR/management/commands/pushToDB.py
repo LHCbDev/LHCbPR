@@ -44,14 +44,14 @@ def pushNewResults():
         results_list = AddedResults.objects.filter(identifier__exact=fileName)
         if not results_list:
             logger.info('New zip: {0}, founded in results directory, calling pushZip command...'.format(zipResult))
-            pushZip.pushThis('{0}{1}{2}'.format(temp_save_path, os.sep, zipResult))
+            pushZip.pushThis(os.path.join(temp_save_path, zipResult))
         
         #remove it from the upload_test folder
         statSE.removeFile(os.path.join(diracStorageElementFolder, zipResult))
         #put the file into the added folder
         statSE.putFile({ os.path.join(addedDiracStorageFolder, zipResult) : zipResult})
         #also remove the file from the current directory
-        os.remove(zipResult)
+        os.remove(os.path.join(temp_save_path, zipResult))
 
 class Command(BaseCommand):
 

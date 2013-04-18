@@ -1,7 +1,7 @@
 import logging
 from django.db.models import Q
 from django.db import connection, transaction
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
 from django.template import RequestContext
@@ -30,11 +30,6 @@ else:
 @csrf_exempt
 @login_required
 def test(request):
-    #requestData = request.POST
-    #datadict = json.dumps(request.GET)
-    #return render_to_response('yo.html',
-    #              context_instance=RequestContext(request))
-    #return HttpResponse(json.dumps(requestData))
     return HttpResponse('dummy_response')
     
 def index(request):
@@ -48,21 +43,26 @@ def index(request):
 @login_required
 def jobDescriptions(request, app_name):
     """From the url is takes the requested application(app_name) , example:
-    /django/lhcbPR/jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
-    and depending on the app_name it returns the available versions, options, setupprojects"""
+    /jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
+    and depending on the app_name it returns the available versions, options, setupprojects
+    and a list of existing job descriptions(this happens with ajax and not from this view)"""
     
+    #get a list of appications
     applicationsList = Application.objects.values_list('appName', flat=True).distinct().order_by('appName')
     
+    #if the application does not exist raise 404
     apps = Application.objects.filter(appName__exact=app_name)
     if not apps:
-        return HttpResponseNotFound("<h3>Page not found</h3>")        
+        raise Http404
     
+    #get the application versions and then sort them in a custom way
     appVersions_temp = Application.objects.filter(jobdescriptions__application__appName__exact= app_name).values_list('id','appVersion').distinct() 
     appVersions = reversed(sorted(appVersions_temp, key = lambda ver : getSplitted(ver[1])))
     
     if not appVersions:
         return HttpResponseNotFound("<h3>No existing job descriptions for this application yet.</h3>")
     
+    #after get the options, platforms and setupproject of the corresponding application
     options = Options.objects.filter(jobdescriptions__application__appName=app_name).values_list('id', 'description').distinct().order_by('description')
     
     platforms = Platform.objects.values_list('id','cmtconfig').distinct().order_by('cmtconfig')
@@ -106,8 +106,8 @@ def jobDescriptionsHome(request):
                   context_instance=RequestContext(request))
 @login_required 
 def analyseHome(request):
-    """To be used later when we start developing the analyzing functions for the 
-    lhcbpr application"""
+    """Return the home page of the analysis, prints the applications for which exist saved jobs
+    in the database"""
     
     #find for which applications there are runned jobs
     applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
@@ -119,29 +119,37 @@ def analyseHome(request):
 
 @login_required  #login_url="login"
 def analysis_application(request, app_name):
-    """From the url is takes the requested application(app_name) , example:
-    /django/lhcbPR/analyse/BRUNEL ==> app_name = 'BRUNEL' 
-    and depending on the app_name it returns the available versions, options, setupprojects"""
+    """Get the name of an application from the url and return all the available analysis modules for the
+    selected application, the analysis modules(web pages) appear as html buttons. Each analysis module contains a method:
+    isAvailableFor(app_name) it takes an application name and returns true or false whether this analysis is available for
+    the current selected application or not"""
     applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
     
     apps = Application.objects.filter(appName__exact=app_name)
     if not apps:
-        return HttpResponseNotFound("<h3>Page not found, no such application</h3>")     
+        raise Http404
     
+    #get a list of the successful handler for the selected application
     handlers = HandlerResult.objects.filter(job__jobDescription__application__appName=app_name).filter(success=True).values_list('handler__name',flat=True).distinct().order_by('handler__name')
     
+    #get the contents of the analysis folder, each folder in the analysis represents a different analysis module
     analysis_dir = os.path.join(settings.PROJECT_PATH, 'analysis')
     modules = os.listdir(analysis_dir)
+    
+    #after loop over all the available modules
     analysisList = []
     for module in modules:
+        #if the element is a directory, try to dynamically import it(check if no exception is occurred) to 
+        #check if it is a valid python module
         if os.path.isdir(os.path.join(analysis_dir, module)):
             mod_import = 'analysis.{0}'.format(module)
             try:
                 mod = __import__(mod_import, fromlist=[mod_import])
             except ImportError, e:
                 logger_analysis.exception(e)
-                return HttpResponseNotFound('<h3>An exception occured please try again later</h3>')
+                return HttpResponseNotFound('<h3>An exception occurred please try again later</h3>')
             else:
+                #if the module is imported properly check if it is available for the current selected application 
                 if mod.isAvailableFor(app_name):
                     analysisList.append((module, module.upper()))
             
@@ -169,23 +177,30 @@ def analysis_render(request, analysis_type, app_name):
     
     module = 'analysis.{0}'.format(analysis_type)
     try:
+        #try to import the module by each name eg basic, timing etc
         mod = __import__(module, fromlist=[module])
     except ImportError, e:
         logger_analysis.exception(e)
         return HttpResponseNotFound('<h3>Analyse {0} render was not found</h3>'.format(analysis_type))
     else:   
+        #if the module is imported properly call the render function and take the data which
+        #the analysis wants to use
         user_data = mod.render(request=request, requestData = requestData, app_name = app_name)
+        
+        #check if the user provided a custom template(different than the render.html)
         if 'template' in user_data:
             template = user_data['template']
         else:
-            #else use the provided template
+            #else use the default custom template by the name render in the corresponding template path
             template = 'analysis/{0}/render.html'.format(analysis_type)
             template_dir = os.path.join(settings.TEMPLATE_DIRS[0], template)
             
-            #if the user doesn't provide a template use the default one
+            #if the user doesn't provide any template at all use the default one
             if not os.path.isfile(template_dir):
                 template = 'analysis/default_render.html'
                 if not 'form' in user_data:
+                    #if the user has not provide any template nor an html form(check documentation)
+                    #return as html_form a message to be rendered
                     user_data['html_form'] = """
 <pre>
 Attention:
@@ -201,7 +216,9 @@ Attention:
     return { 'form' : my_text_elements_list }                 
 </pre> 
                     """
-                    
+        
+        #then check if the user has provided(through the analysis module) any options, versions objects etc
+        #if not, use the default ones           
         if not 'options' in user_data:
             user_data['options'] = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name).distinct().order_by('description')
         if not 'versions' in user_data:
@@ -213,10 +230,12 @@ Attention:
         if not 'hosts' in user_data:
             user_data['hosts'] = Host.objects.filter(jobs__success=True,jobs__jobDescription__application__appName=app_name).distinct().order_by('hostname')
         
+        #as a helptext take the pydoc of the module
         help = mod.__doc__
         if help is None:
             help = 'This module is not documented yet.'
         
+        #also as title of the web page take the title attribute of the module
         try:
             title = mod.title
         except AttributeError:

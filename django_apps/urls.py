@@ -31,5 +31,3 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^newjobdescription', 'new_job_description'),
     url(r'^getcontent', 'get_content')
 )
-
-#wget -q -O- --post-data='application=DAVINCI&version=v33r1&optionsD=PRTEST-DAVINCI-Reco14-Stripping20&setupprojectD=UsePRConfig' http://lhcb-pr.web.cern.ch/lhcb-pr/newjobdescription --no-check-certificate
