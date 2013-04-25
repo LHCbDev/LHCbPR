@@ -1,0 +1,90 @@
+##This file is a copy-paste from an email i received,
+##sorry for the formatting
+
+##this is the guide i used to deploy LHCbPR to an afs web directory
+##you can find in the LHCbPR/docs/ example.fcgi and example.htaccess which 
+##is actually the files currently used to deploy in the afs directory:
+## /afs/cern.ch/lhcb/software/webapps/LHCbPR
+
+How to run Django application on AFS web servers
+ 
+•download the django distribution to AFS directory mapped to the site
+•create .htaccess with the following content:
+AddHandler fastcgi-script .fcgi
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ mysite.fcgi/$1 [QSA,L]
+ 
+•create file (chmod +x) mysite.fcgi (change the appropriate paths):
+#!/usr/bin/python2.4
+import sys, os
+ 
+# Add a custom Python path.
+sys.path.insert(0, "/afs/cern.ch/user/s/sucik/www/web-juraj/django/Django-1.2.1/mysite")
+ 
+# Set the DJANGO_SETTINGS_MODULE environment variable.
+os.environ['DJANGO_SETTINGS_MODULE'] = "settings"
+ 
+from django.core.servers.fastcgi import runfastcgi
+runfastcgi(method="threaded", daemonize="false")
+ 
+•more information: https://docs.djangoproject.com/en/dev/howto/deployment/fastcgi/#apache-shared-hosting
+ 
+ 
+How this is implemented on our AFS web servers
+ 
+•package mod_fastcgi has to be installed
+•module mod_fastcgi.so is loaded in "/etc/httpd/conf.d/fastcgi.conf"
+•following permissions must be set chmod 775  /etc/httpd/logs/ /etc/httpd/logs/fastcgi /etc/httpd/logs/fastcgi/dynamic/
+ 
+ 
+Running Django on a shared-hosting provider with Apache
+Many shared-hosting providers don't allow you to run your own server daemons or edit the httpd.conf file. In these cases, it's still possible to run Django using Web server-spawned processes.
+Note
+If you're using Web server-spawned processes, as explained in this section, there's no need for you to start the FastCGI server on your own. Apache will spawn a number of processes, scaling as it needs to.
+In your Web root directory, add this to a file named .htaccess:
+AddHandler fastcgi-script .fcgi
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ mysite.fcgi/$1 [QSA,L]
+Then, create a small script that tells Apache how to spawn your FastCGI program. Create a file mysite.fcgi and place it in your Web directory, and be sure to make it executable:
+#!/usr/bin/python
+import sys, os
+ 
+# Add a custom Python path.
+sys.path.insert(0, "/home/user/python")
+ 
+# Switch to the directory of your project. (Optional.)
+# os.chdir("/home/user/myproject")
+ 
+# Set the DJANGO_SETTINGS_MODULE environment variable.
+os.environ['DJANGO_SETTINGS_MODULE'] = "myproject.settings"
+ 
+from django.core.servers.fastcgi import runfastcgi
+runfastcgi(method="threaded", daemonize="false")
+ 
+This works if your server uses mod_fastcgi. If, on the other hand, you are using mod_fcgid the setup is mostly the same except for a slight change in the.htaccess file. Instead of adding a fastcgi-script handler, you have to add a fcgid-handler:
+AddHandler fcgid-script .fcgi
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ mysite.fcgi/$1 [QSA,L]
+ 
+ 
+Restarting the spawned server
+ 
+If you change any Python code on your site, you'll need to tell FastCGI the code has changed. But there's no need to restart Apache in this case. Rather, just reupload mysite.fcgi, or edit the file, so that the timestamp on the file will change. When Apache sees the file has been updated, it will restart your Django application for you.
+ 
+If you have access to a command shell on a Unix system, you can accomplish this easily by using the touch command:
+touch mysite.fcgi
+ 
+Serving admin media files
+Regardless of the server and configuration you eventually decide to use, you will also need to give some thought to how to serve the admin media files. The advice given in the mod_wsgi documentation is also applicable in the setups detailed above.
+ 
+ 
+Forcing the URL prefix to a particular value
+ 
+Because many of these fastcgi-based solutions require rewriting the URL at some point inside the Web server, the path information that Django sees may not resemble the original URL that was passed in. This is a problem if the Django application is being served from under a particular prefix and you want your URLs from the {% url %} tag to look like the prefix, rather than the rewritten version, which might contain, for example, mysite.fcgi.
+Django makes a good attempt to work out what the real script name prefix should be. In particular, if the Web server sets the SCRIPT_URL (specific to Apache's mod_rewrite), or REDIRECT_URL (set by a few servers, including Apache + mod_rewrite in some situations), Django will work out the original prefix automatically.
+In the cases where Django cannot work out the prefix correctly and where you want the original value to be used in URLs, you can set theFORCE_SCRIPT_NAME setting in your main settings file. This sets the script name uniformly for every URL served via that settings file. Thus you'll need to use different settings files if you want different sets of URLs to have different script names in this case, but that is a rare situation.
+As an example of how to use it, if your Django configuration is serving all of the URLs under '/' and you wanted to use this setting, you would setFORCE_SCRIPT_NAME = '' in your settings file.
+ 

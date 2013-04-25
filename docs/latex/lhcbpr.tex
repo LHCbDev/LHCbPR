@@ -1,0 +1,1047 @@
+\documentclass{lhcbnote}
+
+\title{LHCb Performance and Regression}
+%\author{Benjamin Gaidioz{\address[BGADD]{CERN,Switzerland}},}
+%for more than one author %
+\author{Emmanouil Kiagias}%,%
+%with a different address %
+% New Author{\address[NEWADD]{His address}%
+%with the same address %
+%Other Author{\addressmark[BGADD]}} %
+%}%
+
+\doctyp{Internal Note}
+\dociss{1}
+\docrev{0}
+\docref{unknown}
+\doccre{February 6, 2013}
+\docmod{\today}
+%\doccnf{You use this command only if you want a note %
+% here: like presented at...}% 
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Put your abstract here.
+\end{abstract}
+
+\begin{status}
+\entry{Draft}{1}{February 6, 2013}{First version}
+\end{status}
+
+\tableofcontents
+
+\listoffigures 
+\listoftables
+
+\section{Introduction}
+
+What is { \bf LHCbPR }
+
+\vspace{4 mm}
+
+LHCb Performance and Regression(PR) is a service designed to record important measurements about releases of the 
+LHCb application. Applications , such as Gauss, Brunel, Moore etc,  receive input in the form of configuration files 
+and produce, as an output, various information.
+LHCbPR is {\bf not} intended to actually run the jobs (maybe in the future as an extra feature), but instead to manage and track the bulk of information produced by them.
+	
+The LHCb Performance and Regression is a framework that allows LHCb software developer to push information for
+a run of their code(job charactetistics, results, performance measures, files) to a central database, from which an analysis can be performed across
+version, configs(platforms) etc.
+
+\vspace{6 mm}
+
+\noindent Why LHCbPR
+
+
+\vspace{4 mm}
+
+ In the past, in order for a user working group to run a  job, they had to execute a job for a specific application -using a configuration file-, 
+gather the results and then run their own analysis on the produced sample. 
+Finally, when such a process was complete, they needed to find a way to publish their results.
+Often ending up with serving static documents such as HTML, CSV or e-mail.
+	
+LHCbPR was conceived as a tool to reliably organize the process of configuring and monitoring a job execution. 
+The framework, solves the problem of gathering the results of a job execution, by providing the user a complete script that, when executed, 
+can produce the desired output, according to a configuration file. This script, also includes a list of {\bf handlers} 
+that collect the defined aspects of the job results and “push” them to the database in a uniformed way. 
+	
+By collecting the results in such an organized manner, it provides the solution to the second problem, mentioned above; 
+the running of the analysis. Since, all the data are stored as objects in the database, 
+the framework provides an abstract and easy way to deploy algorithms and functions which perform analysis on the saved data. 
+	
+Finally, LHCbPR handles the presentation of the collected data by providing a set of templates 
+for the creation of web pages specific to each analysis and customized to the preferences of each user. 
+ 
+\vspace{6 mm}
+
+\noindent Users of LHCbPR
+
+
+\vspace{4 mm}
+
+The LHCbPR users can be divided into three categories: Administrators, Application developers and End users. 
+
+The administrators group is responsible for the integrity of the collected data and the efficiency of the service. They maintain and support the system, 
+making sure the application is functional and available to the end users.
+
+Application developers are the users who actively design and develop modules for the framework, thus extending the functionality of the application.
+
+Finally, the end users are the main body of the users of the service. They put the tools provided by the application developers to practical use and 
+their job results are populating the database.
+
+\section{Architecture}
+
+\subsection{Django}
+
+LHCbPR framework is written in python and the main body has been has been deployed with {\bf Django} . Django is an {\bf open source} web application framework, written also in Python.
+ The application is hosted in a shared Apache web server with fcgi module. For more information about apache, fcgi and django can be found in their corresponding web pages.
+
+\subsection{3TP - 3-Tiered Programming}
+
+The LHCbPR follows the architectural model of three tiered programming. {\bf 3TP} provides a way to theoretically categorize the components 
+of an application, providing abstract modularity. In essence the 3TP model is a client-server architecture which is composed of three 
+layers. Namely,  the presentation tier, the functional process logic tier and the data storage tier. These tiers communicate with one another 
+in a strictly defined way, which allows the developer to independently maintain each tier. In most practical applications of the model the presentation layer 
+includes all forms of user interaction with the service. The process logic tier encompasses the whole of the application functionality, while the data storage 
+tier handles the flow of the information from and to the data source (in most cases a database).
+
+\vspace{4 mm}
+
+The theoritical model mentioned above is practically implemented in LHCbPR(see Figure 1) and is explained in detail in the following sections. 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=170mm]{my3tp.jpg}
+\caption{3TP implemented in LHCbPR}
+\label{overflow}
+\end{figure}
+
+\subsubsection{Presentation layer in LHCbPR}
+
+The presentation tier of LHCbPR is composed of a set of web pages that utilize a {\bf ReST} API, and the handlers' interface.
+
+ReST comes from Representational State Transfer and provides an abstract way of stateless client-server communication. Django's capability of handling URLs, 
+through the stateless HTTP Protocol, serves as a powerful tool to design and develop ReST Interfaces. LHCbPR's API functions range from generating and managing
+unique identifiers(UID) for objects in database, to compiling scripts to run a simulation and collect their output.
+
+Above the ReST API exists a set of web pages which are served to the end user by the django framework. These mainly consist of static HTML 
+styling code and javascript/jquery functions that allow asynchronous communication with the ReST Interface. This web application provides an easy and 
+visual way for the handling of the information stored in the database. 
+
+The handler's interface is different to the ones mentioned above, in the sense that it provides a programmatical way to communicate with the service. 
+That is, an application developer can use the handler library functions to strictly define the amount and type of data that will be collected from a job execution. 
+Essentially the handler is an independent utility that can be called after any job execution to parse, group and collect specific information from the output.
+
+\subsubsection{Application logic layer in LHCbPR}
+
+The application logic tier a set of python modules that can be divided into two categories that each serve its own purpose; the base application logic and the 
+database connectivity.
+
+The base application logic is a group of functions which handles the incoming users' requests, sanitizes their input and generally tries to accomplish the application's 
+objective. Also it provides an interface for application developers to specify the way they process the data that is stored in the database, by developing python 
+modules for analysis. The development of such modules is abstracted from the specific implementation of the framework which makes the analysis process much 
+simpler and more straightforward. 
+
+The database connectivity is achieved by utilizing the models/views-function of the django framework. The representation of the content of the database as logical 
+objects allows easy access and management of the stored data. Also it acts as a powerful mechanism for enforcing the db schema.
+
+
+\subsubsection{Data storage layer in LHCbPR}
+
+The third and last layer of LHCbPR is responsible for the data management of the whole service. It consists of three independent data sources. 
+
+The first and most important is an Oracle database which is provided by the IT central Oracle service. It contains every bit of information about the jobs that 
+have been executed, including the statistics and output information, apart from files. In case where whole files, produced from a job(e.g ROOT files), 
+are needed to be saved then they are not handled from the database but from a filesystem.In the database is only saved a relative path, to a media directory, for each file .
+
+The files mentioned are stored in an AFS shared directory for easy access and robust backup. 
+
+Finally the last data source is another shared directory which is accessed through a DIRAC storage element and is used as a temporary caching space between the 
+server and the data collected by the handlers. 
+
+
+\section{Database}
+
+In order to describe a job execution through the LHCbPR framework and generate a script which will run the defined-described job, {\bf job descriptions} are saved/handled as objects 
+in the database. Also they are used to identify which data comes from which job execution. The database objects will be explained in details in the following subsections.
+
+\vspace{4 mm}
+
+Here is a summary of the database schema tables:
+
+\vspace{4 mm}
+
+
+\begin{tabular}{ | l |}
+\hline
+	
+Jobattribute \\ \hline
+	
+JobDescription \\ \hline
+	
+JobHandler \\ \hline
+	
+JobResults \\ \hline
+	
+Options \\ \hline
+	
+Platform \\ \hline
+	
+Requested\_platform \\ \hline
+	
+ResultsString \\ \hline
+	
+ResultInt \\ \hline
+	
+ResultFloat \\ \hline
+	
+ResultFile \\ \hline
+
+SetupProject \\ \hline
+\end{tabular}
+
+
+
+\subsection{Job description object}
+The tables which constract a job description are the following:
+\begin{itemize}
+\item
+JobDescription, Application, Options, SetupProject
+\end{itemize}
+
+The Application table contains two columns : appname(application) and appversion(application version).
+This pair is unique for each application and ,as the name says, this table represents the application(eg Gauss, Brunel etc)
+with a specific version(eg v42r0, v43r2p0 etc) and its data will be used to setup the environment to prepare a job execution for 
+the corresponding application.
+
+\vspace{4 mm}
+
+The Options table represents the options which we will used to execute a job and it has two columns:
+description and content. The description column is more or less a name(alias) to identify the options and the
+content is the actual content of the options, which can be a path to an options file or a big string containing 
+the actual raw options. Note that the pair description-content in the table must be unique, can not have the same 
+description for two(or more) different contents or the same content for two(or more) different descriptions.
+
+\vspace{4 mm}
+
+The SetupProject table represents the extra arguments(optional) to the SetupProject command. Also this table has two
+columns : description and content. The description is a name(alias) to identify the SetupProject extra arguments(eg --no-user-area)
+and the content is the actual extra arguments. Note the pair description-content must me unique(same as the pair description-content of the
+Options table)
+
+\vspace{6 mm}
+
+All the three previous tables constract a job description object. This is the information which is needed 
+to properly configure and execute a job, this is the table (see Figure 2).
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=170mm]{jobdescription.png}
+\caption{Job description table summary}
+\label{overflow}
+\end{figure}
+
+
+\subsection{Job}
+
+Once there are saved job descriptions in the database they can be used to actually run jobs.
+The Job table has the following columns: The jobDescription\_id, an id to specify which job description object 
+was used to execute the job(application-version, options etc), the time when the job started and finished(time\_start and time\_end columns), 
+the status of the job(finished, running etc), success(whether the job was successful or not). Also a job contains the platform(cmtconfig) 
+and the host(machine) on which it was executed. Apart from the others, which are single columns, the platform and the host columns(and the 
+jobDescription) are ids mapping to the corresponding tables Platform and Host. 
+
+\vspace{4 mm}
+
+The Platform table contains only one column containing a platform(cmtconfig).
+
+\vspace{4 mm}
+
+The Host table represents a machine(on which jobs are executed) and has the following columns:
+hostname(name of the machine eg pclhcb10), cpu\_info and memory\_info for the machine.
+
+\vspace{6 mm}
+
+All the above constract a job object which represents a single job execution(see Figure 3)
+
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=170mm]{job.png}
+\caption{Job table summary}
+\label{overflow}
+\end{figure}
+
+\subsection{Job results}
+
+Up to now we described how a job description and a job execution are represented in the database. 
+Now we will see how job results are saved.
+Each job execution produces various results such as log files, ROOT files(histograms), xml files etc.
+A result can be a number(a float, an integer), a string or a whole file. Each result is considered 
+to be a Job Attribute and it is saved in the JobAttribute table.
+
+\vspace{4 mm}
+
+The JobAttribute table represents,identifies a job result and has the following columns:
+The name column which is the name the result will hold(eg totalCrossSection), the description(optional) 
+column which is a description for the attribute, group column(optional) which specifies a group for 
+the attribute(eg group: "Timing") and the type column which can be an Integer,String,Float or File. 
+
+\vspace{4 mm}
+
+The ResultInt,ResultString,ResultFloat,ResultFile tables "inherit" the JobAttribute table and just provide 
+the data column for each job attribute. So the JobAttribute table works as the parent table and depending
+on the type column it has a corresponding child table, example: if the type of a job attribute is "Integer"
+then the it will have as its child a ResultInt.
+
+To associate the previous tables, one with each other, and all together with the job table a middle
+JobResults table is used which contains a JobAttribute\_id mapping to a JobAttribute object and each 
+Result(ResultString etc) table contains an id mapping to a JobResults object(see Figure 4). 
+Finally the JobResults table also holds a job\_id which maps to a specific job. 
+
+\vspace{6 mm}
+
+So for each job execution there are multiple JobResults instances containing the collected results.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=170mm]{jobattribute.png}
+\caption{Job attribute table summary}
+\label{overflow}
+\end{figure}
+
+
+\subsection{Handlers}
+
+Handlers are python modules which take as a parameter a directory and 
+collect results out of it. Handlers can collect many kind of data
+such as Numbers(Floats, Interger) ,Strings, even save a whole file. In order 
+to associate handlers with jobDescriptions and job executions the following tables
+are used: Handler, JobHandler, HandlerResult
+
+\vspace{4 mm}
+
+The Handler table represents a handler python module and contains two columns:
+a name column which is the name of the python module and a description column 
+which is a description(optional) about the handler. A handler can collect data from 
+different jobDescriptions even from jobDescriptions with different applications
+(example the TimingHandler works for all applications). A handler is associated with 
+a jobDescription through the JobHandler table.
+
+\vspace{4 mm}
+
+The JobHandler table is used as a middle table(many to many relation) 
+between the JobDescription and the  Handler tables.
+
+\vspace{4 mm}
+
+So for each JobDescription there are associated handlers which will collect data after a job 
+execution. When a job is finished, the handlers(may be just one) collect data and produce a zip 
+file with the results. In some cases though a handler can fail(either because of a user's mistake or because 
+a job execution did not produce the results it should have produced), so we keep track of the handlers 
+by using the HandlerResult table.
+
+The HandlerResult table shows whether a handler was successful or not for a specific job execution, so
+it contains a handlers\_id(to map a handler object), a job\_id which maps to a job execution and 
+finally a column success to specify whether the handler was successful or not for this job.
+
+\vspace{4 mm}
+
+For the above tables see Figure 5.
+
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=170mm]{handler.png}
+\caption{Handler table summary}
+\label{overflow}
+\end{figure}
+
+
+\section{Implemented functionality}
+
+Here follows a summary of the implemented functionality of the LHCbPR.
+
+\subsection{Job Description Management}
+\begin{itemize}
+\item
+\underline{Create new Job Description} 
+
+A new job description can be created through a web interface by 
+ cloning an existing job description(cloning means to create a new object based 
+ on a preselected job description).
+
+\item
+\underline{Update Job Description}
+
+A job description can be updated(change one or more attributes) through a web interface.
+Warning: a job description can not be edited if there is at least one executed job saved in the database with this job description.
+
+\item
+\underline{Create Job Description from script} 
+
+A job description can also be created from a script(by making an HTTP request with the desired attributes). 
+In case the job description exists the function returns the existing job description id.
+
+\item
+\underline{Generate Job script}
+
+A script which will execute a job using a selected job description. The script can either be created through a web 
+interface(by clicking a button) or by making an HTTP request through a script.
+\end{itemize}
+
+\subsection{Job Handling}
+\begin{itemize}
+\item
+\underline{Basic python handler interfaces}
+
+An application developer can use the provided handler functions to strictly define the amount and type of data that will be collected from a job execution. 
+\end{itemize}
+
+\subsection{Analysis}
+Here follows a summary of the already implemented analysis pages
+
+\begin{itemize}
+\item
+\underline{Basic analysis}
+
+In this analysis page the user can select a single quantity(a single attribute from the database eg EVENT\_LOOP) 
+also select a job description(or part of it eg only specific options or platform)
+and calculate the average value, standard deviation, generate a histogram for the corresponding selections. Up to 3 histograms can be generated at once 
+and also be superimposed.
+
+\item
+\underline{Timing analysis} 
+
+In this analysis the user can select a job description and generate a tree containg the average timing performance of the algorithms 
+of all the available job runs for the selected job description.
+
+\item
+\underline{Histograms analysis} (available only for Gauss application) 
+
+More or less the same as the basic analysis but in this case the user selects a histogram title(from the saved ROOT files) instead of a single quantity, 
+and calculate the average histograms for all the available ROOT files. 
+Also the histograms can be superimposed or divided(for the division there must be exactly 2 histograms , no more no less) 
+
+\item
+\underline{Trend analysis} (not fully completed yet) 
+
+In this analysis the user can select a single quantity and perform an analysis across the versions of the application.
+\end{itemize}
+
+\subsubsection{Custom Analysis Framework}
+
+Each analysis page is a module and all the above analysis pages are deployed using a small custom analysis framework. 
+The development of such modules is abstracted from the specific implementation of the LHCbPR framework which makes the analysis development much 
+simpler and more straightforward for the developers.
+
+\subsection{Authentication}
+All the LHCbPR's pages and services are protected by shibboleth, the user must provide a valid cern account in order to access the service.
+Also there is the ability to restrict the access to only specific groups ,if necessary, in a desired service/services. 
+
+There is also restricted access to the administrator panel. The admin panel can be accessed only from superusers which are defined inside the database through Django. 
+For more info about superusers check the Django documentation
+
+\subsection{Administration}
+The LHCbPR also comes with a default administration panel provided from the django framework to manage database objects through a web interface. 
+Also the LHCbPR provides a function to either delete a job by id or  hide a job(flag to hide bad data, these jobs will not be used in analysis pages). These 
+functions can olny be accessed from the administrators. As mentioned in the above subsection only superusers can access the admin panel. 
+For superusers check Django official documentation
+
+\section{Analysis development}
+
+The LHCbPR framework provides also the ability to develop new analysis modules and handlers. 
+In this section will be descrided how to develop a new analysis module (a functional analysis web page) using a small custom framework 
+
+\subsection{Getting started}
+
+Below are described the steps you need to do in order to develop a new analysis module locally on your computer and test it. 
+
+First get the latest version of the project from the LHCb git repository:
+
+\vspace{2 mm}
+
+{\bf git clone /afs/cern.ch/lhcb/software/GIT/LHCbPR.git}
+
+\vspace{2 mm}
+
+Then run the script :
+
+\vspace{2 mm}
+
+
+{\bf /LHCbPR/devel/getdjango}
+
+\vspace{2 mm}
+
+This will download the Django source and place inside the LHCbPR/devel directory . 
+The LHCbPR is deployed with Django framework so you need a copy of it in order to 
+run the service locally.
+
+After that you need tou setup the enviroment in order to use the cx\_Oracle module from afs:
+
+\vspace{2 mm}
+
+{\bf source /LHCbPR/devel/setuptools}
+
+\vspace{2 mm}
+
+The LHCbPR uses an oracle database
+so it needs the cx\_Oracle to establish a connection with it(in case you have not executed the getdjango script the setuptools script will invoke it to download the django for you).
+
+{\bf Attetion} One more step to finish the setup. You must provide a {\bf myconf.py}
+file in {\bf LHCbPR/django\_apps/} directory in this format(ask the administrator to give you a valid myconf.py file
+containing the needed information):
+
+\begin{verbatim}
+dbname = 'name_of_the_database'
+dbuser = 'username_for_the_database'
+dbpass = 'database_password'
+
+key = 'key_django_needs'
+
+#ATTENTION
+# LOCAL must true in order to run the project locally
+LOCAL = True
+
+#also debug true is needed to get the django's debug page
+#in case an error happens
+DEBUG = True
+
+#root url for the local development needs to be /
+ROOT_URL = '/'
+\end{verbatim}
+
+And once you have the myconf.py file {\bf everything's ready} in order to start running your local copy:
+
+\vspace{2 mm}
+
+{\bf /LHCbPR/django\_apps/manage.py runserver}
+
+\vspace{2 mm}
+
+Do not forget to run the {\bf source LHCbPR/devel/setuptools} everytime you change {\bf shell}(eg: work the project in a new terminal) 
+in order to setup the enviroment with the needed tools(without this script the runserver command will crash).
+
+\subsection{Writing a new analysis module}
+
+\subsubsection{Initialization}
+
+Once you have downloaded a local copy of LHCbPR project from git and set up the enviroment you are ready to start deploying your new analysis module.
+First create a {\bf new folder} with the name of your new module under to {\bf LHCbPR/django\_apps/analysis} directory. Let's assume your new analysis module will be called {\bf hello\_analysis} , then create a folder :
+
+\vspace{2 mm}
+
+{\bf mkdir LHCbPR/django\_apps/analysis/hello\_analysis}
+
+\vspace{2 mm}
+
+Then create an \_\_init\_\_.py under your new created directory(your analysis code will reside in there) :
+
+\vspace{2 mm}
+
+{\bf vim LHCbPR/django\_apps/analysis/hello\_analysis/\_\_init\_\_.py}
+
+\vspace{4 mm}
+
+Each analysis module needs two basic {\bf templates}:
+ \begin{itemize}
+\item
+{\bf render.html}
+\item
+{\bf analyse.html}
+\end{itemize}
+
+The {\bf render.html} is the one that will be used to diplay the contents of your analysis page
+and the {\bf analyse.html} is the template that will be used to diplay the actual analysis results(this template is loaded inside the render.html automatically), 
+create them in the templates' directory under a directory having the name of the analysis(same we did with the module) :
+
+\vspace{2 mm}
+
+{\bf mkdir LHCbPR/django\_apps/templates/hello\_analysis}
+
+\vspace{2 mm}
+
+{\bf vim LHCbPR LHCbPR/django\_apps/templates/hello\_analysis/render.html}
+
+\vspace{2 mm}
+
+{\bf vim LHCbPR LHCbPR/django\_apps/templates/hello\_analysis/analyse.html}
+ \vspace{2 mm}
+
+An example of how a render.html template should look like please check the following file:
+
+\vspace{2 mm}
+
+{\bf vim LHCbPR/django\_apps/templates/analysis/skeleton\_analysis.html}
+
+\vspace{2 mm}
+
+The {\bf docstring} of the \_\_init\_\_.py file(your module's docstring) will automatically be used as {\bf helptext}(help div in the template) in your new analysis page.
+In case you dont provide a docstring then the helptext will be "This module is not documented yet". In case you want to hardcode the helptext inside your render.html template
+then follow the instructions in the skeleton\_analysis.html.
+
+The {\bf title} of your analysis page will automatically be the selected application followed by the name of your module, so in our case of hello\_analysis module and GAUSS application,
+the title of the page will be "GAUSS hello\_analysis analysis". In case you want to {\bf override} the default generated title, just provide a variable by the name title in your \_\_init\_\_.py file:
+
+\vspace{2 mm}
+
+\begin{verbatim}
+#this will be now your page title
+title = "This is my page title"
+\end{verbatim}
+
+\vspace{2 mm}
+
+The \_\_init\_\_.py also needs 3 methods :
+
+\begin{itemize}
+\item
+{\bf def isAvailableFor(app\_name):}
+\item
+{\bf def render(**kwargs): }
+\item
+{\bf def analyse(**kwargs):}
+\end{itemize}
+
+\subsubsection{def isAvailableFor(app\_name):}
+
+Once you have created your analysis module(folder etc), as mentioned above, it's time to specify for which applications the analysis is available for.
+For example the "histograms" analysis is available only for the GAUSS application so the \_\_init\_\_.py file of the histograms module has the following method:
+
+\begin{verbatim}
+def isAvailableFor(app_name):
+    if app_name in ['GAUSS']:
+        return True
+    
+    return False
+\end{verbatim}
+
+Everytime you select an application from the analyse page, the LHCbPR "walks" in the analysis' module directory and calls in a sequence 
+the isAvailableFor(app\_name) method from every  module. If the method returns "True" then the analysis will automatically appear as 
+button in the rendered page, else if it's "False"  it wont appear. So in case you want to make your analysis available for all applications you can just do:
+
+\begin{verbatim}
+def isAvailableFor(app_name):
+    return True
+\end{verbatim}
+
+In that way, no matter what the app\_name variable contains the method will always return True so it will appear to all applications
+
+\subsubsection{def render(**kwargs)}
+
+The {\bf def render(**kwargs): } function automatically returns the {\bf render.html}, which resides in the templates/hello\_analysis/directory,
+along with a dictionary with all the variables you want to use in your render.html template, 
+for example:
+
+\vspace{2 mm}
+
+\begin{verbatim}
+def render(**kwargs):
+    myvariable = "test_string"
+
+    return { 'myvarialbe' : myvariable }
+\end{verbatim}
+
+\vspace{2 mm}
+
+This will return the render.html template along with the myvariable which you can access it in the template with: \{\{ myvariable \}\}. 
+Before you continue please make sure you have checked how a render.html file must be in {\bf LHCbPR/django apps/templates/analysis/skeleton\_analysis.html}.
+
+As it is mentioned in the skeleton\_analysis.html your render.html inherits the Versions, Options, Platforms, Hosts selections menu.
+By default the LHCbPR returns the Versions, Options, Platforms, Hosts objects for the successful jobs of the corresponding application, for example if you select GAUSS in the analyse 
+page, then the objects that will be returned in the backgroud are :
+
+\vspace{2 mm}
+
+\begin{verbatim}
+options = Options.objects.filter(jobdescriptions__jobs__success=True,
+  jobdescriptions__application__appName='GAUSS').distinct().order_by('description')
+versions = Application.objects.filter(jobdescriptions__jobs__success=True, 
+  appName='GAUSS').distinct()
+platforms =  Platform.objects.filter(jobs__success=True,
+  jobs__jobDescription__application__appName='GAUSS').distinct().order_by('cmtconfig')
+hosts = Host.objects.filter(jobs__success=True,
+  jobs__jobDescription__application__appName='GAUSS').distinct().order_by('hostname')
+\end{verbatim}
+
+\vspace{2 mm}
+
+If you want to return different objects then you can {\bf override the default values} by providing 'options', 'versions', 'platforms', 'hosts' in your returned dictionary. 
+
+For example in the {\bf timing analysis} we need, not only the objects for the successful jobs but also we need the objects who also have jobAttributes with some specific groups, so in that
+case we override the default values like :
+
+\begin{verbatim}
+#missing code here ...
+#...
+from lhcbPR.models import Host, Platform, Application, Options
+
+def render(**kwargs):
+    #some missing code here
+    #....
+    app_name = kwargs['app_name']
+
+    #some missing code here, for full version,
+    #you can check the LHCbPR/django_apps/analysis/timing/__init__.py
+    #....
+    options = Options.objects.filter(jobdescriptions__jobs__success=True,
+        jobdescriptions__application__appName=app_name,
+        jobdescriptions__jobs__jobresults__jobAttribute__group='TimingTree').distinct().order_by('description')
+        
+    versions = ...
+    
+    platforms = ...
+     
+    hosts = ...
+    
+    dataDict = {
+                'platforms' : platforms,
+                'hosts' : hosts,
+                'options' : options,
+                'versions' : versions,
+               }
+      
+    return dataDict
+\end{verbatim} 
+
+In that example you can see that we override the options,platforms etc by providing our own objects. That way
+the template will use these objects instead of the default ones. 
+
+\vspace{2 mm}
+From the {\bf def render(**kwargs)} you can access the following data:
+
+\begin{verbatim}
+# you can take the application from the url(such GAUSS, BRUNEL etc)
+app_name = kwargs['app_name']
+
+#the data which request contains,
+# same as doing ,in case of POST request: requestData = request.POST
+requestData = kwargs['requestData']
+
+#and finally, in case you need to have access to the full request object
+myrequest = kwargs['request']
+\end{verbatim}
+
+\subsubsection{def analyse(**kwargs)}
+
+This function will automatically  be called when you press the "Retreive results" button from your analysis page.
+Same as the render function you can access the same data from the kwargs as shown exactly above(app\_name, requestData and request). 
+Once you click the "Retreive results" button the page will automatically make an{\bf ajax request} to your analyse(**kwargs) sending the 
+selected Versions, Options, Platforms, Hosts(comma separated ids) from the selection menu along with the data of your other custom elements
+Let's assume that you have these two elements in your render.html template:
+
+\begin{verbatim}
+<input id="firstName" type="text" value="Emmanouil">
+<input id="lastName" type="text" value="Kiagias">
+
+<input id="myradio" name="myradiobutton" type="radio" checked="checked">
+\end{verbatim}
+
+The page will put the id and the value of your elements in the request dictionary along with the selected Versions, Options..etc object, so in this case the request dictionary will like this:
+
+\begin{verbatim}
+{
+  'options' : 1,5,7, # comma separated primary keys of the selected options 
+  'versions' : 3,5 , 
+  'platforms' : 45,7,9,
+  'hosts' :78,
+  'firstName' : 'Emmanouil',
+  'lastName' : 'Kiagias',
+  'myradio' : True
+} 
+\end{verbatim} 
+
+You can access these data from the kargs['requestData'] dictionary. Then in your analyse(**kwargs) function you can use these data to make queries to the database(check: from django.db import connection)
+and any other calculation you need to produce your analysis results and just return a dictionary with your data. The analyse function will load the analyse.html template along with your data in the render.html template.
+So you can visualize your results with javascript,jquery etc, or any other web tools in your analyse.html template and they will be loaded in your analysis when you press the "Retreive results button".
+
+\subsubsection{Using different templates}
+
+The default behavior of the functions is: the render(**kwargs) function uses the render.html with the data of the dictionary you return 
+and the analyse(**kwargs) function uses the analyses.html with the data of the dictionary you return. You can {\bf override} the default templates by specifying
+a {\bf template key} in the returned dictionary with the different template you want to use. For example in the {\bf timing analysis} we have 3 different ways of visualizing the data:
+TreeGrid, TreeMap, singleLevel so we have different analyse templates. So in case we want to use the analyseTreeMap.html(a different template we created in the templates/timing/  directory)  instead
+of the default analyse.html template  in the analyse(**kwargs) function we do :
+
+\begin{verbatim}
+return {
+             #....            
+             #here reside the data we need in our template
+             #and here we override the template to be used:
+             'template' : 'analysis/timing/analyseTreeMap.html'
+           }
+\end{verbatim}
+
+Also there are some templates for general use  in the templates/analysis directory like the error.html, so in case an error occurs with your data of with the database inside the analyse(**kwargs) or the render(**kwargs) function
+then you can do:
+
+\begin{verbatim}
+if Error:
+  return {
+             'template' : 'analysis/error.html'
+             'errorMessage' : 'My errorMessage accessed by {{ errorMessage }}'
+            } 
+\end{verbatim}
+
+This way you are able to create as many templates as your needs to diplay different messages, visualize in different ways your analysis results 
+by overriding the template variable in the returned dictionary.
+
+\subsubsection{Bookmarking, trigger results, errorChecking}
+
+The template ,which your render.html, inherits provides {\bf automatic bookmarking} with the following functions:
+
+\vspace{2 mm}
+\begin{itemize}
+\item
+prefillAll();
+\item
+prefill(); //per object
+\end{itemize}
+
+The prefillAll() will take the values from the url(GET request data) and will prefill the elements by id(keys of GET dictionary), or the prefill()
+will just perform the previous action for a specific values( also check the {\bf trigger()} in the example code).
+So if you want to enable {\bf bookmarking } in your render.html you can have something like this:
+
+\begin{verbatim}
+$(document).ready(function() {
+ /* in case you want to prefill a single element you can 
+  * you can use this jquery function .prefill() :
+  * $("#my_element_id").prefill();
+  */
+  //or else you can just call prefillAll();  
+  prefillAll(); 
+  /* this method will take the values from the url(GET request data)
+   * and will prefill all the available elements with the specified values
+  */
+ /* also if you want to automatic retreive the results in the 
+  * bookmarking url call trigger in your code :
+  trigger();
+ /* this will "click" the retreive results if the url contains trigger=true
+});
+\end{verbatim}
+
+Finally if you want to make {\bf errorchecking} to your elements' values before the ajax request from the "Retreive results" button you
+can define a function called: {\bf checkRequestData(requestData)} in your script block in the render . Let's assume that in your analysis
+page you want to always have at least two options selected before you press the button to retreive the results, in case the user doesn't
+select less than two options then an error message should be printed with the problematic field and the reason of the error, example code :
+
+\begin{verbatim}
+function checkRequestData(requestData){
+//the requestData dictionary contains the data 
+//that will be sent to the analyse(**kwargs) in the format
+//we previously mentioned
+  //initial empty error object
+  var errors = {}
+ 
+  var myoptions = requestData["options"].split(",");
+  if (myoptions.length < 2)
+    errors["options"] = "At least two options must selected!";
+
+ return errors;
+}
+\end{verbatim}
+
+The {\bf checkRequestData(requestData)} method will automatically be called , before the ajax request to the corresponding analyse(**kwargs) function of the analysis module, 
+ passing the request data to it. If the returned errors' object is empty then the ajax request will be performed and the analyse.html template will be loaded to the page, if the 
+errors object is not empty then a dialog will pop up printing the problematic fields (keys of the errors' object) along with the reason (values of the keys) and the ajax request 
+won't be performed. 
+
+In our example we create an empty error object.
+If the user doesn't select at least two options we add an entry to the object error['options'] , as key we give a name for the problematic field(can be any word not necessarily the element id) and as
+value we give the reason.
+
+\subsubsection{Adding extra functions to the analysis}
+
+Let take the case you need from your render.html to perform an extra asynchronous request with your analysis module before you retreive the results,
+(for example the attributes filtering by group in the basic analysis). 
+
+Let say that you want an extra function to hello\_analysis module called getMyStuff, then you have to define a method in your module like:
+
+\begin{verbatim}
+def getMyStuff(**kwargs):
+  #the kwargs here contain again the request and requestDat
+  # as the analyse(**kwargs) function
+  #your function's code from here:
+\end{verbatim}
+
+To access your new extra method through ajax you must make the request to the following url:
+
+\begin{verbatim}
+url = "{{ ROOT_URL }}analyse/hello_analysis/functions/getMyStuff/"+appName;
+\end{verbatim}
+The {\bf ROOT\_URL} is returned to all LHCbPR templates so just use it the way it is, the same with the {\bf appName} variable.
+So here follows the format of the url to access your extra function(change only the bold words) :
+
+\vspace{2 mm}
+
+url = "\{\{ ROOT\_URL \}\}analyse/{\bf name\_of\_your\_module}/functions/{\bf extra\_function\_name}/"+appName;
+
+\section{Handler development}
+
+In this section we will show how to write and test a new handler to collect your data.
+
+\subsection{Getting started}
+
+First get the latest {\bf LHCbPRHandlers} project from LHCb GIT repository:
+
+\vspace{2 mm}
+
+{\bf git clone /afs/cern.ch/lhcb/software/GIT/LHCbPRHandlers.git}
+
+\vspace{2 mm}
+
+Then make sure you are using at least {\bf python2.6} to write and test your handler python module.
+Once you have python2.6 and a local copy of the LHCbPRHandlers project you ready to start.
+
+\subsection{How to write handler}
+
+Each handler is python module which {\bf extends} the {\bf BaseHandler}(it resides in the {\bf LHCbPRHandler/handlers} directory)
+and works as a parser which collect data. The only difference from any usual parser if the way it saves the attributes.
+
+\vspace{2 mm}
+
+The {\bf BaseHandler} class provides the following methods:
+\begin{itemize}
+\item			
+saveInt
+\item
+saveFloat
+\item
+saveString
+\item
+saveFile
+\end{itemize}
+
+Each of the above methods take 4 arguments
+\begin{itemize}
+\item
+{\bf name} : the name of the attribute you save( example : 'cpu\_execute\_time')  
+\item
+{\bf data} : the data/value your attribute has (example : 12.45)
+\item
+{\bf description}(optional) : any description you want to add for the attribute (example : 'this number represents...')
+\item
+{\bf group}(optional) : the group(if any) in which the attribute you save belongs(example : 'Timing')
+\end{itemize}
+
+Let take for example the follows case:
+
+\begin{verbatim}
+execution_time = 12.45  
+#If you want to save the number above you can save it like:
+
+# remember the 4 arguments: name, data, description, group
+self.saveFloat('execution_time', 12.45,'the total execution time', 'timing results')
+					
+#or just save it without description/group, just its name and its value/data:
+self.saveFloat('execution_time', 12.45)					
+\end{verbatim}
+
+{\bf Remember} to use the right method for the corresponding {\bf type}, if you want to save  a string use the saveString function 
+if you want to save an Integer use saveInt etc
+
+You can also save {\bf files}(eg .root files) by calling the {\bf saveFile} function giving a 'name' for your file attribute 
+and a 'filename' which must be the actual path to the file you want to save. For example:
+
+\begin{verbatim}
+#lets say that you have a file: my_results_file = '/afs/cern.ch/path_to/my_file'
+##				attribute name 			path to file
+self.saveFile('my_results_file' , '/afs/cern.ch/.../path/my_file' )
+					
+#also you can add a group and/or a description(like the explained above)
+\end{verbatim}
+
+The handler python file must have the same {\bf name} as the {\bf handler class},
+For example if your handler class is called 'TimingHandler' then the python file must have the name 'TimingHandler.py'
+		
+Second in the \_\_init\_\_ you must call super(self.\_\_class\_\_, self).\_\_init\_\_() (as shown in the example below)
+		
+At last you must override the method collectResults(self,directory).
+When a handler is invoked after a job execution , the script which invokes the handler passes to it 
+a directory which contains the job results. So any file your handler needs it must find it in the given directory (the directory argument of collectResults function)
+		
+\vspace{2 mm}
+
+Here follows an example of a handler called "TestHandler":
+
+\begin{verbatim}
+#we need it just to pretty print the example
+import pprint
+
+#import the BaseHandler
+from BaseHandler import BaseHandler
+
+class TestHandler(BaseHandler):
+
+  def __init__(self):
+    #it is needed here
+    super(self.__class__, self).__init__()
+
+  def collectResults(self,directory):
+    #here are some attributes we want to save
+    a_float_number = 12.46
+    an_int_number = 800
+    a_string = 'This is my string'
+
+    #here we save the above attributes
+    self.saveFloat("a_float_number", a_float_number,
+      description = "This is float's description(optional)",
+      group = "MyGroup(optional)");
+    self.saveInt("an_int_number", an_int_number,
+      description = "This is my int's description(optional)",
+      group = "MyGroupInt(optional)");
+    self.saveString("a_string", a_string,
+      description = "This is string's description",
+      group = "MyGroup(optional)");
+
+#and here you can test it by hand
+#before you submit it
+if __name__ == "__main__":
+  #create an object
+  test =  TestHandler()
+    
+  # in real handlers you must provide
+  # a directory where your results reside
+  # and then the collectResults method 
+  # can access your files
+  test.collectResults('some_directory')
+    
+  #then print the collected results:
+  myprint = pprint.PrettyPrinter(indent=4)
+  myprint.pprint(test.getResults())
+\end{verbatim}
+
+{\bf Important}, when you add a new handler in the repository remember to add a new entry(the name of the module) in the Handler table in the database
+in order to see/be able to select the new handler in the web interface. If you do not have the permissions to do it yourself ask the administrator to add it for you.
+
+\vspace {2 mm}
+
+
+\bgroup
+\def\arraystretch{1.5}% 
+    \begin{tabular}{| l | l | l | l | l|}
+    \hline
+    {\bf Functionality} & {\bf CLI} & {\bf GUI} & {\bf User} & {\bf Status} \\ \hline
+    Create new job description & X & X & end & released \\ \hline    
+	Getting options/setupproject content providing description & X & & end & released \\ \hline
+	Update job Description & & X & end &released \\ \hline
+	Generate job script & X & X & end & released \\ \hline
+	Shibboleth authentication & & X & end & released \\ \hline
+	Administrator panel & & X & admin & released \\ \hline
+	Base python handler interface & X & & dev & released \\ \hline
+	Analysis framework interface & X & & dev & released \\ \hline	
+	Basic analysis & & X & end & released \\ \hline
+	Histograms analysis(Gauss application) & & X & end & released \\ \hline
+	Timing analysis & & X & end & released \\ \hline
+	Timing comparison analysis & & X & end & released \\ \hline
+	Trend analysis & & X & end & released \\ \hline
+	File handling using afs directory & X & & end & released \\ \hline
+	File handling using dirac storage element & X & & end & desirable \\ \hline
+	\end{tabular}
+
+
+\end{document}

@@ -1,11 +1,16 @@
 #!/bin/bash
 
+#redirect the output to a log so the cron job would send email to the owner each time it runs
 . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh &> /tmp/mytemp_log
 rm /tmp/mytemp_log
 
+#Setup the enviroment to use LHCbDirac
 . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/SetupProject.sh LHCbDirac -q
 
+#also add to the pythonpath a local copy of Django we have in the AFS web directory we have
+#and IMPORTANT, add the afs pytools path, in order to have access to cx_Oracle module needed to connect to the Oracle database. 
 export PYTHONPATH=$PYTHONPATH:/afs/cern.ch/lhcb/software/webapps/LHCbPR/Django-1.3.5:/afs/cern.ch/sw/lcg/external/pytools/1.8_python2.6/x86_64-slc5-gcc46-opt/lib/python2.6/site-packages
 
+#after setting up the environment call and execute the command which check for new added results
 /afs/cern.ch/lhcb/software/webapps/LHCbPR/LHCbPR/django_apps/manage.py pushToDB
 

@@ -12,11 +12,12 @@ os.environ['X509_USER_PROXY'] = '/afs/cern.ch/user/l/lhcbpr/private/myProxyFile'
 logger = logging.getLogger('check_logger')
 
 diracStorageElementName = 'StatSE'
-#uploaded/ <--- this will be the official one
-diracStorageElementFolder = 'uploaded_test'
+
+diracStorageElementFolder = 'uploaded'
+
 addedDiracStorageFolder = 'added'
 
-temp_save_path = os.path.join(settings.PROJECT_PATH, 'static/images/histograms')
+temp_save_path = os.path.join(settings.PROJECT_PATH, 'static/temp_zipfiles')
 
 def pushNewResults():
     #cd to temp folder to temporary save the zip files

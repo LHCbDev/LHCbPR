@@ -1,0 +1,36 @@
+AuthType shibboleth
+Require shibboleth
+ShibUseHeaders On
+
+#this is the file currently used in /afs/cern.ch/lhcb/software/webapps/LHCbPR
+#to deploy the LHCbPR project with fcgi module
+
+#only specific CERN ips are allowed
+#<Limit GET POST PUT>
+#	order deny,allow
+#	Deny from all
+#	Allow from 137.138.
+#</Limit>
+
+#restrict access to .py files
+<Files ~ "\.py$">
+	Order allow,deny
+	Deny from all
+</Files>
+
+
+Options +ExecCGI 
+AddHandler fastcgi-script .fcgi
+RewriteEngine On
+
+#important
+#this is for serving the django admin static files
+RewriteRule ^no_static/admin/(.*)$ Django-1.3.5/django/contrib/admin/media/$1
+
+#important
+#this is for serving the LHCbPR's static files(css, js etc)
+RewriteRule ^static/(.*)$ LHCbPR/django_apps/static/$1
+RewriteCond %{REQUEST_FILENAME} !-f
+
+#the rest urls should be handled from django fcgi process
+RewriteRule ^(.*)$ lhcbpr.fcgi/$1 [QSA,L]

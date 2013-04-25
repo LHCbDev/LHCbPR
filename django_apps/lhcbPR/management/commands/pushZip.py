@@ -22,19 +22,15 @@ def pushThis(zipFile):
     except ValueError, e:
         logger.exception("{0} exception occurred ".format(log))
         return
-        #sys.exit(1)
     except IOError,e:
         logger.exception("{0} exception occurred ".format(log))
         return
-        #sys.exit(1)
     except IndexError, e:
         logger.exception("{0} exception occurred ".format(log))
         return 
-        #sys.exit(1)
     except Exception, e:
         logger.exception("{0} exception occurred ".format(log))
         return
-        #sys.exit(1)
     
     try:
         results_unique_id, created = AddedResults.objects.get_or_create(identifier=DataDict['results_id'])
@@ -74,7 +70,6 @@ def pushThis(zipFile):
                                          status = DataDict['status'],
                                          success = True
                                          )
-        
         for handres in DataDict['handlers_info']:
             myHandler = Handler.objects.get(name__exact=handres['handler'])
             handler_result, created = HandlerResult.objects.get_or_create(
@@ -82,7 +77,8 @@ def pushThis(zipFile):
                                                                           handler=myHandler,
                                                                           success=handres['successful']
                                                                           )
-
+            
+            
         for atr in attributelist:
             
             myAtr, created = JobAttribute.objects.get_or_create(

@@ -1,0 +1,5 @@
+this folder is needed for pulling the uploaded results 
+from DiracStorageElement, works as a temporary storage for the added zip folders
+do not remove it, also if you deploy the LHCbPR porject on an AFS web directory
+do not forget to give write access to the afswebserver to this folder:
+example: fs sa -dir temp_zipfiles -acl  webserver:afs rlidwk

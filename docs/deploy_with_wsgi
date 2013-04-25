@@ -1,3 +1,6 @@
+This guide show how to deploy Django LHCbPR project 
+in machine (eg virtual machine), with apache+sll+shibboleth
+
 **** Set up apache+ssl+shibboleth+django
 	
 	If you want to find out more information about Django framework check the official site: https://www.djangoproject.com/
@@ -6,14 +9,16 @@
 	
 	1) First make sure you have httpd(apache) installed : rpm -q httpd
 		To configure your apache check the official documentation http://httpd.apache.org/docs/ or choose a tutorial or your taste.
-		After you finish the configuration add an new entry to the iptables so the firewall will accept incoming connections to currently
-		listening port 80. Edit the /etc/sysconfig/iptables and add something like that (add it under the same entry for port 22):
+		After you finish the configuration add an new entry to the iptables so the firewall will accept incoming connections 
+		to currently listening port 80. Edit the /etc/sysconfig/iptables 
+		and add something like that (add it under the same entry for port 22):
 			
 			-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
 			
 			then restart iptables: service iptables restart
 		
-		now your firewall will allow incoming connections to port 80, you can now test your apache( to start apache: (/sbin/)service httpd start) 
+		now your firewall will allow incoming connections to port 80, 
+		you can now test your apache( to start apache: (/sbin/)service httpd start) 
 		add an index.html to /var/www/html/ and check if your apache works.  
 	
 		
@@ -33,14 +38,17 @@
 		or install django using yum (it exists in epel.repo  make sure you epel repository is enable so you can install django through yum).
 		You can check/edit if your epel.repo is enabled in /etc/yum.repos.d/epel.repo (must have enable=1)
 		
-		then you can install django: yum install Django (current version from epel.repo is Django 1.3.1 the same version is used for lhcbPR developing)
-		Check if you installed django correctly : python -c "import django" (if you don't get an error message then django is correctly installed)
+		then you can install django: 
+			yum install Django (current version from epel.repo is Django 1.3.1 the same version is used for lhcbPR developing)
+		Check if you installed django correctly : 
+			python -c "import django" (if you don't get an error message then django is correctly installed)
 		
 	
-	4) Now that you have apache+ssl+django it's time to install mod_wsgi (using yum). Attention! The mod_wsgi must be installed with 
-		same python that you installed django , for example if you installed django on slc5 using python2.6 (and not using the default python2.4)
-		when you install mod_wsgi you must install it with python2.6 (download the correct rpm or install from source) and not by using yum 
-		because in slc5 yum uses default python2.4 so your mod_wsgi won't play with django.
+	4) Now that you have apache+ssl+django it's time to install mod_wsgi (using yum). 
+		Attention! The mod_wsgi must be installed with same python that you installed django
+		For example if you installed django on slc5 using python2.6 (and not using the default python2.4)
+		when you install mod_wsgi you must install it with python2.6 (download the correct rpm or install from source) 
+		and not by using yum  because in slc5 yum uses default python2.4 so your mod_wsgi won't play with django.
 		
 		For more information you can also check https://docs.djangoproject.com/en/1.2/howto/deployment/modwsgi/
 		example of http.conf with wsgi(add also the RewriteEngine to redirect all urls to https, like below): 
@@ -62,13 +70,15 @@
 			
 			WSGIScriptAlias /django path_to_wsgi.py
 			
-		**do not forget to configure apache to serve your also static files and give a link to the admin media(so django will serve properly
+		***do not forget to configure apache to serve your also static files 
+		and give a link to the admin media(so django will serve properly
 		the admin site) example :
 		
 			Alias /no_static/admin/ "/usr/lib/python2.6/site-packages/django/contrib/admin/media/"
 			Alias /static/ "/home/LHCbPR/django_apps/static/"
 		
-	5) Important note: in scl6 you must change the permissions for the selinux if you want the apache to be able to serve your files/application:
+	5) Important note: in scl6 you must change the permissions for the selinux 
+		if you want the apache to be able to serve your files/application:
 		example : 
 			to see the selinux permissions: ls -alZ and to fix them use chcon, 
 			also check this: https://bugzilla.redhat.com/show_bug.cgi?id=143490
@@ -77,9 +87,11 @@
 		
 		**(or just skip this step and fix it like is described below) 
 			
-	6) The lhcbpr django application uses an oracle database so in order to work it needs the oracle-instantclient-basic, oracle-instantclient-tnsnames and also
-		cx_Oracle module, you should install these packages from the cern-only repository(by default the cern-only repo is not enabled so edit the 
-		/etc/yum.repos.d/cern-only(so something similar) and change enable=0 to enable=1
+	6) The lhcbpr django application uses an oracle database so in order to work it needs the 
+		oracle-instantclient-basic, oracle-instantclient-tnsnames and also
+		cx_Oracle module, you should install these packages from the cern-only repository
+		(by default the cern-only repo is not enabled so edit the /etc/yum.repos.d/cern-only(or something similar) 
+		and change enable=0 to enable=1
 		  
 		BUT you must configure the selinux (cx_Oracle doesn't have permissions with selinux), 
 		
@@ -90,13 +102,16 @@
 			
 			and then /usr/sbin/setenforce Permissive 
 			
-	7) At last you need to install shibboleth , for this follow the instructions: http://linux.web.cern.ch/linux/scientific6/docs/shibboleth.shtml for scl6
-		or for slc5 http://linux.web.cern.ch/linux/scientific5/docs/shibboleth.shtml , check in the /etc/httpd/conf.d/shib.conf , if 
-		you use the directory tag check which urls you protect with shibboleth because only these urls will be able to see the headers. In lhcbpr application
+	7) At last you need to install shibboleth.
+		For this follow the instructions: http://linux.web.cern.ch/linux/scientific6/docs/shibboleth.shtml for scl6
+		or for slc5 http://linux.web.cern.ch/linux/scientific5/docs/shibboleth.shtml , check in the /etc/httpd/conf.d/shib.conf ,
+		if you use the directory tag check which urls you protect with shibboleth 
+		because only these urls will be able to see the headers. In lhcbpr application
 		all urls protected so i have: <Location />...</Location> instead of <Location /secure>..</Location>
 		
 		
-	After these steps the django application should play, also the the project contains the shibsso application(from cern svn), so you check the documentation/configuration 
+	After these steps the django application should work, 
+	also the the project contains the shibsso application(from cern svn), so you check the documentation/configuration 
 	for this you can check at: https://svn.cern.ch/reps/elfmsdjango/shibsso
 		 
 		

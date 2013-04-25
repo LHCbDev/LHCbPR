@@ -14,15 +14,14 @@ logger = logging.getLogger('check_logger')
 
 diracStorageElementName = 'StatSE'
 #uploaded/ <--- this will be the official one
-diracStorageElementFolder = 'uploaded_test'
+diracStorageElementFolder = 'uploaded'
+
 addedDiracStorageFolder = 'added'
 
-temp_save_path = os.path.join(settings.PROJECT_PATH, 'static/images/histograms')
+temp_save_path = os.path.join(settings.PROJECT_PATH, 'static/temp_zipfiles')
 
 def pushNewResults():
     #cd to temp folder to temporary save the zip files
-    #before save in the database, for the testing are saved static/images/histograms
-    #where the vm alamages has permissions to write
     os.chdir(temp_save_path) 
     
     logger.info('Checking results directory for new added zip files...')
@@ -38,7 +37,7 @@ def pushNewResults():
     for zipResult in dirDict['Value']['Successful'][diracStorageElementFolder]['Files']:
         fileName, fileExtension = os.path.splitext(zipResult)
         
-        #get the File
+        #get the File, copy the file to the current local directory
         statSE.getFile(os.path.join(diracStorageElementFolder, zipResult))
         
         results_list = AddedResults.objects.filter(identifier__exact=fileName)

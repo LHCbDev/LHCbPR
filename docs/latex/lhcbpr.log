@@ -1,0 +1,378 @@
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.9.27)  25 APR 2013 09:32
+entering extended mode
+**lhcbpr.tex
+(./lhcbpr.tex
+LaTeX2e <2003/12/01>
+Babel <v3.8d> and hyphenation patterns for american, french, german, ngerman, b
+ahasa, basque, bulgarian, catalan, croatian, czech, danish, dutch, esperanto, e
+stonian, finnish, greek, icelandic, irish, italian, latin, magyar, norsk, polis
+h, portuges, romanian, russian, serbian, slovak, slovene, spanish, swedish, tur
+kish, ukrainian, nohyphenation, loaded.
+(./lhcbnote.cls
+Document Class: lhcbnote 
+(/usr/share/texmf/tex/latex/base/article.cls
+Document Class: article 2004/02/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size10.clo
+File: size10.clo 2004/02/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+) (./lhcb-ext.sty)) (./lhcb.sty
+(/usr/share/texmf/tex/latex/a4wide/a4wide.sty
+Package: a4wide 1994/08/30
+
+(/usr/share/texmf/tex/latex/ntgclass/a4.sty
+Package: a4 2004/04/15 v1.2g A4 based page layout
+))
+(/usr/share/texmf/tex/latex/graphics/epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.cfg
+File: graphics.cfg 2005/02/03 v1.3 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 80.
+
+(/usr/share/texmf/tex/latex/graphics/pdftex.def
+File: pdftex.def 2002/06/19 v0.03k graphics/color for pdftex
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+\epsfxsize=\dimen105
+\epsfysize=\dimen106
+)
+\backindent=\skip43
+
+(/usr/share/texmf/tex/latex/psnfss/palatino.sty
+Package: palatino 2004/09/15 PSNFSS-v9.2 (SPQR) 
+)
+\c@address=\count88
+\headwidth=\dimen107
+) (./lhcbpr.aux
+
+LaTeX Warning: Label `overflow' multiply defined.
+
+
+LaTeX Warning: Label `overflow' multiply defined.
+
+
+LaTeX Warning: Label `overflow' multiply defined.
+
+
+LaTeX Warning: Label `overflow' multiply defined.
+
+)
+\openout1 = `lhcbpr.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Try loading font information for OT1+ppl on input line 22.
+ (/usr/share/texmf/tex/latex/psnfss/ot1ppl.fd
+File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
+)
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+(/usr/share/texmf/tex/context/base/supp-mis.tex
+loading : Context Support Macros / Miscellaneous (2004.10.26)
+\protectiondepth=\count89
+\scratchcounter=\count90
+\scratchtoks=\toks15
+\scratchdimen=\dimen108
+\scratchskip=\skip44
+\scratchmuskip=\muskip10
+\scratchbox=\box26
+\scratchread=\read1
+\scratchwrite=\write3
+\zeropoint=\dimen109
+\onepoint=\dimen110
+\onebasepoint=\dimen111
+\minusone=\count91
+\thousandpoint=\dimen112
+\onerealpoint=\dimen113
+\emptytoks=\toks16
+\nextbox=\box27
+\nextdepth=\dimen114
+\everyline=\toks17
+\!!counta=\count92
+\!!countb=\count93
+\recursecounter=\count94
+)
+loading : Context Support Macros / PDF (2004.03.26)
+\nofMPsegments=\count95
+\nofMParguments=\count96
+\MPscratchCnt=\count97
+\MPscratchDim=\dimen115
+\MPnumerator=\count98
+\everyMPtoPDFconversion=\toks18
+)
+LaTeX Font Info:    Try loading font information for T1+phv on input line 24.
+ (/usr/share/texmf/tex/latex/psnfss/t1phv.fd
+File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
+)
+<lhcb-logo.png, id=1, 1424.32124pt x 855.195pt>
+File: lhcb-logo.png Graphic file (type png)
+ <use lhcb-logo.png>
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 24.
+
+(/usr/share/texmf/tex/latex/psnfss/ot1phv.fd
+File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
+)
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 24.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 24.
+ [-1
+
+{/usr/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./lhcb-logo.png>] [0
+
+]
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 26.
+\titlebox=\box28
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 30.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 30.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 30.
+ (./lhcbpr.toc
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1.
+)
+\tf@toc=\write4
+\openout4 = `lhcbpr.toc'.
+
+LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <8> not available
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 36.
+LaTeX Font Info:    Font shape `OT1/phv/bx/it' in size <8> not available
+(Font)              Font shape `OT1/phv/b/it' tried instead on input line 36.
+LaTeX Font Info:    Font shape `OT1/phv/b/it' in size <8> not available
+(Font)              Font shape `OT1/phv/b/sl' tried instead on input line 36.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <8> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 36.
+ [1]
+(./lhcbpr.lof)
+\tf@lof=\write5
+\openout5 = `lhcbpr.lof'.
+
+ (./lhcbpr.lot)
+\tf@lot=\write6
+\openout6 = `lhcbpr.lot'.
+
+Missing character: There is no ‚ in font pplr7t!
+Missing character: There is no Ä in font pplr7t!
+Missing character: There is no ú in font pplr7t!
+Missing character: There is no ‚ in font pplr7t!
+Missing character: There is no Ä in font pplr7t!
+Missing character: There is no ù in font pplr7t!
+ [2]
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <12> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 97.
+ <my3tp.jpg, id=27, 963.6pt x 722.7pt>
+File: my3tp.jpg Graphic file (type jpg)
+
+<use my3tp.jpg>
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 117--118
+ [][] 
+ []
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <10> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 122.
+[3] [4 <./my3tp.jpg>]
+LaTeX Font Info:    Try loading font information for OMS+ppl on input line 212.
+
+ (/usr/share/texmf/tex/latex/psnfss/omsppl.fd
+File: omsppl.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 212.
+
+<jobdescription.png, id=40, 636.3775pt x 537.00626pt>
+File: jobdescription.png Graphic file (type png)
+ <use jobdescription.png>
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 242--243
+ [][] 
+ []
+
+[5] <job.png, id=48, 673.51625pt x 414.54875pt>
+File: job.png Graphic file (type png)
+ <use job.png>
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 273--274
+ [][] 
+ []
+
+
+Underfull \vbox (badness 2409) has occurred while \output is active []
+
+ [6 <./jobdescription.png>] <jobattribute.png, id=52, 674.52pt x 555.07375pt>
+File: jobattribute.png Graphic file (type png)
+
+<use jobattribute.png>
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 311--312
+ [][] 
+ []
+
+[7 <./job.png>] <handler.png, id=56, 754.82pt x 401.5pt>
+File: handler.png Graphic file (type png)
+ <use handler.png>
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 358--359
+ [][] 
+ []
+
+[8 <./jobattribute.png>] [9 <./handler.png>] [10]
+Overfull \hbox (9.13904pt too wide) in paragraph at lines 495--498
+[]\OT1/ppl/b/n/10 Attetion \OT1/ppl/m/n/10 One more step to fin-ish the setup. 
+You must pro-vide a \OT1/ppl/b/n/10 my-conf.py \OT1/ppl/m/n/10 file in \OT1/ppl
+/b/n/10 LHCbPR/django[]apps/
+ []
+
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 499.
+
+(/usr/share/texmf/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+) [11] [12]
+Overfull \hbox (52.64325pt too wide) in paragraph at lines 669--669
+[]  \OT1/pcr/m/n/10 jobdescriptions__application__appName='GAUSS').distinct().o
+rder_by('description')[] 
+ []
+
+
+Overfull \hbox (70.64325pt too wide) in paragraph at lines 669--669
+[]  \OT1/pcr/m/n/10 jobs__jobDescription__application__appName='GAUSS').distinc
+t().order_by('cmtconfig')[] 
+ []
+
+
+Overfull \hbox (64.64325pt too wide) in paragraph at lines 669--669
+[]  \OT1/pcr/m/n/10 jobs__jobDescription__application__appName='GAUSS').distinc
+t().order_by('hostname')[] 
+ []
+
+[13]
+Overfull \hbox (220.64325pt too wide) in paragraph at lines 709--709
+[]        \OT1/pcr/m/n/10 jobdescriptions__jobs__jobresults__jobAttribute__grou
+p='TimingTree').distinct().order_by('description')[] 
+ []
+
+[14]
+Overfull \hbox (4.64325pt too wide) in paragraph at lines 756--756
+[]  \OT1/pcr/m/n/10 'options' : 1,5,7, # comma separated primary keys of the se
+lected options[] 
+ []
+
+
+Overfull \hbox (22.64325pt too wide) in paragraph at lines 788--788
+[]             \OT1/pcr/m/n/10 'errorMessage' : 'My errorMessage accessed by {{
+ errorMessage }}'[] 
+ []
+
+[15]
+Overfull \hbox (4.64325pt too wide) in paragraph at lines 825--825
+[] \OT1/pcr/m/n/10 /* this will "click" the retreive results if the url contain
+s trigger=true[] 
+ []
+
+[16]
+Overfull \hbox (4.64325pt too wide) in paragraph at lines 875--875
+[]\OT1/pcr/m/n/10 url = "{{ ROOT_URL }}analyse/hello_analysis/functions/getMySt
+uff/"+appName;[] 
+ []
+
+
+Overfull \hbox (9.93898pt too wide) in paragraph at lines 881--882
+[]\OT1/ppl/m/n/10 url = "\OMS/cmsy/m/n/10 ff \OT1/ppl/m/n/10 ROOT[]URL \OMS/cms
+y/m/n/10 gg\OT1/ppl/m/n/10 analyse/\OT1/ppl/b/n/10 name[]of[]your[]module\OT1/p
+pl/m/n/10 /functions/\OT1/ppl/b/n/10 extra[]function[]name\OT1/ppl/m/n/10 /"+ap
+pName; 
+ []
+
+
+Overfull \hbox (26.25934pt too wide) in paragraph at lines 902--904
+\OT1/ppl/m/n/10 Each han-dler is python mod-ule which \OT1/ppl/b/n/10 ex-tends 
+\OT1/ppl/m/n/10 the \OT1/ppl/b/n/10 Base-Han-dler\OT1/ppl/m/n/10 (it re-sides i
+n the \OT1/ppl/b/n/10 LHCbPRHan-dler/handlers
+ []
+
+[17]
+Overfull \hbox (58.64325pt too wide) in paragraph at lines 942--942
+[]\OT1/pcr/m/n/10 self.saveFloat('execution_time', 12.45,'the total execution t
+ime', 'timing results')[] 
+ []
+
+
+Overfull \hbox (16.64325pt too wide) in paragraph at lines 942--942
+[]\OT1/pcr/m/n/10 #or just save it without description/group, just its name and
+ its value/data:[] 
+ []
+
+
+Overfull \hbox (34.64325pt too wide) in paragraph at lines 956--956
+[]\OT1/pcr/m/n/10 #lets say that you have a file: my_results_file = '/afs/cern.
+ch/path_to/my_file'[] 
+ []
+
+[18]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [19]
+[20] (./lhcbpr.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ )
+(\end occurred inside a group at level 1)
+
+### simple group (level 1) entered at line 1024 ({)
+### bottom level 
+Here is how much of TeX's memory you used:
+ 1257 strings out of 94500
+ 15496 string characters out of 1176766
+ 65525 words of memory out of 1000000
+ 4405 multiletter control sequences out of 10000+50000
+ 30270 words of font info for 52 fonts, out of 500000 for 2000
+ 580 hyphenation exceptions out of 1000
+ 44i,8n,25p,251b,286s stack positions out of 1500i,500n,5000p,200000b,5000s
+PDF statistics:
+ 100 PDF objects out of 300000
+ 0 named destinations out of 131072
+ 31 words of extra memory for PDF output out of 65536
+{/usr/share/texmf/fonts/enc/dvips/psnfss/8r.enc}</usr/share/tex
+mf/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
+cmsy10.pfb></usr/share/texmf/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/te
+xmf/fonts/type1/urw/palatino/uplbi8a.pfb></usr/share/texmf/fonts/type1/urw/helv
+etic/uhvbo8a.pfb></usr/share/texmf/fonts/type1/urw/palatino/uplb8a.pfb></usr/sh
+are/texmf/fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texmf/fonts/type1/urw
+/helvetic/uhvb8a.pfb>
+Output written on lhcbpr.pdf (22 pages, 331260 bytes).
