@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.9.27)  25 APR 2013 09:32
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.9.27)  29 APR 2013 16:44
 entering extended mode
 **lhcbpr.tex
 (./lhcbpr.tex
@@ -87,19 +87,19 @@ LaTeX Warning: Label `overflow' multiply defined.
 )
 \openout1 = `lhcbpr.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Try loading font information for OT1+ppl on input line 22.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Try loading font information for OT1+ppl on input line 21.
  (/usr/share/texmf/tex/latex/psnfss/ot1ppl.fd
 File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
 )
@@ -137,52 +137,52 @@ loading : Context Support Macros / PDF (2004.03.26)
 \MPnumerator=\count98
 \everyMPtoPDFconversion=\toks18
 )
-LaTeX Font Info:    Try loading font information for T1+phv on input line 24.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 23.
  (/usr/share/texmf/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 <lhcb-logo.png, id=1, 1424.32124pt x 855.195pt>
 File: lhcb-logo.png Graphic file (type png)
  <use lhcb-logo.png>
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 24.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 23.
 
 (/usr/share/texmf/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <20.74> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 24.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 23.
 LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 24.
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 23.
  [-1
 
 {/usr/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./lhcb-logo.png>] [0
 
 ]
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 26.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 25.
 \titlebox=\box28
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 30.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 29.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 30.
+(Font)              <7> on input line 29.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 30.
+(Font)              <5> on input line 29.
  (./lhcbpr.toc
 LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <10> not available
 (Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1.
-)
+LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <8> not available
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 33.
+LaTeX Font Info:    Font shape `OT1/phv/bx/it' in size <8> not available
+(Font)              Font shape `OT1/phv/b/it' tried instead on input line 33.
+LaTeX Font Info:    Font shape `OT1/phv/b/it' in size <8> not available
+(Font)              Font shape `OT1/phv/b/sl' tried instead on input line 33.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <8> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 33.
+ [1])
 \tf@toc=\write4
 \openout4 = `lhcbpr.toc'.
 
-LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <8> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 36.
-LaTeX Font Info:    Font shape `OT1/phv/bx/it' in size <8> not available
-(Font)              Font shape `OT1/phv/b/it' tried instead on input line 36.
-LaTeX Font Info:    Font shape `OT1/phv/b/it' in size <8> not available
-(Font)              Font shape `OT1/phv/b/sl' tried instead on input line 36.
-LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <8> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 36.
- [1]
+
 (./lhcbpr.lof)
 \tf@lof=\write5
 \openout5 = `lhcbpr.lof'.
@@ -199,180 +199,218 @@ Missing character: There is no Ä in font pplr7t!
 Missing character: There is no ù in font pplr7t!
  [2]
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <12> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 97.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 96.
  <my3tp.jpg, id=27, 963.6pt x 722.7pt>
 File: my3tp.jpg Graphic file (type jpg)
 
 <use my3tp.jpg>
-Overfull \hbox (38.34009pt too wide) in paragraph at lines 117--118
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 116--117
  [][] 
  []
 
 LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <10> not available
-(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 122.
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 121.
 [3] [4 <./my3tp.jpg>]
-LaTeX Font Info:    Try loading font information for OMS+ppl on input line 212.
+LaTeX Font Info:    Try loading font information for OMS+ppl on input line 211.
 
  (/usr/share/texmf/tex/latex/psnfss/omsppl.fd
 File: omsppl.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 212.
-
-<jobdescription.png, id=40, 636.3775pt x 537.00626pt>
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 211.
+ [5]
+<jobdescription.png, id=47, 636.3775pt x 537.00626pt>
 File: jobdescription.png Graphic file (type png)
  <use jobdescription.png>
-Overfull \hbox (38.34009pt too wide) in paragraph at lines 242--243
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 241--242
  [][] 
  []
 
-[5] <job.png, id=48, 673.51625pt x 414.54875pt>
+<job.png, id=48, 673.51625pt x 414.54875pt>
 File: job.png Graphic file (type png)
  <use job.png>
-Overfull \hbox (38.34009pt too wide) in paragraph at lines 273--274
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 272--273
  [][] 
  []
 
-
-Underfull \vbox (badness 2409) has occurred while \output is active []
-
- [6 <./jobdescription.png>] <jobattribute.png, id=52, 674.52pt x 555.07375pt>
+[6] <jobattribute.png, id=52, 674.52pt x 555.07375pt>
 File: jobattribute.png Graphic file (type png)
-
-<use jobattribute.png>
-Overfull \hbox (38.34009pt too wide) in paragraph at lines 311--312
+ <use jobattribute.png>
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 310--311
  [][] 
  []
 
-[7 <./job.png>] <handler.png, id=56, 754.82pt x 401.5pt>
+[7 <./jobdescription.png>] <handler.png, id=56, 754.82pt x 401.5pt>
 File: handler.png Graphic file (type png)
- <use handler.png>
-Overfull \hbox (38.34009pt too wide) in paragraph at lines 358--359
+
+<use handler.png>
+Overfull \hbox (38.34009pt too wide) in paragraph at lines 357--358
  [][] 
  []
 
-[8 <./jobattribute.png>] [9 <./handler.png>] [10]
-Overfull \hbox (9.13904pt too wide) in paragraph at lines 495--498
+[8 <./job.png>] [9 <./jobattribute.png>] [10 <./handler.png>]
+Overfull \hbox (9.13904pt too wide) in paragraph at lines 494--497
 []\OT1/ppl/b/n/10 Attetion \OT1/ppl/m/n/10 One more step to fin-ish the setup. 
 You must pro-vide a \OT1/ppl/b/n/10 my-conf.py \OT1/ppl/m/n/10 file in \OT1/ppl
 /b/n/10 LHCbPR/django[]apps/
  []
 
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 499.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 498.
 
 (/usr/share/texmf/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [11] [12]
-Overfull \hbox (52.64325pt too wide) in paragraph at lines 669--669
+) [11] [12] [13]
+Overfull \hbox (52.64325pt too wide) in paragraph at lines 668--668
 []  \OT1/pcr/m/n/10 jobdescriptions__application__appName='GAUSS').distinct().o
 rder_by('description')[] 
  []
 
 
-Overfull \hbox (70.64325pt too wide) in paragraph at lines 669--669
+Overfull \hbox (70.64325pt too wide) in paragraph at lines 668--668
 []  \OT1/pcr/m/n/10 jobs__jobDescription__application__appName='GAUSS').distinc
 t().order_by('cmtconfig')[] 
  []
 
 
-Overfull \hbox (64.64325pt too wide) in paragraph at lines 669--669
+Overfull \hbox (64.64325pt too wide) in paragraph at lines 668--668
 []  \OT1/pcr/m/n/10 jobs__jobDescription__application__appName='GAUSS').distinc
 t().order_by('hostname')[] 
  []
 
-[13]
-Overfull \hbox (220.64325pt too wide) in paragraph at lines 709--709
+
+Overfull \hbox (220.64325pt too wide) in paragraph at lines 708--708
 []        \OT1/pcr/m/n/10 jobdescriptions__jobs__jobresults__jobAttribute__grou
 p='TimingTree').distinct().order_by('description')[] 
  []
 
 [14]
-Overfull \hbox (4.64325pt too wide) in paragraph at lines 756--756
+Overfull \hbox (4.64325pt too wide) in paragraph at lines 755--755
 []  \OT1/pcr/m/n/10 'options' : 1,5,7, # comma separated primary keys of the se
 lected options[] 
  []
 
-
-Overfull \hbox (22.64325pt too wide) in paragraph at lines 788--788
+[15]
+Overfull \hbox (22.64325pt too wide) in paragraph at lines 787--787
 []             \OT1/pcr/m/n/10 'errorMessage' : 'My errorMessage accessed by {{
  errorMessage }}'[] 
  []
 
-[15]
-Overfull \hbox (4.64325pt too wide) in paragraph at lines 825--825
+
+Overfull \hbox (4.64325pt too wide) in paragraph at lines 824--824
 [] \OT1/pcr/m/n/10 /* this will "click" the retreive results if the url contain
 s trigger=true[] 
  []
 
 [16]
-Overfull \hbox (4.64325pt too wide) in paragraph at lines 875--875
+Overfull \hbox (4.64325pt too wide) in paragraph at lines 874--874
 []\OT1/pcr/m/n/10 url = "{{ ROOT_URL }}analyse/hello_analysis/functions/getMySt
 uff/"+appName;[] 
  []
 
 
-Overfull \hbox (9.93898pt too wide) in paragraph at lines 881--882
+Overfull \hbox (9.93898pt too wide) in paragraph at lines 880--881
 []\OT1/ppl/m/n/10 url = "\OMS/cmsy/m/n/10 ff \OT1/ppl/m/n/10 ROOT[]URL \OMS/cms
 y/m/n/10 gg\OT1/ppl/m/n/10 analyse/\OT1/ppl/b/n/10 name[]of[]your[]module\OT1/p
 pl/m/n/10 /functions/\OT1/ppl/b/n/10 extra[]function[]name\OT1/ppl/m/n/10 /"+ap
 pName; 
  []
 
-
-Overfull \hbox (26.25934pt too wide) in paragraph at lines 902--904
+[17]
+Overfull \hbox (26.25934pt too wide) in paragraph at lines 901--903
 \OT1/ppl/m/n/10 Each han-dler is python mod-ule which \OT1/ppl/b/n/10 ex-tends 
 \OT1/ppl/m/n/10 the \OT1/ppl/b/n/10 Base-Han-dler\OT1/ppl/m/n/10 (it re-sides i
 n the \OT1/ppl/b/n/10 LHCbPRHan-dler/handlers
  []
 
-[17]
-Overfull \hbox (58.64325pt too wide) in paragraph at lines 942--942
+
+Overfull \hbox (58.64325pt too wide) in paragraph at lines 941--941
 []\OT1/pcr/m/n/10 self.saveFloat('execution_time', 12.45,'the total execution t
 ime', 'timing results')[] 
  []
 
 
-Overfull \hbox (16.64325pt too wide) in paragraph at lines 942--942
+Overfull \hbox (16.64325pt too wide) in paragraph at lines 941--941
 []\OT1/pcr/m/n/10 #or just save it without description/group, just its name and
  its value/data:[] 
  []
 
 
-Overfull \hbox (34.64325pt too wide) in paragraph at lines 956--956
+Overfull \hbox (34.64325pt too wide) in paragraph at lines 955--955
 []\OT1/pcr/m/n/10 #lets say that you have a file: my_results_file = '/afs/cern.
 ch/path_to/my_file'[] 
  []
 
-[18]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+[18] [19]
+Overfull \hbox (76.64325pt too wide) in paragraph at lines 1074--1074
+[]\OT1/pcr/m/n/10 #for example if you setup a VM with an apache (eg alamages.ce
+rn.ch VM) and the root url[] 
+ []
 
- [19]
-[20] (./lhcbpr.aux)
+[20]
+Overfull \hbox (15.5102pt too wide) in paragraph at lines 1131--1132
+[]\OT1/ppl/b/n/10 */5 * * * * lx-plus.cern.ch /afs/cern.ch/lhcb/software/webapp
+s/LHCbPR/LHCbPR/django[]apps/pushtodb 
+ []
+
+[21]
+Overfull \hbox (0.17923pt too wide) in paragraph at lines 1160--1162
+[]\OT1/ppl/b/n/10 export X509[]USER[]PROXY=/afs/cern.ch/user/l/lhcbpr/private/m
+yProxyFile \OT1/ppl/m/n/10 , cur-rently this line
+ []
+
+
+Overfull \hbox (32.63756pt too wide) in paragraph at lines 1163--1164
+[]\OT1/ppl/b/n/10 IMPORTANT \OT1/ppl/m/n/10 In case you change the cur-rent pat
+h (/afs/cern.ch/user/l/lhcbpr/private/myProxyFile)
+ []
+
+
+Overfull \hbox (59.64328pt too wide) in paragraph at lines 1171--1171
+ []\OT1/pcr/m/n/10 os.environ['X509_USER_PROXY'] = '/afs/cern.ch/user/l/lhcbpr/
+private/myProxyFile'[] 
+ []
+
+
+Overfull \hbox (40.51022pt too wide) in paragraph at lines 1178--1179
+[]\OT1/ppl/b/n/10 */5 * * * * lx-plus.cern.ch /afs/cern.ch/lhcb/software/webapp
+s/LHCbPR/LHCbPR/django[]apps/pushtodb 
+ []
+
+[22]
+Overfull \hbox (33.04855pt too wide) in paragraph at lines 1213--1216
+\OT1/ppl/m/n/10 we have a rel-a-tive path to the saved file. The rel-a-tive pat
+h has this for-mat: \OT1/ppl/b/n/10 job[]description[]id/job[]id/filename\OT1/p
+pl/m/n/10 .
+ []
+
+
+Overfull \hbox (34.64325pt too wide) in paragraph at lines 1245--1245
+[]\OT1/pcr/m/n/10 <link rel="stylesheet" href="{{ STATIC_URL }}css/lhcbPR_new.c
+ss" media="screen">[] 
+ []
+
+[23] [24] (./lhcbpr.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
- )
-(\end occurred inside a group at level 1)
-
-### simple group (level 1) entered at line 1024 ({)
-### bottom level 
+ ) 
 Here is how much of TeX's memory you used:
  1257 strings out of 94500
  15496 string characters out of 1176766
- 65525 words of memory out of 1000000
+ 63526 words of memory out of 1000000
  4405 multiletter control sequences out of 10000+50000
  30270 words of font info for 52 fonts, out of 500000 for 2000
  580 hyphenation exceptions out of 1000
- 44i,8n,25p,251b,286s stack positions out of 1500i,500n,5000p,200000b,5000s
+ 44i,8n,25p,251b,288s stack positions out of 1500i,500n,5000p,200000b,5000s
 PDF statistics:
- 100 PDF objects out of 300000
+ 113 PDF objects out of 300000
  0 named destinations out of 131072
  31 words of extra memory for PDF output out of 65536
-{/usr/share/texmf/fonts/enc/dvips/psnfss/8r.enc}</usr/share/tex
-mf/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
-cmsy10.pfb></usr/share/texmf/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/te
-xmf/fonts/type1/urw/palatino/uplbi8a.pfb></usr/share/texmf/fonts/type1/urw/helv
-etic/uhvbo8a.pfb></usr/share/texmf/fonts/type1/urw/palatino/uplb8a.pfb></usr/sh
-are/texmf/fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texmf/fonts/type1/urw
-/helvetic/uhvb8a.pfb>
-Output written on lhcbpr.pdf (22 pages, 331260 bytes).
+{/usr/share/texmf/fonts/enc/dvips/psnfss/8r.enc}</usr/share/texmf/fonts/type1
+/urw/courier/ucrr8a.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></u
+sr/share/texmf/fonts/type1/urw/palatino/uplbi8a.pfb></usr/share/texmf/fonts/typ
+e1/urw/helvetic/uhvr8a.pfb></usr/share/texmf/fonts/type1/urw/helvetic/uhvbo8a.p
+fb></usr/share/texmf/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texmf/font
+s/type1/urw/palatino/uplr8a.pfb></usr/share/texmf/fonts/type1/urw/helvetic/uhvb
+8a.pfb>
+Output written on lhcbpr.pdf (26 pages, 350754 bytes).

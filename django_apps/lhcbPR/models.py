@@ -105,7 +105,8 @@ class ResultFloat(JobResults):
     
 class ResultInt(JobResults):
     data = models.IntegerField()
-        
+
+#custom path to save the files in format MEDIA_ROOT/job_description_id/job_id/filename    
 def content_file_name(instance, filename):
     return '/'.join([str(instance.job.jobDescription.pk), str(instance.job.pk), filename])
 

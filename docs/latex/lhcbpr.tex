@@ -1,7 +1,6 @@
 \documentclass{lhcbnote}
 
 \title{LHCb Performance and Regression}
-%\author{Benjamin Gaidioz{\address[BGADD]{CERN,Switzerland}},}
 %for more than one author %
 \author{Emmanouil Kiagias}%,%
 %with a different address %
@@ -1018,30 +1017,296 @@ if __name__ == "__main__":
 {\bf Important}, when you add a new handler in the repository remember to add a new entry(the name of the module) in the Handler table in the database
 in order to see/be able to select the new handler in the web interface. If you do not have the permissions to do it yourself ask the administrator to add it for you.
 
-\vspace {2 mm}
+
+\section {Maintenance}
+
+In this section is described how to maitain the LHCbPR project.
+
+\vspace {2mm}
+
+Currently the production release path is: 
+
+{\bf /afs/cern.ch/lhcb/software/webapps/LHCbPR}
+
+There exist the LHCbPR project, the .htaccess file, the lhcbpr.fcgi etc.
+
+\subsection{myconf.py file}
+
+The {\bf myconf.py} file can be found in the LHCbPR project: {\bf LHCbPR/django\_apps}
+
+Here is a sample of a myconf.py file, the comments document the variables:
+
+\begin{verbatim}
+#proper values can be found in the current production myconf.py file 
+dbname = 'name_of_the_database'
+dbuser = 'username_for_the_database'
+dbpass = 'database_password'
+
+key = 'key_django_needs'
+
+#ATTENTION
+# LOCAL must ALWAYS False in order the shibboleth to be enable
+#the only case is can be True is for local deployment and testing of the
+#LHCbPR project
+LOCAL = False
+
+#DEBUG should be False for production 
+#in case of local deployment you can have it true
+DEBUG = False
+
+#ATTENTION - VERY IMPORTANT
+#This variable must contain the root url of project on the hosted server
+#for example currently the LHCbPR is served on a shared afs apache
+#under the url cern.ch/lhcb-pr/, in that case the ROOT_URL must be:
+ROOT_URL = '/lhcb-pr/'
+
+#In case the deployment machine is changed also the ROOT_URL must change
+#for example if you setup a VM with an apache (eg alamages.cern.ch VM) and the root url 
+#of your project is alamages.cern.ch/ the ROOT_URL must be:
+#ROOT_URL= '/'
+#and so on in other cases
+
+#another example :
+#in case the project is served under cern.ch/myothersite/
+#then the ROOT_URL must be:
+#ROOT_URL = '/myothersite/'
+
+\end{verbatim}
+
+\subsection {Cronjob pushing the results in database and DiracStorageElement}
+
+\subsubsection {Overview}
+
+Let have an overview of how the results are pushed to the database
+
+After a job execution the handlers are called (through the {\bf collecRunResults.py} script in {\bf LHCbPRHandlers}) 
+and they produce a zip file containg the gathered data (each zip file has a UUID name). As soon as a zip file is produced 
+it is uploaded to {\bf DiracStorageElement} (either automatically via collectRunResults, check --help of the script, or manually by the user) using the {\bf sendToDB.py} script 
+from the LHCbPRHandlers. 
+
+The uploaded zip files in DiracStorageElement, are pulled from a {\bf cronjob} and get pushed in the database. The cronjob is run by the {\bf lhcbpr} service account 
+in {\bf acrontab} on lxplus. The cronjob checks if there is a new uploaded zip file, it checks if the UUID name of the zip file exists in the {\bf AddedResults} table in the database. If it does not exist 
+in the AddedResults table that means it's a new zip file and so it pushes it in the database.ssh lxvoadm  
+
+\subsubsection {DiracStorageElement}
+
+DiracStorageElement name : { \bf StatSE}
+
+In order to connect to the storage space of StatSE via a terminal and not only through the DiracStorageElement API:
+
+\begin {enumerate}
+\item
+Connect to lxvoadm machine :  {\bf ssh lxvoadm}
+\item
+Once you are in the lxvoadm connect to the volhcb25 machine: {\bf ssh volhcb25}
+\end {enumerate}
+
+In {\bf volhcb25}, the DiracStorageElement's StatSE root folder is the {\bf /data}. The zip files are uploaded inside the {\bf /data/uploaded} folder. 
+The cronjob checks the uploded folder for new zip files. When a new zip file is pushed in the database it is moved from the {\bf uploaded } folder to the {\bf added} folder (/data/added).
+
+So the two folder used in StatSE (volhcb25 machine) :
+
+\begin {enumerate}
+\item
+{\bf /data/uploaded} folder   : this is where the new zip files containing the results are uploaded.
+\item
+{\bf /data/added} folder : this is where the zip files are moved after they have been pushed in the database. This folder's zip files can de deleted depending on the administrator's will. 
+As soon as the zip files are pushed in the database it be useless keeping them since their data is in the database now. But we keep them in case an error occurs while pushing a zip file, 
+you can check the logs and find the UUID of the zip which caused the problem, 
+get the problematic zip file from the added folder and investigate what went wrong (if the log file's exception message is not enough).
+\end {enumerate}
+
+\subsubsection {Cronjob pushing the results}
+
+The AFS cronjob is running under the {\bf lhcbpr} service account. To check the acronjobs you do:
+
+\vspace {2mm}
+{\bf acrontab -l} (for more information about managing afs crontab please visit: 
+
+http://services-old.web.cern.ch/services-old/afs/afsguide.html and check the "Cron Jobs" section )
+
+\vspace {2mm}
+You will probably get this output : 
+
+{\bf */5 * * * * lxplus.cern.ch /afs/cern.ch/lhcb/software/webapps/LHCbPR/LHCbPR/django\_apps/pushtodb}
+
+\vspace {2mm}
+
+So the {\bf lhcbpr} service account runs a cron job (executing the corrensponding script: pushtodb) every 5 minutes on a lxplus node
 
 
-\bgroup
-\def\arraystretch{1.5}% 
-    \begin{tabular}{| l | l | l | l | l|}
-    \hline
-    {\bf Functionality} & {\bf CLI} & {\bf GUI} & {\bf User} & {\bf Status} \\ \hline
-    Create new job description & X & X & end & released \\ \hline    
-	Getting options/setupproject content providing description & X & & end & released \\ \hline
-	Update job Description & & X & end &released \\ \hline
-	Generate job script & X & X & end & released \\ \hline
-	Shibboleth authentication & & X & end & released \\ \hline
-	Administrator panel & & X & admin & released \\ \hline
-	Base python handler interface & X & & dev & released \\ \hline
-	Analysis framework interface & X & & dev & released \\ \hline	
-	Basic analysis & & X & end & released \\ \hline
-	Histograms analysis(Gauss application) & & X & end & released \\ \hline
-	Timing analysis & & X & end & released \\ \hline
-	Timing comparison analysis & & X & end & released \\ \hline
-	Trend analysis & & X & end & released \\ \hline
-	File handling using afs directory & X & & end & released \\ \hline
-	File handling using dirac storage element & X & & end & desirable \\ \hline
-	\end{tabular}
+\subsubsection {Refresh Dirac Proxy (LHCb certificate), Cron Job}
 
+The {\bf lhcbpr}'s service account cron job uses LHCbDirac to access DiracStorageElement and pull the uploaded zip files. In order to access DiracStorageElement 
+we need to have a proxy which we obtain once we run lhcb-proxy-init ( for more info on lhcbpr certificates check: 
+
+https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/Certificate )
+Usually when you call {\bf lhcb-proxy-init} it generates a proxy in the {\bf /tmp/} on the machine where you called it. {\bf BUT} in our case the afs cron job runs every 5 minutes 
+on a {\bf different} lxplus node so it won't locate the generated proxy on the /tmp/ (because it might be on a different node where we call the lhcb-proxy-init). 
+So we need to provide a {\bf custom path} to the {\bf lhcb-proxy-init} command about where to generate a proxy. When you call lhcb-proxy-init it checks the current SHELL for a 
+{\bf X509\_USER\_PROXY} variable, if it is not set then it generates the proxy to the /tmp/ folder, but if it is set it generates a proxy using the variable value ({\bf X509\_USER\_PROXY}'s value)
+
+\vspace {4mm}
+
+Refreshing Dirac proxy of cronjob:
+
+\vspace {2mm}
+\begin {enumerate}
+\item
+{\bf ssh lhcbpr@lxplus.cern.ch} , login to lxplus as lhcbpr service account
+\item
+{\bf echo \$X509\_USER\_PROXY} , make sure that X509\_USER\_PROXY is set, if not set it manually :
+
+{\bf export X509\_USER\_PROXY=/afs/cern.ch/user/l/lhcbpr/private/myProxyFile} , currently this line is added to {\bf lhcbpr}'s {\bf \~/.bashrc} file so there is no need to set it again. 
+In case you change the path to generate the proxy just update also the .bashrc with the above export command with the new path. 
+
+{\bf IMPORTANT} In case you change the current path (/afs/cern.ch/user/l/lhcbpr/private/myProxyFile) also change the:
+
+{\bf /.../LHCbPR/django\_apps/lhcbPR/management/commands/pushToDB.py}
+
+change the 10th line, and you new path:
+\begin{verbatim}
+#set custom path for the proxy
+os.environ['X509_USER_PROXY'] = '/afs/cern.ch/user/l/lhcbpr/private/myProxyFile'
+\end{verbatim}
+
+\item
+{\bf lhcb-proxy-init -v 900:00} , call lhcb-proxy-init by providing how long you want your proxy to be valid (in this example will be 900 hours valid)
+\item
+{\bf acrontab -l} , finally (optional step) check if the cronjob exists in the crontab , you should get the following output:
+
+{\bf */5 * * * * lxplus.cern.ch /afs/cern.ch/lhcb/software/webapps/LHCbPR/LHCbPR/django\_apps/pushtodb}
+
+if you don't get the above output, edit the acrontab ({\bf acrontab -e}) and add the above line.
+\end {enumerate}
+
+\subsubsection{Checking the added results, checking the logs for errors}
+All the logs of the LHCbPR exist in the LHCbPR/django\_apps/static/logs.
+
+You can check the logs of the cron job by checking the following files:
+
+\begin{enumerate}
+\item
+{\bf cd /afs/cern.ch/lhcb/software/webapps/LHCbPR/LHCbPR/django\_apps/static/logs}
+\item
+{\bf tail check.log}, shows when the cron job checks the DiracStorageElement for new uploaded zip files (a new entry every five minutes). In case it finds a 
+new zip file, a new entry in the log is added with the zipfile's UUID.
+\item 
+{\bf tail pushToDB.log}, a line for each zipfile added in the database, contains info: if the pushing of the zip file was successful or not. In 
+case of an exception the exception is logged into the log file. 
+\end{enumerate}
+
+{\bf Note:} In case you want to see if your results where pushed successfully in the database just search the UUID of your zipfile in the {\bf pushToDB.log} and 
+check whether your  zipfile was added successfully or not. 
+
+\subsection {Managing the files}
+
+By default, Django stores files locally, using the MEDIA\_ROOT and MEDIA\_URL settings 
+
+(variables located in LHCbPR/django\_apps/settings.py)
+For more info about django managing files check the online documentation : 
+
+https://docs.djangoproject.com/en/1.5/
+
+Currently the way we handle the uploaded files is the following :
+
+Using the django FileField field in our ResultFile model (LHCbPR/django\_apps/lhcbPR/models.py) we have a relative 
+path to the saved file. The relative path has this format: {\bf job\_description\_id/job\_id/filename}. So in order to get the full path of your file 
+first you get the relative path from the FileField and then using MEDIA\_ROOT (in the setting.py)you get the full path :
+
+{\bf MEDIA\_ROOT/job\_description\_id/job\_id/filename}
+
+Currently the MEDIA\_ROOT path of the files is : 
+
+{\bf /afs/cern.ch/lhcb/software/webapps/LHCbPR/data/files/}
+
+So in case you want to move the files to another afs directory just take the files (the relative paths in the database will remain the same) and move 
+them to new directory, then {\bf change} the {\bf MEDIA\_ROOT} variable with the new root directory in the:
+
+{\bf LHCbPR/django\_apps/settings.py}
+
+\subsection {Managing Static files (js, css etc)}
+
+All the static media of the LHCbPR project exist in:
+
+{\bf LHCbPR/django\_apps/static} directory. There you can store the js, css files or any other static file you 
+need for the project (in the corrensponding existing folders, or create new folders etc).
+
+Django keeps the {\bf STATIC\_URL} in the LHCbPR/django\_apps/settings.py file.
+In case you want to change your static path edit the settings.py and change the {\bf STATIC\_URL} variable.
+
+\vspace {2mm}
+
+A proper way to access your static files through your html templates in the use the {\bf STATIC\_URL} variable instead of hardcoding the path:
+
+Example of accessing your static files from your html templates:
+\begin{verbatim}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/lhcbPR_new.css" media="screen">
+\end{verbatim} 
+
+That way you can easily change your static path, where you store your static files, by just changing the STATIC\_URL variable in the settings.py file, {\bf without} having to also change 
+all the paths of your templates.
+
+\vspace{3mm}
+Note: for more info of how django manages the static files check the django's online documentation
+
+\subsection {Making a new release, deploy on other machine}
+
+First and most important thing, your {\bf LHCbPR/django\_apps/} directory must contain a valid {\bf myconf.py} file 
+(for more info check the corresponding documentation section), example of this file can be found in the current production release directory.
+
+Let's assume that you have worked on a local copy of the GIT repository of the LHCbPR project and you want to 
+make a new release and update the current production one:
+
+\begin{enumerate}
+\item
+{\bf cd /afs/cern.ch/lhcb/software/webapps/LHCbPR/LHCbPR/}
+\item
+{\bf git pull}, to fetch the latest changes in the LHCbPR's code
+\item
+
+{\bf touch ../lhcbpr.fcgi}, to refresh the lhcbpr.fcgi file on the remove apache server 
+
+(path of lhcbpr.fcgi : /afs/cern.ch/lhcb/software/webapps/LHCbPR)
+\end{enumerate}
+
+\vspace{2mm}
+
+{\bf IMPORTANT:}
+
+In case you deploy on new machine or change the folders in the static etc, make sure that you give to the {\bf afs web server} (on any other server you use to deploy the project) 
+{\bf permissions to write} the following folders (if you forget that the server will crash each time it tries to write on these folders)
+
+\begin{itemize}
+\item
+{\bf .../LHCbPR/django\_apps/static/timingJson}, path to save the CSV files for the timing analysis
+\item
+{\bf .../LHCbPR/django\_apps/static/images/histograms}, path to save the generated histogram.png images
+\item
+{\bf .../LHCbPR/django\_apps/static/logs}, path to save the log files
+\end{itemize}
+
+In order to give write permissions to the afs webserver :
+
+\begin{enumerate}
+\item
+{\bf cd .../path/to/folder/}, go to the folder you want to give write permissions
+\item
+{\bf fs sa -dir . -acl  webserver:afs rlidwk}
+\item
+{\bf fs la}, finally check if the permissions are right (permissions must contain {\bf webserver:afs rlidwk})
+\end{enumerate}
+
+{\bf IMPORTANT}:
+
+In case you deploy the LHCbPR project in a new machine {\bf do not forget} to change the {\bf ROOT\_URL} of {\bf myconf.py} in the :
+
+{\bf LHCbPR/django\_apps/} folder (for more info about the {\bf myconf.py} check the corrensponding Maintenance section of this documentation file).
+
+\subsection{Managing the logs}
+
+The logs of LHCbPR exist in the {\bf LHCbPR/django\_apps/static/logs/}. In case you want to change the loggers
+you can edit the {\bf LHCbPR/django\_apps/settings.py} and change the {\bf LOGGING} python dictionary. For more
+info of Django logging can be found in the Django official documentation.
 
 \end{document}
