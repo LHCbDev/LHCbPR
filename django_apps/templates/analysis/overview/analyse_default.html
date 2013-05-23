@@ -1,0 +1,41 @@
+<script src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load('visualization', '1', {packages: ['corechart'],  callback:drawChart});
+var trends = {{ trends|safe }};
+
+    function drawChart() {
+        $.each(trends, function(index, trend){
+            $('<pre>')
+                .html(JSON.stringify(trend['description'], null, '  '))
+                .appendTo('#yo');            
+            
+            $('<div>')
+                .attr('id','trend'+index).css('width',600).css('height',470)
+                .appendTo('#yo');        
+                
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Versions'); // Implicit domain label col.
+            data.addColumn('number', trend['platform']); // Implicit series 1 data col.
+            data.addColumn({type:'number', role:'interval'});  // interval role col.
+            data.addColumn({type:'number', role:'interval'});  // interval role col.
+            data.addColumn({type:'string', role:'annotation'});
+            data.addColumn({type:'string', role:'annotationText'});
+            data.addRows(trend['datatable']);  // Create and draw the visualization.
+            new google.visualization.LineChart(document.getElementById('trend'+index)).
+                draw(data, {curveType: "function",
+                            width: 600, height: 470,
+                            }
+                    );
+                
+            $('<hr>').appendTo('#yo') ;           
+        });
+    }
+</script>
+
+<style type="text/css">
+	pre { margin-left: 2em; }
+</style>
+
+<div id="yo">
+<!-- <div id="trend0" style="width: 500px; height: 400px;"></div> -->
+</div>

@@ -1,0 +1,182 @@
+{% extends "analysis/base_analysis_template.html" %}
+
+{% block head %}
+{{ block.super }}
+<script type="text/javascript" src="{{ STATIC_URL }}js/autocompleteBox.js"></script>
+<script src="https://www.google.com/jsapi"></script>
+{% endblock head %}
+
+{% block script %}
+    {{ block.super }}
+
+   var atrs    = {{ atrs|safe }};
+   var groups  = {{ groups|safe }};
+   var types   = {{ types|safe }};
+
+   $(document).ready(function() {
+      $('#execute_query').hover(
+         function() { $(this).addClass('ui-state-hover'); },
+         function() { $(this).removeClass('ui-state-hover'); }
+      );
+      var atrValues = [];
+      fill_attributes([]);
+
+      /* prefill the data for elements in the  */
+      prefillAll();
+      trigger();
+
+      $("#cb_summary").prop('checked', true);
+
+      $("#groups").click(function(){ showHide("groups","groups_list") });
+
+      $('#groupErase,button').hover(
+         function() { $(this).addClass('ui-state-hover'); },
+         function() { $(this).removeClass('ui-state-hover'); }
+      );
+
+      $('#groupErase').click(function(){
+         var groups = getSelectedGroups("groups_list");                    
+         if(groups.length == 0) return;
+
+         $('#groups_list').children('li').each(function () {
+            if($(':first-child:first-child', this).is(':checked')){
+               $(':first-child:first-child', this).removeAttr('checked');                               
+            }
+         });
+         fixGroups(groups);
+      });
+
+      $("#atr").combobox();
+
+      $("#groups_list input").change( function(){ 
+         var groups = getSelectedGroups("groups_list");                    
+         fixGroups(groups); 
+      });
+
+   });
+
+   function contains(myarray, myvalue){
+      for (var i = 0; i < myarray.length; i++){
+         if (parseInt(myarray[i]) == parseInt(myvalue))
+            return true;
+      }
+      return false;
+   }
+
+   function fill_attributes(allowed_groups){
+      for (var i = 0; i < atrs.length; i++){
+         if (isEmpty(allowed_groups)  ||  contains( allowed_groups, atrs[i][3] ) )
+         {
+            $('<option>')
+                     .attr('value', atrs[i][0]+","+types[atrs[i][2]])
+                     .html(atrs[i][1])
+                     .appendTo('#atr');
+         }
+      }
+   }
+
+   function isEmpty(map) {
+      for(var key in map) {
+         if (map.hasOwnProperty(key)) {
+            return false;
+         }
+      }
+      return true;
+   }
+
+
+   function getSelectedGroups(id){
+      var sdValues = [];
+      $('#'+id+' li label :checked').each(function () {
+            sdValues.push($(this).attr('value'));
+      });
+      return sdValues;
+   }
+
+   function fixGroups(groups){
+      $("#atr_holder").mask("Requesting...");
+
+       //delete it completely so it will refresh the input !!!
+      $("#atr_holder").empty();
+      $('<label>')
+                  .html('Choose an attribute:')
+                  .appendTo("#atr_holder");
+      $('<select>')
+                  .attr('id', 'atr')
+                  .appendTo("#atr_holder");
+
+      //erase all children
+      //add the initial one which should be empty
+      $('<option>')
+                  .appendTo('#atr');
+
+      $( "#atr" ).next().val('');
+
+      fill_attributes(groups);
+      $("#atr").combobox();
+      $("#atr_holder").unmask();
+   }
+{% endblock script %}
+
+{% block stylecss %}
+   .ui-combobox {
+      position: relative;
+      display: inline-block;
+   }
+   .ui-combobox-toggle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      margin-left: -1px;
+      padding: 0;
+      /* adjust styles for IE 6/7 */
+      *height: 1.7em;
+      *top: 0.1em;
+   }
+   .ui-combobox-input {
+      margin: 0;
+      padding: 0.3em;
+   }
+   #histogram_settings { margin-top: 1em; margin-left: 1em;}
+   #atr_holder { margin-top : 1em; }
+{% endblock stylecss %}
+
+
+{% block content %}
+   {% if atrGroups %}
+   <label>Select a group (profiler):</label>
+   <p>
+   <table class="filter">
+   <tr>
+   <td>
+      <a href="javascript:;" id="groups" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Groups</a>
+      <a href="javascript:;" id="groupErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
+   </td>
+   <tr>
+   <td>
+      <ul id="groups_list" class="checklist" style="display:none;" >
+       {% for group in atrGroups %}
+       <li>
+       <label>
+          <input type="checkbox" value="{{ group.1 }}" checked="checked" >{{ group.0 }}
+       </label>
+       </li>
+       {% endfor %}
+      </ul>
+   </td>
+   </table>
+   {% endif %}
+
+   <div id="atr_holder"class="ui-widget">
+   <table>
+   <tr><td>
+      <label>Choose an attribute:</label>
+   </td></tr>
+   <tr><td>
+      <select id="atr">
+         <option value=""></option>
+      </select>
+   </td></tr>
+   </table>
+   </div>
+{% endblock content %}

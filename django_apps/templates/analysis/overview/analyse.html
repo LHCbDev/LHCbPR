@@ -1,0 +1,56 @@
+<!-- 
+we already have it from the render.html template
+<script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
+<script type="text/javascript">
+   google.load('visualization', '1', {packages: ['corechart'],  callback:drawChart});
+   function drawChart() {
+	   var trends = {{ trends|safe }};
+	   var myYo = document.getElementById("yo");
+      for (var i = 0; i < trends.length; i++) {
+         var mypre = document.createElement("pre");
+			var myText = document.createTextNode(JSON.stringify(trends[i]['description'], null, '  '));
+			mypre.appendChild(myText);
+
+			myYo.appendChild(mypre);			
+
+			var mydiv = document.createElement("div");
+			mydiv.id = "trend"+i;
+			mydiv.style.width = 700;
+			mydiv.style.height = 500;
+
+			myYo.appendChild(mydiv);
+			
+         data = new google.visualization.DataTable()
+         data.addColumn('string', 'Version');
+         data.addColumn('number');
+         data.addColumn({type:'number', role:'interval'});
+         data.addColumn({type:'number', role:'interval'});
+         data.addColumn({type:'string',role:'tooltip'});
+         data.addRows(trends[i]['datatable']);
+         data.sort([{column: 1, desc: true}, {column: 0}]);
+         var view = new google.visualization.DataView(data);
+         view.setRows(view.getFilteredRows([{column: 1, minValue: 1}]));
+         data_rows = 25*view.getNumberOfRows();
+         new google.visualization.BarChart(document.getElementById("trend"+i)).
+            draw(view, {
+               legend   : 'none', 
+               width    : 700, 
+               height   : 100+data_rows, 
+               //bar      : { groupWidth : '50%' },
+               title    : "Platform: "+trends[i]['description']['PLATFORM'],
+               chartArea: { left: 250, height: data_rows, width: "100%" },
+               fontSize: 10
+            });
+            
+		   var myhr = document.createElement("hr");
+		   myYo.appendChild(myhr);    
+      }
+   }
+</script>
+<style type="text/css">
+	pre { margin-left: 2em; }
+</style>
+
+<div id="yo">
+<!-- <div id="trend0" style="width: 500px; height: 400px;"></div> -->
+</div>
