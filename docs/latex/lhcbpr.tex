@@ -472,7 +472,7 @@ Then run the script :
 \vspace{2 mm}
 
 
-{\bf /LHCbPR/devel/getdjango}
+{\bf LHCbPR/devel/getdjango} (version of django is set, hardcoded, inside the script)
 
 \vspace{2 mm}
 
@@ -482,18 +482,18 @@ run the service locally.
 
 After that you need tou setup the enviroment in order to use the cx\_Oracle module from afs:
 
+{\bf Note}: the script works on {\bf bash} not in tcsh/csh etc.
 \vspace{2 mm}
 
-{\bf source /LHCbPR/devel/setuptools}
+{\bf source LHCbPR/devel/setuptools}
 
 \vspace{2 mm}
 
 The LHCbPR uses an oracle database
 so it needs the cx\_Oracle to establish a connection with it(in case you have not executed the getdjango script the setuptools script will invoke it to download the django for you).
 
-{\bf Attetion} One more step to finish the setup. You must provide a {\bf myconf.py}
-file in {\bf LHCbPR/django\_apps/} directory in this format(ask the administrator to give you a valid myconf.py file
-containing the needed information):
+{\bf Attention}. One more step to finish the setup. You must provide a {\bf myconf.py}
+file in {\bf LHCbPR/django\_apps/} directory in this format:
 
 \begin{verbatim}
 dbname = 'name_of_the_database'
@@ -514,11 +514,17 @@ DEBUG = True
 ROOT_URL = '/'
 \end{verbatim}
 
-And once you have the myconf.py file {\bf everything's ready} in order to start running your local copy:
+{\bf Note}: Ask the administrator to give you the needed information (dbname,dbpass etc). If you have access 
+to {\$LHCBSOFT/webapps/LHCbPR/LHCbPR/} copy the {\bf myconf.py} file from there (remember to use the testing or developing database not the production one when 
+deploying locally). In case you copy the file from \$LHCBSOFT do not forget to change the settings as shown above (eg  LOCAL variable to LOCAL = True, ROOT\_URL = '/' etc). 
 
 \vspace{2 mm}
 
-{\bf /LHCbPR/django\_apps/manage.py runserver}
+And once you have the myconf.py file {\bf everything's ready} in order to start running your local copy (you must keep the runserver command running to make your local LHCbPR work):
+
+\vspace{2 mm}
+
+{\bf LHCbPR/django\_apps/manage.py runserver}
 
 \vspace{2 mm}
 
@@ -526,6 +532,8 @@ Do not forget to run the {\bf source LHCbPR/devel/setuptools} everytime you chan
 in order to setup the enviroment with the needed tools(without this script the runserver command will crash).
 
 \subsection{Writing a new analysis module}
+
+{\bf Note}: Before you continue it is suggested that you take a look about {\bf django templates} (in case you are not familiar), more info can be found {\bf https://docs.djangoproject.com/en/dev/topics/templates/}
 
 \subsubsection{Initialization}
 
@@ -546,7 +554,7 @@ Then create an \_\_init\_\_.py under your new created directory(your analysis co
 
 \vspace{4 mm}
 
-Each analysis module needs two basic {\bf templates}:
+Each analysis module must have two basic {\bf templates} in the templates directory:
  \begin{itemize}
 \item
 {\bf render.html}
@@ -564,18 +572,25 @@ create them in the templates' directory under a directory having the name of the
 
 \vspace{2 mm}
 
-{\bf vim LHCbPR LHCbPR/django\_apps/templates/hello\_analysis/render.html}
+{\bf vim LHCbPR LHCbPR/django\_apps/templates/hello\_analysis/render.html    (2)}
 
 \vspace{2 mm}
 
-{\bf vim LHCbPR LHCbPR/django\_apps/templates/hello\_analysis/analyse.html}
+
+{\bf vim LHCbPR LHCbPR/django\_apps/templates/hello\_analysis/analyse.html} (this is not mandatory for the beggining)
  \vspace{2 mm}
 
-An example of how a render.html template should look like please check the following file:
+The render.html template has to follow a skeleton structure. The skeleton is available at:
 
 \vspace{2 mm}
 
-{\bf vim LHCbPR/django\_apps/templates/analysis/skeleton\_analysis.html}
+{\bf vim LHCbPR/django\_apps/templates/analysis/skeleton\_analysis.html     (1)}
+
+Note, to copy the skeleton to you render.html use: {\bf cp (1) $\rightarrow$ (2)}	
+
+\vspace{2 mm}
+
+The above skeleton can be extended or use as is. Instructions on how to use or extend the skeleton are in the file itself. 
 
 \vspace{2 mm}
 
@@ -595,7 +610,7 @@ title = "This is my page title"
 
 \vspace{2 mm}
 
-The \_\_init\_\_.py also needs 3 methods :
+Edit the \_\_init\_\_.py file in your analysis directory and add the 3 following needed methods :
 
 \begin{itemize}
 \item
@@ -606,7 +621,7 @@ The \_\_init\_\_.py also needs 3 methods :
 {\bf def analyse(**kwargs):}
 \end{itemize}
 
-\subsubsection{def isAvailableFor(app\_name):}
+\subsubsection{isAvailableFor(app\_name):}
 
 Once you have created your analysis module(folder etc), as mentioned above, it's time to specify for which applications the analysis is available for.
 For example the "histograms" analysis is available only for the GAUSS application so the \_\_init\_\_.py file of the histograms module has the following method:
@@ -630,9 +645,9 @@ def isAvailableFor(app_name):
 
 In that way, no matter what the app\_name variable contains the method will always return True so it will appear to all applications
 
-\subsubsection{def render(**kwargs)}
+\subsubsection{render(**kwargs)}
 
-The {\bf def render(**kwargs): } function automatically returns the {\bf render.html}, which resides in the templates/hello\_analysis/directory,
+The {\bf def render(**kwargs) } function returns the {\bf render.html} to the web browser, which resides in the templates/hello\_analysis/directory,
 along with a dictionary with all the variables you want to use in your render.html template, 
 for example:
 
@@ -651,28 +666,16 @@ This will return the render.html template along with the myvariable which you ca
 Before you continue please make sure you have checked how a render.html file must be in {\bf LHCbPR/django apps/templates/analysis/skeleton\_analysis.html}.
 
 As it is mentioned in the skeleton\_analysis.html your render.html inherits the Versions, Options, Platforms, Hosts selections menu.
-By default the LHCbPR returns the Versions, Options, Platforms, Hosts objects for the successful jobs of the corresponding application, for example if you select GAUSS in the analyse 
-page, then the objects that will be returned in the backgroud are :
+By default the LHCbPR returns the Versions, Options, Platforms, Hosts objects for the successful jobs of the corresponding application.
 
 \vspace{2 mm}
 
-\begin{verbatim}
-options = Options.objects.filter(jobdescriptions__jobs__success=True,
-  jobdescriptions__application__appName='GAUSS').distinct().order_by('description')
-versions = Application.objects.filter(jobdescriptions__jobs__success=True, 
-  appName='GAUSS').distinct()
-platforms =  Platform.objects.filter(jobs__success=True,
-  jobs__jobDescription__application__appName='GAUSS').distinct().order_by('cmtconfig')
-hosts = Host.objects.filter(jobs__success=True,
-  jobs__jobDescription__application__appName='GAUSS').distinct().order_by('hostname')
-\end{verbatim}
+{\bf Note}, for example in the {\bf timing analysis} we need, not only the objects for the successful jobs but also we need the objects who also have jobAttributes with some specific groups, so in that
+case we override the default values which LHCbPR returns.
 
-\vspace{2 mm}
+So if you want to return different objects then you can {\bf override the default values} by providing 'options', 'versions', 'platforms', 'hosts' in your returned dictionary. Here follows an example of how we override the default values in the timing analysis:
 
-If you want to return different objects then you can {\bf override the default values} by providing 'options', 'versions', 'platforms', 'hosts' in your returned dictionary. 
 
-For example in the {\bf timing analysis} we need, not only the objects for the successful jobs but also we need the objects who also have jobAttributes with some specific groups, so in that
-case we override the default values like :
 
 \begin{verbatim}
 #missing code here ...
@@ -710,8 +713,11 @@ def render(**kwargs):
 In that example you can see that we override the options,platforms etc by providing our own objects. That way
 the template will use these objects instead of the default ones. 
 
-\vspace{2 mm}
-From the {\bf def render(**kwargs)} you can access the following data:
+{\bf Important}: if you are not familiar with the above overriding example and you wish to override the default values for your analysis then it is suggested you take a look in the {\bf django models} at :
+ {\bf https://docs.djangoproject.com/en/dev/topics/db/models/}
+
+\vspace{4 mm}
+In the {\bf render(**kwargs)} you can access the following data:
 
 \begin{verbatim}
 # you can take the application from the url(such GAUSS, BRUNEL etc)
@@ -725,11 +731,12 @@ requestData = kwargs['requestData']
 myrequest = kwargs['request']
 \end{verbatim}
 
-\subsubsection{def analyse(**kwargs)}
+\subsubsection{analyse(**kwargs)}
 
-This function will automatically  be called when you press the "Retreive results" button from your analysis page.
+This function will automatically  be called when you press the "Retreive results" button from your analysis page 
+and here you need to implement what shown as results of the analysis.  
 Same as the render function you can access the same data from the kwargs as shown exactly above(app\_name, requestData and request). 
-Once you click the "Retreive results" button the page will automatically make an{\bf ajax request} to your analyse(**kwargs) sending the 
+Once you click the "Retreive results" button the page will automatically make an {\bf ajax request} to your analyse(**kwargs) sending the 
 selected Versions, Options, Platforms, Hosts(comma separated ids) from the selection menu along with the data of your other custom elements
 Let's assume that you have these two elements in your render.html template:
 
@@ -758,21 +765,80 @@ You can access these data from the kargs['requestData'] dictionary. Then in your
 and any other calculation you need to produce your analysis results and just return a dictionary with your data. The analyse function will load the analyse.html template along with your data in the render.html template.
 So you can visualize your results with javascript,jquery etc, or any other web tools in your analyse.html template and they will be loaded in your analysis when you press the "Retreive results button".
 
+\subsubsection{Retrieving results from database}
+
+Once you have the input data you need from your analysis page you can use it and query the database. Django provides various ways to query information from your database. For example way is through the {\bf django models} (django model API, which in our case is not the preferred way unless your query is very simple, more info: {\bf https://docs.djangoproject.com/en/dev/topics/db/queries/}) or another way is through the {\bf python cursor}.
+
+In most of our cases we will need to write an sql query and execute it through {\bf the cursor}, then fetch the results from the cursor. Here follows an example of how the cursor works:
+
+\begin{verbatim}
+from django.db import connection
+#
+#...
+#
+
+def analyse(**kwargs):
+    requestData = kwargs['requestData']
+    #let's assume your and attribute id in your requestData
+    atr_id = requestData['atr']
+    
+    #establish connection with db, get the cursor
+    cursor = connection.cursor()
+    
+    #then execute your query(here is an example, not real functional)
+    cursor.execute('SELECT * FROM lhcbpr_jobattribute WHERE id='+atr_id)
+    
+    #then get you resutls, either fetch them all
+    #myresults = cursor.fetchall() #here it returns a list with the selected rows
+    
+    #or loop over one by one, preferred if you want to handle 
+    #each selected result independently 
+	
+	#get one result from the cursor
+    result = cursor.fetchone()
+    
+	myList = []    
+    
+    #loop while there are no results left
+    while not result == None:
+        #do stuff here with the result
+		#...
+		#add my result in myList
+		myList.append(result)        
+        
+        #read the next result
+        result = cursor.fetchone()
+    
+    #once out of the loop, do stuff with my myList
+    #...
+    #then return my results to be displayed through my analyse template
+    
+    return { 'myresultsList' : myList } 
+    
+\end{verbatim}
+
+{\bf IMPORTANT}: in case you are not familiar with the {\bf python cursor} you should check how things work before you start writing your analysis and quering the database, a quick full quide can be found here: 
+{\bf https://docs.djangoproject.com/en/dev/topics/db/sql/}.
+
+\vspace{2 mm}
+
+Also in order to get a better understanding how the LHCbPR's database is structured and how to query information you can read the database section of the documentation and/or also take a look into the existing analysis modules (basic, timing) and take ideas out of them.
+
 \subsubsection{Using different templates}
 
 The default behavior of the functions is: the render(**kwargs) function uses the render.html with the data of the dictionary you return 
-and the analyse(**kwargs) function uses the analyses.html with the data of the dictionary you return. You can {\bf override} the default templates by specifying
+and the analyse(**kwargs) function uses the analyses.html with the data of the dictionary you return. You can {\bf override} the default by specifying
 a {\bf template key} in the returned dictionary with the different template you want to use. For example in the {\bf timing analysis} we have 3 different ways of visualizing the data:
 TreeGrid, TreeMap, singleLevel so we have different analyse templates. So in case we want to use the analyseTreeMap.html(a different template we created in the templates/timing/  directory)  instead
 of the default analyse.html template  in the analyse(**kwargs) function we do :
 
 \begin{verbatim}
 return {
-             #....            
-             #here reside the data we need in our template
-             #and here we override the template to be used:
-             'template' : 'analysis/timing/analyseTreeMap.html'
-           }
+         #....            
+         #here reside the data we need in our template
+         #and here we override the template to be used:
+         'template' : 'analysis/timing/analyseTreeMap.html'
+       }
 \end{verbatim}
 
 Also there are some templates for general use  in the templates/analysis directory like the error.html, so in case an error occurs with your data of with the database inside the analyse(**kwargs) or the render(**kwargs) function
@@ -781,9 +847,9 @@ then you can do:
 \begin{verbatim}
 if Error:
   return {
-             'template' : 'analysis/error.html'
-             'errorMessage' : 'My errorMessage accessed by {{ errorMessage }}'
-            } 
+           'template' : 'analysis/error.html'
+           'errorMessage' : 'My errorMessage accessed by {{ errorMessage }}'
+         } 
 \end{verbatim}
 
 This way you are able to create as many templates as your needs to diplay different messages, visualize in different ways your analysis results 
@@ -879,6 +945,140 @@ So here follows the format of the url to access your extra function(change only 
 
 url = "\{\{ ROOT\_URL \}\}analyse/{\bf name\_of\_your\_module}/functions/{\bf extra\_function\_name}/"+appName;
 
+\subsubsection{Logging analysis}
+
+For logging in your analysis module you can use the django loggers (python logging module), here follows an example:
+
+\begin{verbatim}
+import logging
+
+#important get the analysis_logger
+logger = logging.getLogger('analysis_logger')
+
+def render(**kwargs):
+    logger.info('I am inside the render function!')
+    #
+    #...
+    #
+\end{verbatim}
+
+Using the {\bf analysis\_logger} from django (check the loggers in the LHCbPR's settings.py file) will save the logs in the LHCbPR's logs directory under the file: {\bf LHCbPR/django\_apps/static/logs/analysis.log}.
+
+For more info on django logging:  {\bf https://docs.djangoproject.com/en/dev/topics/logging/}
+
+\subsubsection{Accessing ROOT through subprocess in LHCbPR}
+
+LHCbPR production release is deployed on a shared apache server. In the machine where the service is hosted ROOT is not installed thus we can not (and do not want to) access ROOT modules through pyROOT straight from the LHCbPR django process. For that reason when we want to use ROOT in LHCbPR we open a \textbf{subprocess} (from the main process) in which we communicate with a function (a custom function we write ourselves) which can import and use  pyROOT. 
+
+The main process communicates, exchange messages/data, with the subprocess (we can also call it child process) through a \textbf{pipe}. In order to make the communication easier we wrapped the \textbf{pipe} inside a class called \textbf{subService}. The \textbf{subService} class can be found the following python file:
+
+vim \textbf{LHCbPR/django\_apps/tools/viewTools.py}
+
+\vspace{2 mm}
+
+The subService class provides the following \textbf{methods}:
+\begin{itemize}
+\item
+\textbf{connect}: opens a subprocess calling the \textbf{ROOT\_service.py} (will be explained later)
+\item
+\textbf{send}: sends data (any data, objects etc) to the subprocess (ROOT\_service.py)
+\item
+\textbf{recv}: receive data from the subprocess
+\item
+\textbf{finish}: does nothing, was kept for legacy reasons (compatibility with another subService class) 
+\end{itemize}
+
+The subService class opens a subprocess when the user calls the \textbf{connect} function. The subpService calls the ROOT\_service.py in a subprocess passing the needed environment so the ROOT\_service.py can access pyROOT, this python file can be found:
+
+vim \textbf{LHCbPR/django\_apps/tools/ROOT\_service.py}
+
+\vspace {2 mm}
+
+So the user can access any python function from the \textbf{ROOT\_service.py} file through the subService class. 
+
+Ok now let's assume that from your analysis module you want to access pyROOT (eg in order to handle a ROOT file which contains histograms). First you need to write your \textbf{python function} which will handle your data using ROOT and place it inside the \textbf{ROOT\_service.py} (check other function inside ROOT\_service like basic\_service etc). Once you have your function inside the ROOT\_service.py you can access it through the subService class from your analysis module. Your main process (analysis module) will communicate with the ROOT\_service through the \textbf{send} and \textbf{recv}(receive) methods of the subService class. Here follows an example showing how to write a "remote" function and access it through the subService class.
+
+\vspace {2 mm}
+Let's assume that your remote function (inside the subprocess) will take two numbers, will calculate their sum and return it back to the father proccess. Here is the function:
+
+\begin{verbatim}
+#your function must take a remoteService object (subService instance)
+#in order to communicate with the father process
+def calculate_sum(remoteService):
+    #receive the first number from the father process
+    first_number = remoteService.recv()
+    
+    #get the second number
+    second_number = remoteService.recv()
+    
+    #calculate the sum
+    sum = first_number + second_number
+    
+    #send the answer back to the father process
+    remoteService.send(sum)
+    
+\end{verbatim}
+
+Place the above function inside the ROOT\_service.py then \textbf{very important} and \textbf{mandatory} place an entry inside the functionList dictionary (a dictionary inside the ROOT\_service.py file) passing as key the name of the function and as value the function itself(like a pointer to the function), shown as below:
+
+\begin{verbatim}
+functionList = {
+    'histograms_service' : histograms_service,
+    'basic_service' : basic_service
+    #any other function may exist here...
+    #here add your new added function passing the name
+    #of the function as key and value pass the function
+    'calculate_sum' : calculate_sum
+                }
+\end{verbatim}
+
+Once you have done the above you ready to access your "remote" function from your analysis module, here follows an example:
+
+\begin{verbatim}
+#import the subService class
+from tools.viewTools import subService
+
+#
+#...
+#
+
+def analyse(**kwargs):
+    #
+    #...
+    #
+
+    #define the two numbers to calculate their sum    
+    number1 = 10
+    number2 = 20
+    
+    remoteservice = service()
+    #open the subprocess
+    #in case any error occurs return an error, example
+    if not remoteservice.connect():
+        #logger.error('Could not connect to remote service')
+        return { 'errorMessage' : 'Connection with remote service failed!', 
+                'template' : 'analysis/error.html' }
+    
+    #IMPORTANT    
+    #once you call connect
+    #define which method(function) from the subService you want to use
+    #pass to the send method the name of your function as string  
+    remoteservice.send('calculate_sum')   
+    
+    #once you call your method you can start communicating with it
+    #send the two numbers
+    remoteservice.send(number1)
+    remoteservice.send(number2)
+    
+    #then receive the sum the child process (subprocess)
+    my_number_sum = remoteservice.recv()
+    
+    #...
+    #
+\end{verbatim}
+
+That way you can write methods which can have \textbf{access to pyROOT} (remember the ROOT\_service.py can import ROOT). The above way to access ROOT in LHCbPR may seem a little inconvenient but it is the only way for the moment. In the future(soon enough) when the \textbf{root.js}, accessing ROOT functions will become much more easier without the need to run ROOT on a local machine or communicating with other processes (as we do now).
+
 \section{Handler development}
 
 In this section we will show how to write and test a new handler to collect your data.
@@ -927,7 +1127,7 @@ Each of the above methods take 4 arguments
 {\bf group}(optional) : the group(if any) in which the attribute you save belongs(example : 'Timing')
 \end{itemize}
 
-Let take for example the follows case:
+Let take for example the following case:
 
 \begin{verbatim}
 execution_time = 12.45  
@@ -957,11 +1157,11 @@ self.saveFile('my_results_file' , '/afs/cern.ch/.../path/my_file' )
 The handler python file must have the same {\bf name} as the {\bf handler class},
 For example if your handler class is called 'TimingHandler' then the python file must have the name 'TimingHandler.py'
 		
-Second in the \_\_init\_\_ you must call super(self.\_\_class\_\_, self).\_\_init\_\_() (as shown in the example below)
+Second you must have an \_\_init\_\_  where you call super(self.\_\_class\_\_, self).\_\_init\_\_() (as shown in the example below)
 		
 At last you must override the method collectResults(self,directory).
 When a handler is invoked after a job execution , the script which invokes the handler passes to it 
-a directory which contains the job results. So any file your handler needs it must find it in the given directory (the directory argument of collectResults function)
+a directory which contains the job results. So any file your handler needs must be found it in the given directory (the directory argument of collectResults function). In other words the directory argument will provide the path of the directory where the output of the job reside. You can there access the files by their names. Usually the \textbf{stdout} of the job is saved in a file under the name \textbf{run.log}
 		
 \vspace{2 mm}
 
@@ -1002,7 +1202,8 @@ class TestHandler(BaseHandler):
 if __name__ == "__main__":
   #create an object
   test =  TestHandler()
-    
+   
+  #  CHECK Note(1) after the code example
   # in real handlers you must provide
   # a directory where your results reside
   # and then the collectResults method 
@@ -1017,6 +1218,38 @@ if __name__ == "__main__":
 {\bf Important}, when you add a new handler in the repository remember to add a new entry(the name of the module) in the Handler table in the database
 in order to see/be able to select the new handler in the web interface. If you do not have the permissions to do it yourself ask the administrator to add it for you.
 
+\vspace {2 mm}
+
+\textbf{Note(1)} the \textbf{\_\_main\_\_} function of the example is recommended for testing purposes. While the \textbf{collectRunResults} will be called by the LHCbPR system, the \_\_main\_\_ will allow you to check your handler's behaviour before commiting it.
+
+\textbf{Note(2)}
+There also another way to test your handler. First go the \textbf{http://lhcb-pr.web.cern.ch/lhcb-pr/jobDescriptions/} , choose your application, then choose your job description for which you want to test your handler and generate the script for local run (by pressing the corresponding button in the web iterface of the job description details dialog). Once you save your auto-generated script make the following changes in order to properly test your new handler:
+
+\textbf{Edit} the \textbf{script} as shown below(read the comments)
+\begin{verbatim}
+#COMMENT out ALL the lines until the JOB_DESCRIPTION_ID
+#
+JOB_DESCRIPTION....
+#In the HANDLERS variable add the name of your class, in our example
+#it should look like this
+HANDLERS="TestHandler"
+#
+#LEAVE the rest of the code as is
+#
+#then COMMET OUT the following line:
+#python -c "import os,urllib,zipfile;urllib.urlretrieve....
+
+#then at last edit the line:
+#python LHCbPRHandlers/collectRunResults.py.... etc
+#provide here the path to your local LHCbPRHandlers instance 
+#and REMOVE the -a argument(it is the last argument), 
+\end{verbatim}
+
+Once you edit your script as explained above, make the script executable:
+
+\textbf{chmod +x path\_to\_script}
+
+Execute it and check if any error occurs in the stdout/stderr of the shell( where you execute the script).
 
 \section {Maintenance}
 

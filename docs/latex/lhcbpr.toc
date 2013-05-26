@@ -21,24 +21,27 @@
 \contentsline {subsection}{\numberline {5.1}Getting started}{11}
 \contentsline {subsection}{\numberline {5.2}Writing a new analysis module}{12}
 \contentsline {subsubsection}{\numberline {5.2.1}Initialization}{12}
-\contentsline {subsubsection}{\numberline {5.2.2}def isAvailableFor(app\_name):}{13}
-\contentsline {subsubsection}{\numberline {5.2.3}def render(**kwargs)}{13}
-\contentsline {subsubsection}{\numberline {5.2.4}def analyse(**kwargs)}{15}
-\contentsline {subsubsection}{\numberline {5.2.5}Using different templates}{16}
-\contentsline {subsubsection}{\numberline {5.2.6}Bookmarking, trigger results, errorChecking}{16}
-\contentsline {subsubsection}{\numberline {5.2.7}Adding extra functions to the analysis}{17}
-\contentsline {section}{\numberline {6}Handler development}{18}
-\contentsline {subsection}{\numberline {6.1}Getting started}{18}
-\contentsline {subsection}{\numberline {6.2}How to write handler}{18}
-\contentsline {section}{\numberline {7}Maintenance}{20}
-\contentsline {subsection}{\numberline {7.1}myconf.py file}{20}
-\contentsline {subsection}{\numberline {7.2}Cronjob pushing the results in database and DiracStorageElement}{21}
-\contentsline {subsubsection}{\numberline {7.2.1}Overview}{21}
-\contentsline {subsubsection}{\numberline {7.2.2}DiracStorageElement}{21}
-\contentsline {subsubsection}{\numberline {7.2.3}Cronjob pushing the results}{21}
-\contentsline {subsubsection}{\numberline {7.2.4}Refresh Dirac Proxy (LHCb certificate), Cron Job}{22}
-\contentsline {subsubsection}{\numberline {7.2.5}Checking the added results, checking the logs for errors}{22}
-\contentsline {subsection}{\numberline {7.3}Managing the files}{23}
-\contentsline {subsection}{\numberline {7.4}Managing Static files (js, css etc)}{23}
-\contentsline {subsection}{\numberline {7.5}Making a new release, deploy on other machine}{23}
-\contentsline {subsection}{\numberline {7.6}Managing the logs}{24}
+\contentsline {subsubsection}{\numberline {5.2.2}isAvailableFor(app\_name):}{13}
+\contentsline {subsubsection}{\numberline {5.2.3}render(**kwargs)}{14}
+\contentsline {subsubsection}{\numberline {5.2.4}analyse(**kwargs)}{15}
+\contentsline {subsubsection}{\numberline {5.2.5}Retrieving results from database}{16}
+\contentsline {subsubsection}{\numberline {5.2.6}Using different templates}{17}
+\contentsline {subsubsection}{\numberline {5.2.7}Bookmarking, trigger results, errorChecking}{17}
+\contentsline {subsubsection}{\numberline {5.2.8}Adding extra functions to the analysis}{18}
+\contentsline {subsubsection}{\numberline {5.2.9}Logging analysis}{19}
+\contentsline {subsubsection}{\numberline {5.2.10}Accessing ROOT through subprocess in LHCbPR}{19}
+\contentsline {section}{\numberline {6}Handler development}{21}
+\contentsline {subsection}{\numberline {6.1}Getting started}{21}
+\contentsline {subsection}{\numberline {6.2}How to write handler}{22}
+\contentsline {section}{\numberline {7}Maintenance}{24}
+\contentsline {subsection}{\numberline {7.1}myconf.py file}{24}
+\contentsline {subsection}{\numberline {7.2}Cronjob pushing the results in database and DiracStorageElement}{25}
+\contentsline {subsubsection}{\numberline {7.2.1}Overview}{25}
+\contentsline {subsubsection}{\numberline {7.2.2}DiracStorageElement}{25}
+\contentsline {subsubsection}{\numberline {7.2.3}Cronjob pushing the results}{26}
+\contentsline {subsubsection}{\numberline {7.2.4}Refresh Dirac Proxy (LHCb certificate), Cron Job}{26}
+\contentsline {subsubsection}{\numberline {7.2.5}Checking the added results, checking the logs for errors}{27}
+\contentsline {subsection}{\numberline {7.3}Managing the files}{27}
+\contentsline {subsection}{\numberline {7.4}Managing Static files (js, css etc)}{28}
+\contentsline {subsection}{\numberline {7.5}Making a new release, deploy on other machine}{28}
+\contentsline {subsection}{\numberline {7.6}Managing the logs}{29}
