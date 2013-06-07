@@ -9,23 +9,17 @@
 {% block script %}
     {{ block.super }}
 
-   var atrs    = {{ atrs|safe }};
    var groups  = {{ groups|safe }};
-   var types   = {{ types|safe }};
 
    $(document).ready(function() {
       $('#execute_query').hover(
          function() { $(this).addClass('ui-state-hover'); },
          function() { $(this).removeClass('ui-state-hover'); }
       );
-      var atrValues = [];
-      fill_attributes([]);
 
       /* prefill the data for elements in the  */
       prefillAll();
       trigger();
-
-      $("#cb_summary").prop('checked', true);
 
       $("#groups").click(function(){ showHide("groups","groups_list") });
 
@@ -40,50 +34,13 @@
 
          $('#groups_list').children('li').each(function () {
             if($(':first-child:first-child', this).is(':checked')){
-               $(':first-child:first-child', this).removeAttr('checked');                               
+               $(':first-child:first-child', this).removeAttr('checked'); 
             }
          });
-         fixGroups(groups);
       });
 
-      $("#atr").combobox();
-
-      $("#groups_list input").change( function(){ 
-         var groups = getSelectedGroups("groups_list");                    
-         fixGroups(groups); 
-      });
-
+      $('#grps').combobox();
    });
-
-   function contains(myarray, myvalue){
-      for (var i = 0; i < myarray.length; i++){
-         if (parseInt(myarray[i]) == parseInt(myvalue))
-            return true;
-      }
-      return false;
-   }
-
-   function fill_attributes(allowed_groups){
-      for (var i = 0; i < atrs.length; i++){
-         if (isEmpty(allowed_groups)  ||  contains( allowed_groups, atrs[i][3] ) )
-         {
-            $('<option>')
-                     .attr('value', atrs[i][0]+","+types[atrs[i][2]])
-                     .html(atrs[i][1])
-                     .appendTo('#atr');
-         }
-      }
-   }
-
-   function isEmpty(map) {
-      for(var key in map) {
-         if (map.hasOwnProperty(key)) {
-            return false;
-         }
-      }
-      return true;
-   }
-
 
    function getSelectedGroups(id){
       var sdValues = [];
@@ -93,28 +50,14 @@
       return sdValues;
    }
 
-   function fixGroups(groups){
-      $("#atr_holder").mask("Requesting...");
-
-       //delete it completely so it will refresh the input !!!
-      $("#atr_holder").empty();
-      $('<label>')
-                  .html('Choose an attribute:')
-                  .appendTo("#atr_holder");
-      $('<select>')
-                  .attr('id', 'atr')
-                  .appendTo("#atr_holder");
-
-      //erase all children
-      //add the initial one which should be empty
-      $('<option>')
-                  .appendTo('#atr');
-
-      $( "#atr" ).next().val('');
-
-      fill_attributes(groups);
-      $("#atr").combobox();
-      $("#atr_holder").unmask();
+   function checkRequestData(requestData){
+      var errors = {}
+       
+      if (requestData["atr"] == "") {
+         errors["attribute"] = "Attribute field can not be empty!";
+      }
+      
+      return errors;
    }
 {% endblock script %}
 
@@ -137,46 +80,24 @@
       margin: 0;
       padding: 0.3em;
    }
-   #histogram_settings { margin-top: 1em; margin-left: 1em;}
-   #atr_holder { margin-top : 1em; }
 {% endblock stylecss %}
 
 
 {% block content %}
    {% if atrGroups %}
-   <label>Select a group (profiler):</label>
+   <label>Select at least a group, a version and an option set:</label>
    <p>
    <table class="filter">
    <tr>
    <td>
-      <a href="javascript:;" id="groups" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-plusthick"></span>Groups</a>
-      <a href="javascript:;" id="groupErase" class="ui-state-default ui-corner-all filterErase"  title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
-   </td>
-   <tr>
-   <td>
-      <ul id="groups_list" class="checklist" style="display:none;" >
+   <div id="atr_holder"class="ui-widget">
+   <select id="grps">
        {% for group in atrGroups %}
-       <li>
-       <label>
-          <input type="checkbox" value="{{ group.1 }}" checked="checked" >{{ group.0 }}
-       </label>
-       </li>
+          <option value="{{ group.0 }}">{{ group.0 }}</option>
        {% endfor %}
-      </ul>
+   </select>
+   </div>
    </td>
    </table>
    {% endif %}
-
-   <div id="atr_holder"class="ui-widget">
-   <table>
-   <tr><td>
-      <label>Choose an attribute:</label>
-   </td></tr>
-   <tr><td>
-      <select id="atr">
-         <option value=""></option>
-      </select>
-   </td></tr>
-   </table>
-   </div>
 {% endblock content %}
