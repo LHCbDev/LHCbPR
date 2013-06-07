@@ -37,13 +37,13 @@ we already have it from the render.html template
                width    : 700, 
                height   : 100+data_rows, 
                //bar      : { groupWidth : '50%' },
-               title    : "Platform: "+trends[i]['description']['PLATFORM'],
+               title    : "Platform: " + trends[i]['description']['PLATFORM'] + " Lines: " + data.getNumberOfRows(),
                chartArea: { left: 250, height: data_rows, width: "100%" },
                fontSize: 10
             });
             
 		   var myhr = document.createElement("hr");
-		   myYo.appendChild(myhr);    
+		   myYo.appendChild(myhr);
       }
    }
 </script>
