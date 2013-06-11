@@ -66,10 +66,7 @@ def analyse(**kwargs):
    requestData   = kwargs['requestData']
    app_name      = kwargs['app_name']
 
-   #print requestData
-
    grps = requestData['grps'].split(',')
-   print grps[0]
    if grps[0] == "":
       raise Http404     
     
@@ -89,17 +86,9 @@ def analyse(**kwargs):
    cursor.execute(query_jobs)
    cursor_description = cursor.description
    jobs = cursor.fetchall()
-   #print "Jobs: ", jobs
-
-   #query_results = get_data_query(requestData, app_name, jobs)
-   #print "Query results in overview: ", query_results
 
    query_tree_info = get_tree_query(jobs)
-   print "Query tree in overview: ", query_tree_info
-    
-   #cursor1 = connection.cursor()
-   #cursor1.execute(query_results)
-   #cursor_description1 = cursor1.description
+   #print "Query tree in overview: ", query_tree_info
     
    cursor2 = connection.cursor()
    cursor2.execute(query_tree_info)
