@@ -1,0 +1,61 @@
+{% extends "lhcbPR/base_template.html" %}
+
+{% block title %} Job List {% endblock title %}
+
+{% block head %}
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load('visualization', '1', {packages: ['table']});
+</script>
+<script type="text/javascript">
+function drawVisualization() {
+   // Create and populate the data table.
+	var cnfs = {{ configs|safe }};
+	var jobs = {{ jobs|safe }};
+	var cnf_desc = {{ cnf_description|safe }};
+   cnf_data = google.visualization.arrayToDataTable(cnfs);
+   job_data = google.visualization.arrayToDataTable(jobs);
+
+   data_rows = 20*cnf_data.getNumberOfRows();
+
+   // Create and draw the visualization.
+   visualization = new google.visualization.Table(document.getElementById('configs'));
+   visualization = new google.visualization.Table(document.getElementById('details'));
+   visualization.draw(cnf_data, { width : 700, height : 50 + data_rows, chartArea: { left: 250, height: data_rows, width: "100%"}});
+   visualization.draw(job_data, null);
+}
+
+
+google.setOnLoadCallback(drawVisualization);
+</script>
+{% endblock head %}
+
+{% block script %}
+
+$(document).ready(function () {
+	$("#jobListMenu").attr('checked', 'checked').button("refresh");
+	$('#tabs').tabs({ selected : -1 });
+	$('#tabs').tabs('select', '#{{ active_tab }}tab');
+});
+
+{% endblock script %}
+
+{% block stylecss %} {% endblock stylecss %}
+
+{% block helptext %} {% endblock helptext %}
+
+{% block pagebody %}
+
+
+<div id="tabs">
+	<ul>
+		<li><a href="#jobs">Jobs</a></li>
+	</ul>
+   <div id="container" style="width:1200px;">
+   <div id="configs" style="width:500px;float:left"></div>
+   <div id="details" style="width:500px;float:left"></div>
+   </div>
+</div>
+
+
+{% endblock pagebody %}
