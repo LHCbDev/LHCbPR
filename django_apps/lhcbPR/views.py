@@ -96,6 +96,54 @@ def jobDescriptions(request, app_name):
                   context_instance=RequestContext(request))
    
 @login_required 
+def joblistHome(request):
+    """List of available jobs and runns"""
+    cnf_query = "SELECT DISTINCT LHCBPR_APPLICATION.APPNAME, \
+      LHCBPR_APPLICATION.APPVERSION, \
+      LHCBPR_PLATFORM.CMTCONFIG, \
+      LHCBPR_OPTIONS.DESCRIPTION \
+      FROM LHCBPR_JOB \
+      INNER JOIN LHCBPR_PLATFORM \
+      ON LHCBPR_PLATFORM.ID = LHCBPR_JOB.PLATFORM_ID \
+      INNER JOIN LHCBPR_JOBDESCRIPTION \
+      ON LHCBPR_JOBDESCRIPTION.ID = LHCBPR_JOB.JOBDESCRIPTION_ID \
+      INNER JOIN LHCBPR_APPLICATION \
+      ON LHCBPR_APPLICATION.ID = LHCBPR_JOBDESCRIPTION.APPLICATION_ID \
+      INNER JOIN LHCBPR_OPTIONS \
+      ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID"
+    job_query = "SELECT LHCBPR_JOB.ID AS ID, \
+      LHCBPR_APPLICATION.APPNAME AS Project, \
+      LHCBPR_APPLICATION.APPVERSION AS Version, \
+      LHCBPR_PLATFORM.CMTCONFIG AS Platform, \
+      LHCBPR_OPTIONS.DESCRIPTION AS Options, \
+      LHCBPR_JOB.SUCCESS AS Succ \
+      FROM LHCBPR_JOB \
+      INNER JOIN LHCBPR_PLATFORM \
+      ON LHCBPR_PLATFORM.ID = LHCBPR_JOB.PLATFORM_ID \
+      INNER JOIN LHCBPR_JOBDESCRIPTION \
+      ON LHCBPR_JOBDESCRIPTION.ID = LHCBPR_JOB.JOBDESCRIPTION_ID \
+      INNER JOIN LHCBPR_APPLICATION \
+      ON LHCBPR_APPLICATION.ID = LHCBPR_JOBDESCRIPTION.APPLICATION_ID \
+      INNER JOIN LHCBPR_OPTIONS \
+      ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID"
+
+    cursor = connection.cursor()
+    cursor.execute(cnf_query)
+    cnf_description = [i[0] for i in cursor.description]
+    configurations = cursor.fetchall()
+
+    cursor2= connection.cursor()
+    cursor2.execute(cnf_query)
+    job_description = [i[0] for i in cursor2.description]
+    jobs = cursor2.fetchall()
+
+    return render_to_response('lhcbPR/joblistHome.html',
+                  { 'configs' : json.dumps(configurations),
+                    'jobs' : json.dumps(jobs),
+                    'cnf_description' : cnf_description },
+                  context_instance=RequestContext(request))
+
+@login_required 
 def jobDescriptionsHome(request):
     """Serves the jobDescriptions home page with the available applications"""
     applicationsList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')

@@ -66,10 +66,7 @@ def analyse(**kwargs):
    requestData   = kwargs['requestData']
    app_name      = kwargs['app_name']
 
-   #print requestData
-
    grps = requestData['grps'].split(',')
-   print grps[0]
    if grps[0] == "":
       raise Http404     
     
@@ -93,10 +90,6 @@ def analyse(**kwargs):
    query_tree_info = get_tree_query(jobs)
    #print "Query tree in overview: ", query_tree_info
     
-   #cursor1 = connection.cursor()
-   #cursor1.execute(query_results)
-   #cursor_description1 = cursor1.description
-    
    cursor2 = connection.cursor()
    cursor2.execute(query_tree_info)
    cursor_description2 = cursor2.description
@@ -115,26 +108,20 @@ def analyse(**kwargs):
       entry_avg = {}
       entry_sdv = {}
       parents   = {}
-      levels    = {}
       events    = {}
+      ids       = {}
       for res in values:
          if '_parent' in res[-7]:
             attr = re.sub('_parent$','',res[-7])
             parents[attr] = res[-2]
-            if res[-2] == None:
-                levels[attr] = 0
-            elif res[-2] == 'EVENT_LOOP':
-                levels[attr] = 1
-            elif res[-2] in levels:
-                levels[attr] = levels[res[-2]]+1
-            else:
-                levels[attr] = -1
-         if '_count' in res[-7]:
+         elif '_count' in res[-7]:
             attr = re.sub('_count$','',res[-7])
             events[attr] = res[-3]
-         if '_id' in res[-7]:
-            continue
+         elif '_id' in res[-7]:
+            attr = re.sub('_id$','',res[-7])
+            ids[attr] = res[-1]
          elif not res[-6] == None:
+            print res[-7]
             entry_avg[res[-7]] = res[-6]
             entry_sdv[res[-7]] = res[-5]
 
@@ -144,7 +131,7 @@ def analyse(**kwargs):
             float(entry_avg[k]), \
             float(entry_avg[k]+entry_sdv[k]), \
             float(entry_avg[k]-entry_sdv[k]), \
-            'Average: {0}, Stddev.: +-{1}\nEvents: {2}\nParent: {3}'.format(entry_avg[k], entry_sdv[k], events[k], parents[k])
+            'Id: {0:03d}\nAverage: {1}, Stddev.: +-{2}\nEvents: {3}\nParent: {4}'.format(ids[k], entry_avg[k], entry_sdv[k], events[k], parents[k])
          ])
         
       dataDict = {}
