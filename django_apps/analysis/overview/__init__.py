@@ -89,10 +89,6 @@ def analyse(**kwargs):
    cursor.execute(query_jobs)
    cursor_description = cursor.description
    jobs = cursor.fetchall()
-   #print "Jobs: ", jobs
-
-   #query_results = get_data_query(requestData, app_name, jobs)
-   #print "Query results in overview: ", query_results
 
    query_tree_info = get_tree_query(jobs)
    #print "Query tree in overview: ", query_tree_info
@@ -127,12 +123,12 @@ def analyse(**kwargs):
             parents[attr] = res[-2]
             if res[-2] == None:
                 levels[attr] = 0
-            if res[-2] == 'EVENT_LOOP':
+            elif res[-2] == 'EVENT_LOOP':
                 levels[attr] = 1
-            #if not levels[res[-2]] == None:
-                #levels[attr] = levels[res[-2]]+1
-            #else
-                #levels[attr] = -1
+            elif res[-2] in levels:
+                levels[attr] = levels[res[-2]]+1
+            else:
+                levels[attr] = -1
          if '_count' in res[-7]:
             attr = re.sub('_count$','',res[-7])
             events[attr] = res[-3]
