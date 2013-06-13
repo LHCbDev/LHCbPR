@@ -14,17 +14,42 @@ function drawVisualization() {
 	var jobs = {{ jobs|safe }};
 	var cnf_desc = {{ cnf_description|safe }};
    cnf_data = google.visualization.arrayToDataTable(cnfs);
+   cnf_data.setColumnLabel(0, "Project");
+   cnf_data.setColumnLabel(1, "Version");
+   cnf_data.setColumnLabel(2, "Platform");
+   cnf_data.setColumnLabel(3, "Options");
    job_data = google.visualization.arrayToDataTable(jobs);
 
-   data_rows = 20*cnf_data.getNumberOfRows();
-
    // Create and draw the visualization.
-   visualization = new google.visualization.Table(document.getElementById('configs'));
-   visualization = new google.visualization.Table(document.getElementById('details'));
-   visualization.draw(cnf_data, { width : 700, height : 50 + data_rows, chartArea: { left: 250, height: data_rows, width: "100%"}});
-   visualization.draw(job_data, null);
+   cnf_visualization = new google.visualization.Table(document.getElementById('configs'));
+   job_visualization = new google.visualization.Table(document.getElementById('details'));
+   cnf_visualization.draw(cnf_data, {
+      width  : 700,
+      height : 500,
+      page   : 'enable',
+      pageSize: 16,
+      pagingSymbols: {prev: 'prev', next: 'next'},
+      pagingButtonsConfiguration: 'auto',
+      chartArea: {
+            left: 250,
+            width: "50%"
+      },
+      alternatingRowStyle: true
+   });
+   job_visualization.draw(job_data, {
+      width  : 700,
+      height : 500,
+      page   : 'enable',
+      pageSize: 16,
+      pagingSymbols: {prev: 'prev', next: 'next'},
+      pagingButtonsConfiguration: 'auto',
+      chartArea: {
+            left: 250,
+            width: "50%"
+      },
+      alternatingRowStyle: true
+   });
 }
-
 
 google.setOnLoadCallback(drawVisualization);
 </script>
@@ -46,16 +71,18 @@ $(document).ready(function () {
 
 {% block pagebody %}
 
-
 <div id="tabs">
-	<ul>
-		<li><a href="#jobs">Jobs</a></li>
-	</ul>
-   <div id="container" style="width:1200px;">
-   <div id="configs" style="width:500px;float:left"></div>
-   <div id="details" style="width:500px;float:left"></div>
+   <ul>
+      <li><a href="#jobs">Jobs</a></li>
+   </ul>
+   <div id="main" style="height: 700px">
+      <div id="filter"  style="height: 50px">Choose configuration:</div>
+      <div id="configs" style="height: 600px">
+      <div id="diff_version" style="height: 100px; display: none;">
+      <div id="details" style="height: 600px">
+      <div id="cleaner"> 
    </div>
+   <div id="footer"></div>
 </div>
-
 
 {% endblock pagebody %}
