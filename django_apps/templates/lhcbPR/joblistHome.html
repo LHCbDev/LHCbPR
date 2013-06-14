@@ -12,20 +12,33 @@ function drawVisualization() {
    // Create and populate the data table.
 	var cnfs = {{ configs|safe }};
 	var jobs = {{ jobs|safe }};
-	var cnf_desc = {{ cnf_description|safe }};
    cnf_data = google.visualization.arrayToDataTable(cnfs);
    cnf_data.setColumnLabel(0, "Project");
    cnf_data.setColumnLabel(1, "Version");
    cnf_data.setColumnLabel(2, "Platform");
    cnf_data.setColumnLabel(3, "Options");
+
    job_data = google.visualization.arrayToDataTable(jobs);
+   job_data.setColumnLabel(0, "Id");
+   job_data.setColumnLabel(1, "Project");
+   job_data.setColumnLabel(2, "Version");
+   job_data.setColumnLabel(3, "Platform");
+   job_data.setColumnLabel(4, "Options");
+   job_data_view = new google.visualization.DataView(job_data);
+   job_data_view.setColumns([0,5]);
 
    // Create and draw the visualization.
-   cnf_visualization = new google.visualization.Table(document.getElementById('configs'));
-   job_visualization = new google.visualization.Table(document.getElementById('details'));
+   cnf_visualization = new google.visualization.Table(document.getElementById('left'));
+   job_visualization = new google.visualization.Table(document.getElementById('right'));
+
+   var cnfStyle = { oddTableRow: 'google-table-row',
+                    headerCell: 'google-table-head'
+   }
+
    cnf_visualization.draw(cnf_data, {
-      width  : 700,
-      height : 500,
+      allowHtml: true,
+      width  : 600,
+      height : 670,
       page   : 'enable',
       pageSize: 16,
       pagingSymbols: {prev: 'prev', next: 'next'},
@@ -34,11 +47,13 @@ function drawVisualization() {
             left: 250,
             width: "50%"
       },
-      alternatingRowStyle: true
+      alternatingRowStyle: true,
+      cssClassNames: cnfStyle
    });
-   job_visualization.draw(job_data, {
-      width  : 700,
-      height : 500,
+   job_visualization.draw(job_data_view, {
+      allowHtml: true,
+      width  : 600,
+      height : 670,
       page   : 'enable',
       pageSize: 16,
       pagingSymbols: {prev: 'prev', next: 'next'},
@@ -47,7 +62,8 @@ function drawVisualization() {
             left: 250,
             width: "50%"
       },
-      alternatingRowStyle: true
+      alternatingRowStyle: true,
+      cssClassNames: cnfStyle
    });
 }
 
@@ -65,7 +81,48 @@ $(document).ready(function () {
 
 {% endblock script %}
 
-{% block stylecss %} {% endblock stylecss %}
+{% block stylecss %}
+
+#main {
+    width: 1200px;
+    height: 700px;
+    border: 1px solid black;
+}
+#header {
+    width: 1200px;
+    height: 10px;
+    border: 1px solid black;
+}
+#left {
+    width: 600px;
+    height: 670px;
+    float:left;
+    border: 1px solid black;
+}
+#right {
+    height: 670px;
+    border: 1px solid black;
+    overflow: hidden;
+}
+#footer {
+    width: 1200px;
+    height: 20px;
+    border: 1px solid black;
+}
+.google-table-row {
+   background-color:  lightblue;
+}
+.google-table-head {
+   background-color: skyblue;
+   font-size: 12px;
+   height: 20px;
+}
+.google-table td {
+   font-size: 10px;
+   height: 30px;
+}
+
+{% endblock stylecss %}
 
 {% block helptext %} {% endblock helptext %}
 
@@ -73,13 +130,15 @@ $(document).ready(function () {
 
 <div id="tabs">
    <ul>
-      <li><a href="#jobs">Jobs</a></li>
+		<li><a id="AlltabButton" href="#">All</a></li>
+		{% for app in applications %}
+		<li><a id="{{ app }}tabButton" href="#{{ app }}tab">{{ app }}</a></li>
+		{% endfor %}
    </ul>
-   <div id="main" style="height: 700px">
-      <div id="filter"  style="height: 50px">Choose configuration:</div>
-      <div id="configs" style="height: 600px">
-      <div id="diff_version" style="height: 100px; display: none;">
-      <div id="details" style="height: 600px">
+   <div id="header"></div>
+   <div id="main">
+      <div id="left" class="google-table"></div>
+      <div id="right" class="google-table"></div>
       <div id="cleaner"> 
    </div>
    <div id="footer"></div>
