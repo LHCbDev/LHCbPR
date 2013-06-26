@@ -96,12 +96,22 @@ def jobDescriptions(request, app_name):
                   context_instance=RequestContext(request))
    
 @login_required 
-def joblistHome(request, app_name=""):
+def joblistDescHome(request):
    """List of available jobs and runns"""
-   cnf_query = "SELECT DISTINCT LHCBPR_APPLICATION.APPNAME, \
+   return joblistDesc(request, "")
+
+@login_required 
+def joblistDesc(request, app_name):
+   """List of available jobs and runns"""
+   cnf_query = "SELECT DISTINCT \
+      LHCBPR_JOBDESCRIPTION.ID, \
+      LHCBPR_APPLICATION.APPNAME, \
       LHCBPR_APPLICATION.APPVERSION, \
       LHCBPR_PLATFORM.CMTCONFIG, \
-      LHCBPR_OPTIONS.DESCRIPTION \
+      LHCBPR_OPTIONS.DESCRIPTION, \
+      LHCBPR_SETUPPROJECT.DESCRIPTION AS SETUP_DESC, \
+      LHCBPR_OPTIONS.CONTENT, \
+      LHCBPR_SETUPPROJECT.CONTENT AS CONTENT1 \
       FROM LHCBPR_JOB \
       INNER JOIN LHCBPR_PLATFORM \
       ON LHCBPR_PLATFORM.ID = LHCBPR_JOB.PLATFORM_ID \
@@ -110,12 +120,44 @@ def joblistHome(request, app_name=""):
       INNER JOIN LHCBPR_APPLICATION \
       ON LHCBPR_APPLICATION.ID = LHCBPR_JOBDESCRIPTION.APPLICATION_ID \
       INNER JOIN LHCBPR_OPTIONS \
-      ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID"
+      ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID \
+      INNER JOIN LHCBPR_SETUPPROJECT \
+      ON LHCBPR_SETUPPROJECT.ID = LHCBPR_JOBDESCRIPTION.SETUP_PROJECT_ID"
+
+   query = ""
+   if not app_name == "All":
+      query = " WHERE LHCBPR_APPLICATION.APPNAME = \'{0}\'".format(app_name)
+
+   cnf_query += query
+   cnf_query += " ORDER BY LHCBPR_JOBDESCRIPTION.ID DESC"
+
+   cursor = connection.cursor()
+   cursor.execute(cnf_query)
+   description = [i[0] for i in cursor.description]
+   configurations = cursor.fetchall()
+
+   applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
+
+   return render_to_response('lhcbPR/joblistHome.html',
+                  { 'configs' : json.dumps(configurations),
+                    'description' : description,
+                    'applications' : applicationList
+                  },
+                  context_instance=RequestContext(request))
+
+@login_required 
+def joblistInfo(request, desc_id):
+   """List of available jobs and runns"""
+   if not desc_id:
+      return HttpResponseNotFound("<h3>No existing jobs for job description or no job description given.</h3>")
+
    job_query = "SELECT LHCBPR_JOB.ID AS ID, \
       LHCBPR_APPLICATION.APPNAME AS Project, \
       LHCBPR_APPLICATION.APPVERSION AS Version, \
       LHCBPR_PLATFORM.CMTCONFIG AS Platform, \
       LHCBPR_OPTIONS.DESCRIPTION AS Options, \
+      TO_CHAR(LHCBPR_JOB.TIME_START, 'YYYY-MM-DD HH12:MI:SS AM') AS TIME_START, \
+      TO_CHAR(LHCBPR_JOB.TIME_END, 'YYYY-MM-DD HH12:MI:SS AM') AS TIME_END, \
       LHCBPR_JOB.SUCCESS AS Stat \
       FROM LHCBPR_JOB \
       INNER JOIN LHCBPR_PLATFORM \
@@ -126,31 +168,23 @@ def joblistHome(request, app_name=""):
       ON LHCBPR_APPLICATION.ID = LHCBPR_JOBDESCRIPTION.APPLICATION_ID \
       INNER JOIN LHCBPR_OPTIONS \
       ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID"
+   
+   query = " WHERE LHCBPR_JOBDESCRIPTION.ID = {0}".format(desc_id)
 
-   if not app_name == "":
-      cnf_query += " WHERE LHCBPR_APPLICATION.APPNAME = \'{0}\'"
-      cnf_query.format("MOORE")
+   job_query += query
+   job_query += " ORDER BY LHCBPR_JOB.ID"
 
-   print cnf_query
+   print job_query
 
    cursor = connection.cursor()
-   cursor.execute(cnf_query)
-   cnf_description = [i[0] for i in cursor.description]
-   configurations = cursor.fetchall()
+   cursor.execute(job_query)
+   description = [i[0] for i in cursor.description]
+   jobs = cursor.fetchall()
 
-   cursor2= connection.cursor()
-   cursor2.execute(job_query)
-   job_description = [i[0] for i in cursor2.description]
-   jobs = cursor2.fetchall()
-
-   applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
-
-   return render_to_response('lhcbPR/joblistHome.html',
-                  { 'configs' : json.dumps(configurations),
-                    'jobs' : json.dumps(jobs),
-                    'cnf_description' : cnf_description,
-                    'job_description' : job_description,
-                    'applications' : applicationList
+   return render_to_response('lhcbPR/joblistInfo.html',
+                  {
+                    'jobs'        : json.dumps(jobs),
+                    'description' : description
                   },
                   context_instance=RequestContext(request))
 

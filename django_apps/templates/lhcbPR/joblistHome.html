@@ -6,65 +6,64 @@
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
 google.load('visualization', '1', {packages: ['table']});
-</script>
-<script type="text/javascript">
+
+var cnf_data;
+var cnf_view;
+
 function drawVisualization() {
    // Create and populate the data table.
 	var cnfs = {{ configs|safe }};
-	var jobs = {{ jobs|safe }};
    cnf_data = google.visualization.arrayToDataTable(cnfs);
-   cnf_data.setColumnLabel(0, "Project");
-   cnf_data.setColumnLabel(1, "Version");
-   cnf_data.setColumnLabel(2, "Platform");
-   cnf_data.setColumnLabel(3, "Options");
+   cnf_data.setColumnLabel(0, "Id");
+   cnf_data.setColumnLabel(1, "Project");
+   cnf_data.setColumnLabel(2, "Version");
+   cnf_data.setColumnLabel(3, "Platform");
+   cnf_data.setColumnLabel(4, "Options");
+   cnf_data.setColumnLabel(5, "Setup Name");
+   cnf_data.setColumnLabel(6, "Options File");
+   cnf_data.setColumnLabel(7, "Setup Options");
 
-   job_data = google.visualization.arrayToDataTable(jobs);
-   job_data.setColumnLabel(0, "Id");
-   job_data.setColumnLabel(1, "Project");
-   job_data.setColumnLabel(2, "Version");
-   job_data.setColumnLabel(3, "Platform");
-   job_data.setColumnLabel(4, "Options");
-   job_data_view = new google.visualization.DataView(job_data);
-   job_data_view.setColumns([0,5]);
+   cnf_view = new google.visualization.DataView(cnf_data);
+   cnf_view.setColumns([0, 1, 2, 3, 4, 5, 6, 7]);
+
+   var linesPerPage   = 16;
+   var pageTableIndex =  0;
+   var pageTableCount = Math.ceil(cnf_data.getNumberOfRows()/linesPerPage);
 
    // Create and draw the visualization.
    cnf_visualization = new google.visualization.Table(document.getElementById('left'));
-   job_visualization = new google.visualization.Table(document.getElementById('right'));
 
-   var cnfStyle = { oddTableRow: 'google-table-row',
-                    headerCell: 'google-table-head'
+   var cnfStyle = {
+      oddTableRow : 'google-table-row',
+      headerCell  : 'google-table-head'
    }
 
-   cnf_visualization.draw(cnf_data, {
+   cnf_visualization.draw(cnf_view, {
       allowHtml: true,
-      width  : 600,
-      height : 670,
-      page   : 'enable',
-      pageSize: 16,
+      width: 800,
+      height: 770,
+      page: 'enable',
+      pageSize : linesPerPage,
       pagingSymbols: {prev: 'prev', next: 'next'},
       pagingButtonsConfiguration: 'auto',
       chartArea: {
-            left: 250,
-            width: "50%"
+         left: 250,
+         width: "60%"
       },
       alternatingRowStyle: true,
       cssClassNames: cnfStyle
    });
-   job_visualization.draw(job_data_view, {
-      allowHtml: true,
-      width  : 600,
-      height : 670,
-      page   : 'enable',
-      pageSize: 16,
-      pagingSymbols: {prev: 'prev', next: 'next'},
-      pagingButtonsConfiguration: 'auto',
-      chartArea: {
-            left: 250,
-            width: "50%"
-      },
-      alternatingRowStyle: true,
-      cssClassNames: cnfStyle
-   });
+
+   google.visualization.events.addListener(cnf_visualization, 'select', handleConfigs);
+}
+
+// Handler to set configuration info
+function handleConfigs()
+{
+   var selection      = cnf_visualization.getSelection();
+   var description_id = cnf_data.getValue(selection[0].row, 0);
+   //var app_name       = cnf_data.getValue(selection[0].row, 1);
+   location.href = "{{ ROOT_URL }}joblistInfo/" + description_id;
 }
 
 google.setOnLoadCallback(drawVisualization);
@@ -74,9 +73,22 @@ google.setOnLoadCallback(drawVisualization);
 {% block script %}
 
 $(document).ready(function () {
-	$("#jobListMenu").attr('checked', 'checked').button("refresh");
+   $("#jobListMenu").attr('checked', 'checked').button("refresh");
+   $('#AlltabButton').click(function(){
+      document.location.href="{{ ROOT_URL }}joblist/All/" ;
+      $("#{{ active_tab }}tab").mask("Loading...");
+   });
+   {% for app in applications %}
+   $('#{{ app }}tabButton').click(function(){
+      document.location.href="{{ ROOT_URL }}joblist/{{ app }}/" ;
+      $("#{{ active_tab }}tab").mask("Loading...");
+   });
+   {% endfor %}
+
 	$('#tabs').tabs({ selected : -1 });
 	$('#tabs').tabs('select', '#{{ active_tab }}tab');
+
+   $("button").button();
 });
 
 {% endblock script %}
@@ -85,29 +97,23 @@ $(document).ready(function () {
 
 #main {
     width: 1200px;
-    height: 700px;
-    border: 1px solid black;
+    height: 750px;
 }
 #header {
     width: 1200px;
-    height: 10px;
-    border: 1px solid black;
+    height: 30px;
 }
 #left {
-    width: 600px;
-    height: 670px;
+    width: 800px;
+    height: 700px;
     float:left;
-    border: 1px solid black;
 }
 #right {
-    height: 670px;
-    border: 1px solid black;
-    overflow: hidden;
+    height: 700px;
 }
 #footer {
     width: 1200px;
     height: 20px;
-    border: 1px solid black;
 }
 .google-table-row {
    background-color:  lightblue;
@@ -130,11 +136,12 @@ $(document).ready(function () {
 
 <div id="tabs">
    <ul>
-		<li><a id="AlltabButton" href="#">All</a></li>
+		<li><a id="AlltabButton" href="#Alltab">All</a></li>
 		{% for app in applications %}
 		<li><a id="{{ app }}tabButton" href="#{{ app }}tab">{{ app }}</a></li>
 		{% endfor %}
    </ul>
+   <div id="{{ active_tab }}tab">
    <div id="header"></div>
    <div id="main">
       <div id="left" class="google-table"></div>
@@ -142,6 +149,7 @@ $(document).ready(function () {
       <div id="cleaner"> 
    </div>
    <div id="footer"></div>
+   </div>
 </div>
 
 {% endblock pagebody %}
