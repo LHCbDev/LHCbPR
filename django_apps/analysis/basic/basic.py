@@ -123,7 +123,7 @@ def analyse(**kwargs):
         #after we finish sending our data we wait for the response(answer)
         answerDict = remoteservice.recv()
     except Exception, e:
-        logger.exception()
+        logger.exception(e)
         return {'errorMessage' : 'An exception occurred please try again later',
                 'template' : 'analysis/error.html' }
         #return {'errorMessage' : 'An error occurred with the root analysis process, please try again later',
