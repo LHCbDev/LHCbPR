@@ -18,9 +18,9 @@ function drawVisualization() {
    cnf_data.setColumnLabel(1, "Project");
    cnf_data.setColumnLabel(2, "Version");
    cnf_data.setColumnLabel(3, "Platform");
-   cnf_data.setColumnLabel(4, "Options");
-   cnf_data.setColumnLabel(5, "Setup Name");
-   cnf_data.setColumnLabel(6, "Options File");
+   cnf_data.setColumnLabel(4, "Options Name");
+   cnf_data.setColumnLabel(5, "Options");
+   cnf_data.setColumnLabel(6, "Setup Name");
    cnf_data.setColumnLabel(7, "Setup Options");
 
    cnf_view = new google.visualization.DataView(cnf_data);
@@ -41,7 +41,7 @@ function drawVisualization() {
    cnf_visualization.draw(cnf_view, {
       allowHtml: true,
       width: 800,
-      height: 770,
+      height: 750,
       page: 'enable',
       pageSize : linesPerPage,
       pagingSymbols: {prev: 'prev', next: 'next'},
