@@ -109,8 +109,8 @@ def joblistDesc(request, app_name):
       LHCBPR_APPLICATION.APPVERSION, \
       LHCBPR_PLATFORM.CMTCONFIG, \
       LHCBPR_OPTIONS.DESCRIPTION, \
-      LHCBPR_SETUPPROJECT.DESCRIPTION AS SETUP_DESC, \
       LHCBPR_OPTIONS.CONTENT, \
+      LHCBPR_SETUPPROJECT.DESCRIPTION AS SETUP_DESC, \
       LHCBPR_SETUPPROJECT.CONTENT AS CONTENT1 \
       FROM LHCBPR_JOB \
       INNER JOIN LHCBPR_PLATFORM \
@@ -122,7 +122,7 @@ def joblistDesc(request, app_name):
       INNER JOIN LHCBPR_OPTIONS \
       ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID \
       INNER JOIN LHCBPR_SETUPPROJECT \
-      ON LHCBPR_SETUPPROJECT.ID = LHCBPR_JOBDESCRIPTION.SETUP_PROJECT_ID"
+      ON LHCBPR_SETUPPROJECT.ID = NVL(LHCBPR_JOBDESCRIPTION.SETUP_PROJECT_ID, 1)"
 
    query = ""
    if not app_name == "All":
@@ -130,6 +130,8 @@ def joblistDesc(request, app_name):
 
    cnf_query += query
    cnf_query += " ORDER BY LHCBPR_JOBDESCRIPTION.ID DESC"
+
+   #print "Cnf query: ", cnf_query
 
    cursor = connection.cursor()
    cursor.execute(cnf_query)
