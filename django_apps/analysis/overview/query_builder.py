@@ -94,7 +94,7 @@ def get_data_query(requestData, app_name, job_list):
     
     return query_results
 
-def get_jobs_query(requestData, app_name):
+def get_jobs_query(requestData):
     select_statements = [
          'distinct j.ID'
     ]

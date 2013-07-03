@@ -62,8 +62,8 @@ function handleConfigs()
 {
    var selection      = cnf_visualization.getSelection();
    var description_id = cnf_data.getValue(selection[0].row, 0);
-   //var app_name       = cnf_data.getValue(selection[0].row, 1);
-   location.href = "{{ ROOT_URL }}joblistInfo/" + description_id;
+   var app_name       = cnf_data.getValue(selection[0].row, 1);
+   location.href = "{{ ROOT_URL }}joblistInfo/" + app_name + "/" + description_id;
 }
 
 google.setOnLoadCallback(drawVisualization);

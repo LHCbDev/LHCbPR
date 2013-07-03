@@ -19,7 +19,7 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^jobDescriptions/(?P<app_name>\w+)/$', 'jobDescriptions'),
     url(r'^joblist/$','joblistDesc', {'app_name': 'All'}),
     url(r'^joblist/(?P<app_name>\w+)/$','joblistDesc'),
-    url(r'^joblistInfo/(?P<desc_id>\w+)/$','joblistInfo'),
+    url(r'^joblistInfo/(?P<app_name>\w+)/(?P<desc_id>\w+)/$','joblistInfo'),
     url(r'^analyse/$','analyseHome'),
     url(r'^analyse/(?P<analysis_type>\w+)/functions/(?P<function_name>\w+)/(?P<app_name>\w+)/$', 'analysis_extras'),
     url(r'^analyse/(?P<analysis_type>\w+)/results/(?P<app_name>\w+)/$', 'analysis_function'),
@@ -32,5 +32,6 @@ urlpatterns += patterns('lhcbPR.views',
     url(r'^script', 'script'),
     url(r'^test','test'),
     url(r'^newjobdescription', 'new_job_description'),
-    url(r'^getcontent', 'get_content')
+    url(r'^getcontent', 'get_content'),
+    url(r'^files/(?P<filename>.*)$', 'getFiles')
 )

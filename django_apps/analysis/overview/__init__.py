@@ -17,6 +17,12 @@ class GroupDict(dict):
 
 def render(**kwargs):
    app_name = kwargs['app_name']
+   request  = kwargs['requestData']
+   jobs = ""
+   try:
+      jobs = request['jobs']
+   except KeyError:
+      jobs = ""
     
    apps = Application.objects.filter(appName__exact=app_name)
    if not apps:
@@ -51,10 +57,9 @@ def render(**kwargs):
          if k != "":
             atr_groups.append([k, v])
    
-   print atr_groups 
-    
    dataDict = {
          'atrs'      : json.dumps(atrs),
+         'jobs'      : jobs,
          'atrGroups' : atr_groups,
          'groups'    : json.dumps(dict((v,k) for k, v in groups.iteritems())),
          'types'     : json.dumps(dict((v,k) for k, v in types.iteritems()))  
@@ -66,26 +71,29 @@ def analyse(**kwargs):
    requestData   = kwargs['requestData']
    app_name      = kwargs['app_name']
 
-   grps = requestData['grps'].split(',')
-   if grps[0] == "":
-      raise Http404     
-    
    versions = requestData['versions'].split(',')
-   if versions[0] == "":
-      raise Http404     
-    
-   options = requestData['options'].split(',')
-   if options[0] == "":
-      raise Http404
+   options  = requestData['options'].split(',')
+   
+   jobs = ""
+   try:
+      jobs = requestData['jobs']
+   except KeyError:
+      jobs = ""
 
-   # Get SQL query
-   query_jobs = get_jobs_query(requestData, app_name)
-   #print "Query jobs in overview: ", query_jobs
+   if jobs == "":
+      if versions[0] == "" and options[0] == "":
+         raise Http404
+      else:
+         # Get SQL query
+         query_jobs = get_jobs_query(requestData)
+         #print "Query jobs in overview: ", query_jobs
     
-   cursor = connection.cursor()
-   cursor.execute(query_jobs)
-   cursor_description = cursor.description
-   jobs = cursor.fetchall()
+         cursor = connection.cursor()
+         cursor.execute(query_jobs)
+         cursor_description = cursor.description
+         jobs = cursor.fetchall()
+
+   print "Jobs: ", jobs
 
    query_tree_info = get_tree_query(jobs)
    #print "Query tree in overview: ", query_tree_info
@@ -121,7 +129,6 @@ def analyse(**kwargs):
             attr = re.sub('_id$','',res[-7])
             ids[attr] = res[-1]
          elif not res[-6] == None:
-            print res[-7]
             entry_avg[res[-7]] = res[-6]
             entry_sdv[res[-7]] = res[-5]
 

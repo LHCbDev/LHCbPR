@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.conf import settings
 from django.contrib.auth.decorators import login_required as default_login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.files import File 
 
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults
 import json, subprocess, sys, re, copy, os
@@ -148,16 +149,31 @@ def joblistDesc(request, app_name):
                   context_instance=RequestContext(request))
 
 @login_required 
-def joblistInfo(request, desc_id):
+def joblistInfo(request, app_name, desc_id):
    """List of available jobs and runns"""
    if not desc_id:
       return HttpResponseNotFound("<h3>No existing jobs for job description or no job description given.</h3>")
 
+   atrs_float = JobResults.objects.filter(
+         job__jobDescription__application__appName=app_name,
+         job__success=True
+   ).filter(Q(jobAttribute__type='Float'))
+   atr_groups_tmp = atrs_float.values_list(
+         'jobAttribute__group'
+   ).distinct()
+   atr_groups = []
+   for k, v in enumerate(atr_groups_tmp):
+      if v[0] != "":
+         v[0].split(',')
+         atr_groups.append(v[0])
+
    job_query = "SELECT LHCBPR_JOB.ID AS ID, \
       LHCBPR_APPLICATION.APPNAME AS Project, \
       LHCBPR_APPLICATION.APPVERSION AS Version, \
+      LHCBPR_APPLICATION.ID AS APP_ID, \
       LHCBPR_PLATFORM.CMTCONFIG AS Platform, \
       LHCBPR_OPTIONS.DESCRIPTION AS Options, \
+      LHCBPR_OPTIONS.ID AS OPT_ID, \
       TO_CHAR(LHCBPR_JOB.TIME_START, 'YYYY-MM-DD HH12:MI:SS AM') AS TIME_START, \
       TO_CHAR(LHCBPR_JOB.TIME_END, 'YYYY-MM-DD HH12:MI:SS AM') AS TIME_END, \
       LHCBPR_JOB.SUCCESS AS Stat \
@@ -176,16 +192,55 @@ def joblistInfo(request, desc_id):
    job_query += query
    job_query += " ORDER BY LHCBPR_JOB.ID"
 
-   print job_query
+   #print job_query
+
+   info_query = "SELECT LHCBPR_JOBRESULTS.JOB_ID, \
+      LHCBPR_JOBATTRIBUTE.NAME, \
+      LHCBPR_JOBATTRIBUTE.\"GROUP\", \
+      LHCBPR_JOBATTRIBUTE.DESCRIPTION, \
+      LHCBPR_RESULTSTRING.DATA \
+      FROM LHCBPR_RESULTSTRING \
+      INNER JOIN LHCBPR_JOBRESULTS \
+      ON LHCBPR_JOBRESULTS.ID = LHCBPR_RESULTSTRING.JOBRESULTS_PTR_ID \
+      INNER JOIN LHCBPR_JOBATTRIBUTE \
+      ON LHCBPR_JOBRESULTS.JOBATTRIBUTE_ID = LHCBPR_JOBATTRIBUTE.ID \
+      WHERE LHCBPR_JOBATTRIBUTE.\"GROUP\" = 'JobInfo' \
+      ORDER BY LHCBPR_JOBRESULTS.JOB_ID"
+
+   #print info_query
+
+   file_query = "SELECT LHCBPR_JOBRESULTS.JOB_ID, \
+     LHCBPR_JOBATTRIBUTE.NAME, \
+     LHCBPR_RESULTFILE.\"FILE\" \
+     FROM LHCBPR_JOBRESULTS \
+     INNER JOIN LHCBPR_JOBATTRIBUTE \
+     ON LHCBPR_JOBRESULTS.JOBATTRIBUTE_ID = LHCBPR_JOBATTRIBUTE.ID \
+     INNER JOIN LHCBPR_RESULTFILE \
+     ON LHCBPR_JOBRESULTS.ID = LHCBPR_RESULTFILE.JOBRESULTS_PTR_ID \
+     ORDER BY LHCBPR_JOBRESULTS.JOB_ID"
 
    cursor = connection.cursor()
    cursor.execute(job_query)
    description = [i[0] for i in cursor.description]
    jobs = cursor.fetchall()
 
+   cursor = connection.cursor()
+   cursor.execute(info_query)
+   description = [i[0] for i in cursor.description]
+   infos = cursor.fetchall()
+
+   cursor = connection.cursor()
+   cursor.execute(file_query)
+   description = [i[0] for i in cursor.description]
+   files = cursor.fetchall()
+
    return render_to_response('lhcbPR/joblistInfo.html',
                   {
                     'jobs'        : json.dumps(jobs),
+                    'infos'       : json.dumps(infos),
+                    'files'       : json.dumps(files),
+                    'groups'      : atr_groups,
+                    'application' : app_name,
                     'description' : description
                   },
                   context_instance=RequestContext(request))
@@ -712,6 +767,18 @@ def script(request):
     script += '#python LHCbPRHandlers/sendToDB.py -s name_of_zip'
     
     return HttpResponse(script, mimetype="text/plain")
+
+@login_required
+def getFiles(request, filename):
+    django_file = ""
+    try:
+        file = open(filename)
+        django_file = File(file) 
+    except IOError:
+        print "File: ", filename, "can not be opened."
+
+    c = Context({'file':django_file})
+    return HttpResponse(t.render(c)) 
 
 @csrf_exempt
 def get_content(request):

@@ -85,8 +85,6 @@
 
 {% block content %}
    {% if atrGroups %}
-   <label>Select at least a group, a version and an option set:</label>
-   <p>
    <table class="filter">
    <tr>
    <td>
@@ -96,6 +94,7 @@
           <option value="{{ group.0 }}">{{ group.0 }}</option>
        {% endfor %}
    </select>
+   <select id="jobs"></select>
    </div>
    </td>
    </tr>
