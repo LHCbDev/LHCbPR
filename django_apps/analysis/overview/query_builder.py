@@ -165,7 +165,7 @@ def get_jobs_query(requestData):
     
     return query
 
-def get_tree_query(job_list):
+def get_tree_query(job_list, group):
     query = "SELECT \
         opt.description as OPTIONS, \
         plat.cmtconfig as PLATFORM, \
@@ -200,14 +200,22 @@ def get_tree_query(job_list):
         AND attd.jobresults_ptr_id (+) = r.id \
         AND resint.jobresults_ptr_id (+) = r.id \
         AND resstr.jobresults_ptr_id (+) = r.id \
-        AND resint2.jobresults_ptr_id (+) = r.id \
-        AND att.\"GROUP\" in ( 'Timing', 'TimingTree', 'TimingCount', 'TimingID')"
+        AND resint2.jobresults_ptr_id (+) = r.id "
+
+    if   group == 'Timing':
+        query += "AND att.\"GROUP\" in ( 'Timing', 'TimingTree', 'TimingCount', 'TimingID')"
+    elif group == 'TaskTiming':
+        query += "AND att.\"GROUP\" in ( 'TaskTiming', 'TimingTree', 'TimingCount', 'TimingID')"
+    else:
+        query += "AND att.\"GROUP\" in ( '"
+        query += group
+        query += "')"
 
     jobs = []
     for id in job_list:
         jobs.append("j.id = {0}".format(id[0]))
 
-    query += 'and ( ' + ' or '.join(jobs) + ' ) ' 
+    query += ' and ( ' + ' or '.join(jobs) + ' ) ' 
     query += ' GROUP BY att.name, apl.appversion, h.hostname, opt.description, plat.cmtconfig'
     query += ' ORDER BY att.name'
 

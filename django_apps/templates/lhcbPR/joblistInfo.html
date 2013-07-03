@@ -95,7 +95,6 @@ function handleJobs()
 
    $("#job_info").append($("<p>"));
    $("#job_info").append($("<label>").html("Files:"));
-   $("#job_info").append($("<hr>"));
    $("#job_info").append($("<p>"));
    var files = {{ files|safe }};
    for (var f in files) {

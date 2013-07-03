@@ -23,6 +23,8 @@ def render(**kwargs):
       jobs = request['jobs']
    except KeyError:
       jobs = ""
+
+   print "Jobs in render: ", jobs
     
    apps = Application.objects.filter(appName__exact=app_name)
    if not apps:
@@ -57,6 +59,8 @@ def render(**kwargs):
          if k != "":
             atr_groups.append([k, v])
    
+   print "Jobs in render: ", jobs
+
    dataDict = {
          'atrs'      : json.dumps(atrs),
          'jobs'      : jobs,
@@ -71,14 +75,18 @@ def analyse(**kwargs):
    requestData   = kwargs['requestData']
    app_name      = kwargs['app_name']
 
-   versions = requestData['versions'].split(',')
-   options  = requestData['options'].split(',')
-   
+   versions  = requestData['versions'].split(',')
+   options   = requestData['options'].split(',')
+   atr_group = requestData['grps']
+
    jobs = ""
+   print "Request analyse: ", requestData
    try:
       jobs = requestData['jobs']
    except KeyError:
       jobs = ""
+
+   print "Jobs: ", jobs
 
    if jobs == "":
       if versions[0] == "" and options[0] == "":
@@ -95,7 +103,7 @@ def analyse(**kwargs):
 
    print "Jobs: ", jobs
 
-   query_tree_info = get_tree_query(jobs)
+   query_tree_info = get_tree_query(jobs, atr_group)
    #print "Query tree in overview: ", query_tree_info
     
    cursor2 = connection.cursor()
@@ -118,6 +126,7 @@ def analyse(**kwargs):
       parents   = {}
       events    = {}
       ids       = {}
+
       for res in values:
          if '_parent' in res[-7]:
             attr = re.sub('_parent$','',res[-7])
@@ -132,22 +141,32 @@ def analyse(**kwargs):
             entry_avg[res[-7]] = res[-6]
             entry_sdv[res[-7]] = res[-5]
 
-      for k in entry_avg.keys():
-         datatable.append([ \
-            '{0}'.format(k), \
-            float(entry_avg[k]), \
-            float(entry_avg[k]+entry_sdv[k]), \
-            float(entry_avg[k]-entry_sdv[k]), \
-            'Id: {0:03d}\nAverage: {1}, Stddev.: +-{2}\nEvents: {3}\nParent: {4}'.format(ids[k], entry_avg[k], entry_sdv[k], events[k], parents[k])
-         ])
-        
+      try:
+         for k in entry_avg.keys():
+            datatable.append([ \
+               '{0}'.format(k), \
+               float(entry_avg[k]), \
+               float(entry_avg[k]+entry_sdv[k]), \
+               float(entry_avg[k]-entry_sdv[k]), \
+               'Id: {0:03d}\nAverage: {1}, Stddev.: +-{2}\nEvents: {3}\nParent: {4}'.format(ids[k], entry_avg[k], entry_sdv[k], events[k], parents[k])
+            ])
+      except KeyError:
+         for k in entry_avg.keys():
+            datatable.append([ \
+               '{0}'.format(k), \
+               float(entry_avg[k]), \
+               float(entry_avg[k]+0), \
+               float(entry_avg[k]-0), \
+               'Average: {0}'.format(entry_avg[k])
+            ])
+
       dataDict = {}
       dataDict['description']  = dict(zip([col[0] for col in cursor2.description[:-7]], g))
       dataDict['platform']     = dataDict['description']['PLATFORM']
       dataDict['datatable']    = datatable
         
       trends.append(dataDict)
-        
+
    return { 'trends': json.dumps(trends) }
 
 def isAvailableFor(app_name):
