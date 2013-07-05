@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 import os, logging
-from tools.cron import CronTab, Event
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
-from lhcbPR.models import AddedResults
-import pushZip
+from django_apps.lhcbPR.models import AddedResults
+import django_apps.lhcbPR.management.commands.pushZip as pushZip
 
 #set custom path for the proxy
 os.environ['X509_USER_PROXY'] = '/afs/cern.ch/user/l/lhcbpr/private/myProxyFile'
@@ -26,7 +25,7 @@ def pushNewResults():
     
     logger.info('Checking results directory for new added zip files...')
     
-    from DIRAC.Core.Base.Script import parseCommandLine, initialize
+    from DIRAC.Core.Base.Script import initialize
     initialize(ignoreErrors = True, enableCommandLine = False)
     
     from DIRAC.Resources.Storage.StorageElement import StorageElement    
