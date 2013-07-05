@@ -10,7 +10,7 @@ import ROOT
 
 parent_work_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 sys.path.append(parent_work_path)
-import django_apps.myconf as conf
+import myconf as conf
 
 #logging stuff
 LOG_FILENAME = os.path.join(parent_work_path, 'static/logs/ROOT_service.log')
