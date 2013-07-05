@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files import File
 from django.core.files.base import ContentFile
-from django_apps.lhcbPR.models import AddedResults, ResultFile, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, JobDescription, HandlerResult, Handler
+from lhcbPR.models import AddedResults, ResultFile, Platform, Host, Job, JobResults, JobAttribute, ResultString, ResultInt, ResultFloat, JobDescription, HandlerResult, Handler
 from django.db import transaction
 import json, re, logging, zipfile, os, sys
 from django.conf import settings
