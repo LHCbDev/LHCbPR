@@ -1,8 +1,8 @@
-import socket, cPickle, os, sys, inspect, random
+import socket, os, sys, random
 import logging
 from logging.handlers import RotatingFileHandler
 from threading import Thread
-import socket_service as service
+import django_apps.tools.socket_service as service
 from cPickle import load, dump
 from ROOT import TFile, TCanvas, TH1D, TH1F, TPad, gROOT, TMath, TArrayF, TList
 from ROOT import gDirectory, gPad, gStyle
