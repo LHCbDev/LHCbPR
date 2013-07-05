@@ -18,14 +18,12 @@ class GroupDict(dict):
 def render(**kwargs):
    app_name = kwargs['app_name']
    request  = kwargs['requestData']
-   jobs = ""
+   jobs = []
    try:
-      jobs = request['jobs']
+      jobs = request['jobs'].split(',')
    except KeyError:
-      jobs = ""
+      jobs = []
 
-   print "Jobs in render: ", jobs
-    
    apps = Application.objects.filter(appName__exact=app_name)
    if not apps:
       raise Http404     
@@ -58,9 +56,9 @@ def render(**kwargs):
       for k, v in groups.iteritems():
          if k != "":
             atr_groups.append([k, v])
-   
-   print "Jobs in render: ", jobs
 
+   print "Jobs in render: ", jobs
+   
    dataDict = {
          'atrs'      : json.dumps(atrs),
          'jobs'      : jobs,

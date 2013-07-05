@@ -21,7 +21,11 @@ function drawVisualization() {
    job_data.setColumnLabel(5, "Options");
    job_data.setColumnLabel(7, "Start");
    job_data.setColumnLabel(8, "End");
-   job_data.setColumnLabel(9, "Success");
+   job_data.setColumnLabel(9, "S");
+   job_data.setProperty(0, 0, 'style', 'width:40px');
+   job_data.setProperty(0, 7, 'style', 'width:100px');
+   job_data.setProperty(0, 8, 'style', 'width:100px');
+   job_data.setProperty(0, 9, 'style', 'width:30px');
    job_data_view = new google.visualization.DataView(job_data);
    job_data_view.setColumns([0,7,8,9]);
 
@@ -180,8 +184,8 @@ $(document).ready(function () {
 }
 .google-table-head {
    background-color: skyblue;
-   font-size: 12px;
-   height: 20px;
+   font-size: 10px;
+   height: 15px;
 }
 .google-table td {
    font-size: 10px;

@@ -21,7 +21,8 @@
       prefillAll();
       trigger();
 
-      $("#groups").click(function(){ showHide("groups","groups_list") });
+      $("#grps").click(function(){ showHide("groups","groups_list") });
+      $("#JobsButton").click(function(){ showHide("JobsButton","jobs") });
 
       $('#groupErase,button').hover(
          function() { $(this).addClass('ui-state-hover'); },
@@ -84,18 +85,28 @@
 
 {% block content %}
    {% if atrGroups %}
-   <table class="filter">
-   <tr>
-   <td>
    <div id="atr_holder"class="ui-widget">
+   <table class="filter" style="margin-top: 1em;">
+   <tr><td>
    <select id="grps">
        {% for group in atrGroups %}
           <option value="{{ group.0 }}">{{ group.0 }}</option>
        {% endfor %}
    </select>
-   </div>
-   </td>
-   </tr>
+   </td></tr>
+   <tr><td>
+   <a href="javascript:;" id="JobsButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Jobs</a><a href="javascript:;" id="JobsErase" class="ui-state-default ui-corner-all filterErase" title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
+   </td></tr>
+   <tr><td>
+   <ul id="jobs" class="checklist">
+      {% for j in jobs %}
+         <li><label>
+         <input type="checkbox" value={{ j }}>{{ j }}
+         </label></li>
+      {% endfor %}
+   </ul>
+   </td></tr>
    </table>
+   </div>
    {% endif %}
 {% endblock content %}
