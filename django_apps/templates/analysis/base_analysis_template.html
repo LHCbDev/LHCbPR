@@ -73,8 +73,8 @@ jQuery(document).ready(function() {
             window.open( bookmarkshort );
         });
         jQuery("#triggerResults").click(function(){
-                var mytrigger = $(this).is(":checked");
-               jQuery("#bookmark_url").val( "https://"+ window.location.host + window.location.pathname +"?"+getBookmarkUrl()+"&trigger="+mytrigger );     
+            var mytrigger = $(this).is(":checked");
+            jQuery("#bookmark_url").val( "https://"+ window.location.host + window.location.pathname +"?"+getBookmarkUrl()+"&trigger="+mytrigger );
         });
 
         /* call the bookmark prefill */

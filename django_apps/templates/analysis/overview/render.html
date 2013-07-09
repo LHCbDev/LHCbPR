@@ -11,6 +11,16 @@
 
    var groups  = {{ groups|safe }};
 
+   function prefillJobs() {
+      {% for j in jobs %}
+      jQuery('#jobs li label input').each(function () {
+         if( jQuery(this).val() == {{ j }} ){
+             jQuery(this).attr('checked', 'checked');
+         }
+      });
+      {% endfor %}
+   }
+
    $(document).ready(function() {
       $('#execute_query').hover(
          function() { $(this).addClass('ui-state-hover'); },
@@ -19,6 +29,7 @@
 
       /* prefill the data for elements in the  */
       prefillAll();
+      prefillJobs();
       trigger();
 
       $("#grps").click(function(){ showHide("groups","groups_list") });

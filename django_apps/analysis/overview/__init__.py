@@ -57,8 +57,6 @@ def render(**kwargs):
          if k != "":
             atr_groups.append([k, v])
 
-   print "Jobs in render: ", jobs
-   
    dataDict = {
          'atrs'      : json.dumps(atrs),
          'jobs'      : jobs,
@@ -84,7 +82,7 @@ def analyse(**kwargs):
    except KeyError:
       jobs = ""
 
-   print "Jobs: ", jobs
+   print "Jobs from url: ", jobs
 
    if jobs == "":
       if versions[0] == "" and options[0] == "":
@@ -99,7 +97,7 @@ def analyse(**kwargs):
          cursor_description = cursor.description
          jobs = cursor.fetchall()
 
-   print "Jobs: ", jobs
+   print "Jobs to query: ", jobs
 
    query_tree_info = get_tree_query(jobs, atr_group)
    #print "Query tree in overview: ", query_tree_info
