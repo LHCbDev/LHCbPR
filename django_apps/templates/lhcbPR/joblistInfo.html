@@ -93,9 +93,11 @@ function handleJobs()
    $("#job_info").append($("<p>"));
    $("#job_info").append($("<label>").html("Results:"));
    $("#job_info").append($("<p>"));
-   var info = {{ infos|safe }};
-   if (job_id == info[0][0])
-      $("#job_info").append($("<label>").html(info[0][4]));
+   var infos = {{ infos|safe }};
+   for (var i in infos) {
+      if (job_id == infos[i][0])
+         $("#job_info").append($("<label>").html(infos[i][4]));
+   }
 
    $("#job_info").append($("<p>"));
    $("#job_info").append($("<label>").html("Files:"));
