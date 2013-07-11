@@ -6,6 +6,8 @@ we already have it from the render.html template
    function drawChart() {
 	   var trends = {{ trends|safe }};
 	   var myYo = document.getElementById("yo");
+      var validation = true;
+      if(validation == false) {
       for (var i = 0; i < trends.length; i++) {
          var mypre = document.createElement("pre");
 			var myText = document.createTextNode(JSON.stringify(trends[i]['description'], null, '  '));
@@ -43,6 +45,45 @@ we already have it from the render.html template
             
 		   var myhr = document.createElement("hr");
 		   myYo.appendChild(myhr);
+      }
+      } else {
+			var mydiv = document.createElement("div");
+			mydiv.id = "trend";
+			mydiv.style.width = 700;
+			mydiv.style.height = 500;
+			myYo.appendChild(mydiv);
+         var data = new google.visualization.DataTable()
+         data.addColumn('string', 'Version');
+         for (var r = 0; r < trends[0]['datatable'].length; r++) {
+            var new_trend = new Array();
+            for (var i = 0; i < trends.length; i++) {
+               if (r == 0) {
+                  data.addColumn({type:'number', role:'data'});
+                  data.addColumn({type:'number', role:'interval'});
+                  data.addColumn({type:'number', role:'interval'});
+                  data.addColumn({type:'string', role:'tooltip'});
+               }
+               if (i == 0) {
+                  new_trend.push(trends[0]['datatable'][r][0]);
+               }
+               new_trend.push(trends[i]['datatable'][r][1]);
+               new_trend.push(trends[i]['datatable'][r][2]);
+               new_trend.push(trends[i]['datatable'][r][3]);
+               new_trend.push(trends[i]['datatable'][r][4]);
+            }
+            data.addRow(new_trend);
+         }
+         data.sort([{column: 4, desc: false}, {column: 0}]);
+         var view = new google.visualization.DataView(data);
+         data_rows = 25*view.getNumberOfRows();
+         new google.visualization.BarChart(document.getElementById("trend")).
+            draw(view, {
+               legend   : 'none', 
+               width    : 700, 
+               height   : 100 + data_rows, 
+               chartArea: { left: 250, height: data_rows, width: "100%" },
+               fontSize: 10
+            });
       }
    }
 </script>

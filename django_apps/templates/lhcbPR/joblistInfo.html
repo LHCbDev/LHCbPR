@@ -8,6 +8,7 @@
 google.load('visualization', '1', {packages: ['table']});
 
 var job_data;
+var job_data_view;
 
 function drawVisualization() {
    // Create and populate the data table.
@@ -22,10 +23,10 @@ function drawVisualization() {
    job_data.setColumnLabel(7, "Start");
    job_data.setColumnLabel(8, "End");
    job_data.setColumnLabel(9, "S");
-   job_data.setProperty(0, 0, 'style', 'width:40px');
-   job_data.setProperty(0, 7, 'style', 'width:100px');
-   job_data.setProperty(0, 8, 'style', 'width:100px');
-   job_data.setProperty(0, 9, 'style', 'width:30px');
+   //job_data.setProperty(0, 0, 'style', 'width:40px');
+   //job_data.setProperty(0, 7, 'style', 'width:100px');
+   //job_data.setProperty(0, 8, 'style', 'width:100px');
+   //job_data.setProperty(0, 9, 'style', 'width:30px');
    job_data_view = new google.visualization.DataView(job_data);
    job_data_view.setColumns([0,7,8,9]);
 
@@ -84,7 +85,17 @@ function showInfo() {
 function handleJobs()
 {
    var selection = job_visualization.getSelection();
-   var job_id = job_data.getValue(selection[0].row, 0);
+   var job_id    = job_data.getValue(selection[0].row, 0);
+   var job_ids   = "";
+   var r;
+   for (r=0; r<job_data.getNumberOfRows(); r++) {
+      if (job_data.getValue(r, 9) == 1) {
+         job_ids += job_data.getValue(r, 0);
+         job_ids += ",";
+      }
+   }
+   if (job_ids.length>0)
+      job_ids = job_ids.substring(0, job_ids.length - 1);
    var app_id = job_data.getValue(selection[0].row, 3);
    var opt_id = job_data.getValue(selection[0].row, 6);
    $("#job_info").empty();
@@ -98,7 +109,6 @@ function handleJobs()
       if (job_id == infos[i][0])
          $("#job_info").append($("<label>").html(infos[i][4]));
    }
-
    $("#job_info").append($("<p>"));
    $("#job_info").append($("<label>").html("Files:"));
    $("#job_info").append($("<p>"));
@@ -120,7 +130,7 @@ function handleJobs()
    $("#job_links").append($("<a>",
       { 'href': '{{ ROOT_URL }}analyse/overview/{{ application }}' +
                 '?grps={{ gr }}' +
-                '&jobs=' + job_id + 
+                '&jobs=' + job_ids + 
                 '&options=' + opt_id +
                 '&versions=' + app_id +
                 '&trigger=true',
