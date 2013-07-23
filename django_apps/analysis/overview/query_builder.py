@@ -213,7 +213,7 @@ def get_tree_query(job_list, group):
 
     jobs = []
     for id in job_list:
-        jobs.append("j.id = {0}".format(id[0]))
+        jobs.append("j.id = {0}".format(id))
 
     query += ' and ( ' + ' or '.join(jobs) + ' ) ' 
     query += ' GROUP BY att.name, apl.appversion, h.hostname, opt.description, plat.cmtconfig'

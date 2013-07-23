@@ -75,16 +75,16 @@ def analyse(**kwargs):
    options   = requestData['options'].split(',')
    atr_group = requestData['grps']
 
-   jobs = ""
+   jobs = []
    print "Request analyse: ", requestData
    try:
-      jobs = requestData['jobs']
+      jobs = requestData['jobs'].split(",")
    except KeyError:
-      jobs = ""
+      jobs = []
 
    print "Jobs from url: ", jobs
 
-   if jobs == "":
+   if len(jobs) == 0:
       if versions[0] == "" and options[0] == "":
          raise Http404
       else:
@@ -95,7 +95,7 @@ def analyse(**kwargs):
          cursor = connection.cursor()
          cursor.execute(query_jobs)
          cursor_description = cursor.description
-         jobs = cursor.fetchall()
+         jobs = [j[0] for j in cursor.fetchall()]
 
    print "Jobs to query: ", jobs
 
