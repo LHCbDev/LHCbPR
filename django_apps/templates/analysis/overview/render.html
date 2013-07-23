@@ -2,12 +2,12 @@
 
 {% block head %}
 {{ block.super }}
-<script type="text/javascript" src="{{ STATIC_URL }}js/autocompleteBox.js"></script>
-<script src="https://www.google.com/jsapi"></script>
+   <script type="text/javascript" src="{{ STATIC_URL }}js/autocompleteBox.js"></script>
+   <script src="https://www.google.com/jsapi"></script>
 {% endblock head %}
 
 {% block script %}
-    {{ block.super }}
+   {{ block.super }}
 
    var groups  = {{ groups|safe }};
 
@@ -19,6 +19,26 @@
          }
       });
       {% endfor %}
+   }
+
+   function getSelected(id){
+      var sdValues = [];
+      $('#' + id + ' li label :checked').each(
+         function () {
+            sdValues.push($(this).attr('value'));
+         }
+      );
+      return sdValues;
+   }
+
+   function checkRequestData(requestData){
+      var errors = {}
+       
+      if (requestData["atr"] == "") {
+         errors["attribute"] = "Attribute field can not be empty!";
+      }
+      
+      return errors;
    }
 
    $(document).ready(function() {
@@ -33,7 +53,6 @@
       trigger();
 
       $("#grps").click(function(){ showHide("groups","groups_list") });
-      $("#JobsButton").click(function(){ showHide("JobsButton","jobs") });
 
       $('#groupErase,button').hover(
          function() { $(this).addClass('ui-state-hover'); },
@@ -41,7 +60,7 @@
       );
 
       $('#groupErase').click(function(){
-         var groups = getSelectedGroups("groups_list");                    
+         var groups = getSelected("groups_list");                    
          if(groups.length == 0) return;
 
          $('#groups_list').children('li').each(function () {
@@ -52,25 +71,9 @@
       });
 
       $('#grps').combobox();
+
+      $("#JobsButton").click(function(){ showHide("JobsButton","jobs") });
    });
-
-   function getSelectedGroups(id){
-      var sdValues = [];
-      $('#'+id+' li label :checked').each(function () {
-            sdValues.push($(this).attr('value'));
-      });
-      return sdValues;
-   }
-
-   function checkRequestData(requestData){
-      var errors = {}
-       
-      if (requestData["atr"] == "") {
-         errors["attribute"] = "Attribute field can not be empty!";
-      }
-      
-      return errors;
-   }
 {% endblock script %}
 
 {% block stylecss %}
@@ -97,27 +100,34 @@
 {% block content %}
    {% if atrGroups %}
    <div id="atr_holder"class="ui-widget">
-   <table class="filter" style="margin-top: 1em;">
-   <tr><td>
-   <select id="grps">
-       {% for group in atrGroups %}
-          <option value="{{ group.0 }}">{{ group.0 }}</option>
-       {% endfor %}
-   </select>
-   </td></tr>
-   <tr><td>
-   <a href="javascript:;" id="JobsButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Jobs</a><a href="javascript:;" id="JobsErase" class="ui-state-default ui-corner-all filterErase" title="clear checkbox" ><span class="ui-icon ui-icon-closethick"></span></a>
-   </td></tr>
-   <tr><td>
-   <ul id="jobs" class="checklist">
-      {% for j in jobs %}
-         <li><label>
-         <input type="checkbox" value={{ j }}>{{ j }}
-         </label></li>
-      {% endfor %}
-   </ul>
-   </td></tr>
-   </table>
+      <table class="filter" style="margin-top: 1em;">
+         <tr><td>
+            <select id="grps">
+               {% for group in atrGroups %}
+               <option value="{{ group.0 }}">{{ group.0 }}</option>
+               {% endfor %}
+            </select>
+         </td></tr>
+         <tr><td>
+            <a href="javascript:;" id="JobsButton" class="ui-state-default ui-corner-all filterButton">
+               <span class="ui-icon ui-icon-minusthick"></span>Jobs
+            </a>
+            <a href="javascript:;" id="JobsErase" class="ui-state-default ui-corner-all filterErase" title="clear checkbox">
+               <span class="ui-icon ui-icon-closethick"></span>
+            </a>
+         </td></tr>
+         <tr><td>
+            <ul id="jobs" class="checklist" style="display: none;">
+            {% for j in jobs %}
+               <li>
+                  <label>
+                     <input type="checkbox" value="{{ j }}">{{ j }}
+                  </label>
+               </li>
+            {% endfor %}
+         </ul>
+         </td></tr>
+      </table>
    </div>
    {% endif %}
 {% endblock content %}

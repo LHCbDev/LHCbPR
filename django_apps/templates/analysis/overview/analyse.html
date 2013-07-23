@@ -1,68 +1,129 @@
-<!-- 
-we already have it from the render.html template
-<script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
 <script type="text/javascript">
-   google.load('visualization', '1', {packages: ['corechart'],  callback:drawChart});
+   google.load('visualization', '1.1', {packages: ['corechart', 'controls'], callback:drawChart});
+   /**
+    * Validation of input if comparable overview can be generated.
+    * 
+    * @param input Data coming from django __init__.py after sql request.
+   */ 
+   function validation(input) {
+      if (input.length < 2)
+         return false;
+      var length = input[0]['datatable'].length;
+      for(var i=0; i<input.length; i++) {
+         if (length != input[i]['datatable'].length)
+            return false;
+      }
+      var old_lable = "";
+      for(var r=0; r<input[0]['datatable'].length; r++) {
+         old_label = input[0]['datatable'][r][0];
+         for(var i=0; i<input.length; i++) {
+            if (old_label != input[i]['datatable'][r][0])
+               return false;
+         }
+      }
+      return true;
+   }
+   /**
+    * Draw overview by using google bar charts, if validated it will be
+    * drawn into a single chart, otherwide multiple charts are generated
+    * for each group a tends-datatable is passed from django.
+   */
    function drawChart() {
 	   var trends = {{ trends|safe }};
-	   var myYo = document.getElementById("yo");
-      var validation = true;
-      if(validation == false) {
-      for (var i = 0; i < trends.length; i++) {
-         var mypre = document.createElement("pre");
-			var myText = document.createTextNode(JSON.stringify(trends[i]['description'], null, '  '));
-			mypre.appendChild(myText);
+      var valid  = validation(trends);
 
-			myYo.appendChild(mypre);			
+	   var chart_area_div = document.getElementById("chart_area");
 
-			var mydiv = document.createElement("div");
-			mydiv.id = "trend"+i;
-			mydiv.style.width = 700;
-			mydiv.style.height = 500;
+      if(valid == false) {
+         for (var i = 0; i < trends.length; i++) {
+            var area_div = document.createElement("div");
+            area_div.id            = "area"+i;
+            area_div.style.width   = 700;
+            area_div.style.height  = 550;
+            chart_area_div.appendChild(area_div);
 
-			myYo.appendChild(mydiv);
-			
-         data = new google.visualization.DataTable()
-         data.addColumn('string', 'Version');
-         data.addColumn({type:'number', role:'data'});
-         data.addColumn({type:'number', role:'interval'});
-         data.addColumn({type:'number', role:'interval'});
-         data.addColumn({type:'string',role:'tooltip'});
-         data.addRows(trends[i]['datatable']);
-         data.sort([{column: 4, desc: false}, {column: 0}]);
-         var view = new google.visualization.DataView(data);
-         //view.setRows(view.getFilteredRows([{column: 1, minValue: 1}]));
-         data_rows = 25*view.getNumberOfRows();
-         new google.visualization.BarChart(document.getElementById("trend"+i)).
-            draw(view, {
-               legend   : 'none', 
-               width    : 700, 
-               height   : 100 + data_rows, 
-               title    : "Platform: " + trends[i]['description']['PLATFORM'],
-               chartArea: { left: 250, height: data_rows, width: "100%" },
-               fontSize: 10
+            //var info_pre   = document.createElement("pre");
+            //var info_text  = document.createTextNode(JSON.stringify(trends[i]['description'], null, '  '));
+            //info_pre.appendChild(info_text);
+            //area_div.appendChild(info_pre);
+
+            var control1_div = document.createElement("div");
+            control1_div.id            = "control1"+i;
+            control1_div.style.width   = 700;
+            control1_div.style.height  =  20;
+            area_div.appendChild(control1_div);
+
+            var trend_div = document.createElement("div");
+            trend_div.id            = "trend"+i;
+            trend_div.style.width   = 700;
+            trend_div.style.height  = 500;
+            area_div.appendChild(trend_div);
+
+            var platform = trends[i]['description']['PLATFORM'] + " - " + trends[i]['description']['HOST'];
+
+            data = new google.visualization.DataTable()
+            data.addColumn('string', 'Unit');
+            data.addColumn({label: platform, type:'number', role:'data'});
+            data.addColumn({type:'number', role:'interval'});
+            data.addColumn({type:'number', role:'interval'});
+            data.addColumn({type:'string',role:'tooltip'});
+            data.addRows(trends[i]['datatable']);
+            data.sort([{column: 4, desc: false}, {column: 0}]);
+            var view = new google.visualization.DataView(data);
+            //view.setRows(view.getFilteredRows([{column: 1, minValue: 1}]));
+            data_rows = 25*view.getNumberOfRows();
+
+            var unitControl = new google.visualization.ControlWrapper({
+               controlType: 'StringFilter',
+               containerId: control1_div.id,
+               options: {
+                  filterColumnLabel: 'Unit',
+                  ui: { label: 'Filter Lables' }
+               }
             });
-            
-		   var myhr = document.createElement("hr");
-		   myYo.appendChild(myhr);
-      }
+
+            var barChart = new google.visualization.ChartWrapper({
+               chartType:     "BarChart",
+               containerId:   trend_div.id,
+               options: {
+                  title    : "Overview",
+                  width    : 700, 
+                  height   : 100 + data_rows, 
+                  fontSize : 10,
+                  chartArea: { left: 250, height: data_rows, width: "100%" },
+                  legend: {
+                     position: 'top'
+                  }
+               }
+            });
+
+            var dashboard = new google.visualization.Dashboard(area_div);
+            dashboard.bind(unitControl, barChart);
+            dashboard.draw(view);
+
+            var line = document.createElement("hr");
+		      chart_area_div.appendChild(line);
+         }
       } else {
-			var mydiv = document.createElement("div");
-			mydiv.id = "trend";
-			mydiv.style.width = 700;
-			mydiv.style.height = 500;
-			myYo.appendChild(mydiv);
+			var trend_div = document.createElement("div");
+			trend_div.id           = "trend";
+			trend_div.style.width  = 700;
+			trend_div.style.height = 500;
+			chart_area_div.appendChild(trend_div);
+         // Create new data table from trend information.
          var data = new google.visualization.DataTable()
-         data.addColumn('string', 'Version');
+         data.addColumn('string', 'Unit');
          for (var r = 0; r < trends[0]['datatable'].length; r++) {
             var new_trend = new Array();
             for (var i = 0; i < trends.length; i++) {
                if (r == 0) {
-                  data.addColumn({type:'number', role:'data'});
+                  var platform = trends[i]['description']['PLATFORM'] + " - " + trends[i]['description']['HOST'];
+                  data.addColumn('number', platform);
                   data.addColumn({type:'number', role:'interval'});
                   data.addColumn({type:'number', role:'interval'});
                   data.addColumn({type:'string', role:'tooltip'});
                }
+               // Using push to add array elements dynamically .slice() does not work.
                if (i == 0) {
                   new_trend.push(trends[0]['datatable'][r][0]);
                }
@@ -78,11 +139,14 @@ we already have it from the render.html template
          data_rows = 25*view.getNumberOfRows();
          new google.visualization.BarChart(document.getElementById("trend")).
             draw(view, {
-               legend   : 'none', 
+               title    : "Overview",
                width    : 700, 
                height   : 100 + data_rows, 
                chartArea: { left: 250, height: data_rows, width: "100%" },
-               fontSize: 10
+               fontSize: 10,
+               legend: {
+                  position: 'top'
+               }
             });
       }
    }
@@ -91,6 +155,4 @@ we already have it from the render.html template
 	pre { margin-left: 2em; }
 </style>
 
-<div id="yo">
-<!-- <div id="trend0" style="width: 500px; height: 400px;"></div> -->
-</div>
+<div id="chart_area"></div>
