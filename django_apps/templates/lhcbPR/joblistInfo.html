@@ -23,6 +23,7 @@ function drawVisualization() {
    job_data.setColumnLabel(7, "Start");
    job_data.setColumnLabel(8, "End");
    job_data.setColumnLabel(9, "S");
+   job_data.sort([{column: 0, desc: true }]);
    //job_data.setProperty(0, 0, 'style', 'width:40px');
    //job_data.setProperty(0, 7, 'style', 'width:100px');
    //job_data.setProperty(0, 8, 'style', 'width:100px');
@@ -46,10 +47,10 @@ function drawVisualization() {
       pageSize: 16,
       pagingSymbols: {prev: 'prev', next: 'next'},
       pagingButtonsConfiguration: 'auto',
-      chartArea: {
-            left: 250,
-            width: "60%"
-      },
+      //chartArea: {
+            //left: 250,
+            //width: "60%"
+      //},
       alternatingRowStyle: true,
       cssClassNames: cnfStyle
    });
@@ -60,24 +61,27 @@ function drawVisualization() {
 }
 
 function showInfo() {
+   $("#job_info").hide(); 
+   $("#job_links").hide(); 
+
    $("#job_info_head").empty();
    $("#job_info_head").append($("<label>").html("<h3>Job description: </h3>"));
    $("#job_info_head").append($("<hr>"));
-   $("#job_info_head").append($("<p>"));
+   $("#job_info_head").append($("<br>"));
    if (job_data.getNumberOfRows() > 0) {
-      var app = job_data.getValue(1, 1);
-      var ver = job_data.getValue(1, 2);
-      var plt = job_data.getValue(1, 4);
-      var opt = job_data.getValue(1, 5);
+      var app = job_data.getValue(0, 1);
+      var ver = job_data.getValue(0, 2);
+      var plt = job_data.getValue(0, 4);
+      var opt = job_data.getValue(0, 5);
       var application = "Project: " + app + " vers./rev. " + ver;
       $("#job_info_head").append($("<label>").html(application));
-      $("#job_info_head").append($("<p>"));
+      $("#job_info_head").append($("<br>"));
       var platform = "Platform: " + plt;
       $("#job_info_head").append($("<label>").html(platform));
-      $("#job_info_head").append($("<p>"));
+      $("#job_info_head").append($("<br>"));
       var options = "Options: " + opt;
       $("#job_info_head").append($("<label>").html(options));
-      $("#job_info_head").append($("<p>"));
+      $("#job_info_head").append($("<br>"));
    }
 }
 
@@ -85,6 +89,11 @@ function showInfo() {
 function handleJobs()
 {
    var selection = job_visualization.getSelection();
+   var succs     = job_data.getValue(selection[0].row, 9);
+   if (succs == "0") {
+      alert("Not successfull finalized dataset");
+      return;
+   }
    var job_id    = job_data.getValue(selection[0].row, 0);
    var job_ids   = "";
    var r;
@@ -98,6 +107,7 @@ function handleJobs()
       job_ids = job_ids.substring(0, job_ids.length - 1);
    var app_id = job_data.getValue(selection[0].row, 3);
    var opt_id = job_data.getValue(selection[0].row, 6);
+   $("#job_info").show(); 
    $("#job_info").empty();
    $("#job_info").append($("<label>").html("<h3>Job information: </h3>"));
    $("#job_info").append($("<hr>"));
@@ -122,8 +132,8 @@ function handleJobs()
          $("#job_info").append($("<br>"));
       }
    }
+   $("#job_links").show(); 
    $("#job_links").empty();
-   $("#job_links").append($("<p>"));
    $("#job_links").append($("<label>").html("Links:"));
    $("#job_links").append($("<hr>"));
    {% for gr in groups %}
@@ -134,9 +144,8 @@ function handleJobs()
                 '&options=' + opt_id +
                 '&versions=' + app_id +
                 '&trigger=true',
-        'html': '{{ gr }}' }
+        'html': ' {{ gr }} ' }
       ));
-   $("#job_links").append($("<br>"));
    {% endfor %}
 }
 
@@ -183,7 +192,7 @@ $(document).ready(function () {
     width : 550px;
     height: 150px;
 }
-.info-box {
+.info-box-info {
     width : 550px;
     height: 300px;
 }
@@ -220,13 +229,13 @@ $(document).ready(function () {
       <div id="right" class="google-table">
          <table>
          <tr><td>
-            <div id="job_info_head" class="info-box-head"> 
+            <div id="job_info_head" class="info-box-head info-box information"> 
          </td></tr>
          <tr><td>
-            <div id="job_info" class="info-box">
+            <div id="job_info" class="info-box-info info-box information">
          </td></tr>
          <tr><td>
-            <div id="job_links" class="info-box-links">
+            <div id="job_links" class="info-box-links info-box information">
          </td></tr>
          </table>
       </div>
