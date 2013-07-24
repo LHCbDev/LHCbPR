@@ -76,13 +76,10 @@ def analyse(**kwargs):
    atr_group = requestData['grps']
 
    jobs = []
-   print "Request analyse: ", requestData
    try:
       jobs = requestData['jobs'].split(",")
    except KeyError:
       jobs = []
-
-   print "Jobs from url: ", jobs
 
    if len(jobs) == 0:
       if versions[0] == "" and options[0] == "":
@@ -96,8 +93,6 @@ def analyse(**kwargs):
          cursor.execute(query_jobs)
          cursor_description = cursor.description
          jobs = [j[0] for j in cursor.fetchall()]
-
-   print "Jobs to query: ", jobs
 
    query_tree_info = get_tree_query(jobs, atr_group)
    #print "Query tree in overview: ", query_tree_info

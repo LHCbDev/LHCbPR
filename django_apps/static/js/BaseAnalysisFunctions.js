@@ -9,7 +9,7 @@ function getValue(child, dataObj) {
 			return;
 		}
 		else if(child.attr("type") == "radio" || child.attr("type") == "checkbox"){
-			dataObj[child.attr("id") ] = child.is(":checked") ;
+			dataObj[child.attr("id")] = child.is(":checked");
 			return;
 		}
 		else if(child.is("select")){
@@ -81,6 +81,7 @@ function sendRequest(){
 		return;
 	}
 	
+	requestData["jobs"] = getSelectedChilds("jobs").join(",");
 	requestData["options"] = getSelectedChilds("options").join(",");
 	requestData["versions"] = getSelectedChilds("versions").join(",");
 	requestData["platforms"] = getSelectedChilds("platforms").join(",");

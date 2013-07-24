@@ -132,8 +132,6 @@ def joblistDesc(request, app_name):
    cnf_query += query
    cnf_query += " ORDER BY LHCBPR_JOBDESCRIPTION.ID DESC"
 
-   #print "Cnf query: ", cnf_query
-
    cursor = connection.cursor()
    cursor.execute(cnf_query)
    description = [i[0] for i in cursor.description]
@@ -143,6 +141,7 @@ def joblistDesc(request, app_name):
 
    return render_to_response('lhcbPR/joblistHome.html',
                   { 'configs' : json.dumps(configurations),
+                    'active_tab' : app_name,
                     'description' : description,
                     'applications' : applicationList
                   },
@@ -324,7 +323,7 @@ def analysis_render(request, analysis_type, app_name):
         requestData = request.GET
     else:
         requestData = request.POST
-    
+
     module = 'analysis.{0}'.format(analysis_type)
     try:
         #try to import the module by each name eg basic, timing etc
@@ -335,7 +334,7 @@ def analysis_render(request, analysis_type, app_name):
     else:   
         #if the module is imported properly call the render function and take the data which
         #the analysis wants to use
-        user_data = mod.render(request=request, requestData = requestData, app_name = app_name)
+        user_data = mod.render(request=request, requestData=requestData, app_name=app_name)
         
         #check if the user provided a custom template(different than the render.html)
         if 'template' in user_data:
@@ -367,7 +366,7 @@ Attention:
 </pre> 
                     """
         
-        #then check if the user has provided(through the analysis module) any options, versions objects etc
+        #then check if the user has provided (through the analysis module) any options, versions objects etc
         #if not, use the default ones           
         if not 'options' in user_data:
             user_data['options'] = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name).distinct().order_by('description')
@@ -395,20 +394,21 @@ Attention:
             html_form = formBuilder(user_data['form'])
             del(user_data['form'])
             user_data['html_form'] = html_form
-        
+
         applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
+
         dataDict = {
                     'applications' : applicationsList,
                     'active_tab' : app_name,
                     'analysis_type' : analysis_type,
                     'bookmark' : json.dumps(requestData), 
-                    
                     'title' : title,
                     'help' : help,
                     }
         #include user's data
         if user_data:
             dataDict.update(user_data)
+
         return render_to_response(template, 
                   dataDict,
                   context_instance=RequestContext(request))
