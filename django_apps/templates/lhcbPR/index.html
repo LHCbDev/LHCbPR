@@ -17,19 +17,17 @@ $(document).ready(function () {
 {% block helptext %} {% endblock helptext %}
 
 {% block pagebody %}
-<h2 id="demoHeaders" class="demoHeaders">LHCb PR
-		</h2>
-		<div id="yo" class="fakewindowcontain" style="height : 200px">
-			<p>LHCb Performance and Regression(PR) is a service designed to record important measures about releases of the
-version of the LHCb software. LHCb applications , such as Gauss, Brunel, Moore etc,  receive input in the form of configuration files 
-and produce, as an output, various information.
-LHCbPR is not intended to actually run the jobs(maybe a future feature), but instead to manage and track the bulk of information produced by them.
-</p><p>
-The LHCb Performance and Regression is a framework that allows LHCb software developer to push qualitative information about
-a run of their code(results, performance measures) to a central database, from which an analysis can be performed across
-version, configs(platforms) etc.
-</p>
-
-			<div class="ui-widget-overlay"></div>
-		</div><!-- /fakewindowscontain-->
+<h2 id="demoHeaders" class="demoHeaders">LHCb PR</h2>
+<div>
+<div id="yo" class="info-box information" style="height: 200px; width: 550px;">
+<h3 id="demoHeaders" class="demoHeaders">About LHCb PR</h3>
+LHCb Performance and Regression(PR) is a service designed to record important measures about releases of the version of the LHCb software. LHCb applications , such as Gauss, Brunel, Moore etc,  receive input in the form of configuration files and produce, as an output, various information. LHCbPR is not intended to actually run the jobs(maybe a future feature), but instead to manage and track the bulk of information produced by them.
+<br>
+The LHCb Performance and Regression is a framework that allows LHCb software developer to push qualitative information about a run of their code(results, performance measures) to a central database, from which an analysis can be performed across version, configs(platforms) etc.
+</div>
+<div id="yo" class="info-box information" style="width: 550px;">
+<h3 id="demoHeaders" class="demoHeaders">Information</h3>
+<div>
+</div>
+</div>
 {% endblock pagebody %}
