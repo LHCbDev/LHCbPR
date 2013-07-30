@@ -62,7 +62,7 @@ def render(**kwargs):
          'jobs'      : jobs,
          'atrGroups' : atr_groups,
          'groups'    : json.dumps(dict((v,k) for k, v in groups.iteritems())),
-         'types'     : json.dumps(dict((v,k) for k, v in types.iteritems()))  
+         'types'     : json.dumps(dict((v,k) for k, v in types.iteritems()))
    }
       
    return dataDict
@@ -74,6 +74,7 @@ def analyse(**kwargs):
    versions  = requestData['versions'].split(',')
    options   = requestData['options'].split(',')
    atr_group = requestData['grps']
+   min_value = requestData['min']
 
    jobs = []
    try:
@@ -81,7 +82,8 @@ def analyse(**kwargs):
    except KeyError:
       jobs = []
 
-   if len(jobs) == 0:
+   if jobs[0] == "":
+      print "Overview-Analyse, Jobs Branch"
       if versions[0] == "" and options[0] == "":
          raise Http404
       else:
@@ -155,6 +157,7 @@ def analyse(**kwargs):
       dataDict['description']  = dict(zip([col[0] for col in cursor2.description[:-7]], g))
       dataDict['platform']     = dataDict['description']['PLATFORM']
       dataDict['datatable']    = datatable
+      dataDict['min']          = min_value
         
       trends.append(dataDict)
 

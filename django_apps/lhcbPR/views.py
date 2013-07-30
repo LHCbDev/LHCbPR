@@ -233,6 +233,8 @@ def joblistInfo(request, app_name, desc_id):
    description = [i[0] for i in cursor.description]
    files = cursor.fetchall()
 
+   applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
+
    return render_to_response('lhcbPR/joblistInfo.html',
                   {
                     'jobs'        : json.dumps(jobs),
@@ -240,6 +242,8 @@ def joblistInfo(request, app_name, desc_id):
                     'files'       : json.dumps(files),
                     'groups'      : atr_groups,
                     'application' : app_name,
+                    'active_tab'  : app_name,
+                    'applications' : applicationList,
                     'description' : description
                   },
                   context_instance=RequestContext(request))
