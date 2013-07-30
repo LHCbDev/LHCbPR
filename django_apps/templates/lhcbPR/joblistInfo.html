@@ -14,15 +14,18 @@ function drawVisualization() {
    // Create and populate the data table.
 	var jobs = {{ jobs|safe }};
 
-   job_data = google.visualization.arrayToDataTable(jobs);
-   job_data.setColumnLabel(0, "Id");
-   job_data.setColumnLabel(1, "Project");
-   job_data.setColumnLabel(2, "Version");
-   job_data.setColumnLabel(4, "Platform");
-   job_data.setColumnLabel(5, "Options");
-   job_data.setColumnLabel(7, "Start");
-   job_data.setColumnLabel(8, "End");
-   job_data.setColumnLabel(9, "S");
+   job_data = new google.visualization.DataTable();
+   job_data.addColumn('number', 'Id');
+   job_data.addColumn('string', 'Project');
+   job_data.addColumn('string', 'Version');
+   job_data.addColumn('number', 'AppId');
+   job_data.addColumn('string', "Platform");
+   job_data.addColumn('string', "Options");
+   job_data.addColumn('number', 'OptId');
+   job_data.addColumn('string', "Start");
+   job_data.addColumn('string', "End");
+   job_data.addColumn('number', "S");
+   job_data.addRows(jobs);
    job_data.sort([{column: 0, desc: true }]);
    //job_data.setProperty(0, 0, 'style', 'width:40px');
    //job_data.setProperty(0, 7, 'style', 'width:100px');
@@ -35,8 +38,8 @@ function drawVisualization() {
    job_visualization = new google.visualization.Table(document.getElementById('left'));
 
    var cnfStyle = {
-      oddTableRow : 'google-table-row',
-      headerCell  : 'google-table-head'
+      oddTableRow : 'google-table-row-odd',
+      headerCell  : 'google-table-head',
    }
 
    job_visualization.draw(job_data_view, {
@@ -65,23 +68,23 @@ function showInfo() {
    $("#job_links").hide(); 
 
    $("#job_info_head").empty();
-   $("#job_info_head").append($("<label>").html("<h3>Job description: </h3>"));
+   $("#job_info_head").append($("<label>").html("<b>Job description: </b>"));
    $("#job_info_head").append($("<hr>"));
-   $("#job_info_head").append($("<br>"));
    if (job_data.getNumberOfRows() > 0) {
       var app = job_data.getValue(0, 1);
       var ver = job_data.getValue(0, 2);
       var plt = job_data.getValue(0, 4);
       var opt = job_data.getValue(0, 5);
-      var application = "Project: " + app + " vers./rev. " + ver;
-      $("#job_info_head").append($("<label>").html(application));
-      $("#job_info_head").append($("<br>"));
-      var platform = "Platform: " + plt;
-      $("#job_info_head").append($("<label>").html(platform));
-      $("#job_info_head").append($("<br>"));
-      var options = "Options: " + opt;
-      $("#job_info_head").append($("<label>").html(options));
-      $("#job_info_head").append($("<br>"));
+      var appl_name  = app + " vers. " + ver;
+      table_content = "<table>";
+      table_content += "<tr><td style='height:15px;'>Project: </td>"
+      table_content += "<td style='height:15px;'>" + appl_name + "</td></tr>";
+      table_content += "<tr><td style='height:15px;'>Platform: </td>";
+      table_content += "<td style='height:15px;'>" + plt + "</td></tr>";
+      table_content += "<tr><td style='height:15px;'>Option: </td>";
+      table_content += "<td style='height:15px;'>" + opt + "</td></tr>";
+      table_content += "</table>";
+      $("#job_info_head").append(table_content);
    }
 }
 
@@ -109,7 +112,7 @@ function handleJobs()
    var opt_id = job_data.getValue(selection[0].row, 6);
    $("#job_info").show(); 
    $("#job_info").empty();
-   $("#job_info").append($("<label>").html("<h3>Job information: </h3>"));
+   $("#job_info").append($("<label>").html("<b>Job information: </b>"));
    $("#job_info").append($("<hr>"));
    $("#job_info").append($("<p>"));
    $("#job_info").append($("<label>").html("Results:"));
@@ -134,7 +137,7 @@ function handleJobs()
    }
    $("#job_links").show(); 
    $("#job_links").empty();
-   $("#job_links").append($("<label>").html("Links:"));
+   $("#job_links").append($("<label>").html("<b>Links: </b>"));
    $("#job_links").append($("<hr>"));
    {% for gr in groups %}
    $("#job_links").append($("<a>",
@@ -159,6 +162,7 @@ $(document).ready(function () {
 	$("#jobListMenu").attr('checked', 'checked').button("refresh");
 	$('#tabs').tabs({ selected : -1 });
 	$('#tabs').tabs('select', '#{{ active_tab }}tab');
+   $('#tabs').tabs("disable");
 });
 
 {% endblock script %}
@@ -176,12 +180,10 @@ $(document).ready(function () {
 #left {
     width: 600px;
     height: 670px;
-    margin-left: 30px;
     float:left;
 }
 #right {
     height: 670px;
-    margin-left: 30px;
     overflow: hidden;
 }
 #footer {
@@ -190,7 +192,7 @@ $(document).ready(function () {
 }
 .info-box-head {
     width : 550px;
-    height: 150px;
+    height: 100px;
 }
 .info-box-info {
     width : 550px;
@@ -200,11 +202,14 @@ $(document).ready(function () {
     width : 550px;
     height: 50px;
 }
+.google-table-row-odd {
+   background-color: #eef3f6;
+}
 .google-table-row {
-   background-color: lightblue;
+   background-color: #6ca6cd;
 }
 .google-table-head {
-   background-color: skyblue;
+   background-color: #6ca6cd;
    font-size: 10px;
    height: 15px;
 }
@@ -222,8 +227,11 @@ $(document).ready(function () {
 <div id="tabs">
    <ul>
 		<li><a id="AlltabButton" href="#Alltab">All</a></li>
+		{% for app in applications %}
+		<li><a id="{{ app }}tabButton" href="#{{ app }}tab">{{ app }}</a></li>
+		{% endfor %}
    </ul>
-   <div id="header"></div>
+   <div id="{{ active_tab }}tab">
    <div id="main">
       <div id="left" class="google-table"></div>
       <div id="right" class="google-table">

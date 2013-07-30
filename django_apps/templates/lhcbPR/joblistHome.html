@@ -24,7 +24,7 @@ function drawVisualization() {
    cnf_data.setColumnLabel(7, "Setup Options");
 
    cnf_view = new google.visualization.DataView(cnf_data);
-   cnf_view.setColumns([0, 1, 2, 3, 4, 5, 6, 7]);
+   cnf_view.setColumns([0, 1, 2, 3, 4, 6]);
 
    var linesPerPage   = 16;
    var pageTableIndex =  0;
@@ -34,22 +34,22 @@ function drawVisualization() {
    cnf_visualization = new google.visualization.Table(document.getElementById('left'));
 
    var cnfStyle = {
-      oddTableRow : 'google-table-row',
+      oddTableRow : 'google-table-row-odd',
       headerCell  : 'google-table-head'
    }
 
    cnf_visualization.draw(cnf_view, {
       allowHtml: true,
-      width: 800,
-      height: 750,
+      width: 600,
+      height: 670,
       page: 'enable',
       pageSize : linesPerPage,
       pagingSymbols: {prev: 'prev', next: 'next'},
       pagingButtonsConfiguration: 'auto',
-      chartArea: {
-         left: 250,
-         width: "60%"
-      },
+      //chartArea: {
+         //left: 250,
+         //width: "60%"
+      //},
       alternatingRowStyle: true,
       cssClassNames: cnfStyle
    });
@@ -97,30 +97,34 @@ $(document).ready(function () {
 
 #main {
     width: 1200px;
-    height: 750px;
+    height: 700px;
 }
 #header {
     width: 1200px;
-    height: 30px;
+    height: 10px;
 }
 #left {
-    width: 800px;
-    height: 700px;
-    margin-left: 30px;
+    width: 600px;
+    height: 670px;
     float:left;
 }
 #right {
-    height: 700px;
+    height: 670px;
+    margin-left: 30px;
+    overflow: hidden;
 }
 #footer {
     width: 1200px;
     height: 20px;
 }
+.google-table-row-odd {
+   background-color: #eef3f6;
+}
 .google-table-row {
-   background-color:  lightblue;
+   background-color: #6ca6cd;
 }
 .google-table-head {
-   background-color: skyblue;
+   background-color: #6ca6cd;
    font-size: 12px;
    height: 20px;
 }
@@ -143,7 +147,6 @@ $(document).ready(function () {
 		{% endfor %}
    </ul>
    <div id="{{ active_tab }}tab">
-   <div id="header"></div>
    <div id="main">
       <div id="left" class="google-table"></div>
       <div id="right" class="google-table"></div>

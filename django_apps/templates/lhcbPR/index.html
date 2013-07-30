@@ -5,7 +5,6 @@
 {% block head %} {% endblock head %}
 
 {% block script %} 
-
 $(document).ready(function () {
 	$("#homeMenu").attr('checked', 'checked').button("refresh");
 });
@@ -14,20 +13,32 @@ $(document).ready(function () {
 
 {% block stylecss %} {% endblock stylecss %}
 
-{% block helptext %} {% endblock helptext %}
+{% block helptext %} This help block is used to describe what you can find and what you can do on the page it appears.{% endblock helptext %}
 
 {% block pagebody %}
 <h2 id="demoHeaders" class="demoHeaders">LHCb PR</h2>
 <div>
-<div id="yo" class="info-box information" style="height: 200px; width: 550px;">
-<h3 id="demoHeaders" class="demoHeaders">About LHCb PR</h3>
-LHCb Performance and Regression(PR) is a service designed to record important measures about releases of the version of the LHCb software. LHCb applications , such as Gauss, Brunel, Moore etc,  receive input in the form of configuration files and produce, as an output, various information. LHCbPR is not intended to actually run the jobs(maybe a future feature), but instead to manage and track the bulk of information produced by them.
-<br>
-The LHCb Performance and Regression is a framework that allows LHCb software developer to push qualitative information about a run of their code(results, performance measures) to a central database, from which an analysis can be performed across version, configs(platforms) etc.
-</div>
-<div id="yo" class="info-box information" style="width: 550px;">
-<h3 id="demoHeaders" class="demoHeaders">Information</h3>
-<div>
-</div>
+   <div id="d1" class="info-box information" style="height: 200px; width: 550px;">
+      <h3 id="demoHeaders" class="demoHeaders">About LHCb PR</h3>
+      LHCb Performance and Regression(PR) is a service designed to record important measures about releases of the version of the LHCb software. LHCb applications , such as Gauss, Brunel, Moore etc,  receive input in the form of configuration files and produce, as an output, various information. LHCbPR is not intended to actually run the jobs(maybe a future feature), but instead to manage and track the bulk of information produced by them.
+      <br>
+      The LHCb Performance and Regression is a framework that allows LHCb software developer to push qualitative information about a run of their code(results, performance measures) to a central database, from which an analysis can be performed across version, configs(platforms) etc.
+   </div>
+   <div id="d2" class="info-box information" style="width: 550px;">
+      <h3 id="demoHeaders" class="demoHeaders">Information</h3>
+      <table>
+         <tr>
+         <td><b>June '13:</b></td><td>Creating tag 1.0.0 from deployed master branch.</td>
+         <tr>
+      </table>
+   </div>
+   <div id="d3" class="info-box information" style="width: 550px;">
+      <h3 id="demoHeaders" class="demoHeaders">Documentation</h3>
+      <ul>
+         <li><label><a href="{{ STATIC_URL }}docs/lhcbpr.pdf">Documentation for Development</a></label></li>
+         <li><label><a href="https://twiki.cern.ch/twiki/bin/view/LHCb/LHCbPR">Description of general idea and structure in Twiki</a></label></li>
+         <li><label><a href="http://indico.cern.ch/getFile.py/access?contribId=3&resId=0&materialId=slides&confId=247333">Presentation about Performance and Regression platform</a></label></li>
+      </ul>
+   </div>
 </div>
 {% endblock pagebody %}
