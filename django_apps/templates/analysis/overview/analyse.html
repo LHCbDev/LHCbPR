@@ -1,5 +1,7 @@
 <script type="text/javascript">
    google.load('visualization', '1.1', {packages: ['corechart', 'controls'], callback:drawChart});
+   var barChart;
+
    /**
     * Validation of input if comparable overview can be generated.
     * 
@@ -70,7 +72,7 @@
             data.addRows(trends[i]['datatable']);
             data.sort([{column: 4, desc: false}, {column: 0}]);
             var view = new google.visualization.DataView(data);
-            //view.setRows(view.getFilteredRows([{column: 1, minValue: 1}]));
+            view.setRows(view.getFilteredRows([{column: 1, minValue: trends[0]['min']}]));
             data_rows = 25*view.getNumberOfRows();
 
             var unitControl = new google.visualization.ControlWrapper({
@@ -103,6 +105,24 @@
 
             var line = document.createElement("hr");
 		      chart_area_div.appendChild(line);
+
+            google.visualization.events.addListener(barChart, 'select', function handleUnits(){
+               var app_name = "MOORE";
+               var atr_num  = "656%2CFloat";
+               var opt_num  = "261";
+               var ver_num  = "1881";
+               var plt_num  = "2";
+               var hst_num  = "81";
+               alert(barChart);
+               location.href =
+                  "https://lhcb-pr.web.cern.ch/lhcb-pr/analyse/basic/"
+                  + app_name + "/?atr=" + atr_num + "&"
+                  + "histogram=true&xlow=0&separately_hist=true&"
+                  + "options=" + opt_num + "&"
+                  + "versions=" + ver_num + "&"
+                  + "platforms=" + plt_num + "&"
+                  + "hosts=" + hst_num + "&trigger=true";
+            });
          }
       } else {
 			var trend_div = document.createElement("div");
@@ -136,8 +156,9 @@
          }
          data.sort([{column: 4, desc: false}, {column: 0}]);
          var view = new google.visualization.DataView(data);
+         view.setRows(view.getFilteredRows([{column: 1, minValue: trends[0]['min']}]));
          data_rows = 25*view.getNumberOfRows();
-         new google.visualization.BarChart(document.getElementById("trend")).
+         var barChart = new google.visualization.BarChart(document.getElementById("trend")).
             draw(view, {
                title    : "Overview",
                width    : 700, 
@@ -148,9 +169,28 @@
                   position: 'top'
                }
             });
+         google.visualization.events.addListener(barChart, 'select', function (){
+            var app_name = "MOORE";
+            var atr_num  = "656%2CFloat";
+            var opt_num  = "261";
+            var ver_num  = "1881";
+            var plt_num  = "2";
+            var hst_num  = "81";
+            alert(barChart);
+            location.href =
+               "https://lhcb-pr.web.cern.ch/lhcb-pr/analyse/basic/"
+               + app_name + "/?atr=" + atr_num + "&"
+               + "histogram=true&xlow=0&separately_hist=true&"
+               + "options=" + opt_num + "&"
+               + "versions=" + ver_num + "&"
+               + "platforms=" + plt_num + "&"
+               + "hosts=" + hst_num + "&trigger=true";
+         });
       }
    }
+
 </script>
+
 <style type="text/css">
 	pre { margin-left: 2em; }
 </style>

@@ -35,7 +35,15 @@
       var errors = {}
        
       if (requestData["atr"] == "") {
-         errors["attribute"] = "Attribute field can not be empty!";
+         errors["Attribute"] = "Attribute field can not be empty!";
+      }
+      
+      if (requestData["versions"].split(',').length != 1) {
+         errors["Version"] = "Please give only one version in overview analysis.";
+      }
+      
+      if (requestData["options"].split(',').length != 1) {
+         errors["Option"] = "Please select only one option in overview analysis.";
       }
       
       return errors;
@@ -97,27 +105,36 @@
    }
 {% endblock stylecss %}
 
+{% block helptext %} 
+The purpose of the overview analysis is to get a quick impression about how several attribute contibutes to the general resource consumption. Clicking on a column will lead to the basic distribution of the specific attribute with all jobs of the same job-description.
+{% endblock helptext %}
+
 {% block content %}
    {% if atrGroups %}
    <div id="atr_holder"class="ui-widget">
       <table class="filter" style="margin-top: 1em;">
-         <tr><td>
+         <tr><td colspan="2">
+            <label>Profiler group:</label>
+         </td></tr>
+         <tr><td colspan="2">
             <select id="grps">
                {% for group in atrGroups %}
                <option value="{{ group.0 }}">{{ group.0 }}</option>
                {% endfor %}
             </select>
          </td></tr>
+         <tr><td style="width:50px">
+            <label>Min. attr. value:</label>
+         </td><td style="width:50px">
+            <input id="min" type="text" style="width:50px;" value="0">
+         </td></tr>
+         <!--
          <tr><td>
-            <a href="javascript:;" id="JobsButton" class="ui-state-default ui-corner-all filterButton">
-               <span class="ui-icon ui-icon-minusthick"></span>Jobs
-            </a>
-            <a href="javascript:;" id="JobsErase" class="ui-state-default ui-corner-all filterErase" title="clear checkbox">
-               <span class="ui-icon ui-icon-closethick"></span>
-            </a>
+            <a href="javascript:;" id="JobsButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Jobs</a>
+            <a href="javascript:;" id="JobsErase" class="ui-state-default ui-corner-all filterErase" title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
          </td></tr>
          <tr><td>
-            <ul id="jobs" class="checklist" style="display: none;">
+            <ul id="jobs" class="checklist">
             {% for j in jobs %}
                <li>
                   <label>
@@ -127,6 +144,7 @@
             {% endfor %}
          </ul>
          </td></tr>
+         -->
       </table>
    </div>
    {% endif %}
