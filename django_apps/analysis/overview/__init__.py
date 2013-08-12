@@ -84,7 +84,7 @@ def analyse(**kwargs):
       jobs = []
 
    if jobs[0] == "":
-      print "Overview-Analyse, Jobs Branch"
+      #print "Overview-Analyse, Jobs Branch"
       if versions[0] == "" and options[0] == "":
          raise Http404
       else:
