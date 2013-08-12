@@ -75,6 +75,7 @@ def analyse(**kwargs):
    options   = requestData['options'].split(',')
    atr_group = requestData['grps']
    min_value = requestData['min']
+   sorting   = requestData['sort']
 
    jobs = []
    try:
@@ -154,10 +155,12 @@ def analyse(**kwargs):
             ])
 
       dataDict = {}
+      dataDict['application']  = app_name,
       dataDict['description']  = dict(zip([col[0] for col in cursor2.description[:-7]], g))
       dataDict['platform']     = dataDict['description']['PLATFORM']
       dataDict['datatable']    = datatable
       dataDict['min']          = min_value
+      dataDict['sort']         = sorting
         
       trends.append(dataDict)
 

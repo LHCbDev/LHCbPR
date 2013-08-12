@@ -49,11 +49,11 @@
             //info_pre.appendChild(info_text);
             //area_div.appendChild(info_pre);
 
-            var control1_div = document.createElement("div");
-            control1_div.id            = "control1"+i;
-            control1_div.style.width   = 700;
-            control1_div.style.height  =  20;
-            area_div.appendChild(control1_div);
+            //var control1_div = document.createElement("div");
+            //control1_div.id            = "control1"+i;
+            //control1_div.style.width   = 700;
+            //control1_div.style.height  =  20;
+            //area_div.appendChild(control1_div);
 
             var trend_div = document.createElement("div");
             trend_div.id            = "trend"+i;
@@ -70,59 +70,58 @@
             data.addColumn({type:'number', role:'interval'});
             data.addColumn({type:'string',role:'tooltip'});
             data.addRows(trends[i]['datatable']);
-            data.sort([{column: 4, desc: false}, {column: 0}]);
+
+            if ( trends[i]['sort'] == "true" ) {
+               data.sort([{column: 1, desc: true}]);
+            } else {
+               data.sort([{column: 4, desc: false}, {column: 0}]);
+            }
+
             var view = new google.visualization.DataView(data);
-            view.setRows(view.getFilteredRows([{column: 1, minValue: trends[0]['min']}]));
+            view.setRows(view.getFilteredRows([{column: 1, minValue: trends[i]['min']}]));
             data_rows = 25*view.getNumberOfRows();
 
-            var unitControl = new google.visualization.ControlWrapper({
-               controlType: 'StringFilter',
-               containerId: control1_div.id,
-               options: {
-                  filterColumnLabel: 'Unit',
-                  ui: { label: 'Filter Lables' }
+            barChart = new google.visualization.BarChart(document.getElementById("trend"+i)).draw(view, {
+               title    : "Overview",
+               width    : 700, 
+               height   : 100 + data_rows, 
+               chartArea: { left: 250, height: data_rows, width: "100%" },
+               fontSize: 10,
+               legend: {
+                  position: 'top'
                }
             });
 
-            var barChart = new google.visualization.ChartWrapper({
-               chartType:     "BarChart",
-               containerId:   trend_div.id,
-               options: {
-                  title    : "Overview",
-                  width    : 700, 
-                  height   : 100 + data_rows, 
-                  fontSize : 10,
-                  chartArea: { left: 250, height: data_rows, width: "100%" },
-                  legend: {
-                     position: 'top'
-                  }
-               }
-            });
+            //var unitControl = new google.visualization.ControlWrapper({
+               //controlType: 'StringFilter',
+               //containerId: control1_div.id,
+               //options: {
+                  //filterColumnLabel: 'Unit',
+                  //ui: { label: 'Filter Lables' }
+               //}
+            //});
 
-            var dashboard = new google.visualization.Dashboard(area_div);
-            dashboard.bind(unitControl, barChart);
-            dashboard.draw(view);
+            //var barChart = new google.visualization.ChartWrapper({
+               //chartType:     "BarChart",
+               //containerId:   trend_div.id,
+               //options: {
+                  //title    : "Overview",
+                  //width    : 700, 
+                  //height   : 100 + data_rows, 
+                  //fontSize : 10,
+                  //chartArea: { left: 250, height: data_rows, width: "100%" },
+                  //legend: {
+                     //position: 'top'
+                  //}
+               //}
+            //});
+
+            //var dashboard = new google.visualization.Dashboard(area_div);
+            //dashboard.bind(unitControl, barChart);
+            //dashboard.draw(view);
 
             var line = document.createElement("hr");
 		      chart_area_div.appendChild(line);
-
-            google.visualization.events.addListener(barChart, 'select', function handleUnits(){
-               var app_name = "MOORE";
-               var atr_num  = "656%2CFloat";
-               var opt_num  = "261";
-               var ver_num  = "1881";
-               var plt_num  = "2";
-               var hst_num  = "81";
-               alert(barChart);
-               location.href =
-                  "https://lhcb-pr.web.cern.ch/lhcb-pr/analyse/basic/"
-                  + app_name + "/?atr=" + atr_num + "&"
-                  + "histogram=true&xlow=0&separately_hist=true&"
-                  + "options=" + opt_num + "&"
-                  + "versions=" + ver_num + "&"
-                  + "platforms=" + plt_num + "&"
-                  + "hosts=" + hst_num + "&trigger=true";
-            });
          }
       } else {
 			var trend_div = document.createElement("div");
@@ -131,7 +130,7 @@
 			trend_div.style.height = 500;
 			chart_area_div.appendChild(trend_div);
          // Create new data table from trend information.
-         var data = new google.visualization.DataTable()
+         var data = new google.visualization.DataTable();
          data.addColumn('string', 'Unit');
          for (var r = 0; r < trends[0]['datatable'].length; r++) {
             var new_trend = new Array();
@@ -154,11 +153,15 @@
             }
             data.addRow(new_trend);
          }
-         data.sort([{column: 4, desc: false}, {column: 0}]);
+         if ( trends[i]['sort'] == "true" ) {
+            data.sort([{column: 0, desc: true}]);
+         } else {
+            data.sort([{column: 4, desc: false}, {column: 0}]);
+         }
          var view = new google.visualization.DataView(data);
-         view.setRows(view.getFilteredRows([{column: 1, minValue: trends[0]['min']}]));
+         view.setRows(view.getFilteredRows([{column: 1, minValue: trends[i]['min']}]));
          data_rows = 25*view.getNumberOfRows();
-         var barChart = new google.visualization.BarChart(document.getElementById("trend")).
+         barChart = new google.visualization.BarChart(document.getElementById("trend")).
             draw(view, {
                title    : "Overview",
                width    : 700, 
@@ -169,26 +172,31 @@
                   position: 'top'
                }
             });
-         google.visualization.events.addListener(barChart, 'select', function (){
-            var app_name = "MOORE";
-            var atr_num  = "656%2CFloat";
-            var opt_num  = "261";
-            var ver_num  = "1881";
-            var plt_num  = "2";
-            var hst_num  = "81";
-            alert(barChart);
-            location.href =
-               "https://lhcb-pr.web.cern.ch/lhcb-pr/analyse/basic/"
-               + app_name + "/?atr=" + atr_num + "&"
-               + "histogram=true&xlow=0&separately_hist=true&"
-               + "options=" + opt_num + "&"
-               + "versions=" + ver_num + "&"
-               + "platforms=" + plt_num + "&"
-               + "hosts=" + hst_num + "&trigger=true";
-         });
       }
+      //google.visualization.events.addListener(barChart, 'select', selectHandler());
    }
 
+/*
+ * FOR UPCOMING FEATURE: 
+ * Link to Basic analysis from overview
+ *
+   function selectHandler(e) {
+      var app_name = "MOORE";
+      var atr_num  = "656%2CFloat";
+      var opt_num  = "261";
+      var ver_num  = "1881";
+      var plt_num  = "2";
+      var hst_num  = "81";
+      location.href =
+         "https://lhcb-pr.web.cern.ch/lhcb-pr/analyse/basic/"
+         + app_name + "/?atr=" + atr_num + "&"
+         + "histogram=true&xlow=0&separately_hist=true&"
+         + "options=" + opt_num + "&"
+         + "versions=" + ver_num + "&"
+         + "platforms=" + plt_num + "&"
+         + "hosts=" + hst_num + "&trigger=true";
+   }
+*/
 </script>
 
 <style type="text/css">
