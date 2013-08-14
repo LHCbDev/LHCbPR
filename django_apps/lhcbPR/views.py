@@ -112,7 +112,9 @@ def joblistDesc(request, app_name):
       LHCBPR_OPTIONS.DESCRIPTION, \
       LHCBPR_OPTIONS.CONTENT, \
       LHCBPR_SETUPPROJECT.DESCRIPTION AS SETUP_DESC, \
-      LHCBPR_SETUPPROJECT.CONTENT AS CONTENT1 \
+      LHCBPR_SETUPPROJECT.CONTENT AS CONTENT1, \
+      CAST(SUM(LHCBPR_JOB.SUCCESS)/COUNT(*) AS FLOAT), \
+      COUNT(*) \
       FROM LHCBPR_JOB \
       INNER JOIN LHCBPR_PLATFORM \
       ON LHCBPR_PLATFORM.ID = LHCBPR_JOB.PLATFORM_ID \
@@ -130,7 +132,18 @@ def joblistDesc(request, app_name):
       query = " WHERE LHCBPR_APPLICATION.APPNAME = \'{0}\'".format(app_name)
 
    cnf_query += query
+
+   cnf_query += " GROUP BY LHCBPR_JOBDESCRIPTION.ID, \
+     LHCBPR_APPLICATION.APPNAME, \
+     LHCBPR_APPLICATION.APPVERSION, \
+     LHCBPR_PLATFORM.CMTCONFIG, \
+     LHCBPR_OPTIONS.DESCRIPTION, \
+     LHCBPR_OPTIONS.CONTENT, \
+     LHCBPR_SETUPPROJECT.DESCRIPTION, \
+     LHCBPR_SETUPPROJECT.CONTENT"
+
    cnf_query += " ORDER BY LHCBPR_JOBDESCRIPTION.ID DESC"
+   #print "Joblist Query: ", cnf_query
 
    cursor = connection.cursor()
    cursor.execute(cnf_query)

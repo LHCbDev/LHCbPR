@@ -14,6 +14,14 @@ function drawVisualization() {
    // Create and populate the data table.
 	var jobs = {{ jobs|safe }};
 
+   // Convert string to boolean for visualization purposes
+   for (var i=0; i<jobs.length; i++) {
+      var bool_elem = jobs[i].pop();
+      jobs[i].push(Boolean(bool_elem));
+   }
+
+   alert(typeof jobs[0][9]);
+
    job_data = new google.visualization.DataTable();
    job_data.addColumn('number', 'Id');
    job_data.addColumn('string', 'Project');
@@ -24,7 +32,7 @@ function drawVisualization() {
    job_data.addColumn('number', 'OptId');
    job_data.addColumn('string', "Start");
    job_data.addColumn('string', "End");
-   job_data.addColumn('number', "S");
+   job_data.addColumn('boolean', "S");
    job_data.addRows(jobs);
    job_data.sort([{column: 0, desc: true }]);
    //job_data.setProperty(0, 0, 'style', 'width:40px');

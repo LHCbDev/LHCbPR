@@ -33,17 +33,14 @@
 
    function checkRequestData(requestData){
       var errors = {}
-       
-      if (requestData["atr"] == "") {
-         errors["Attribute"] = "Attribute field can not be empty!";
+
+      if (requestData["versions"] == "" || requestData["versions"].split(',').length != 1) {
+         errors["Version"] = "Please give exactly one version in overview analysis.";
       }
       
-      if (requestData["versions"].split(',').length != 1) {
-         errors["Version"] = "Please give only one version in overview analysis.";
-      }
       
-      if (requestData["options"].split(',').length != 1) {
-         errors["Option"] = "Please select only one option in overview analysis.";
+      if (requestData["options"] == ""|| requestData["options"].split(',').length != 1) {
+         errors["Option"] = "Please select exactly only one option in overview analysis.";
       }
       
       return errors;

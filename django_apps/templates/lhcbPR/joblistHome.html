@@ -5,7 +5,7 @@
 {% block head %}
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
-google.load('visualization', '1', {packages: ['table']});
+google.load('visualization', '1.1', {packages: ['table']});
 
 var cnf_data;
 var cnf_view;
@@ -22,13 +22,22 @@ function drawVisualization() {
    cnf_data.setColumnLabel(5, "Options");
    cnf_data.setColumnLabel(6, "Setup Name");
    cnf_data.setColumnLabel(7, "Setup Options");
+   cnf_data.setColumnLabel(8, "State");
+   cnf_data.setColumnLabel(9, "Count");
+   // BUGFIX: Workaround, first line otherwise skipped.
+   cnf_data.addRow(cnfs[0]);
+   cnf_data.sort([{column: 0, desc: true }]);
+
+   var formatter = new google.visualization.TableColorFormat();
+   formatter.addRange(0   , 0.33, 'black', 'red');
+   formatter.addRange(0.33, 0.66, 'black', 'orange');
+   formatter.addRange(0.66, 2.00, 'black', 'green');
+   formatter.format(cnf_data, 8);
+   var num_formatter = new google.visualization.TableNumberFormat({pattern:'#.##%'});
+   num_formatter.format(cnf_data, 8);
 
    cnf_view = new google.visualization.DataView(cnf_data);
-   cnf_view.setColumns([0, 1, 2, 3, 4, 6]);
-
-   var linesPerPage   = 16;
-   var pageTableIndex =  0;
-   var pageTableCount = Math.ceil(cnf_data.getNumberOfRows()/linesPerPage);
+   cnf_view.setColumns([0, 1, 2, 3, 4, 6, 9, 8]);
 
    // Create and draw the visualization.
    cnf_visualization = new google.visualization.Table(document.getElementById('left'));
@@ -43,13 +52,9 @@ function drawVisualization() {
       width: 600,
       height: 670,
       page: 'enable',
-      pageSize : linesPerPage,
-      pagingSymbols: {prev: 'prev', next: 'next'},
+      pageSize : 15,
+      pagingSymbols: {prev: '<', next: '>'},
       pagingButtonsConfiguration: 'auto',
-      //chartArea: {
-         //left: 250,
-         //width: "60%"
-      //},
       alternatingRowStyle: true,
       cssClassNames: cnfStyle
    });
