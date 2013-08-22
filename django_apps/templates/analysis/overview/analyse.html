@@ -153,13 +153,13 @@
             }
             data.addRow(new_trend);
          }
-         if ( trends[i]['sort'] == "true" ) {
+         if ( trends[0]['sort'] == "true" ) {
             data.sort([{column: 0, desc: true}]);
          } else {
             data.sort([{column: 4, desc: false}, {column: 0}]);
          }
          var view = new google.visualization.DataView(data);
-         view.setRows(view.getFilteredRows([{column: 1, minValue: trends[i]['min']}]));
+         view.setRows(view.getFilteredRows([{column: 1, minValue: trends[0]['min']}]));
          data_rows = 25*view.getNumberOfRows();
          barChart = new google.visualization.BarChart(document.getElementById("trend")).
             draw(view, {
