@@ -262,6 +262,40 @@ def joblistInfo(request, app_name, desc_id):
                   context_instance=RequestContext(request))
 
 @login_required 
+def jobFileView(request):
+    """Returns file for download."""
+    if request.method == 'GET':
+        requestData = request.GET
+    else:
+        requestData = request.POST
+
+    if requestData['file'] == "":
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'No file given.' }))
+
+    data_store = "/afs/cern.ch/lhcb/software/webapps/LHCbPR/data/files/"
+    data_file  = requestData['file']
+
+    reco  = re.compile('\d+')
+    names = reco.findall(data_file)
+    print names
+
+    reco  = re.compile('[0-9a-zA-Z.-]+$')
+    name  = reco.findall(data_file)
+    print name 
+
+    filename = "lhcbpr-%s-%s-%s" % (names[0], names[1], name[0])
+
+    data_file  = data_store + data_file
+
+    if not os.path.isfile(data_file):
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'File not readable.' }))
+
+    fsock = open(data_file, 'r')
+    response = HttpResponse(fsock, mimetype='text/html')
+    response['Content-Disposition'] = "attachment; filename=%s" % (filename)
+    return response
+
+@login_required 
 def jobDescriptionsHome(request):
     """Serves the jobDescriptions home page with the available applications"""
     applicationsList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
@@ -794,6 +828,7 @@ def getFiles(request, filename):
     except IOError:
         print "File: ", filename, "can not be opened."
 
+    t = loader.get_template('myapp/template.html')
     c = Context({'file':django_file})
     return HttpResponse(t.render(c)) 
 

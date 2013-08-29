@@ -135,7 +135,7 @@ function handleJobs()
    for (var f in files) {
       if (job_id == files[f][0]) {
          $("#job_info").append($("<a>",
-            { 'href': '{{ MEDIA_URL }}' + files[f][2],
+            { 'href': '{{ ROOT_URL }}jobFileView?file=' + files[f][2],
               'html': files[f][1] }
          ));
          $("#job_info").append($("<br>"));
