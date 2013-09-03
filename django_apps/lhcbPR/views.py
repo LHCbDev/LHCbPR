@@ -113,6 +113,12 @@ def joblistDesc(request, app_name):
       LHCBPR_OPTIONS.CONTENT, \
       LHCBPR_SETUPPROJECT.DESCRIPTION AS SETUP_DESC, \
       LHCBPR_SETUPPROJECT.CONTENT AS CONTENT1, \
+      (SELECT max( \
+        extract(day from (LHCBPR_JOB.TIME_END-timestamp '1970-01-01 00:00:00 +00:00'))*86400+ \
+        extract(hour from (LHCBPR_JOB.TIME_END-timestamp '1970-01-01 00:00:00 +00:00'))*3600+ \
+        extract(minute from (LHCBPR_JOB.TIME_END-timestamp '1970-01-01 00:00:00 +00:00'))*60+ \
+        extract(second from (LHCBPR_JOB.TIME_END-timestamp '1970-01-01 00:00:00 +00:00'))) \
+        FROM LHCBPR_JOB WHERE lhcbpr_job.jobdescription_id = LHCBPR_JOBDESCRIPTION.ID) AS ENDTIME, \
       CAST(SUM(LHCBPR_JOB.SUCCESS)/COUNT(*) AS FLOAT), \
       COUNT(*) \
       FROM LHCBPR_JOB \
@@ -142,8 +148,8 @@ def joblistDesc(request, app_name):
      LHCBPR_SETUPPROJECT.DESCRIPTION, \
      LHCBPR_SETUPPROJECT.CONTENT"
 
-   cnf_query += " ORDER BY LHCBPR_JOBDESCRIPTION.ID DESC"
-   #print "Joblist Query: ", cnf_query
+   cnf_query += " ORDER BY ENDTIME DESC"
+   print "Joblist Query: ", cnf_query
 
    cursor = connection.cursor()
    cursor.execute(cnf_query)

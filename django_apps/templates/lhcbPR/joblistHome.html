@@ -13,31 +13,36 @@ var cnf_view;
 function drawVisualization() {
    // Create and populate the data table.
 	var cnfs = {{ configs|safe }};
-   cnf_data = google.visualization.arrayToDataTable(cnfs);
-   cnf_data.setColumnLabel(0, "Id");
-   cnf_data.setColumnLabel(1, "Project");
-   cnf_data.setColumnLabel(2, "Version");
-   cnf_data.setColumnLabel(3, "Platform");
-   cnf_data.setColumnLabel(4, "Options Name");
-   cnf_data.setColumnLabel(5, "Options");
-   cnf_data.setColumnLabel(6, "Setup Name");
-   cnf_data.setColumnLabel(7, "Setup Options");
-   cnf_data.setColumnLabel(8, "State");
-   cnf_data.setColumnLabel(9, "Count");
+   for (var i = 0; i<cnfs.length; i++) { 
+      cnfs[i][8] = new Date(cnfs[i][8]*1000);
+   }
+   cnf_data = new google.visualization.DataTable();
+   cnf_data.addColumn('number', 'Id');
+   cnf_data.addColumn('string', 'Project');
+   cnf_data.addColumn('string', 'Version');
+   cnf_data.addColumn('string', 'Platform');
+   cnf_data.addColumn('string', 'Options Name');
+   cnf_data.addColumn('string', 'Options');
+   cnf_data.addColumn('string', 'Setup Name');
+   cnf_data.addColumn('string', 'Setup Options');
+   cnf_data.addColumn('datetime', 'Latest Run');
+   cnf_data.addColumn('number', 'State');
+   cnf_data.addColumn('number', 'Count');
    // BUGFIX: Workaround, first line otherwise skipped.
-   cnf_data.addRow(cnfs[0]);
-   cnf_data.sort([{column: 0, desc: true }]);
+   cnf_data.addRows(cnfs);
+   // Sorted already in SQL-Request, in case:
+   //cnf_data.sort([{column: 8, desc: true }]);
 
    var formatter = new google.visualization.TableColorFormat();
    formatter.addRange(0   , 0.33, 'black', 'red');
    formatter.addRange(0.33, 0.66, 'black', 'orange');
    formatter.addRange(0.66, 2.00, 'black', 'green');
-   formatter.format(cnf_data, 8);
+   formatter.format(cnf_data, 9);
    var num_formatter = new google.visualization.TableNumberFormat({pattern:'#.##%'});
-   num_formatter.format(cnf_data, 8);
+   num_formatter.format(cnf_data, 9);
 
    cnf_view = new google.visualization.DataView(cnf_data);
-   cnf_view.setColumns([0, 1, 2, 3, 4, 6, 9, 8]);
+   cnf_view.setColumns([0, 1, 2, 3, 4, 6, 8, 10, 9]);
 
    // Create and draw the visualization.
    cnf_visualization = new google.visualization.Table(document.getElementById('left'));
@@ -49,7 +54,7 @@ function drawVisualization() {
 
    cnf_visualization.draw(cnf_view, {
       allowHtml: true,
-      width: 600,
+      width: 700,
       height: 670,
       page: 'enable',
       pageSize : 15,
@@ -109,7 +114,7 @@ $(document).ready(function () {
     height: 10px;
 }
 #left {
-    width: 600px;
+    width: 700px;
     height: 670px;
     float:left;
 }
