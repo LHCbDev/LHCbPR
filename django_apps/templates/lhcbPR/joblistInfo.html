@@ -145,20 +145,17 @@ function handleJobs()
    $("#job_links").empty();
    $("#job_links").append($("<label>").html("<b>Links: </b>"));
    $("#job_links").append($("<hr>"));
-   var groups = {{ groups|safe }};
-   for (var g in groups) {
-      if (job_id == groups[g][0]) {
-      $("#job_links").append($("<a>",
-         { 'href': '{{ ROOT_URL }}analyse/overview/{{ application }}' +
+   {% for gr in groups %}
+   $("#job_links").append($("<a>",
+      { 'href': '{{ ROOT_URL }}analyse/overview/{{ application }}' +
                 '?grps={{ gr }}' +
                 '&jobs=' + job_ids + 
                 '&options=' + opt_id +
                 '&versions=' + app_id +
                 '&trigger=true',
-           'html': groups[g][1] + ' ' }
-         ));
-      }
-   }
+        'html': ' {{ gr }} ' }
+      ));
+   {% endfor %}
 }
 
 google.setOnLoadCallback(drawVisualization);

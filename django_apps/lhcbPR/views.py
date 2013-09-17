@@ -149,7 +149,7 @@ def joblistDesc(request, app_name):
      LHCBPR_SETUPPROJECT.CONTENT"
 
    cnf_query += " ORDER BY ENDTIME DESC"
-   #print "Joblist Query: ", cnf_query
+   print "Joblist Query: ", cnf_query
 
    cursor = connection.cursor()
    cursor.execute(cnf_query)
@@ -168,22 +168,22 @@ def joblistDesc(request, app_name):
 
 @login_required 
 def joblistInfo(request, app_name, desc_id):
-   """Detailed information of jobs belonging to a certain job_description.id (configuration)."""
+   """List of available jobs and runns"""
    if not desc_id:
       return HttpResponseNotFound("<h3>No existing jobs for job description or no job description given.</h3>")
 
-   #atrs_float = JobResults.objects.filter(
-         #job__jobDescription__application__appName=app_name,
-         #job__success=True
-   #).filter(Q(jobAttribute__type='Float'))
-   #atr_groups_tmp = atrs_float.values_list(
-         #'jobAttribute__group'
-   #).distinct()
-   #atr_groups = []
-   #for k, v in enumerate(atr_groups_tmp):
-      #if v[0] != "":
-         #v[0].split(',')
-         #atr_groups.append(v[0])
+   atrs_float = JobResults.objects.filter(
+         job__jobDescription__application__appName=app_name,
+         job__success=True
+   ).filter(Q(jobAttribute__type='Float'))
+   atr_groups_tmp = atrs_float.values_list(
+         'jobAttribute__group'
+   ).distinct()
+   atr_groups = []
+   for k, v in enumerate(atr_groups_tmp):
+      if v[0] != "":
+         v[0].split(',')
+         atr_groups.append(v[0])
 
    job_query = "SELECT LHCBPR_JOB.ID AS ID, \
       LHCBPR_APPLICATION.APPNAME AS Project, \
@@ -237,17 +237,6 @@ def joblistInfo(request, app_name, desc_id):
      ON LHCBPR_JOBRESULTS.ID = LHCBPR_RESULTFILE.JOBRESULTS_PTR_ID \
      ORDER BY LHCBPR_JOBRESULTS.JOB_ID"
 
-   #print file_query
-
-   group_query = "SELECT DISTINCT LHCBPR_JOBRESULTS.JOB_ID, \
-     LHCBPR_JOBATTRIBUTE.\"GROUP\" \
-     FROM LHCBPR_JOBRESULTS \
-     INNER JOIN LHCBPR_JOBATTRIBUTE \
-     ON LHCBPR_JOBRESULTS.JOBATTRIBUTE_ID = LHCBPR_JOBATTRIBUTE.ID \
-     INNER JOIN LHCBPR_RESULTFLOAT \
-     ON LHCBPR_RESULTFLOAT.JOBRESULTS_PTR_ID = LHCBPR_JOBRESULTS.ID \
-     ORDER BY LHCBPR_JOBRESULTS.JOB_ID"
-
    cursor = connection.cursor()
    cursor.execute(job_query)
    description = [i[0] for i in cursor.description]
@@ -263,16 +252,6 @@ def joblistInfo(request, app_name, desc_id):
    description = [i[0] for i in cursor.description]
    files = cursor.fetchall()
 
-   cursor = connection.cursor()
-   cursor.execute(group_query)
-   description = [i[0] for i in cursor.description]
-   groups = cursor.fetchall()
-
-   atr_groups = []
-   for k, v in enumerate(groups):
-      if v[0] != "":
-         atr_groups.append([v[0], v[1]])
-
    applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
 
    return render_to_response('lhcbPR/joblistInfo.html',
@@ -280,7 +259,7 @@ def joblistInfo(request, app_name, desc_id):
                     'jobs'        : json.dumps(jobs),
                     'infos'       : json.dumps(infos),
                     'files'       : json.dumps(files),
-                    'groups'      : json.dumps(groups),
+                    'groups'      : atr_groups,
                     'application' : app_name,
                     'active_tab'  : app_name,
                     'applications' : applicationList,
