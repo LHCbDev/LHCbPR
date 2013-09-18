@@ -1,5 +1,6 @@
 \documentclass[a4paper]{jpconf}
 \usepackage{graphicx}
+\usepackage{wrapfig}
 
 \begin{document}
 \title{Systematic profiling to monitor and specify the software refactoring process of the LHCb experiment}
@@ -42,9 +43,9 @@ This paper is organized ...
 \subsection{LHCb software}
 \label{sec:lhcb_software}
 
-The software frameworks used in the LHCb experiment are based on Gaudi \cite{gaudi}. Gaudi is an OO framework providing core services for the applications that are build on top of Gaudi. It executes subsequently an abstract set of algorithms (modules) to process data objects on demand. The processing of physic events based on these algorithms are using services to access frequently used routines like temporary or permanent storage access and math functions. This hides complexity and makes future development and changes in the system transparent for users. Gaudi is a large-scale framework and it is used by ATLAS, Glast, Harp and other experiments.
+The software frameworks used in the LHCb experiment are based on Gaudi \cite{gaudi}. Gaudi is a framework using generic and object-oriented features of C++ for processing intensive tasks and python for configuring and structuring modules, which we call algorithms. It executes consecutive an abstract series of these algorithms to process data objects from the transient store on request. Gaudi is providing core services and tools for applications to hide complexity and make future development and changes more transparent for users. It is a large-scale framework and is used by ATLAS, Glast, Harp and other experiments.
 \newline
-Applications build on top of Gaudi are Brunel, Gauss, DaVinci, Moore, Boole and others. Moore is the implementation of the high-level trigger to decide weather event data will be stored or not. Brunel is responsible for the offline reconstruction, Gauss is simulating the particle transport and interaction through the detector modules and Boole performs the digitization.
+Applications build on top of Gaudi are Brunel, Gauss, DaVinci, Moore, Boole and others. Moore is the implementation of the high-level trigger to decide weather event data will be stored or not. Brunel is responsible for the offline reconstruction, Gauss is simulating the particle transport and interaction through detector modules, and Boole performs the digitization.
 
 \subsection{Integrated Profiling}
 \label{sec:integrated_profiling}
@@ -55,6 +56,12 @@ In HEP computing it is a common method to measure performance via throughput (ev
 \label{sec:computing_environment}
 
 The LHCb computing environment persists in particular out of the WLCG and (what ever is in the pit). Around (N) CPU's are processing data collected by the different detector subsystems. M GB of recorded data per second have to be processed by N computing nodes the high-level-trigger (HLT) to decide if they should be stored.
+
+\begin{figure}{t}
+\includegraphics[scale=0.3]{figures/profiling_process.eps}
+\caption{\small \textit{nix}}
+\label{fig:trend}
+\end{figure}
 
 \section{The LHCb PR framework}
 \label{sec:lhcbpr_framework}
@@ -101,7 +108,6 @@ Use cases are importend
 
 \subsubsection{Use case High-Level-Trigger}
 \label{sec:use_case_hlt}
-
 
 \begin{figure}[t]
 \begin{minipage}[t]{17pc}
