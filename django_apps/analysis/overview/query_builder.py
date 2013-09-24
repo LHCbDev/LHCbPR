@@ -171,6 +171,7 @@ def get_tree_query(job_list, group):
         plat.cmtconfig as PLATFORM, \
         h.hostname as HOST, \
         apl.appversion as VERSION, \
+        att.description, \
         att.name AS atr_name, \
         ROUND(AVG(attd.data), 3) AS float_data_avg, \
         ROUND(stddev(attd.data), 3) AS float_data_sdv, \
@@ -216,7 +217,7 @@ def get_tree_query(job_list, group):
         jobs.append("j.id = {0}".format(id))
 
     query += ' and ( ' + ' or '.join(jobs) + ' ) ' 
-    query += ' GROUP BY att.name, apl.appversion, h.hostname, opt.description, plat.cmtconfig'
-    query += ' ORDER BY att.name'
+    query += ' GROUP BY att.name, apl.appversion, h.hostname, opt.description, plat.cmtconfig, att.description'
+    query += ' ORDER BY att.name' 
 
     return query

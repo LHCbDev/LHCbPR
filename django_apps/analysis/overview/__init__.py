@@ -76,7 +76,9 @@ def analyse(**kwargs):
    atr_group = requestData['grps']
    min_value = requestData['min']
    sorting   = requestData['sort']
-   logscale   = requestData['log']
+   logscale  = requestData['log']
+
+   axis = "unknown unit"
 
    jobs = []
    try:
@@ -109,7 +111,9 @@ def analyse(**kwargs):
 
    result = cursor2.fetchone()
    while not result == None:
-      group = tuple(result[:-7])
+      group = tuple(result[:-8])
+      if result[-8] != None:
+         axis  = result[-8]
       groups[group].append(tuple(result[-7:]))
       result = cursor2.fetchone()
 
@@ -155,6 +159,7 @@ def analyse(**kwargs):
                'Average: {0}'.format(entry_avg[k])
             ])
 
+
       dataDict = {}
       dataDict['application']  = app_name,
       dataDict['description']  = dict(zip([col[0] for col in cursor2.description[:-7]], g))
@@ -163,7 +168,8 @@ def analyse(**kwargs):
       dataDict['min']          = min_value
       dataDict['sort']         = sorting
       dataDict['log']          = logscale
-        
+      dataDict['axis']         = axis
+
       trends.append(dataDict)
 
    return { 'trends': json.dumps(trends) }
