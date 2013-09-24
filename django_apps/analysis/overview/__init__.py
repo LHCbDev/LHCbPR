@@ -112,7 +112,7 @@ def analyse(**kwargs):
    result = cursor2.fetchone()
    while not result == None:
       group = tuple(result[:-8])
-      if result[-8] != None:
+      if result[-6] != None:
          axis  = result[-8]
       groups[group].append(tuple(result[-7:]))
       result = cursor2.fetchone()
