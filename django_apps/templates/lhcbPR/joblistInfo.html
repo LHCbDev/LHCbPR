@@ -121,15 +121,21 @@ function handleJobs()
    $("#job_info").append($("<label>").html("<b>Job information: </b>"));
    $("#job_info").append($("<hr>"));
    $("#job_info").append($("<p>"));
-   $("#job_info").append($("<label>").html("Results:"));
+   $("#job_info").append($("<label>").html("<u>Results</u>"));
    $("#job_info").append($("<p>"));
    var infos = {{ infos|safe }};
+   var content = "<table>";
    for (var i in infos) {
-      if (job_id == infos[i][0])
-         $("#job_info").append($("<label>").html(infos[i][4]));
+      if (job_id == infos[i][0]) {
+         content += "<tr><td>" + infos[i][1] + ":</td>";
+         content += "<td> &nbsp; &nbsp; &nbsp; </td>";
+         content += "<td>" + infos[i][4] + "</td></tr>";
+      }
    }
+   content += "</table>";
+   $("#job_info").append(content);
    $("#job_info").append($("<p>"));
-   $("#job_info").append($("<label>").html("Files:"));
+   $("#job_info").append($("<label>").html("<u>Files</u>"));
    $("#job_info").append($("<p>"));
    var files = {{ files|safe }};
    for (var f in files) {

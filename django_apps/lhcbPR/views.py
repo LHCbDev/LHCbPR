@@ -108,6 +108,7 @@ def joblistDesc(request, app_name):
       LHCBPR_JOBDESCRIPTION.ID, \
       LHCBPR_APPLICATION.APPNAME, \
       LHCBPR_APPLICATION.APPVERSION, \
+      LHCBPR_PLATFORM.ID, \
       LHCBPR_PLATFORM.CMTCONFIG, \
       LHCBPR_OPTIONS.DESCRIPTION, \
       LHCBPR_OPTIONS.CONTENT, \
@@ -142,6 +143,7 @@ def joblistDesc(request, app_name):
    cnf_query += " GROUP BY LHCBPR_JOBDESCRIPTION.ID, \
      LHCBPR_APPLICATION.APPNAME, \
      LHCBPR_APPLICATION.APPVERSION, \
+     LHCBPR_PLATFORM.ID, \
      LHCBPR_PLATFORM.CMTCONFIG, \
      LHCBPR_OPTIONS.DESCRIPTION, \
      LHCBPR_OPTIONS.CONTENT, \
@@ -167,7 +169,7 @@ def joblistDesc(request, app_name):
                   context_instance=RequestContext(request))
 
 @login_required 
-def joblistInfo(request, app_name, desc_id):
+def joblistInfo(request, app_name, desc_id, plat_id):
    """Detailed information of jobs belonging to a certain job_description.id (configuration)."""
    if not desc_id:
       return HttpResponseNotFound("<h3>No existing jobs for job description or no job description given.</h3>")
@@ -205,7 +207,8 @@ def joblistInfo(request, app_name, desc_id):
       INNER JOIN LHCBPR_OPTIONS \
       ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID"
    
-   query = " WHERE LHCBPR_JOBDESCRIPTION.ID = {0}".format(desc_id)
+   query  = " WHERE LHCBPR_JOBDESCRIPTION.ID = {0}".format(desc_id)
+   query += " AND LHCBPR_PLATFORM.ID = {0}".format(plat_id)
 
    job_query += query
    job_query += " ORDER BY LHCBPR_JOB.ID"
@@ -223,7 +226,8 @@ def joblistInfo(request, app_name, desc_id):
       INNER JOIN LHCBPR_JOBATTRIBUTE \
       ON LHCBPR_JOBRESULTS.JOBATTRIBUTE_ID = LHCBPR_JOBATTRIBUTE.ID \
       WHERE LHCBPR_JOBATTRIBUTE.\"GROUP\" = 'JobInfo' \
-      ORDER BY LHCBPR_JOBRESULTS.JOB_ID"
+      ORDER BY LHCBPR_JOBRESULTS.JOB_ID, \
+      LHCBPR_JOBATTRIBUTE.NAME"
 
    #print info_query
 

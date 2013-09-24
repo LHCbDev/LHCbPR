@@ -14,12 +14,13 @@ function drawVisualization() {
    // Create and populate the data table.
 	var cnfs = {{ configs|safe }};
    for (var i = 0; i<cnfs.length; i++) { 
-      cnfs[i][8] = new Date(cnfs[i][8]*1000);
+      cnfs[i][9] = new Date(cnfs[i][9]*1000);
    }
    cnf_data = new google.visualization.DataTable();
    cnf_data.addColumn('number', 'Id');
    cnf_data.addColumn('string', 'Project');
    cnf_data.addColumn('string', 'Version');
+   cnf_data.addColumn('number', 'PlatformID');
    cnf_data.addColumn('string', 'Platform');
    cnf_data.addColumn('string', 'Options Name');
    cnf_data.addColumn('string', 'Options');
@@ -37,12 +38,12 @@ function drawVisualization() {
    formatter.addRange(0   , 0.33, 'black', 'red');
    formatter.addRange(0.33, 0.66, 'black', 'orange');
    formatter.addRange(0.66, 2.00, 'black', 'green');
-   formatter.format(cnf_data, 9);
+   formatter.format(cnf_data, 10);
    var num_formatter = new google.visualization.TableNumberFormat({pattern:'#.##%'});
-   num_formatter.format(cnf_data, 9);
+   num_formatter.format(cnf_data, 10);
 
    cnf_view = new google.visualization.DataView(cnf_data);
-   cnf_view.setColumns([0, 1, 2, 3, 4, 6, 8, 10, 9]);
+   cnf_view.setColumns([0, 1, 2, 4, 5, 7, 9, 11, 10]);
 
    // Create and draw the visualization.
    cnf_visualization = new google.visualization.Table(document.getElementById('left'));
@@ -73,7 +74,8 @@ function handleConfigs()
    var selection      = cnf_visualization.getSelection();
    var description_id = cnf_data.getValue(selection[0].row, 0);
    var app_name       = cnf_data.getValue(selection[0].row, 1);
-   location.href = "{{ ROOT_URL }}joblistInfo/" + app_name + "/" + description_id;
+   var platform_id    = cnf_data.getValue(selection[0].row, 3);
+   location.href = "{{ ROOT_URL }}joblistInfo/" + app_name + "/" + description_id + "/" + platform_id + "/";
 }
 
 google.setOnLoadCallback(drawVisualization);

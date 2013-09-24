@@ -76,6 +76,7 @@ def analyse(**kwargs):
    atr_group = requestData['grps']
    min_value = requestData['min']
    sorting   = requestData['sort']
+   logscale   = requestData['log']
 
    jobs = []
    try:
@@ -161,6 +162,7 @@ def analyse(**kwargs):
       dataDict['datatable']    = datatable
       dataDict['min']          = min_value
       dataDict['sort']         = sorting
+      dataDict['log']          = logscale
         
       trends.append(dataDict)
 

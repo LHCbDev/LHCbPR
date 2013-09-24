@@ -71,7 +71,7 @@
             data.addColumn({type:'string',role:'tooltip'});
             data.addRows(trends[i]['datatable']);
 
-            if ( trends[i]['sort'] == "true" ) {
+            if ( trends[0]['sort'] == "true" ) {
                data.sort([{column: 1, desc: true}]);
             } else {
                data.sort([{column: 4, desc: false}, {column: 0}]);
@@ -87,6 +87,7 @@
                height   : 100 + data_rows, 
                chartArea: { left: 250, height: data_rows, width: "100%" },
                fontSize: 10,
+               hAxis: { title: "nix Title", logScale: trends[0]['log'] },
                legend: {
                   position: 'top'
                }
@@ -168,6 +169,7 @@
                height   : 100 + data_rows, 
                chartArea: { left: 250, height: data_rows, width: "100%" },
                fontSize: 10,
+               hAxis: { title: "nix Title", logScale: trends[0]['log'] },
                legend: {
                   position: 'top'
                }
