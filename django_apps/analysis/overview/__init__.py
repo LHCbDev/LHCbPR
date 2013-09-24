@@ -149,6 +149,7 @@ def analyse(**kwargs):
                float(entry_avg[k]-entry_sdv[k]), \
                'Id: {0:03d}\nAverage: {1}, Stddev.: +-{2}\nEvents: {3}\nParent: {4}'.format(ids[k], entry_avg[k], entry_sdv[k], events[k], parents[k])
             ])
+         sort_column = 4
       except KeyError:
          for k in entry_avg.keys():
             datatable.append([ \
@@ -158,7 +159,10 @@ def analyse(**kwargs):
                float(entry_avg[k]-0), \
                'Average: {0}'.format(entry_avg[k])
             ])
-
+         sort_column = 0
+         if sorting == "true":
+            sort_column = 1
+         print sort_column
 
       dataDict = {}
       dataDict['application']  = app_name,
@@ -166,7 +170,7 @@ def analyse(**kwargs):
       dataDict['platform']     = dataDict['description']['PLATFORM']
       dataDict['datatable']    = datatable
       dataDict['min']          = min_value
-      dataDict['sort']         = sorting
+      dataDict['sort']         = sort_column
       dataDict['log']          = logscale
       dataDict['axis']         = axis
 

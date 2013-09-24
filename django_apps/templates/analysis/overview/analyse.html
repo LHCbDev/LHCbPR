@@ -61,7 +61,7 @@
             trend_div.style.height  = 500;
             area_div.appendChild(trend_div);
 
-            var platform = trends[i]['description']['PLATFORM'] + " - " + trends[i]['description']['HOST'];
+            var platform = trends[i]['description']['VERSION'] + " - " + trends[i]['description']['PLATFORM'] + " - " + trends[i]['description']['HOST'];
 
             data = new google.visualization.DataTable()
             data.addColumn('string', 'Unit');
@@ -70,13 +70,11 @@
             data.addColumn({type:'number', role:'interval'});
             data.addColumn({type:'string',role:'tooltip'});
             data.addRows(trends[i]['datatable']);
-
-            if ( trends[0]['sort'] == "true" ) {
-               data.sort([{column: 1, desc: true}]);
+            if ( trends[0]['sort'] == 1 ) {
+               data.sort([{column: trends[0]['sort'], desc: true}]);
             } else {
-               data.sort([{column: 4, desc: false}, {column: 0}]);
+               data.sort([{column: trends[0]['sort'], desc: false}]);
             }
-
             var view = new google.visualization.DataView(data);
             view.setRows(view.getFilteredRows([{column: 1, minValue: trends[i]['min']}]));
             data_rows = 25*view.getNumberOfRows();
@@ -137,7 +135,7 @@
             var new_trend = new Array();
             for (var i = 0; i < trends.length; i++) {
                if (r == 0) {
-                  var platform = trends[i]['description']['PLATFORM'] + " - " + trends[i]['description']['HOST'];
+                  var platform = trends[i]['description']['VERSION'] + " - " + trends[i]['description']['PLATFORM'] + " - " + trends[i]['description']['HOST'];
                   data.addColumn('number', platform);
                   data.addColumn({type:'number', role:'interval'});
                   data.addColumn({type:'number', role:'interval'});
@@ -154,10 +152,10 @@
             }
             data.addRow(new_trend);
          }
-         if ( trends[0]['sort'] == "true" ) {
-            data.sort([{column: 0, desc: true}]);
+         if ( trends[0]['sort'] == 1 ) {
+            data.sort([{column: trends[0]['sort'], desc: true}]);
          } else {
-            data.sort([{column: 4, desc: false}, {column: 0}]);
+            data.sort([{column: trends[0]['sort'], desc: false}]);
          }
          var view = new google.visualization.DataView(data);
          view.setRows(view.getFilteredRows([{column: 1, minValue: trends[0]['min']}]));

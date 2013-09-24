@@ -34,7 +34,7 @@
    function checkRequestData(requestData){
       var errors = {}
 
-      if (requestData["versions"] == "" || requestData["versions"].split(',').length != 1) {
+      if (requestData["versions"] == "" || requestData["versions"].split(',').length > 2) {
          errors["Version"] = "Please give exactly one version in overview analysis.";
       }
       
