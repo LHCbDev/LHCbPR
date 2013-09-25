@@ -9,9 +9,9 @@
 {% block script %}
     {{ block.super }}
 
-var atrs = {{ atrs|safe }}
-var groups = {{ groups|safe }};
-var types = {{ types|safe }};
+var atrs    = {{ atrs|safe }}
+var groups  = {{ groups|safe }};
+var types   = {{ types|safe }};
 
 			$(document).ready(function() {			
 				$('#execute_query').hover(
@@ -63,12 +63,12 @@ function contains(myarray, myvalue){
 
 function fill_attributes(allowed_groups){
 	for (var i = 0; i < atrs.length; i++){
-		if (isEmpty(allowed_groups)  ||  contains( allowed_groups, atrs[i][3] ) )
+		if (isEmpty(allowed_groups) || contains( allowed_groups, atrs[i][3] ) )
 		{
 			$('<option>')
-							.attr('value', atrs[i][0]+","+types[atrs[i][2]])
-							.html(atrs[i][1])
-							.appendTo('#atr');
+			   .attr('value', atrs[i][1]+","+types[atrs[i][2]])
+				.html(atrs[i][1])
+				.appendTo('#atr');
 		}
 	}
 }

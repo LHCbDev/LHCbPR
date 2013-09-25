@@ -65,7 +65,7 @@ def get_queries(requestData, app_name):
         
     #now we finished generating the filtering in the query attributes
     #we know finalize the queries
-    application_attribute= "  and att.id={0}".format(requestData['atr'].split(',')[0])
+    application_attribute= "  and att.name = \'{0}\'".format(requestData['atr'].split(',')[0])
     if versions[0] == "":
         application_attribute+= " and apl.appname='{0}'".format(app_name)
     query_results += application_attribute

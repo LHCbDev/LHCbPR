@@ -151,7 +151,7 @@ def joblistDesc(request, app_name):
      LHCBPR_SETUPPROJECT.CONTENT"
 
    cnf_query += " ORDER BY ENDTIME DESC"
-   print "Joblist Query: ", cnf_query
+   # print "Joblist Query: ", cnf_query
 
    cursor = connection.cursor()
    cursor.execute(cnf_query)
@@ -287,11 +287,9 @@ def jobFileView(request):
 
     reco  = re.compile('\d+')
     names = reco.findall(data_file)
-    print names
 
     reco  = re.compile('[0-9a-zA-Z.-]+$')
     name  = reco.findall(data_file)
-    print name 
 
     filename = "lhcbpr-%s-%s-%s" % (names[0], names[1], name[0])
 
