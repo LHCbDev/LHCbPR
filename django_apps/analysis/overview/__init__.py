@@ -87,7 +87,6 @@ def analyse(**kwargs):
       jobs = []
 
    if jobs[0] == "":
-      #print "Overview-Analyse, Jobs Branch"
       if versions[0] == "" and options[0] == "":
          raise Http404
       else:
@@ -141,28 +140,33 @@ def analyse(**kwargs):
             entry_sdv[res[-7]] = res[-5]
 
       try:
+         db_temp = []
          for k in entry_avg.keys():
-            datatable.append([ \
+             # Bug occurs with this key, probably import to DB failed
+             # values (id) and others already in DB missing! 
+             if k == "Hlt2CharmHadD2HHHKsDD":
+                continue
+             db_temp.append([ \
                '{0}'.format(k), \
                float(entry_avg[k]), \
                float(entry_avg[k]+entry_sdv[k]), \
                float(entry_avg[k]-entry_sdv[k]), \
                'Id: {0:03d}\nAverage: {1}, Stddev.: +-{2}\nEvents: {3}\nParent: {4}'.format(ids[k], entry_avg[k], entry_sdv[k], events[k], parents[k])
             ])
+         datatable = db_temp
          sort_column = 4
       except KeyError:
          for k in entry_avg.keys():
             datatable.append([ \
                '{0}'.format(k), \
                float(entry_avg[k]), \
-               float(entry_avg[k]+0), \
-               float(entry_avg[k]-0), \
-               'Average: {0}'.format(entry_avg[k])
+               float(entry_avg[k]+entry_sdv[k]), \
+               float(entry_avg[k]-entry_sdv[k]), \
+               'Average: {0}\nStddev.: +-{1}'.format(entry_avg[k], entry_sdv[k])
             ])
          sort_column = 0
          if sorting == "true":
             sort_column = 1
-         print sort_column
 
       dataDict = {}
       dataDict['application']  = app_name,
