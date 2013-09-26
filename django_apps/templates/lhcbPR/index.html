@@ -7,15 +7,34 @@
 {% block script %} 
 $(document).ready(function () {
 	$("#homeMenu").attr('checked', 'checked').button("refresh");
+   var links_array = {{ links|safe }};
+   $('#d4').append('<ul id="ulli"></ul>');
+   $.each(links_array, function(key, elem) {
+      $("<li></li>").append($('<a></a>', {
+         text: elem[3],
+         href: elem[2]
+      })).appendTo('#ulli');
+   });
+   var displayAmt = 10;
+   $('#d4 li').slice(displayAmt).hide();
+   $('#d4').append('<a id="ali" href="" class="right">all</a>');
 });
+
 {% endblock script %}
 
 
-{% block stylecss %} {% endblock stylecss %}
+{% block stylecss %}
+.right {float:right;}
+
+margin-bottom: 20px;
+{% endblock stylecss %}
 
 {% block helptext %} This help block is used to describe what you can find and what you can do on the page it appears.{% endblock helptext %}
 
 {% block pagebody %}
+
+<div id="link-dialog" title="Links collected"></div>
+
 <h2 id="demoHeaders" class="demoHeaders">LHCb PR</h2>
 <div>
    <div id="d1" class="info-box information" style="height: 200px; width: 550px;">
@@ -40,5 +59,8 @@ $(document).ready(function () {
          <li><label><a href="http://indico.cern.ch/getFile.py/access?contribId=3&resId=0&materialId=slides&confId=247333">Presentation about Performance and Regression platform</a></label></li>
       </ul>
    </div>
+   <div id="d4" class="info-box information" style="width: 550px;">
+      <h3 id="demoHeaders" class="demoHeaders">Recent Links</h3>
+   <div>
 </div>
 {% endblock pagebody %}

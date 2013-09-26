@@ -37,9 +37,19 @@ def index(request):
     """This view serves the home page of the application(lhcbPR), along 
     with the page it provides information for the user(if he is authenticated
     or not)"""
-    
+
+    query = "SELECT * FROM lhcbpr_public_links" 
+    cursor = connection.cursor()
+    cursor.execute(query)
+    links = cursor.fetchall()
+
+    dataDict = {
+       'links': json.dumps(links)
+    }
+
     return render_to_response('lhcbPR/index.html',
-                  context_instance=RequestContext(request))
+       dataDict,
+       context_instance=RequestContext(request))
     
 @login_required
 def jobDescriptions(request, app_name):
