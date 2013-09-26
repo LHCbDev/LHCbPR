@@ -38,24 +38,46 @@ This paper is organized ...
 \section{LHCb computing}
 \label{sec:lhcb_computing}
 
-
-
 \subsection{LHCb software}
 \label{sec:lhcb_software}
 
-The software frameworks used in the LHCb experiment are based on Gaudi \cite{gaudi}. Gaudi is a framework using generic and object-oriented features of C++ for processing intensive tasks and python for configuring and structuring modules, which we call algorithms. It executes consecutive an abstract series of these algorithms to process data objects from the transient store on request. Gaudi is providing core services and tools for applications to hide complexity and make future development and changes more transparent for users. It is a large-scale framework and is used by ATLAS, Glast, Harp and other experiments.
+The software frameworks used in the LHCb experiment are based on Gaudi \cite{gaudi}. Gaudi is a framework using generic and object-oriented features of C++ for processing intensive tasks and python for configuring and structuring modules, which we call algorithms. It executes consecutive an abstract series of these algorithms to process data objects from the transient store on request. Gaudi is providing core services and tools for applications to hide complexity and make future development and changes more transparent for users. It is a large-scale framework and is additionally used by ATLAS, Glast, Harp and other experiments.
 \newline
-Applications build on top of Gaudi are Brunel, Gauss, DaVinci, Moore, Boole and others. Moore is the implementation of the high-level trigger to decide weather event data will be stored or not. Brunel is responsible for the offline reconstruction, Gauss is simulating the particle transport and interaction through detector modules, and Boole performs the digitization.
-
-\subsection{Integrated Profiling}
-\label{sec:integrated_profiling}
-
-In HEP computing it is a common method to measure performance via throughput (events per time unit). Thus the performance analysis is focused on the time linear and not the time constant part of processing like initialization. To achieve this, instrumentation is an important advantage for profiling source-code in a large scale frameworks like those from the LHCb experiment. Multiple profilers and measurements have been implemented in the Gaudi framework using the Auditor-Service. Timing information from the operating system's process information are collected using the TimingAuditor and printing a summary of time spend in the applications algorithms. Likewise memory information can be collected using the MemoryAuditor as soon as changes in memory consumption are observed. Recently the API of Intel's VTune Amplifier was used by Mazurov and Couturier \cite{intel_auditor} to implement an IntelAuditor to be used for profiling the event loop with higher precision. Another strategy is to collect information from the PMU of a modern CPU architecture to collect information about hardware related issues, such as cach-misses, branch-misprediction and stall cycles as done by Kruse and Kruzelecki \cite{monitoring} for the Gaudi framework.
+Applications build on top of Gaudi are Brunel, Moore, DaVinci, Gauss, Boole and others. Brunel is responsible for the offline reconstruction, Moore is the implementation of the High-Level Trigger (HLT) to decide weather event data will be stored or not, DaVinci ???, Gauss to simulate the particle transport and interaction through several detector modules, and Boole performs the digitization.
 
 \subsection{Computing environment}
 \label{sec:computing_environment}
 
-The LHCb computing environment persists in particular out of the WLCG and (what ever is in the pit). Around (N) CPU's are processing data collected by the different detector subsystems. M GB of recorded data per second have to be processed by N computing nodes the high-level-trigger (HLT) to decide if they should be stored.
+The LHCb computing environment persists in particular out of the resources accessed via the Worldwide LHC Computing Grid (WLCG), Cloud Infrastructure and the HLT farm located close to the experiment. Some 100k CPU's are involved in  data collection of the different detector subsystems, event filtering, offline reconstruction, stripping and simulation. 35 GB/s of recorded data have to be processed by 1500 computing nodes of the Event Filtering Farm (EFF) of the HLT to be reduced to 70 MB/s \cite{lhcb_hlt_opt}.
+
+\subsection{Integrated Profiling}
+\label{sec:integrated_profiling}
+
+In HEP computing it is a common method to measure performance via throughput (events per time unit). Thus the performance analysis is focused on the time linear and not the time constant part of processing. To achieve this, instrumentation is an important advantage for profiling source-code in a large scale frameworks like the applications from the LHCb experiment. Multiple profiling measures have been implemented in the Gaudi framework using the Auditor-Service.
+\newline
+Timing information from the operating system's process information are collected using the TimingAuditor and printing a summary of time spend in the applications algorithms. Likewise information can be collected using the MemoryAuditor or MemStatAuditor for changes in memory as soon they are observed. Recent work \cite{intel_auditor} conducted by Mazurov and Couturier has shown to improve precision in profiling the event-loop by implementing instrumentation for Intel's  VTune Amplifier which can be added using the IntelAuditor. Another strategy is to collect information from the PMU of a modern CPU architecture to collect information about hardware related issues, such as cache-misses, branch-misprediction and stall cycles as done by Kruse and Kruzelecki \cite{monitoring} for the Gaudi framework.
+\newline
+Many of such kind of work has been performed to provide tools for developers to profile their code. Still, systematic usage or comparative profiling has been sparely observed.
+
+\subsection{Systematic Profiling}
+\label{sec:integrated_profiling}
+
+Two important aspects must be considered as crucial for systematic profiling. It first must be frequently repeated and second it should be comparable to allow regression analysis. For this purpose profiling must be limited to small number of default cases using reference data to avoid the profile to vary because of a differing amount and size of physics events. This way differences between two software revisions can be examined on changes in their code. On the other side, changing events could be used to evaluate the performance of the software if other types of events for upcoming data-taking periods are expected.
+\newline
+Hence for the LHCb PR project the following objectives have to be defined:
+\begin{enumerate}
+ \item Frequent automated execution
+ \item Repetion of same test cases
+ \item Brief profile overview
+ \item Detailed profile analysis
+ \item Flexibal in including new profiling tools
+\end{enumerate}
+
+
+Systematic profiling shell help to obtain an understanding which techniques, tool at optimization measures turn out to have a higher impact on ... .
+\newline
+means regular profiling for observation of the software efficiency and multiple runs of default cases on a set of reference data to make regression analysis
+
 
 \begin{figure}{t}
 \includegraphics[scale=0.3]{figures/profiling_process.eps}
@@ -98,10 +120,23 @@ This paper is not going to evaluate the benefits and drawbacks of different tool
 
 Data collection can be done in three different ways, first one can segregate information from the results of profilers, store files containing performance information and store the resting profiler specific collected information. Segregating information can also be quite diverse depending on which profiler were delivering the information. To maintain flexibility here, a collection of data handler were written for each profiler in use. They have to parse the output, select and combine information and finally collect it for insertion into the LHCb PR underlying database.  
 
+\begin{figure}[t]
+\begin{minipage}[t]{17pc}
+\includegraphics[scale=0.4]{figures/moore_trend_analysis.png}
+\caption{\small \textit{nix}}
+\label{fig:trend}
+\end{minipage}\hspace{1pc}%
+\begin{minipage}[t]{17pc}
+\includegraphics[scale=0.4]{figures/moore_overview_memory.png}
+\caption{\small \textit{nix}}
+\label{fig:overview}
+\end{minipage}
+\end{figure}
+
 \subsection{Test cases}
 \label{sec:test_cases}
 
-Use cases are importend 
+Use cases are important to trace back performance changes to the evolving algorithms during the source code refactoring period. Unfortunately the HLT software Moore can not simply be reduced to a view most common default cases, what makes it more difficult to trace back performance issues that way as it would affect production. ...   
 
 \subsubsection{Use case Reconstruction}
 \label{sec:use_case_rec}
@@ -111,12 +146,12 @@ Use cases are importend
 
 \begin{figure}[t]
 \begin{minipage}[t]{17pc}
-\includegraphics[scale=0.4]{figures/trend_brunel.png}
+\includegraphics[scale=0.4]{figures/brunel_trend_analysis.png}
 \caption{\small \textit{nix}}
 \label{fig:trend}
 \end{minipage}\hspace{1pc}%
 \begin{minipage}[t]{17pc}
-\includegraphics[scale=0.4]{figures/overview_brunel.png}
+\includegraphics[scale=0.4]{figures/brunel_overview_analysis.png}
 \caption{\small \textit{nix}}
 \label{fig:overview}
 \end{minipage}
@@ -141,9 +176,12 @@ Using a customizable platform to collect and summarize profiling results enables
 \section*{References}
 \begin{thebibliography}{3}
 \bibitem{gaudi} G. Corti, M. Cattaneo, P. Charpentier, F. Markus, P. Koppenburg, P. Mato, F. Ranjard, S. Roiser, I. Belyaev and G. Barrand, ``Software for the LHCb experiment'', IEEE Transactions on Nuclear Science, vol. 53, nb. 3, P.1323-1328, 2006
+\bibitem{lhcb_hlt_opt}M. Frank, C. Gaspar, E. v Herwijnen, B. Jost, N. Neufeld, and R. Schwemmer, “Optimization of the HLT Resource Consumption in the LHCb Experiment,” Journal of Physics: Conference Series, vol. 396, no. 1, p. 
 \bibitem{intel_auditor} A. Mazurov and B. Couturier, ``Advanced Modular Software Performance Monitoring'', J. Phys.: Conf. Ser. 396 052054, 2012
 \bibitem{monitoring} D. F. Kruse and K. Kruzelecki, ``Modular Software Performance Monitoring'', J. Phys.: Conf. Ser. 331 042014, 2011
 \bibitem{django} ``Django is a high-level Python Web framework'', url: https://www.djangoproject.com/
 \bibitem{jenkins} ``Jenkins, An extendable open source continuous integration server'', url: https://www.jenkins-ci.org/
+012021, Dec. 2012.
+
 \end{thebibliography}
 \end{document}
