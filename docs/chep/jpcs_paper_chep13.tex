@@ -29,9 +29,7 @@ Software optimization is a sophisticated process where all parts, compiler, oper
 \section{Introduction}
 \label{sec:introduction}
 
-To assure that software performance of a large-scale framework keeps its preestimated performance boundaries, regular and detailed profiling is indispensable. Since software is not going to speed up anymore with each new generation of cpu's, profiling tools to trace back hotspots and to discover interesting regions to optimize the cpu's exploitation are becoming more and more important. But profiling was not an integral part of the software development procedure of the LHCb experiment for the first period of the LHC run till 2013. line-number-modeProfiling remained an unsystematic task which each developer or collaborating development group conducted on its own. Profiles were thus only of temporal value, incomparable and often unreproducible. This paper is not going to evaluate the benefits and drawbacks of different tools, but wants to enable the collaboration to systematize profiling and to make progress comparable and more visible for the upcoming refactoing face to make the source-code ready for the second big LHCb run.
-\newline
-Important objectives to develop a framework for regular systematic profiling are, to be aware of comparability, reproducibility and automation of performance validation. ...
+To assure that software performance of a large-scale framework keeps its preestimated performance boundaries, regular and detailed profiling is indispensable. Since software is not going to speed up anymore with each new generation of cpu's, profiling tools to trace back hotspots and to discover interesting regions to optimize the cpu's exploitation are becoming more and more important. But profiling was not an integral part of the software development procedure of the LHCb experiment for the first period of the LHC run till 2013. line-number-modeProfiling remained an unsystematic task which each developer or collaborating development group conducted on its own. Profiles were thus only of temporal value, incomparable and often unreproducible. This paper is not going to evaluate the benefits and drawbacks of different tools, but wants to enable the collaboration to systematize profiling and to make progress comparable and more visible for the upcoming refactoing face to make the source-code ready for the second big LHCb run. Important objectives to develop a framework for regular systematic profiling are, to be aware of comparability, reproducibility and automation of performance validation.
 \newline
 This paper is organized ...
 
@@ -64,20 +62,18 @@ Many of such kind of work has been performed to provide tools for developers to 
 
 Two important aspects must be considered as crucial for systematic profiling. It first must be frequently repeated and second it should be comparable to allow regression analysis. For this purpose profiling must be limited to small number of default cases using reference data to avoid the profile to vary because of a differing amount and size of physics events. This way differences between two software revisions can be examined on changes in their code. On the other side, changing events could be used to evaluate the performance of the software if other types of events for upcoming data-taking periods are expected.
 \newline
-Hence for the LHCb PR project the following objectives have to be defined:
+Hence the LHCb PR project has the following objectives:
 \begin{enumerate}
- \item Frequent automated execution
- \item Repetion of same test cases
- \item Brief profile overview
- \item Detailed profile analysis
- \item Flexibal in including new profiling tools
+ \item Automated triggering and execution for frequent runs. This implies to avoid influences between jobs on the same machienes and makes job-configuration, job-submission and a job queue necessary. This is solved by using Jenkins \cite{jenkins} executing scripts as trigger to perform profiling and as wrapper to make the setup for several profilers transparent.
+ \item Profiles must be reproducable to be able to compare configurations. All activeties with changing configurations and all option files used are predefined and archived. Since Jenkins is missing the possabillity to be archived, the regular backup was put into a reposatory to be able to trace back changes in the jobs configuration.
+ \item Comparable, to trace back changes in the profile with changes in algorithms or in sorce-code locations. Hence it is also necessary to be conducted on library- and function level, what makes a detailed analysis necessary as soon as changes are observed. Profiles of a same kind become comparable by statistical analysis of multiple runs of a same kind of configuration.
+ \item Flexibal in including new profiling tools.
+ \item Web supported brief analysis and detailed analysis of collected data. Means that many of the collected data of the several profilers will be stored for further analysis. Important information can be collected by parsing the profilers reports and pushing them onto a central database.
 \end{enumerate}
 
+Systematic profiling should not only trace back hotspots and drawbacks of changes in code, but shell help to obtain an understanding which techniques, tool for optimization, or changing platforms are having a higher impact on saving computing resources.
 
-Systematic profiling shell help to obtain an understanding which techniques, tool at optimization measures turn out to have a higher impact on ... .
-\newline
-means regular profiling for observation of the software efficiency and multiple runs of default cases on a set of reference data to make regression analysis
-
+\newpage
 
 \begin{figure}{t}
 \includegraphics[scale=0.3]{figures/profiling_process.eps}
@@ -85,21 +81,20 @@ means regular profiling for observation of the software efficiency and multiple 
 \label{fig:trend}
 \end{figure}
 
-\section{The LHCb PR framework}
-\label{sec:lhcbpr_framework}
+\section{Workflow and Implementation}
+\label{sec:workflow_and_implementation}
 
 The LHCb PR platform uses the continous integration system Jenkins \cite{jenkins} to prepare, configure and schedule jobs for profiling, a set of wrappers to customize available profilers for their working environment, a set of data handlers to parse and collect output data from the profilers, a SQL database to store summarized data and the web analysis framework LHCb PR. 
 
-\subsection{Structure}
-\label{sec:structure}
-
 \begin{itemize}
- \item Job distribution and triggering
- \item Job execution and profiling
- \item Data collection
- \item Web-based Analysis platform
- \item Test definition
+ \item Job triggering and execution of profiling
+ \item Definition of test or default cases
+ \item A customize method for data collection
+ \item Web-based analysis platform
 \end{itemize}
+
+\subsection{LHCb PR framework}
+\label{sec:lhcbpr_framework}
 
 \subsection{Job distribution and triggering}
 \label{sec:job_distribution}
