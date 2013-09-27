@@ -37,7 +37,7 @@ def get_queries(requestData, app_name):
         where_statements.append('j.host_id = h.id')
         
     query_results = 'select '+' , '.join(select_statements)
-    query_results+=' ,apl.appversion as VERSION , ROUND(AVG(rf.data), 2) AS AVERAGE, ROUND(STDDEV(rf.data), 2) AS STDDEV, count(*) as ENTRIES from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
+    query_results+=' ,apl.appversion as VERSION , ROUND(AVG(rf.data), 4) AS AVERAGE, ROUND(STDDEV(rf.data), 4) AS STDDEV, count(*) as ENTRIES from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
     
     query_groups = 'select distinct '+' , '.join(select_statements)+' from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
               
