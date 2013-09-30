@@ -8,27 +8,36 @@
 {% endblock head %}
 
 {% block script %} 
-var appName = "{{ active_tab }}";
-var requestUrl = "{{ ROOT_URL }}analyse/{{ analysis_type }}/results/{{  active_tab }}/";
-var prefillData = {{ bookmark|safe }};
+var appName       = "{{ active_tab }}";
+var requestUrl    = "{{ ROOT_URL }}analyse/{{ analysis_type }}/results/{{  active_tab }}/";
+var prefillData   = {{ bookmark|safe }};
 var triggerResults = false;
 jQuery(document).ready(function() {
-        jQuery( "#bookmarkDialog" ).dialog({
-            //modal: true,
-            autoOpen: false,
-            show: "blind",
-            hide: "blind",
-            position: { 
-                my: 'top',
-                at: 'right',
-                of: jQuery('#dummy')
-              },
-            buttons: {
-                Ok: function() {
-                    jQuery( this ).dialog( "close" );
-                }
-            }
-        });
+   jQuery("#confirmDialog").dialog({
+      //modal: true,
+      autoOpen: false,
+      show: "blind",
+      hide: "blind",
+   });
+   jQuery("#bookmarkDialog").dialog({
+      //modal: true,
+      width: "450px",
+      autoOpen: false,
+      show: "blind",
+      hide: "blind",
+      position: { 
+         my: 'top',
+         at: 'right',
+         of: jQuery('#dummy')
+      },
+      buttons: {
+         Ok: function() {
+            jQuery(this).dialog("close");
+            if($('#storeLink').prop('checked'))
+               $('#confirmDialog' ).dialag('open');
+         }
+      }
+   });
         
 		$("#analyseMenu").attr('checked', 'checked').button("refresh");
 		{% for app in applications %}
@@ -217,13 +226,13 @@ div.innerLeft {
 </div><!--  /tabs -->
 
  <!--  bookmark dialog(captain obvious) -->
-<div id="bookmarkDialog" title="Bookmark url">
-        <label>
-            <a id="goo" href="javascript:;">Shorten url</a>
-        </label><br>
-        <label><input id="triggerResults" type="checkbox" checked="checked">Retrieve results on bookmark url</label>
-
-        <input id="bookmark_url" type="text" value="" style="width: 100%;margin-top : 0.5em;" />
-
+<div id="bookmarkDialog" title="Bookmark Url">
+   <label><input id="triggerResults" type="checkbox" checked="checked">Retrieve results on bookmark url</label><br>
+   <label><input id="storeLink" type="checkbox">Save link to quicklinks for public </label><p>
+   <label><a id="goo" href="javascript:;">Short url to bookmark</a></label>
+   <input id="bookmark_url" type="text" value="" style="width: 100%; margin-top: 0.5em;" />
+</div>
+<div id="confirmDialog" title="Confirmation">
+   <label>Update confirmed.</label>
 </div>
 {% endblock pagebody %}

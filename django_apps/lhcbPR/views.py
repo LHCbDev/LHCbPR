@@ -52,6 +52,13 @@ def index(request):
        context_instance=RequestContext(request))
     
 @login_required
+def saveUrl(request):
+
+   print request
+
+   return render_to_response('lhcbPR/success.html', context_instance=RequestContext(request))
+
+@login_required
 def jobDescriptions(request, app_name):
     """From the url is takes the requested application(app_name) , example:
     /jobDescriptions/BRUNEL ==> app_name = 'BRUNEL' 
