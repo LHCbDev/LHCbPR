@@ -32,9 +32,15 @@ jQuery(document).ready(function() {
       },
       buttons: {
          Ok: function() {
-            jQuery(this).dialog("close");
             if($('#storeLink').prop('checked'))
-               $('#confirmDialog' ).dialag('open');
+               var oRequest = new XMLHttpRequest();
+               var pUrl = ""; 
+               var sUrl = "{{ ROOT_URL }}saveUrl/?url=" + pUrl;
+               oRequest.open("GET",sURL,false);
+               oRequest.setRequestHeader("User-Agent",navigator.userAgent);
+               oRequest.send(null)
+               $('#confirmDialog' ).dialog('open');
+            jQuery(this).dialog("close");
          }
       }
    });

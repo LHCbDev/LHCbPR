@@ -56,7 +56,11 @@ def saveUrl(request):
 
    print request
 
-   return render_to_response('lhcbPR/success.html', context_instance=RequestContext(request))
+   dataDic = {
+      'succ': True
+   }
+
+   return render_to_response('lhcbPR/success.html', dataDic, context_instance=RequestContext(request))
 
 @login_required
 def jobDescriptions(request, app_name):
