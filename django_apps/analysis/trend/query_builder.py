@@ -8,10 +8,7 @@ def get_queries(requestData, app_name):
                     'jobdes.options_id = opt.id', 'r.jobattribute_id = att.id', 
                     'rf.jobresults_ptr_id = r.id', 'j.platform_id = plat.id' , 'j.success = 1' ]
     
-    if requestData['atr'].split(',')[1] == 'Float':
-        from_statements.append('lhcbpr_resultfloat rf')
-    else:
-        from_statements.append('lhcbpr_resultint rf')
+    from_statements.append('lhcbpr_resultfloat rf')
     
     secondpart_query = ""
     use_host = False
@@ -73,7 +70,7 @@ def get_queries(requestData, app_name):
     
     #add the second part of the query which contains the filtering
     query_results += secondpart_query
-    query_results+=' GROUP BY '+' , '.join(group_statements)
-    query_groups += secondpart_query
+    query_results +=' GROUP BY '+' , '.join(group_statements)
+    query_groups  += secondpart_query
     
     return query_groups, query_results

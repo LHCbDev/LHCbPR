@@ -5,8 +5,8 @@ def get_data_query(requestData, app_name, job_list):
          'h.hostname as HOST',
          'apl.appversion as VERSION',
          'att.name as NAME',
-         'ROUND(AVG(rf.data), 2) AS AVERAGE',
-         'ROUND(STDDEV(rf.data), 2) AS STDDEV',
+         'ROUND(AVG(rf.data), 4) AS AVERAGE',
+         'ROUND(STDDEV(rf.data), 4) AS STDDEV',
          'count(*) as ENTRIES'
     ]
     from_statements = [
@@ -173,8 +173,8 @@ def get_tree_query(job_list, group):
         apl.appversion as VERSION, \
         att.description, \
         att.name AS atr_name, \
-        ROUND(AVG(attd.data), 3) AS float_data_avg, \
-        ROUND(stddev(attd.data), 3) AS float_data_sdv, \
+        ROUND(AVG(attd.data), 4) AS float_data_avg, \
+        ROUND(stddev(attd.data), 4) AS float_data_sdv, \
         count(*) as ENTRIES, \
         avg(resint.data) AS int_data, \
         min(resstr.data) AS str_data, \

@@ -188,7 +188,7 @@ class Node:
         if self.parent != None:
             if self.parent.total == 0:
                 return 0.0
-            return round((self.total * 100.0)/self.parent.total,2)        
+            return round((self.total * 100.0)/self.parent.total, 4)        
         else:
             return 100.0
 
@@ -206,7 +206,7 @@ class Node:
 
     def perTotal(self):
         """ percentage time spent in this algorithm vs the TOTAL time"""
-        return round(self.total * 100.0 / self.getEventTotal(),2)
+        return round(self.total * 100.0 / self.getEventTotal(), 4)
 
     def getfullname(self):
         """ Returns the complete path flatened joined by '-' """

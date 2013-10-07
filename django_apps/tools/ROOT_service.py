@@ -19,7 +19,7 @@ filehandler = RotatingFileHandler(LOG_FILENAME, maxBytes=2000, backupCount=5)
 formatter = logging.Formatter('[%(asctime)s ]  [%(levelname)s]  %(message)s')
 filehandler.setFormatter(formatter)
 logger.addHandler(filehandler) 
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 #dirac stuff
 diracStorageElementName = 'StatSE'
@@ -106,16 +106,16 @@ class Stats(object):
         for i, v in enumerate(data):
             array.SetAt(v, i)
         self._array = array
-        self.mean = round(TMath.Mean(array.GetSize(), array.GetArray()),2)
-        self.stdev = round(TMath.RMS(array.GetSize(), array.GetArray()),2)
+        self.mean = round(TMath.Mean(array.GetSize(), array.GetArray()),4)
+        self.stdev = round(TMath.RMS(array.GetSize(), array.GetArray()),4)
         if self.mean == 0:
             self.stdev_per = 0
         else:
-            self.stdev_per = round((self.stdev/self.mean)*100,2)
+            self.stdev_per = round((self.stdev/self.mean)*100,4)
         self.count = array.GetSize()
         
     def histogramObject(self, bins,name):
-        ##print name, bins
+        #print name, bins
         h0f = TH1F("histogram", "{0} values".format(name), bins['nbins'], bins['xlow'], bins['xup'])
         for value in self.data:
             h0f.Fill(value)
@@ -245,6 +245,7 @@ def histograms_service(remoteservice):
         return
         
 def basic_service(remoteservice):
+    logger.info('Enter basic service')
     try:
         #reading the request info(histogram, nbins, xlow, xup etc)
         request_info = remoteservice.recv()

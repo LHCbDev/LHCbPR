@@ -1,6 +1,6 @@
 import logging
 from django.db.models import Q
-from django.db import connection, transaction
+from django.db import connection, transaction, DatabaseError, IntegrityError
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
@@ -53,14 +53,47 @@ def index(request):
     
 @login_required
 def saveUrl(request):
+    ''' Method to store links for application into lhcbpr database.'''
+    if request.method == 'GET':
+        requestData = request.GET
+    else:
+        requestData = request.POST
+    
+    app  = requestData['app']
+    url  = requestData['url']
+    dscp = requestData['description']
 
-   print request
+    print app, " - ", url, " - ", dscp
+    #
+    # Here is a security measure missing to avoid adding anything.
+    #
 
-   dataDic = {
-      'succ': True
-   }
+    query = ""
+    if app != "" and url != "" and dscp != "":
+        query = "INSERT INTO LHCBPR_PUBLIC_LINKS \
+           (APPNAME, LINK, DESCRIPTION) VALUES \
+           ('{0}', '{1}', '{2}')".format(app, url, dscp)
 
-   return render_to_response('lhcbPR/success.html', dataDic, context_instance=RequestContext(request))
+    #print query
+
+    cursor = connection.cursor()
+    cursor.execute(query)
+
+    try:
+        transaction.commit_unless_managed()
+    except DatabaseError, IntegrityError:
+        succ = False
+    else:
+        succ = True
+
+    dataDic = {
+        'app' : app,
+        'url' : url,
+        'dscp': dscp, 
+        'succ': succ
+    }
+
+    return render_to_response('lhcbPR/success.html', dataDic, context_instance=RequestContext(request))
 
 @login_required
 def jobDescriptions(request, app_name):

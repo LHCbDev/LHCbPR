@@ -18,6 +18,39 @@ jQuery(document).ready(function() {
       autoOpen: false,
       show: "blind",
       hide: "blind",
+      buttons: {
+         Ok: function() {
+            jQuery(this).dialog("close");
+         }
+      }
+   });
+   jQuery("#descriptionDialog").dialog({
+      //modal: true,
+      autoOpen: false,
+      show: "blind",
+      hide: "blind",
+      buttons: {
+         Ok: function() {
+            var app  = appName;
+            var pUrl = $("#bookmark_url").val();
+            var desc = $("#description").val();
+            var oRequest = new XMLHttpRequest();
+            var sUrl = {
+               'app': appName,
+               'description': desc,
+               'url': pUrl
+            }
+            var Url = window.location.origin + "{{ ROOT_URL }}saveUrl/?" + $.param( sUrl );
+            oRequest.open("GET",Url,false);
+            oRequest.setRequestHeader("User-Agent",navigator.userAgent);
+            oRequest.send(null)
+            $('#confirmDialog' ).dialog('open');
+            jQuery(this).dialog("close");
+         },
+         Cancel: function() {
+            jQuery(this).dialog("close");
+         }
+      }
    });
    jQuery("#bookmarkDialog").dialog({
       //modal: true,
@@ -32,15 +65,10 @@ jQuery(document).ready(function() {
       },
       buttons: {
          Ok: function() {
-            if($('#storeLink').prop('checked'))
-               var oRequest = new XMLHttpRequest();
-               var pUrl = ""; 
-               var sUrl = "{{ ROOT_URL }}saveUrl/?url=" + pUrl;
-               oRequest.open("GET",sURL,false);
-               oRequest.setRequestHeader("User-Agent",navigator.userAgent);
-               oRequest.send(null)
-               $('#confirmDialog' ).dialog('open');
-            jQuery(this).dialog("close");
+            if($('#storeLink').prop('checked')) {
+               $('#descriptionDialog' ).dialog('open');
+               jQuery(this).dialog("close");
+            }
          }
       }
    });
@@ -238,6 +266,13 @@ div.innerLeft {
    <label><a id="goo" href="javascript:;">Short url to bookmark</a></label>
    <input id="bookmark_url" type="text" value="" style="width: 100%; margin-top: 0.5em;" />
 </div>
+
+<div id="descriptionDialog" title="Name/Description">
+   <label>Name (description for url):<br>
+   <input id="description" type="text"/>
+   </label>
+</div>
+
 <div id="confirmDialog" title="Confirmation">
    <label>Update confirmed.</label>
 </div>
