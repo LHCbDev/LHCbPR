@@ -191,19 +191,6 @@ def joblistInfo(request, app_name, desc_id, plat_id):
    if not desc_id:
       return HttpResponseNotFound("<h3>No existing jobs for job description or no job description given.</h3>")
 
-   atrs_float = JobResults.objects.filter(
-         job__jobDescription__application__appName=app_name,
-         job__success=True
-   ).filter(Q(jobAttribute__type='Float'))
-   atr_groups_tmp = atrs_float.values_list(
-         'jobAttribute__group'
-   ).distinct()
-   atr_groups = []
-   for k, v in enumerate(atr_groups_tmp):
-      if v[0] != "":
-         v[0].split(',')
-         atr_groups.append(v[0])
-
    job_query = "SELECT LHCBPR_JOB.ID AS ID, \
       LHCBPR_APPLICATION.APPNAME AS Project, \
       LHCBPR_APPLICATION.APPVERSION AS Version, \
@@ -258,6 +245,19 @@ def joblistInfo(request, app_name, desc_id, plat_id):
      ON LHCBPR_JOBRESULTS.ID = LHCBPR_RESULTFILE.JOBRESULTS_PTR_ID \
      ORDER BY LHCBPR_JOBRESULTS.JOB_ID"
 
+   #print file_query
+
+   group_query = "SELECT DISTINCT LHCBPR_JOBRESULTS.JOB_ID, \
+     LHCBPR_JOBATTRIBUTE.\"GROUP\" \
+     FROM LHCBPR_JOBRESULTS \
+     INNER JOIN LHCBPR_JOBATTRIBUTE \
+     ON LHCBPR_JOBRESULTS.JOBATTRIBUTE_ID = LHCBPR_JOBATTRIBUTE.ID \
+     INNER JOIN LHCBPR_RESULTFLOAT \
+     ON LHCBPR_RESULTFLOAT.JOBRESULTS_PTR_ID = LHCBPR_JOBRESULTS.ID \
+     ORDER BY LHCBPR_JOBRESULTS.JOB_ID"
+
+   #print group_query
+
    cursor = connection.cursor()
    cursor.execute(job_query)
    description = [i[0] for i in cursor.description]
@@ -273,6 +273,16 @@ def joblistInfo(request, app_name, desc_id, plat_id):
    description = [i[0] for i in cursor.description]
    files = cursor.fetchall()
 
+   cursor = connection.cursor()
+   cursor.execute(group_query)
+   description = [i[0] for i in cursor.description]
+   groups = cursor.fetchall()
+ 
+   atr_groups = []
+   for k, v in enumerate(groups):
+      if v[0] != "":
+         atr_groups.append([v[0], v[1]])
+
    applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
 
    return render_to_response('lhcbPR/joblistInfo.html',
@@ -280,7 +290,7 @@ def joblistInfo(request, app_name, desc_id, plat_id):
                     'jobs'        : json.dumps(jobs),
                     'infos'       : json.dumps(infos),
                     'files'       : json.dumps(files),
-                    'groups'      : atr_groups,
+                    'groups'      : json.dumps(groups),
                     'application' : app_name,
                     'active_tab'  : app_name,
                     'applications' : applicationList,
