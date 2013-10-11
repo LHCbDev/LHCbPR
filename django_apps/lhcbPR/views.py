@@ -1,4 +1,5 @@
 import logging
+import urllib
 from django.db.models import Q
 from django.db import connection, transaction, DatabaseError, IntegrityError
 from django.http import HttpResponse, HttpResponseNotFound, Http404
@@ -53,7 +54,7 @@ def index(request):
     
 @login_required
 def saveUrl(request):
-    ''' Method to store links for application into lhcbpr database.'''
+    '''Method to store links for application into lhcbpr database.'''
     if request.method == 'GET':
         requestData = request.GET
     else:
@@ -61,20 +62,22 @@ def saveUrl(request):
     
     app  = requestData['app']
     url  = requestData['url']
-    dscp = requestData['description']
+    desc = requestData['description']
 
-    print app, " - ", url, " - ", dscp
+    url = urllib.unquote(url).decode('utf8')
+
+    #print "Info: ", app, " - ", desc, " - ", url
     #
     # Here is a security measure missing to avoid adding anything.
     #
 
     query = ""
-    if app != "" and url != "" and dscp != "":
+    if app != "" and url != "" and desc != "":
         query = "INSERT INTO LHCBPR_PUBLIC_LINKS \
            (APPNAME, LINK, DESCRIPTION) VALUES \
-           ('{0}', '{1}', '{2}')".format(app, url, dscp)
+           (\'{0}\', \'{1}\', \'{2}\')".format(app, url, desc)
 
-    #print query
+    #print "Query: ", query
 
     cursor = connection.cursor()
     cursor.execute(query)
@@ -89,7 +92,7 @@ def saveUrl(request):
     dataDic = {
         'app' : app,
         'url' : url,
-        'dscp': dscp, 
+        'dscp': desc, 
         'succ': succ
     }
 

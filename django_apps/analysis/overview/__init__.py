@@ -75,6 +75,8 @@ def analyse(**kwargs):
    options   = requestData['options'].split(',')
    atr_group = requestData['grps']
    min_value = requestData['min']
+   max_value = requestData['max']
+   distance  = requestData['dist']
    sorting   = requestData['sort']
    logscale  = requestData['log']
 
@@ -174,6 +176,8 @@ def analyse(**kwargs):
       dataDict['platform']     = dataDict['description']['PLATFORM']
       dataDict['datatable']    = datatable
       dataDict['min']          = min_value
+      dataDict['max']          = max_value
+      dataDict['dist']         = distance
       dataDict['sort']         = sort_column
       dataDict['log']          = logscale
       dataDict['axis']         = axis

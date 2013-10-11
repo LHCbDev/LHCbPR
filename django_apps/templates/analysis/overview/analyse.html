@@ -1,6 +1,33 @@
 <script type="text/javascript">
    google.load('visualization', '1.1', {packages: ['corechart', 'controls'], callback:drawChart});
    var barChart;
+   /**
+    * Insert "ghost" values from items of table input2 and which are
+    * not available in table input1, into input1. The idea is to make
+    * both tables comparable.
+    *
+    * Attention: String of item (e.g. "Id: 1226, Average: ..." ist copied.")
+   */
+   function missing_lines(input1, input2){
+      input1.sort();
+      input2.sort();
+      for (var l2=0; l2<input2.length; l2++) {
+         var candidate = input2[l2][0];
+         for (var l1=0; l1<input1.length; l1++) {
+            if (input1[l1][0] == candidate) {
+               candidate = "";
+               break;
+            }
+         }
+         if (candidate) {
+            var line = input2[l2];
+            line[1] = 0;
+            line[2] = 0;
+            line[3] = 0;
+            input1.splice(l2, 0, line);
+         }
+      }
+   }
 
    /**
     * Validation of input if comparable overview can be generated.
@@ -8,19 +35,16 @@
     * @param input Data coming from django __init__.py after sql request.
    */ 
    function validation(input) {
-      if (input.length < 2)
+      if (input.length < 2) {
          return false;
-      var length = input[0]['datatable'].length;
-      for(var i=0; i<input.length; i++) {
-         if (length != input[i]['datatable'].length)
-            return false;
       }
-      var old_lable = "";
-      for(var r=0; r<input[0]['datatable'].length; r++) {
-         old_label = input[0]['datatable'][r][0];
-         for(var i=0; i<input.length; i++) {
-            if (old_label != input[i]['datatable'][r][0])
-               return false;
+      var len = input[0]['datatable'].length;
+      for(var i=1; i<input.length; i++) {
+         missing_lines(input[i-1]['datatable'], input[i]['datatable']);
+         missing_lines(input[i]['datatable'], input[i-1]['datatable']);
+         len = input[0]['datatable'].length;
+         if (len != input[i]['datatable'].length) {
+            return false;
          }
       }
       return true;
@@ -49,12 +73,6 @@
             //info_pre.appendChild(info_text);
             //area_div.appendChild(info_pre);
 
-            //var control1_div = document.createElement("div");
-            //control1_div.id            = "control1"+i;
-            //control1_div.style.width   = 700;
-            //control1_div.style.height  =  20;
-            //area_div.appendChild(control1_div);
-
             var trend_div = document.createElement("div");
             trend_div.id            = "trend"+i;
             trend_div.style.width   = 700;
@@ -76,7 +94,13 @@
                data.sort([{column: trends[0]['sort'], desc: false}]);
             }
             var view = new google.visualization.DataView(data);
-            view.setRows(view.getFilteredRows([{column: 1, minValue: trends[i]['min']}]));
+            var max_value = trends[0]['max'];
+            if ( max_value == 0 ) {
+               max_value = Number.MAX_VALUE;
+            }
+            view.setRows(view.getFilteredRows(
+               [{column: 1, minValue: trends[0]['min'], maxValue: max_value}]
+            ));
             data_rows = 25*view.getNumberOfRows();
 
             barChart = new google.visualization.BarChart(document.getElementById("trend"+i)).draw(view, {
@@ -91,39 +115,15 @@
                }
             });
 
-            //var unitControl = new google.visualization.ControlWrapper({
-               //controlType: 'StringFilter',
-               //containerId: control1_div.id,
-               //options: {
-                  //filterColumnLabel: 'Unit',
-                  //ui: { label: 'Filter Lables' }
-               //}
-            //});
-
-            //var barChart = new google.visualization.ChartWrapper({
-               //chartType:     "BarChart",
-               //containerId:   trend_div.id,
-               //options: {
-                  //title    : "Overview",
-                  //width    : 700, 
-                  //height   : 100 + data_rows, 
-                  //fontSize : 10,
-                  //chartArea: { left: 250, height: data_rows, width: "100%" },
-                  //legend: {
-                     //position: 'top'
-                  //}
-               //}
-            //});
-
-            //var dashboard = new google.visualization.Dashboard(area_div);
-            //dashboard.bind(unitControl, barChart);
-            //dashboard.draw(view);
-
             var line = document.createElement("hr");
 		      chart_area_div.appendChild(line);
          }
       } else {
 			var trend_div = document.createElement("div");
+
+         // Value set to filter lines out with a difference below.
+         var diff_min = trends[0]['dist'];
+
 			trend_div.id           = "trend";
 			trend_div.style.width  = 700;
 			trend_div.style.height = 500;
@@ -133,6 +133,9 @@
          data.addColumn('string', 'Unit');
          for (var r = 0; r < trends[0]['datatable'].length; r++) {
             var new_trend = new Array();
+            var diff_last = 0;
+            var diff_min_value = 0;
+            var diff_max_value = 0;
             for (var i = 0; i < trends.length; i++) {
                if (r == 0) {
                   var platform = trends[i]['description']['VERSION'] + " - " + trends[i]['description']['PLATFORM'] + " - " + trends[i]['description']['HOST'];
@@ -144,13 +147,24 @@
                // Using push to add array elements dynamically .slice() does not work.
                if (i == 0) {
                   new_trend.push(trends[0]['datatable'][r][0]);
+                  diff_min_value = trends[0]['datatable'][r][1];
+                  diff_max_value = diff_min_value;
+               }
+               if (trends[i]['datatable'][r][1] < diff_min_value) {
+                  diff_min_value = trends[i]['datatable'][r][1];
+               }
+               if (trends[i]['datatable'][r][1] > diff_max_value) {
+                  diff_max_value = trends[i]['datatable'][r][1];
                }
                new_trend.push(trends[i]['datatable'][r][1]);
                new_trend.push(trends[i]['datatable'][r][2]);
                new_trend.push(trends[i]['datatable'][r][3]);
                new_trend.push(trends[i]['datatable'][r][4]);
             }
-            data.addRow(new_trend);
+            diff_last = diff_max_value - diff_min_value;
+            if (diff_last >= diff_min) {
+               data.addRow(new_trend);
+            }
          }
          if ( trends[0]['sort'] == 1 ) {
             data.sort([{column: trends[0]['sort'], desc: true}]);
@@ -158,7 +172,13 @@
             data.sort([{column: trends[0]['sort'], desc: false}]);
          }
          var view = new google.visualization.DataView(data);
-         view.setRows(view.getFilteredRows([{column: 1, minValue: trends[0]['min']}]));
+         var max_value = trends[0]['max'];
+         if ( max_value == 0 ) {
+            max_value = Number.MAX_VALUE;
+         }
+         view.setRows(view.getFilteredRows(
+            [{column: 1, minValue: trends[0]['min'], maxValue: max_value}]
+         ));
          data_rows = 25*view.getNumberOfRows();
          barChart = new google.visualization.BarChart(document.getElementById("trend")).
             draw(view, {

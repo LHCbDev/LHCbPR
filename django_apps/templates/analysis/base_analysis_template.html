@@ -31,17 +31,14 @@ jQuery(document).ready(function() {
       hide: "blind",
       buttons: {
          Ok: function() {
-            var app  = appName;
             var pUrl = $("#bookmark_url").val();
             var desc = $("#description").val();
             var oRequest = new XMLHttpRequest();
-            var sUrl = {
-               'app': appName,
-               'description': desc,
-               'url': pUrl
-            }
-            var Url = window.location.origin + "{{ ROOT_URL }}saveUrl/?" + $.param( sUrl );
-            oRequest.open("GET",Url,false);
+            var Url = window.location.origin + "{{ ROOT_URL }}saveUrl/"
+               + "?app=" + appName
+               + "&description=" + desc
+               + "&url=" + encodeURIComponent( pUrl );
+            oRequest.open("GET", Url, false);
             oRequest.setRequestHeader("User-Agent",navigator.userAgent);
             oRequest.send(null)
             $('#confirmDialog' ).dialog('open');
