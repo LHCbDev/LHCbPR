@@ -87,17 +87,19 @@ To fulfill the objectives and requirements, the LHCb PR project contains three i
 \section{Workflow and Implementation}
 \label{sec:workflow_and_implementation}
 
-The LHCb PR platform uses the continous integration system Jenkins \cite{jenkins} to prepare, configure and schedule jobs for profiling, a set of wrappers to customize available profilers for their working environment, a set of data handlers to parse and collect output data from the profilers, a SQL database to store summarized data and the web analysis framework LHCb PR. 
-
-\begin{itemize}
- \item Job triggering and execution of profiling
- \item Definition of test or default cases
- \item A customize method for data collection
- \item Web-based analysis platform
-\end{itemize}
+The LHCb PR project uses the continous integration system Jenkins \cite{jenkins} to configure, trigger and schedule test jobs for profiling. A set of scripts as wrappers to make profilers for jenkins available on a generic way have been set up. Data handlers to parse and collect output must be defined for each distinct type of profiling, dependending on the needs of the gathered information, they can be filtered or combined with other available information. A SQL database is used to store the job configuration of each run, the results and information needed to run Django \cite{django} as supporting framework for the web based data analysis, the LHCb PR framework. 
 
 \subsection{LHCb PR framework}
 \label{sec:lhcbpr_framework}
+
+The core of the LHCb PR framework is its customized analysis platform based on Django. The backbone of the framework is based on python which speeds up development while keeping a certain amount of flexibility due to a variety of auxiliary modules. Additionally processing intensive tasks can be performed on the server-side, while keeping the interface quick and smart.
+\newline
+LHCb PR can ruffly be divided into two main aspects, navigation and visualization. Plotting graphs is current done by using the visualization capabilities of the ROOT framework and its python interface pyRoot or using Google Charts in javascript. Different kinds of analysis are referring to different ways of visualization in which data analysis is accessing data on a generic way. For visualizing the distribution or a trend of attributes, or providing an overview about several does not require attributes to be of a certain kind. Thus attributes can be runtime, memory consumption, memory blocks, hardware events or a more complex software performance metric.
+\newline
+For a top-down analysis, the trend has been added to observe changes cross revisions and version. Significant changes in the overall performance become immediately be conspicuous, but requires single attributes to be tracked. For a better observation of several attributed the overview analysis was necessary. Both show entries with their statistical variance. To get precise information about how items are distributed around their average, the basic analysis demonstrates this in a ROOT histogram.
+\newline
+Navigation ... JobList ... selection by categories ...
+
 
 \subsection{Job distribution and triggering}
 \label{sec:job_distribution}
@@ -135,23 +137,15 @@ Data collection can be done in three different ways, first one can segregate inf
 \label{sec:test_cases}
 
 Use cases are important to trace back performance changes to the evolving algorithms during the source code refactoring period. Test cases shell base on default use cases, which in deed, must not necessarily exist for frameworks. Still, all test cases should be best approximations to production usage. But sophisticated environments can influence runs on an non-deterministic way, which hampers the profile analysis. The highest priority of the current systematic profiling is to find software related issues, that can be addressed or have to be taken into account for upcoming decisions in resource allocation.
-
-\subsection{Use case Reconstruction}
-\label{sec:use_case_rec}
-
-\subsection{Use case High-Level-Trigger}
-\label{sec:use_case_hlt}
-
+\newline
+Describing offline reconstruction and the figures shown. ...
+\newline
 Unfortunately the HLT framework Moore can not simply be reduced to a view common default cases, what makes it more difficult to trace back performance issues that way as it would affect production. The HLT brings further complications for the PR project in two main aspects:
 \begin{enumerate}
  \item Single or a few default cases, as required, are not available.
  \item The computing environment at the HLT farms are likewise the Grid, highly sophisticated.
 \end{enumerate}
 The second, analyzing the impact of structural changes in the computing environment, could basically be addressed, but has currently no priority. The first, can partially be addressed by not only splitting use cases, but also the software into parts for further investigations. It also simplifies tracing performance issues back to source-code locations. 
-
-\subsection{Profiling accuracy}
-\label{sec:profiling accuracy}
-
 
 \begin{figure}[t]
 \begin{minipage}[t]{17pc}
@@ -166,18 +160,18 @@ The second, analyzing the impact of structural changes in the computing environm
 \end{minipage}
 \end{figure}
 
-\section{Performance analysis}
-\label{sec:performance_analysis}
+\section{Ongoing work}
+\label{sec:ongoing_work}
 
-The core of the LHCb performance and regression (PR) framework is its customized analysis platform based on Django \cite{django}. The backbone of the framework is based on python which speeds up development while keeping a certain amount of flexibility. Additionally processing intensive tasks can be performed on the server-side, while keeping the interface quick and smart.
-\newline
+\subsection{Profiling accuracy}
+\label{sec:profiling accuracy}
 
+Attribute distribution and detailed information like from Valgrind or VTune accessible via the web-interface, require already many information to be collected. Still the resolution of the interface is limited for two good reasons. First, developer shell be provided with profiles but competing with the variety of visualization tools of highly sophisticated profiles from the correspondent profiler is unreasonable difficult and second, ... tremendous amount of data that would have to be collected and stored. ... Current accuracy ... good ... but ... limitations due to hardware features: frequency scaling, turbo boost, ...
 
-\subsection{Web based analysis}
-\label{sec:web_based_analysis}
+\subsection{Complementary information}
+\label{sec:complementary_information}
 
-\subsection{Detailed analysis}
-\label{sec:detailed_analysis}
+Call stack information ...
 
 \section{Conclusions}
 \label{sec:conclusions}
