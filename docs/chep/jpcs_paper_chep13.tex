@@ -160,8 +160,8 @@ The second, analyzing the impact of structural changes in the computing environm
 \end{minipage}
 \end{figure}
 
-\section{Ongoing work}
-\label{sec:ongoing_work}
+\section{LHCb PR and beyond}
+\label{sec:lhcbpr_and_beyond}
 
 \subsection{Profiling accuracy}
 \label{sec:profiling accuracy}
@@ -171,7 +171,11 @@ Attribute distribution and detailed information like from Valgrind or VTune acce
 \subsection{Complementary information}
 \label{sec:complementary_information}
 
-Call stack information ...
+To fulfill the current tasks some further complementary information are necessary. A function call-stack for algorithms could give a much higher resolution for finding anomalies in profiles than currently available. ...
+\newline
+Once a test case is fully implemented to be analyzed by several profilers in distinct runs, much more general information could be put into place. The most important is currently to make performance observable and to intervene in case issues are observed. However, the collected information could also be used to be correlated to each other, to find the impact of design decisions and to validate existing methods or new concepts. This way open questions could be answered as knowledge base for further development and design decisions. At the moment measurements like CPI, cache-misses, branch-misprediction and others are often mentioned, but can barely be correlated to real performance influences.
+\newline
+Questions like how much exactly an extended call-stack influenc ...  cache-misses ... call-stack depth ... to bring this often  - kaum - influences.
 
 \section{Conclusions}
 \label{sec:conclusions}
