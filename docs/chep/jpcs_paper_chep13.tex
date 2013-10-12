@@ -1,6 +1,6 @@
 \documentclass[a4paper]{jpconf}
 \usepackage{graphicx}
-\usepackage{wrapfig}
+%\usepackage{wrapfig}
 
 \begin{document}
 \title{Systematic profiling to monitor and specify the software refactoring process of the LHCb experiment}
@@ -98,8 +98,7 @@ LHCb PR can ruffly be divided into two main aspects, navigation and visualizatio
 \newline
 For a top-down analysis, the trend has been added to observe changes cross revisions and version. Significant changes in the overall performance become immediately be conspicuous, but requires single attributes to be tracked. For a better observation of several attributed the overview analysis was necessary. Both show entries with their statistical variance. To get precise information about how items are distributed around their average, the basic analysis demonstrates this in a ROOT histogram.
 \newline
-Navigation ... JobList ... selection by categories ...
-
+To navigate easily through data, results are treated as categories of tuples of job descriptions, platforms and hosts. Hence data selection persist out of a generic selection menu that stays the same and a customized part for profile group- and attribute selection and for visualization specific filtering. Access to single finished jobs is guaranteed over a job table, with successful retired jobs.  
 
 \subsection{Job distribution and triggering}
 \label{sec:job_distribution}
@@ -123,12 +122,12 @@ Data collection can be done in three different ways, first one can segregate inf
 \begin{figure}[t]
 \begin{minipage}[t]{17pc}
 \includegraphics[scale=0.4]{figures/moore_trend_analysis.png}
-\caption{\small \textit{nix}}
+\caption{\small \textit{ExampleTrend analysis example to trace back}}
 \label{fig:trend}
 \end{minipage}\hspace{1pc}%
 \begin{minipage}[t]{17pc}
 \includegraphics[scale=0.4]{figures/moore_overview_memory.png}
-\caption{\small \textit{nix}}
+\caption{\small \textit{Overview of multiple attributes of memory compared between two versions.}}
 \label{fig:overview}
 \end{minipage}
 \end{figure}
@@ -166,21 +165,24 @@ The second, analyzing the impact of structural changes in the computing environm
 \subsection{Profiling accuracy}
 \label{sec:profiling accuracy}
 
-Attribute distribution and detailed information like from Valgrind or VTune accessible via the web-interface, require already many information to be collected. Still the resolution of the interface is limited for two good reasons. First, developer shell be provided with profiles but competing with the variety of visualization tools of highly sophisticated profiles from the correspondent profiler is unreasonable difficult and second, ... tremendous amount of data that would have to be collected and stored. ... Current accuracy ... good ... but ... limitations due to hardware features: frequency scaling, turbo boost, ...
+In the current state, the web-interface does not provide a resolution beyond algorithm level. More detailed information are currently only accessible with the collected profile information profilers like Valgrind or VTune. The resolution of the interface is limited for two good reasons. First, developer shell be provided with profiles but competing with the variety of visualization tools of highly sophisticated profilers is unreasonable difficult and second, a tremendous amount of data that would have to be collected and stored. Still it could be reasonable to increase the resolution to function level. This becomes at latest with Moore evident, because algorithms are not executed in a strict order and for access to certain services lazy initialization is used. For instance tracking in the vertex detector is started by the first algorithm which requests these information and later on data can directly be accessed. This makes algorithm vary in their profile, what can currently not be reasonable traced back from the web analysis.
+%\newline
+%... Current accuracy ... good ... but ... limitations due to hardware features: frequency scaling, turbo boost, ...
 
 \subsection{Complementary information}
 \label{sec:complementary_information}
 
-To fulfill the current tasks some further complementary information are necessary. A function call-stack for algorithms could give a much higher resolution for finding anomalies in profiles than currently available. ...
+Due to the issue of the latter paragraph, the unordered execution of algorithms need to be addressed. This can be done by adding further complementary information, like a function call-stack for each algorithm to give a much higher resolution for finding anomalies in profiles than currently available, and it would make profiles of algorithms more comprehensive.
 \newline
-Once a test case is fully implemented to be analyzed by several profilers in distinct runs, much more general information could be put into place. The most important is currently to make performance observable and to intervene in case issues are observed. However, the collected information could also be used to be correlated to each other, to find the impact of design decisions and to validate existing methods or new concepts. This way open questions could be answered as knowledge base for further development and design decisions. At the moment measurements like CPI, cache-misses, branch-misprediction and others are often mentioned, but can barely be correlated to real performance influences.
+Another upcoming task is that if once a test case is fully implemented to be analyzed by several profilers in distinct runs, and if much more general information are available, these information could also be used to be correlated to each other. This way it would be possible to find the impact of design decisions and to validate existing methods or new concepts. Then open questions could be answered as knowledge base for further developments.
 \newline
-Questions like how much exactly an extended call-stack influenc ...  cache-misses ... call-stack depth ... to bring this often  - kaum - influences.
+At the moment measurements like CPI, cache-misses, branch-misprediction and others are often mentioned, but can barely be correlated to real performance influences. Questions like how much exactly the call-stack depth influences runtime by occurring more cache-misses, and how does this influences current R\&D project like Gaudi-Hive by sharing cache among threads could then be emphasized by concrete numbers.
 
 \section{Conclusions}
 \label{sec:conclusions}
 
-Using a customizable platform to collect and summarize profiling results enables the LHCb collaboration to focus on important places in Gaudi algorithms during the refactoring time and beyond. This is organized in a way that takes additional tasks away from developers and simplifies the profiling to introduce a certain level of automation, e.g. for performance validation before a new release. It permits an arbitrary level of flexibility due to including new profilers and to monitor new software performance and quality values. The web front-end simplifies the task of monitoring the general performance of the Gaudi frameworks applications. 
+Using a customizable platform to collect and summarize profiling results enables the LHCb collaboration to focus on important places in Gaudi algorithms during the refactoring time and beyond. The LHCb PR projrct has already demonstrated to be highly valuable. Since implementing instrumentation has in many aspects already performed, since many profilers can be applied for data collection and since Django and Jenkins is reducing the effort necessary for a web application, the effort could be reduced to setup a platform to reduce the effort of labor intensive profiling work and to rely on systematic collected information. 
+%This is organized in a way that takes additional tasks away from developers and simplifies the profiling to introduce a certain level of automation, e.g. for performance validation before a new release. It permits an arbitrary level of flexibility due to including new profilers and to monitor new software performance and quality values. The web front-end simplifies the task of monitoring the general performance of the Gaudi frameworks applications. 
 
 \section*{References}
 \bibliographystyle{iopart-num}
