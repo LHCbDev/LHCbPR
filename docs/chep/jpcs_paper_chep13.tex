@@ -1,6 +1,5 @@
 \documentclass[a4paper]{jpconf}
 \usepackage{graphicx}
-%\usepackage{wrapfig}
 
 \begin{document}
 \title{Systematic profiling to monitor and specify the software refactoring process of the LHCb experiment}
@@ -18,22 +17,19 @@
 \ead{stefan.lohn@cern.ch}
 
 \begin{abstract}
-The LHCb collaboration develops and maintains large software frameworks, critical to the good performance of the experiments, that face challenges due to the increase of throughput requested from the Physics side that will not be matched by the computing resources, and by new computing architectures such as many-core, that cannot be currently fully used due to the limited amount of memory available per core. In the coming years, a considerable refactoring effort will therefore be needed to vectorize and parallelize the code, to minimize hotspots and to reduce the impact of bottlenecks. It is crucial to guide the refactoring with a profiling system that gives hints to parts for possible and necessary source-code re-engineering and which kind of optimization could lead to final success. From detailed profiling few results are selected, summarized and available to be visualized by a web analysis frontend.
-%More detailed information can be accessed via files to download or in case access from AFS, the internal network file system.
+The LHCb collaboration develops and maintains large software frameworks, critical to the good performance of the experiments, that face challenges due to the increase of throughput requested from the Physics side that will not be matched by the computing resources, and by new computing architectures such as many-core, that cannot be currently fully used due to the limited amount of memory available per core. In the coming years, a considerable refactoring effort will therefore be needed to vectorize and parallelize the code, to minimize hotspots and to reduce the impact of bottlenecks. It is crucial to guide the refactoring with a profiling system that gives hints to parts for possible and necessary source-code re-engineering and which kind of optimization could lead to final success.
 \newline
 Software optimization is a sophisticated process where all parts, compiler, operating system, libraries and chosen hardware play a role in. Intended improvements can have different effects on different platforms. To obtain precise information of the general performance, to make profiles comparable, reproducible and to verify the progress of performance in the framework, it is important to produce profiles more systematically in terms of regular profiling based on representative use cases and to perform regression tests. Once a general execution, monitoring and analysis platform is available, software metrics can be derived from the collected profiling results to trace changes in performance back and to create summary reports on a regular basis with an alert system if modifications led to significant performance degradations.
 \end{abstract}
 
-\newpage
-
 \section{Introduction}
 \label{sec:introduction}
 
-The LHCb collaboration develops and maintains large software frameworks, critical to the good performance of the experiment. While the LHCb Software performed satisfactorily during the LHC Run1, it now faces several challenges: the LHCb Upgrade will imply more Data processing with the same amount of computing resources, and the Computing hardware is evolving with the introduction of many-core architectures, that cannot be currently fully used due to the limited amount of memory available per core. For this reason, in the coming years, a considerable refactoring effort will therefore be needed to vectorize and parallelize the code, to minimize hotspots and to reduce the impact of bottlenecks. It is crucial to guide the refactoring with a system that gathers profiling information and summarizes the results in order to make the analysis as easy as possible.
+In large scale software solutions of high energy physics, performance is critical for an efficient result extraction. Profiling tools are widely available and should be regular used to track performance from an early state in development. But often software is more evolving because of considerations of maintainability, usability or due to urgent fixes and necessary feature implementations than due to performance estimation. Often it appears that such information are not clearly and reliably available in decision making. Hence it has less priority, in particular, because that often these information are not available at all. The LHCb performance \& regression (PR) project tries to address this issue for the LHCb experiment at CERN to allow more intervention which relay on performance information.    
 \newline
-During its development phase, the LHCb Software was constantly optimized; the profiling was however the responsibility of each developer, with no ``official'' profiling test suite defined and no record of the results. While this approach was effective in the framework development phase, there are no record of the evolution in software performance, nor of the current baseline. With a refactoring of the code under way, and some of the initial developers having gone, it is therefore now necessary for LHCb to put in place systematic profiling tests, in order to ensure that there is no performance degradation. These tests have to be as automated as possible, and the framework should allow to spot differences in the software performance between the new versions and the baseline.
+During its development phase, the LHCb software was constantly optimized; the profiling was however in responsibility of each developer, with no ``official'' profiling test suite defined and no record of the results. While this approach was effective in the framework development phase, there are no record of the evolution in software performance, nor of the current baseline. With a refactoring of the code under way it is therefore now necessary for LHCb to put in place systematic profiling tests, in order to ensure that there is no performance degradation.
 \newline
-This paper describes the framework developed by LHCb to profile its application and to display the results in a user friendly manner. This paper is organized ...
+This paper describes the LHCb PR framework, to profile the experiments software and to display results in a user friendly manner. This paper describes an overview about LHCb software and the objectives of the LHCb PR project in chapter \ref{sec:lhcb_computing}, the work-flow with some implementation aspects in chapter \ref{sec:workflow_and_implementation} and briefly goes into upcoming challenges in chapter \ref{sec:lhcbpr_and_beyond}.
 
 \section{LHCb computing}
 \label{sec:lhcb_computing}
@@ -41,101 +37,100 @@ This paper describes the framework developed by LHCb to profile its application 
 \subsection{LHCb software}
 \label{sec:lhcb_software}
 
-The LHCb experiment software is based on the Gaudi\cite{gaudi}, a C++ framework using generic and object-oriented features of C++ for computing intensive tasks, and python for configuring and structuring modules (algorithms, tools...). It executes consecutive an abstract series of these algorithms to process data objects from the transient store on request. Gaudi is providing core services and tools for applications to hide complexity and make future development and changes more transparent for users. It is a large-scale framework and is additionally used by ATLAS, Glast, Harp and other experiments.
+The LHCb experiment software is based on Gaudi\cite{gaudi}, a C++ framework using generic and object-oriented features of C++ for computing intensive tasks, and python for configuring and structuring modules (algorithms, tools...). It executes consecutive an abstract series of these algorithms to process data objects from the transient store on request. Gaudi is providing core services and tools for applications to hide complexity and make future development and changes more transparent for users. It is a large-scale framework and is additionally used by ATLAS, Glast, Harp and other experiments.
 \newline
-Applications build on top of Gaudi are Brunel, Moore, DaVinci, Gauss, Boole and others. Brunel is responsible for the offline reconstruction, Moore is the implementation of the High-Level Trigger (HLT) to decide weather event data will be stored or not, DaVinci as physics analysis framework, Gauss to simulate the particle transport and interaction through several detector modules, and Boole performs the digitization.
+Applications build on top of Gaudi are Moore, Brunel, DaVinci, Gauss, Boole and others. Moore is the implementation of the High-Level Trigger (HLT) to decide weather event data will be stored or not, Brunel is responsible for the offline reconstruction of tracks, DaVinci is the physics analysis framework, Gauss to simulate the particle transport and interaction through several detector modules, and Boole performs the digitization.
 
 \subsection{Computing environment}
 \label{sec:computing_environment}
 
-The LHCb computing environment persists in particular out of the resources accessed via the Worldwide LHC Computing Grid (WLCG), Cloud Infrastructure and the HLT farm located close to the experiment. Some 100k CPU's are involved in  data collection of the different detector subsystems, event filtering, offline reconstruction, stripping and simulation. 35 GB/s of recorded data have to be processed by 1500 computing nodes of the Event Filtering Farm (EFF) of the HLT to be reduced to 70 MB/s \cite{lhcb_hlt_opt}.
+The LHCb computing environment persists out of the computing resources accessed in the Worldwide LHC Computing Grid (WLCG), in Cloud Infrastructure and in the HLT farm located at the experiment. Additional, virtualization is used and just recently volunteer computing has been added. Some 100k CPU's are involved in the data processing. 
+%35 GB/s of recorded data have to be processed by 1500 computing nodes of the Event Filtering Farm (EFF) of the HLT to be reduced to 70 MB/s \cite{lhcb_hlt_opt}.
 
 \subsection{Integrated Profiling}
 \label{sec:integrated_profiling}
 
-In HEP computing it is a common method to measure performance via throughput (events processed per time unit). Thus the performance analysis is focused on the time linear and not the time constant part of processing. To achieve this instrumentation is an important advantage for profiling source-code in large scale frameworks like the applications from the LHCb experiment. Multiple profiling measures have been implemented in the Gaudi framework using the Auditor-Service, which provides an interface for executing code between the event processing.
+In HEP computing it is a common method to measure performance via throughput (events processed per time unit). Thus the performance analysis is focused on the time linear and not the time constant part of processing. Instrumentation is an important advantage for profiling source-code in large scale frameworks like the applications from the LHCb experiment. Multiple profiling measures have been implemented in the Gaudi framework using the AuditorService, which provides an interface for executing code between events or algorithms processed.
 \newline
-Timing information from the operating system's process information are collected using the TimingAuditor and are printing a summary of time spend in the applications algorithms. Likewise information can be collected using the Memory- or MemStatAuditor for changes in memory as soon as they appear. Recent work \cite{intel_auditor} conducted by Mazurov and Couturier has shown to improve precision in profiling the event-loop by implementing instrumentation for Intel's  VTune\texttrademark Amplifier which can be added using the IntelAuditor. Another strategy is to collect information from the performance monitoring unit (PMU) of modern CPU architectures to collect information about hardware related issues, such as cache-misses, branch-misprediction and stall cycles as done by Kruse and Kruzelecki \cite{modular_monitoring} for the Gaudi framework. Many of such kind of work has been performed to provide tools for developers to profile their code. Still, systematic usage or comparative profiling has been sparely observed.
+Timing information from the operating system's process information are collected using the TimingAuditor and are printing a summary of time spend in the applications algorithms. Likewise information can be collected using the Memory- or MemStatAuditor for changes in memory as soon as they appear. Recent work \cite{intel_auditor} conducted by Mazurov and Couturier shows how to improve precision in profiling the event-loop using instrumentation routines of Intel's VTune\texttrademark Amplifier API, which can be added using the IntelAuditor. Another strategy is to collect information from the performance monitoring unit (PMU) of modern CPU architectures to collect information about hardware usage and issues such as cache-misses, branch-misprediction and more as done by Kruse and Kruzelecki \cite{modular_monitoring} for the Gaudi framework. Many of such kind of work has been performed to provide tools for developers to profile their code. Still, systematic usage or comparative profiling has been sparsely observed.
 
 \subsection{Systematic Profiling}
 \label{sec:integrated_profiling}
 
-Three important aspects must be considered as crucial for systematic profiling. Profiles must become \textit{comparable}, \textit{reproducible} and \textit{representative} to allow regression analysis. For this purpose profiling must be limited to small number of default cases and a fixed set of reference data, to ease the observation of relevant hotspots and to avoid a profile to vary because of differing types of physics events or other parameters. This way differences in the execution behavior between two software revisions can be examined and traced back on changes in related source-code. On the other side, changing events could later on be used to evaluate the needs of computing resource if other types of event data, for the upcoming data-taking periods or other projects, are expected.
+Three important aspects must be considered as crucial for systematic profiling. Profiles must become \textit{comparable}, \textit{reproducible} and \textit{representative} to allow regression analysis and to trace back changes to source-code locations. For this purpose profiling must be limited to a small number of default cases and a fixed set of reference data, to avoid a profile to vary because of differing types of physics events or other parameters. This way differences in the execution behavior between two software revisions can be examined and traced back on changes in related source-code. On the other side, changing events could later on be used to evaluate the needs of computing resource if other types of event data, for the upcoming data-taking periods or other projects, are expected.
 %Systematic profiling should not only trace back hotspots and drawbacks of changes in code, but shell help to obtain and understanding which techniques, tool for optimization, or changing platforms are having a higher impact on saving computing resources.
 \newline
 Furthermore, profiles must be reproducible to be able to compare the test configuration of executed test jobs. This affects the job configuration, to log the software/platform information, as well as the run configuration provided by option files for Gaudi applications. Finally, gathered information should be precise and reliable making a regular execution of a series of test jobs necessary.
 \newline
 Hence the LHCb PR project has the following requirements.
 \begin{enumerate}
- \item The expected huge amount of information must be centrally collected and easily become accessible. This can be achieved by using a web application as interface to support brief- and detailed analysis of collected data. 
+ \item The expected huge amount of information must be centrally collected and easily become accessible. This can be achieved by using a web application as interface to support brief analysis of collected data.
  \item Profiling is a changing subject with new interesting technologies. A solution must be flexible to include new profiling tools. Information must be collected by parsing generated reports and hooking them onto a central database.
- \item To reduce work generic ways of navigation and visualization have to be investigated.
+ \item To reduce work generic ways of navigation and visualization have to be investigated by trying to use supporting tools as much as available.
  \item Regular execution would be labor intensive without an automated execution chain. Automated triggering, setup and data collection of the profiling procedure simplifies systematic profiling attempts.
 \end{enumerate}
-To fulfill the objectives and requirements, the LHCb PR project contains three important technical aspects. First, the PRConfig package was created to store the run configuration in a version control system and to collect further job information and final profiling results into a central SQL database. Second, Jenkins \cite{jenkins} a continous integration system system to configure, trigger and submit test jobs and finally Django \cite{django} as support for a web application to quickly access, visualize and propagate results. 
-
-\newpage
+To fulfill the objectives and requirements, the LHCb PR project contains three important technical aspects. First, the PRConfig package was created to store the run configuration in a version control system and to collect further job information and final profiling results into a central SQL database. Second, Jenkins \cite{jenkins} a continuous integration system is used to configure, trigger and submit test jobs and finally Django \cite{django} to support the web application to quickly visualize and propagate results. 
 
 \begin{figure}{t}
 \includegraphics[scale=0.3]{figures/profiling_process.eps}
-\caption{\small \textit{The profiling proceedure includes three stages. First, the test definition, triggering and submission. Second, the run execution, repetition and data collection by using data handlers to parse profiling reports and send core information to the database. And third, quick access to gathered profiling results by generating summary reports, using a web application for quick access to compare the general performance or to access detailed profile collected during the run.}}
+\caption{\small \textit{The profiling procedure includes three stages. First, the test definition, triggering and submission. Second, the run execution, repetition and data collection by using data handlers to parse profiling reports and send core information to the database. And third, quick access to gathered profiling results by generating summary reports, using a web application for quick access to compare the general performance or to access detailed profile collected during the run.}}
 \label{fig:profiling_process}
 \end{figure}
 
-\section{Workflow and Implementation}
+\section{Work-flow and Implementation}
 \label{sec:workflow_and_implementation}
 
-The LHCb PR project is used for systematic profiling, which workflow is summarized in \mbox{figure \ref{fig:profiling_process}}. It uses Jenkins to configure, trigger and schedule test jobs for profiling. A set of scripts as wrappers to make profilers for jenkins available on a generic way have been set up. Data handlers to parse and collect output must be defined for each distinct type of profiling, dependending on the needs of the gathered information, they can be filtered or combined with other available information. A SQL database is used to store the job configuration of each run, the results and information needed to run Django as implementation of the LHCb PR web based analysis framework.
+The LHCb PR project provides support to setup systematic profiling. The work-flow of test execution is summarized in \mbox{figure \ref{fig:profiling_process}}. It uses Jenkins to configure, trigger and schedule test jobs for profiling. A set of wrappers to hide the profiler specific setup for Jenkins. In the end of a test run, data handlers to parse and collect output are called, which are defined for each distinct type of profile. Depending on the desired information profiles can be filtered or combined with other available information. Then data are stored in a SQL database together with certain job information. In the end the LHCb PR web based analysis framework facilitates profile comparisons and helps detecting anomalies in performance.
 
 \subsection{LHCb PR framework}
 \label{sec:lhcbpr_framework}
 
-The core of the LHCb PR framework is its customized analysis platform based on Django. The backbone of the framework is based on python which speeds up development while keeping a certain amount of flexibility due to a variety of auxiliary modules. Additionally processing intensive tasks can be performed on the server-side, while keeping the interface quick and smart.
+The core of the LHCb PR framework is a customized analysis interface based on Django. The backbone of the framework is based on python which speeds up development while keeping a certain amount of flexibility due to a variety of auxiliary modules. Additionally, processing intensive tasks can be performed on the server-side, while keeping the interface quick and smart.
 \newline
-LHCb PR can ruffly be divided into two main aspects, navigation and visualization. Plotting graphs is current done by using the visualization capabilities of the ROOT framework and its python interface pyRoot or using Google Charts in javascript. Different kinds of analysis are referring to different ways of visualization in which data analysis is accessing data on a generic way. For visualizing the distribution or a trend of attributes, or providing an overview about several does not require attributes to be of a certain kind. Thus attributes can be runtime, memory consumption, memory blocks, hardware events or a more complex software performance metric.
+LHCb PR can ruffly be divided into two main aspects, navigation and visualization. Plotting graphs is current done by using visualization capabilities of the ROOT framework and its python interface pyRoot or using Google Charts. Different kinds of analysis are referring to different ways of visualization in which data attributes as generic items for performance information are shown. For instance the Basic-Analysis shows the distribution of attributes, the Trend shows the progress of attributes cross versions or revisions and the Overview-Analysis about several attributes between a few versions or platforms. Attributes can be runtime, resident memory per event, possibly lost memory blocks or could even be more complex software performance or quality metrics.
 \newline
-For a top-down analysis, the trend has been added to observe changes cross revisions and version. Significant changes in the overall performance become immediately be conspicuous, but requires single attributes to be tracked. For a better observation of several attributed the overview analysis was necessary. Both show entries with their statistical variance. To get precise information about how items are distributed around their average, the basic analysis demonstrates this in a ROOT histogram.
+For a top-down analysis, the trend has been added to observe changes cross revisions and version and demonstrates hence the progress made. Significant changes become immediately be conspicuous, but requires single attributes to be tracked. For a better observation of several attributed the overview was necessary. Both show entries with their statistical variance. To get precise information about how items are distributed around their average, but the basic analysis is indispensable to get the exact distribution shown in a ROOT histogram.
 \newline
-To navigate easily through data, results are treated in categories of tuples of job descriptions, platforms and hosts. Hence data selection persist out of a generic selection menu that stays the same and a customized part for profile group- and attribute selection and for visualization specific filtering. Access to single finished jobs is guaranteed over a job table, with successful retired jobs.  
+To navigate easily through data, results are treated in categories of tuples of job descriptions, platforms and hosts. Hence data selection persist out of a generic selection menu that stays the same in all analysis interfaces and a customized part to specify profile groups (profiling information), attributes or filtering options. Access to finished jobs is given through a job table accessible through another table of differing configuration.  
 
 \subsection{Job distribution and triggering}
 \label{sec:job_distribution}
 
-To facilitate regular and intensive systematic profiling, Jenkins is used to manage the job distribution to the test platform. This makes the in- or exclusion of other platforms simple and avoids interference between multiple runs on the same machine. The configuration (creation) of Jobs can further be used for a test specific pre-installation and compilation for development specific purposes or to run pre-configured jobs before new releases are tagged.
+To facilitate regular profiling in a series of equal tests to allow statistic information, Jenkins is used to manage the job distribution to the test hosts. It makes the inclusion of further hosts simple and prevents interference between multiple runs on the same machine by avoiding over-commitment through a job queue. Test configurations can be created by creating parametrized  jobs on the Jenkins interface. A test specific preparation, e.g. compiling packages with specific compiler flags, can be added depending on the use case.
 \newline
-An other advantage is that the job configuration in Jenkins can be used for regular execution to call a validation test of recent builds from the build system to perform a subsequent profiling procedure.  
+An other advantage is that Jenkins can be used for regular execution. Along with validation tests within the release cycle, or as result of a successful build in the nightly build system, a profiling series can be triggered.  
 
 \subsection{Execution and Profiling}
 \label{sec:execution_and_profiling}
 
-Commercial and open-source profilers becoming more and more available. The open source community developed crucial tools like the valgrind tool suit. Other tools like google's tcmalloc can be used to elaborate processing time and memory consumption. Additional, recent hardware features give access to hardware counters of the PMU (performance monitoring unit), which can be read from proprietary software like intels VTune or open source projects like oprofile.
-\newline
-This paper is not going to evaluate the benefits and drawbacks of different tools, but wants to enable a profiling platform like LHCb PR to individually setup these tools on their specific necessary way. For these purposes scripts are collected into a separate repository which can easily execute the test cases and stay flexible for individual configuration. To improve the configuration of profiling runs and to focus the profiling onto main time consuming parts, integration of the profilers instrumentation methods are highly recommended.
+%Commercial and open-source profilers becoming more and more usable. The open source community developed crucial tools like the valgrind tool suit. Other tools like google's tcmalloc can be used to elaborate processing time and memory consumption. Additional, recent hardware features give access to hardware counters of the PMU (performance monitoring unit), which can be read from proprietary software like intels VTune or open source projects like oprofile.
+%\newline
+This paper is not going to evaluate the benefits and drawbacks of different tools, but wants to enable a profiling platform like LHCb PR to individually setup these tools on their specific necessary way. For these purposes scripts are collected into a separate repository which can easily execute the test cases and stay flexible for an individual configuration. To improve the configuration of profiling runs and to focus the profiling onto main time consuming parts, integration of the profilers instrumentation methods are highly recommended.
 
 \subsection{Data collection}
 \label{sec:data_collection}
 
-Data collection can be done in three different ways, first one can segregate information from the results of profilers, store files containing performance information and store the resting profiler specific collected information. Segregating information can also be quite diverse depending on which profiler were delivering the information. To maintain flexibility here, a collection of data handler were written for each profiler in use. They have to parse the output, select and combine information and finally collect it for insertion into the LHCb PR underlying database.  
+Data collection can be handled in three different ways, first one can segregate information from results to be stored in the database, second, files which contain performance information can be made available for downloading on the web-interface and third, bigger profiles can become available on the remote storage. Segregating information from different profilers can be addressed by several parsers for each different profiling report. To maintain flexibility, a collection of data handler were written for each different profiling task.
 
 \begin{figure}[t]
 \begin{minipage}[t]{17pc}
-\includegraphics[scale=0.4]{figures/moore_trend_analysis.png}
-\caption{\small \textit{ExampleTrend analysis example to trace back}}
-\label{fig:trend}
-\end{minipage}\hspace{1pc}%
+\includegraphics[scale=0.55]{figures/brunel_basic_libm.eps}
+\caption{\small \textit{Runtime distribution of a Brunel version using different glibc's ([ms] per event) of the event\_loop attribute for different math libraries. (blue) Intel, (red) elder libm, (green) updated libm of a new glibc version.}}
+\label{fig:brunel_basic_libm}
+\end{minipage}\hspace{1pc}
 \begin{minipage}[t]{17pc}
-\includegraphics[scale=0.4]{figures/moore_overview_memory.png}
-\caption{\small \textit{Overview of multiple attributes of memory compared between two versions.}}
-\label{fig:overview}
+\includegraphics[scale=0.48]{figures/brunel_trend_analysis.eps}
+\caption{\small \textit{Trend analysis of Brunel to monitor changes cross versions.}}
+\label{fig:brunel_trend}
 \end{minipage}
 \end{figure}
 
 \subsection{Test cases}
 \label{sec:test_cases}
 
-Use cases are important to trace back performance changes to the evolving algorithms during the source code refactoring period. Test cases shell base on default use cases, which in deed, must not necessarily exist for frameworks. Still, all test cases should be best approximations to production usage. But sophisticated environments can influence runs on an non-deterministic way, which hampers the profile analysis. The highest priority of the current systematic profiling is to find software related issues, that can be addressed or have to be taken into account for upcoming decisions in resource allocation.
+Use cases are important to trace performance changes back to the evolving algorithms. Test cases shell base on default use cases, which in deed, must not necessarily exist. Still, all test cases should be best approximations to production usage. But sophisticated environments can influence runs on an non-deterministic way, which hampers the profile analysis. The highest priority of the current systematic profiling is to find software related issues, that can be addressed or have to be taken into account for upcoming decisions in resource allocation.
 \newline
-Describing offline reconstruction and the figures shown. ...
+LHCb PR has shown to be quickly adaptable running default cases of Brunel. It has demonstrated its significance already by observing simple timing information that are obtained from the TimingAuditor. As figure \ref{fig:brunel_trend} shows, performance changes become immediately clear observing the trend information cross version profiles. If changes like between v44r3 and v44r3p1 are observed, the overview analysis gives you a quick overview, how performance items have changed. If further information are needed, more tests derived from the default case, that needs to be examined, can be generated and compared to clarify origins of the performance, as it has for instance been conducted for several math libraries demonstrated in figure \ref{fig:brunel_basic_libm}.  
 \newline
 Unfortunately the HLT framework Moore can not simply be reduced to a view common default cases, what makes it more difficult to trace back performance issues that way as it would affect production. The HLT brings further complications for the PR project in two main aspects:
 \begin{enumerate}
@@ -144,19 +139,6 @@ Unfortunately the HLT framework Moore can not simply be reduced to a view common
 \end{enumerate}
 The second, analyzing the impact of structural changes in the computing environment, could basically be addressed, but has currently no priority. The first, can partially be addressed by not only splitting use cases, but also the software into parts for further investigations. It also simplifies tracing performance issues back to source-code locations. 
 
-\begin{figure}[t]
-\begin{minipage}[t]{17pc}
-\includegraphics[scale=0.4]{figures/brunel_trend_analysis.png}
-\caption{\small \textit{nix}}
-\label{fig:trend}
-\end{minipage}\hspace{1pc}%
-\begin{minipage}[t]{17pc}
-\includegraphics[scale=0.4]{figures/brunel_overview_analysis.png}
-\caption{\small \textit{nix}}
-\label{fig:overview}
-\end{minipage}
-\end{figure}
-
 \section{LHCb PR and beyond}
 \label{sec:lhcbpr_and_beyond}
 
@@ -164,8 +146,6 @@ The second, analyzing the impact of structural changes in the computing environm
 \label{sec:profiling accuracy}
 
 In the current state, the web-interface does not provide a resolution beyond algorithm level. More detailed information are currently only accessible with the collected profile information profilers like Valgrind or VTune. The resolution of the interface is limited for two good reasons. First, developer shell be provided with profiles but competing with the variety of visualization tools of highly sophisticated profilers is unreasonable difficult and second, a tremendous amount of data that would have to be collected and stored. Still it could be reasonable to increase the resolution to function level. This becomes at latest with Moore evident, because algorithms are not executed in a strict order and for access to certain services lazy initialization is used. For instance tracking in the vertex detector is started by the first algorithm which requests these information and later on data can directly be accessed. This makes algorithm vary in their profile, what can currently not be reasonable traced back from the web analysis.
-%\newline
-%... Current accuracy ... good ... but ... limitations due to hardware features: frequency scaling, turbo boost, ...
 
 \subsection{Complementary information}
 \label{sec:complementary_information}
@@ -176,10 +156,24 @@ Another upcoming task is that if once a test case is fully implemented to be ana
 \newline
 At the moment measurements like CPI, cache-misses, branch-misprediction and others are often mentioned, but can barely be correlated to real performance influences. Questions like how much exactly the call-stack depth influences runtime by occurring more cache-misses, and how does this influences current R\&D project like Gaudi-Hive by sharing cache among threads could then be emphasized by concrete numbers.
 
+\begin{figure}[t]
+\begin{minipage}[b]{0.33\textwidth}
+\includegraphics[scale=0.3]{figures/moore_basic_vect.eps}
+\caption{\small \textit{Comparing auto-vectorized library in Moore again unvectorized version.}}
+\label{fig:moore_basic}
+\end{minipage}\hspace{0.5cm}%
+\begin{minipage}[b]{0.60\textwidth}
+\centering
+\includegraphics[scale=0.50]{figures/moore_overview_memory.eps}
+\caption{\small \textit{For some application memory consumption is crucial. An overview of several memory information to observe differences between version.}}
+\label{fig:moore_overview}
+\end{minipage}
+\end{figure}
+
 \section{Conclusions}
 \label{sec:conclusions}
 
-Using a customizable platform to collect and summarize profiling results enables the LHCb collaboration to focus on important places in Gaudi algorithms during the refactoring time and beyond. The LHCb PR projrct has already demonstrated to be highly valuable. Since implementing instrumentation has in many aspects already performed, since many profilers can be applied for data collection and since Django and Jenkins is reducing the effort necessary for a web application, the effort could be reduced to setup a platform to reduce the effort of labor intensive profiling work and to rely on systematic collected information. 
+Using a flexible, extensible and customizable platform to collect and summarize profiling results enables the LHCb collaboration to systematically compare profiles. The LHCb PR project has already demonstrated to be highly valuable. Performance due to changing software and advancing technology could be observed, examined and appropriately be addressed. Since implementing instrumentation is in many aspects already performed, since many profilers can be applied for data collection and since Django and Jenkins is reducing the necessary work to set up a performance monitoring system, the effort is absolutely affordable for large scale projects as those from the LHCb collaboration. Still, improvements have to be discussed and put into place, but due to the easy adaptivity to the web interface and testing framework, more and more fields for application, like including software metrics into testing and analysis become tangible. 
 %This is organized in a way that takes additional tasks away from developers and simplifies the profiling to introduce a certain level of automation, e.g. for performance validation before a new release. It permits an arbitrary level of flexibility due to including new profilers and to monitor new software performance and quality values. The web front-end simplifies the task of monitoring the general performance of the Gaudi frameworks applications. 
 
 \section*{References}
