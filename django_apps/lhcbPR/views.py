@@ -39,7 +39,7 @@ def index(request):
     with the page it provides information for the user(if he is authenticated
     or not)"""
 
-    query = "SELECT * FROM lhcbpr_public_links" 
+    query = "SELECT * FROM lhcbpr_public_links ORDER BY ROWNUM DESC" 
     cursor = connection.cursor()
     cursor.execute(query)
     links = cursor.fetchall()

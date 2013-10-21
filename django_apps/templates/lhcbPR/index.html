@@ -5,19 +5,58 @@
 {% block head %} {% endblock head %}
 
 {% block script %} 
+/*
+ * Initialization of document. Prepare list of links (bookmarks).
+*/
 $(document).ready(function () {
 	$("#homeMenu").attr('checked', 'checked').button("refresh");
-   var links_array = {{ links|safe }};
+
+   /* Get links from Django */
+   var link_array = {{ links|safe }};
+
+   /*
+    * On page (in div d4), a list of 10 links shell be shown.
+    * First add ul to d4, then walk through each link in array.
+    *
+    * link_array is organized in:
+    * elem[1] - App.name; elem[3] - Description; elem[2] - Link;
+   */
    $('#d4').append('<ul id="ulli"></ul>');
-   $.each(links_array, function(key, elem) {
-      $("<li></li>").append($('<a></a>', {
-         text: elem[3],
+   $.each(link_array, function(key, elem) {
+      $("<li></li>").append($("<a></a>", {
+         text: elem[1] + " - " + elem[3],
          href: elem[2]
       })).appendTo('#ulli');
    });
+
+   /* Insert whole link list to dialog. */
+   $('#link-dialog').append('<ul id="aliulli"></ul>');
+   $.each(link_array, function(key, elem) {
+      $("<li></li>").append($('<a></a>', {
+         text: elem[1] + " - " + elem[3],
+         href: elem[2]
+      })).appendTo('#aliulli');
+   });
+
+   /* Limit shown items to 10. */
    var displayAmt = 10;
    $('#d4 li').slice(displayAmt).hide();
-   $('#d4').append('<a id="ali" href="" class="right">all</a>');
+   
+   /* Add link to open dialog to show all bookmarks. */
+   $('#d4').append('<a id="ali" href="#" class="right">all</a>');
+
+   /* Add open dialog event. */
+   $("#ali").click(function(){
+      $("#link-dialog").dialog({
+         width:  500,
+         height: 600,
+         buttons: {
+            OK: function(){
+               $(this).dialog("destroy");
+            }
+         }
+      });
+   });
 });
 
 {% endblock script %}
@@ -32,8 +71,10 @@ margin-bottom: 20px;
 {% block helptext %} This help block is used to describe what you can find and what you can do on the page it appears.{% endblock helptext %}
 
 {% block pagebody %}
-
-<div id="link-dialog" title="Links collected"></div>
+<!--
+ * This div is used as a JQuery dialog.
+-->
+<div id="link-dialog" title="Links collected" style="display: none;"></div>
 
 <h2 id="demoHeaders" class="demoHeaders">LHCb PR</h2>
 <div>
