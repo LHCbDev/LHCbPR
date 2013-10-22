@@ -2,9 +2,97 @@
 
 {% block title %} Home {% endblock title %}
 
-{% block head %} {% endblock head %}
+{% block head %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript"> 
+google.load('visualization', '1.2', {packages: ['controls']});
+/*
+ * Draw table in link list dialog.
+*/
+function drawVisualization() {
+   /* Get links from Django */
+   var link_array = {{ links|safe }};
 
-{% block script %} 
+   /* Prepare data table. */
+   data = new google.visualization.DataTable();
+   data.addColumn('number', 'Id');
+   data.addColumn('string', 'Application');
+   data.addColumn('string', 'Link');
+   data.addColumn('string', 'Description');
+   data.addColumn('string', 'Date');
+   data.addRows(link_array);
+   data.setProperty(0, 2, 'style', 'width:300px');
+   data_view = new google.visualization.DataView(data);
+   data_view.setColumns([1, 3, 4]);
+
+   /* Define table style as in JobsList.*/
+   var cnfStyle = {
+      oddTableRow : 'google-table-row-odd',
+      headerCell  : 'google-table-head'
+   }
+
+   /* Add category filter for applications. */
+   var appPicker = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'link-dialog-app-picker',
+      'options': {
+         'filterColumnLabel': 'Application',
+         'ui': {
+            'allowTyping'  : false,
+            'allowMultiple': false
+         }
+      }
+   });
+
+   /* Add category filter for insert date. */
+   var datePicker = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'link-dialog-date-picker',
+      'options': {
+         'filterColumnLabel': 'Date',
+         'ui': {
+            'allowTyping'  : false,
+            'allowMultiple': false
+         }
+      }
+   });
+
+   /* Add tabel for link data. */
+   var table = new google.visualization.ChartWrapper({
+      'chartType'  : 'Table',
+      'containerId': 'link-dialog-table',
+      'options'    : {
+         'allowHtml' : true,
+         'page'      : 'enable',
+         'pageSize'  : 10,
+         'pagingSymbols': {prev: 'prev', next: 'next'}, 
+         'pargingButtonsConfiguration': 'auto'
+      },
+      'alternatingRowStyle': true,
+      'cssClassNames'      : cnfStyle
+   });
+
+   /* Create dashboard and combine filters. */
+   new google.visualization.Dashboard(document.getElementById('link-dialog')).
+      bind([appPicker, datePicker], [table]).
+      draw(data_view);
+
+   /* Handler in wrapper can first be added, when ready. */
+   google.visualization.events.addListener(table, 'ready', function(){
+      google.visualization.events.addListener(table.getChart(), 'select', function() {
+         var selection = table.getChart().getSelection();
+         if ( selection[0].row > -1 ) {
+            location.href = link_array[selection[0].row][2];
+         }
+      });
+   });
+}
+
+google.setOnLoadCallback(drawVisualization);
+</script>
+{% endblock head %}
+
+{% block script %}
 /*
  * Initialization of document. Prepare list of links (bookmarks).
 */
@@ -19,23 +107,15 @@ $(document).ready(function () {
     * First add ul to d4, then walk through each link in array.
     *
     * link_array is organized in:
-    * elem[1] - App.name; elem[3] - Description; elem[2] - Link;
+    * elem[1] - App.name;  elem[3] - Description;
+    * elem[2] - Link;      elem[4] - Date added;
    */
    $('#d4').append('<ul id="ulli"></ul>');
    $.each(link_array, function(key, elem) {
       $("<li></li>").append($("<a></a>", {
-         text: elem[1] + " - " + elem[3],
+         text: elem[1] + " - " + elem[3] + " - " + elem[4],
          href: elem[2]
       })).appendTo('#ulli');
-   });
-
-   /* Insert whole link list to dialog. */
-   $('#link-dialog').append('<ul id="aliulli"></ul>');
-   $.each(link_array, function(key, elem) {
-      $("<li></li>").append($('<a></a>', {
-         text: elem[1] + " - " + elem[3],
-         href: elem[2]
-      })).appendTo('#aliulli');
    });
 
    /* Limit shown items to 10. */
@@ -48,7 +128,7 @@ $(document).ready(function () {
    /* Add open dialog event. */
    $("#ali").click(function(){
       $("#link-dialog").dialog({
-         width:  500,
+         width:  550,
          height: 600,
          buttons: {
             OK: function(){
@@ -58,7 +138,6 @@ $(document).ready(function () {
       });
    });
 });
-
 {% endblock script %}
 
 
@@ -66,6 +145,17 @@ $(document).ready(function () {
 .right {float:right;}
 
 margin-bottom: 20px;
+
+.google-table-row-odd {
+    background-color: #eef3f6;
+}
+.google-table-row {
+    background-color: #6ca6cd;
+}
+.google-table-head {
+    background-color: #6ca6cd;
+    font-size: 9px;
+}
 {% endblock stylecss %}
 
 {% block helptext %} This help block is used to describe what you can find and what you can do on the page it appears.{% endblock helptext %}
@@ -73,8 +163,18 @@ margin-bottom: 20px;
 {% block pagebody %}
 <!--
  * This div is used as a JQuery dialog.
+ * Google chart is used to add a table.
+ * App and Date picker r used as controler.
 -->
-<div id="link-dialog" title="Links collected" style="display: none;"></div>
+<div id="link-dialog" title="Links collected" style="display: none; width: 525px">
+<table>
+<tr>
+<td><div id="link-dialog-app-picker"></div></td>
+<td><div id="link-dialog-date-picker"></div><td>
+<tr>
+<td colspan=2><div id="link-dialog-table" style="width: 525px;"></div></td>
+</table>
+</div>
 
 <h2 id="demoHeaders" class="demoHeaders">LHCb PR</h2>
 <div>
