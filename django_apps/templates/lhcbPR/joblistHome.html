@@ -5,11 +5,15 @@
 {% block head %}
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-google.load('visualization', '1.2', {packages: ['table']});
-
+google.load('visualization', '1.2', {packages: ['controls']});
+/*
+ * Var for configuration data, DataTable & DataView.
+*/ 
 var cnf_data;
 var cnf_view;
-
+/*
+ * Draw table of jobs.
+*/
 function drawVisualization() {
    // Create and populate the data table.
 	var cnfs = {{ configs|safe }};
@@ -18,14 +22,14 @@ function drawVisualization() {
    }
    cnf_data = new google.visualization.DataTable();
    cnf_data.addColumn('number', 'Id');
-   cnf_data.addColumn('string', 'Project');
+   cnf_data.addColumn('string', 'App.');
    cnf_data.addColumn('string', 'Version');
    cnf_data.addColumn('number', 'PlatformID');
    cnf_data.addColumn('string', 'Platform');
-   cnf_data.addColumn('string', 'Options Name');
-   cnf_data.addColumn('string', 'Options');
+   cnf_data.addColumn('string', 'Option Name');
+   cnf_data.addColumn('string', 'Option');
    cnf_data.addColumn('string', 'Setup Name');
-   cnf_data.addColumn('string', 'Setup Options');
+   cnf_data.addColumn('string', 'Setup Option');
    cnf_data.addColumn('datetime', 'Latest Run');
    cnf_data.addColumn('number', 'State');
    cnf_data.addColumn('number', 'Count');
@@ -45,37 +49,132 @@ function drawVisualization() {
    cnf_view = new google.visualization.DataView(cnf_data);
    cnf_view.setColumns([0, 1, 2, 4, 5, 7, 9, 11, 10]);
 
-   // Create and draw the visualization.
-   cnf_visualization = new google.visualization.Table(document.getElementById('left'));
-
    var cnfStyle = {
       oddTableRow : 'google-table-row-odd',
       headerCell  : 'google-table-head'
    }
 
-   cnf_visualization.draw(cnf_view, {
-      allowHtml: true,
-      width: 750,
-      height: 670,
-      page: 'enable',
-      pageSize : 15,
-      pagingSymbols: {prev: '<', next: '>'},
-      pagingButtonsConfiguration: 'auto',
-      alternatingRowStyle: true,
-      cssClassNames: cnfStyle
+   /* Add category filter for versions. */
+   var vers_picker = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'left-version-picker',
+      'options': {
+         'filterColumnLabel': 'Version',
+         'ui': {
+            'allowTyping'  : false,
+            'allowMultiple': false,
+            'labelStacking': 'vertical'
+         }
+      }
    });
 
-   google.visualization.events.addListener(cnf_visualization, 'select', handleConfigs);
-}
+   /* Add category filter for platforms. */
+   var plat_picker = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'left-platform-picker',
+      'options': {
+         'filterColumnLabel': 'Platform',
+         'ui': {
+            'allowTyping'  : false,
+            'allowMultiple': false,
+            'labelStacking': 'vertical'
+         }
+      }
+   });
 
-// Handler to set configuration info
-function handleConfigs()
-{
-   var selection      = cnf_visualization.getSelection();
-   var description_id = cnf_data.getValue(selection[0].row, 0);
-   var app_name       = cnf_data.getValue(selection[0].row, 1);
-   var platform_id    = cnf_data.getValue(selection[0].row, 3);
-   location.href = "{{ ROOT_URL }}joblistInfo/" + app_name + "/" + description_id + "/" + platform_id + "/";
+   /* Add category filter for options. */
+   var opt_picker = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'left-option-picker',
+      'options': {
+         'filterColumnLabel': 'Option Name',
+         'ui': {
+            'allowTyping'  : false,
+            'allowMultiple': false,
+            'labelStacking': 'vertical'
+         }
+      }
+   });
+
+   /* Add category filter for options. */
+   var setup_picker = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'left-setup-picker',
+      'options': {
+         'filterColumnLabel': 'Setup Name',
+         'ui': {
+            'allowTyping'  : false,
+            'allowMultiple': false,
+            'labelStacking': 'vertical'
+         }
+      }
+   });
+
+   /* Add tabel for link data. */
+   var cnf_table = new google.visualization.ChartWrapper({
+      'chartType'  : 'Table',
+      'containerId': 'left-table',
+      'options'    : {
+         'width'     : 750,
+         'height'    : 600,
+         'chartArea': {top: 0, right: 0, bottom: 0},
+         'allowHtml' : true,
+         'page'      : 'enable',
+         'pageSize'  : 14,
+         'pagingSymbols': {prev: '<', next: '>'}, 
+         'pargingButtonsConfiguration': 'auto',
+         'alternatingRowStyle': true,
+         'cssClassNames'      : cnfStyle
+      }
+   });
+
+   /* Create dashboard and combine filters. */
+   new google.visualization.Dashboard(document.getElementById('left')).
+      bind(vers_picker, plat_picker).
+      bind(plat_picker, opt_picker).
+      bind(opt_picker, setup_picker).
+      bind(setup_picker, cnf_table).
+      draw(cnf_view);
+
+   /* Handler in wrapper can first be added, when ready. */
+   google.visualization.events.addListener(cnf_table, 'ready', function(){
+      google.visualization.events.addListener(cnf_table.getChart(), 'select', function() {
+         var selection = cnf_table.getChart().getSelection();
+         var state_vers = vers_picker.getState();
+         var state_plat = plat_picker.getState();
+         var state_opt  = opt_picker.getState();
+         var state_setup  = setup_picker.getState();
+
+         var index;
+
+         var filter = new Array();
+
+         if ( state_vers.selectedValues[0] != undefined ) {
+            filter.push({column: 2, value: state_vers.selectedValues[0]});
+         }
+         if ( state_plat.selectedValues[0] != undefined ) {
+            filter.push({column: 3, value: state_plat.selectedValues[0]});
+         }
+         if ( state_opt.selectedValues[0] != undefined ) {
+            filter.push({column: 4, value: state_opt.selectedValues[0]});
+         }
+         if ( state_setup.selectedValues[0] != undefined ) {
+            filter.push({column: 5, value: state_setup.selectedValues[0]});
+         }
+
+         if ( filter.length > 0 ) {
+            var rows = cnf_view.getFilteredRows(filter);
+            index = rows[selection[0].row];
+         } else {
+            index = selection[0].row;
+         }
+
+         var description_id = cnf_data.getValue(index, 0);
+         var app_name       = cnf_data.getValue(index, 1);
+         var platform_id    = cnf_data.getValue(index, 3);
+         location.href = "{{ ROOT_URL }}joblistInfo/" + app_name + "/" + description_id + "/" + platform_id + "/";
+      });
+   });
 }
 
 google.setOnLoadCallback(drawVisualization);
@@ -129,6 +228,9 @@ $(document).ready(function () {
     width: 1200px;
     height: 20px;
 }
+.controler {
+    float: left;
+}
 .google-table-row-odd {
    background-color: #eef3f6;
 }
@@ -160,7 +262,19 @@ $(document).ready(function () {
    </ul>
    <div id="{{ active_tab }}tab">
    <div id="main">
-      <div id="left" class="google-table"></div>
+      <div id="left" class="google-table">
+         <table>
+            <tr><td>
+               <table>
+                  <td><div id="left-version-picker"></div></td>
+                  <td><div id="left-platform-picker"></div></td>
+                  <td><div id="left-option-picker"></div></td>
+                  <td><div id="left-setup-picker"></div></td>
+               </table>
+            </td><tr>
+               <td><div id="left-table" style="width: 750px;"></div></td>
+         </table>
+      </div>
       <div id="right" class="google-table"></div>
       <div id="cleaner"> 
    </div>
