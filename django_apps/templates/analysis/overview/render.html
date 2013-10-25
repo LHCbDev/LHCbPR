@@ -35,12 +35,11 @@
       var errors = {}
 
       if (requestData["versions"] == "" || requestData["versions"].split(',').length > 2) {
-         errors["Version"] = "Please give exactly one version in overview analysis.";
+         errors["Version"] = "Please select at least one version.";
       }
       
-      
-      if (requestData["options"] == ""|| requestData["options"].split(',').length != 1) {
-         errors["Option"] = "Please select exactly only one option in overview analysis.";
+      if (requestData["options"] == ""|| requestData["options"].split(',').length > 2) {
+         errors["Option"] = "Please select at least one option.";
       }
       
       return errors;
