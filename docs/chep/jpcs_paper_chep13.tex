@@ -114,12 +114,12 @@ Data collection can be handled in three different ways, first one can segregate 
 
 \begin{figure}[t]
 \begin{minipage}[t]{17pc}
-\includegraphics[scale=0.55]{figures/brunel_basic_libm.eps}
+\includegraphics[scale=0.50]{figures/brunel_basic_libm.eps}
 \caption{\small \textit{Runtime distribution of a Brunel version using different glibc's ([ms] per event) of the event\_loop attribute for different math libraries. (blue) Intel, (red) elder libm, (green) updated libm of a new glibc version.}}
 \label{fig:brunel_basic_libm}
 \end{minipage}\hspace{1pc}
 \begin{minipage}[t]{17pc}
-\includegraphics[scale=0.48]{figures/brunel_trend_analysis.eps}
+\includegraphics[scale=0.43]{figures/brunel_trend_analysis.eps}
 \caption{\small \textit{Trend analysis of Brunel to monitor changes cross versions.}}
 \label{fig:brunel_trend}
 \end{minipage}
@@ -134,7 +134,7 @@ Default cases for Brunel have been quickly evaluated, defined and are running no
 \newline
 Unfortunately the HLT framework Moore can not simply be reduced to a view common default cases, what makes it more difficult to trace back performance issues using a top-down analysis. The HLT brings further complications for the PR project in two main aspects:
 \begin{enumerate}
- \item The computing environment at the HLT farms are highly sophisticated with processes cloned to run multiple processes on the same job, with events coming ...
+ \item The computing environment at the HLT farms are highly sophisticated with processes cloned to run multiple processes on the same job, with events coming from the BufferManager.
  \item Single or a few default cases, as required, are not available because of constantly changing trigger configuration keys (TCKs), which define the algorithms involved.
 \end{enumerate}
 The first problem, as discussed, can not fully be addressed. First, more default cases can be used for a closer approximation and second, a standard configuration can be defined to make the analysis, as applied for Brunel, available. The second problem, can partially be addressed by not only splitting use cases, but also the software into parts for further investigations. This would also simplifies tracing back performance issues to source-code locations to help particular software development efforts. 
@@ -145,11 +145,15 @@ The first problem, as discussed, can not fully be addressed. First, more default
 \subsection{Profiling accuracy}
 \label{sec:profiling accuracy}
 
-In the current state, the web-interface does not provide a resolution beyond algorithm level. More detailed information are currently only accessible with the collected profile information profilers like Valgrind or VTune. The resolution of the interface is limited for two good reasons. First, developer shell be provided with profiles but competing with the variety of visualization tools of highly sophisticated profilers is unreasonable difficult and second, a tremendous amount of data that would have to be collected and stored. Still it could be reasonable to increase the resolution to function level. This becomes at latest with Moore evident, because algorithms are not executed in a strict order and for access to certain services lazy initialization is used. For instance tracking in the vertex detector is started by the first algorithm which requests these information and later on data can directly be accessed. This makes algorithm vary in their profile, what can currently not be reasonable traced back from the web analysis.
+In the current state, the web-interface does not provide a resolution beyond algorithm level. More detailed information are currently only accessible via the collected profile information. The resolution of the web-interface is limited for two good reasons. First, developer shell be provided with profiles, but competing with the variety of visualization tools of highly sophisticated profilers is not feasable and second, a tremendous amount of data that would have to be collected and stored would go beyond the current capacity and scale of the project.
+\newline
+Instead, stored data are more focused on regression analysis and hence to store results of a series of runs with the same test configuration. Visualizing the attributes distirbution allows more precise information than single runs permit. This is important for two reasons. First, recent hardware features can influence runtime, e.g. by frequency scaling and automated overclocking and second, new compiletime optimizations bring often olmost unobservable improvements. Both aspects can now precisely be analysed on their influence on performance, but needs also be turned off to reduce non-determinsitic influences on profile measurements.
 
 \subsection{Complementary information}
 \label{sec:complementary_information}
 
+Still it could be reasonable to increase the resolution to function level. A call stack of functions and runtime spent, would enable us to see if algorithm were calling objects first and executing lazy initialization. In particular for Gaudi, which allows a flexible order in which algorithms are called, it would be a . For instance tracking in the vertex detector is started by the first algorithm which requests these information and later on data can directly be accessed. This makes algorithm vary in their profile, what can currently not be reasonable traced back from the web analysis.
+\newline
 Due to the issue of the latter paragraph, the unordered execution of algorithms need to be addressed. This can be done by adding further complementary information, like a function call-stack for each algorithm to give a much higher resolution for finding anomalies in profiles than currently available, and it would make profiles of algorithms more comprehensive.
 \newline
 Another upcoming task is that if once a test case is fully implemented to be analyzed by several profilers in distinct runs, and if much more general information are available, these information could also be used to be correlated to each other. This way it would be possible to find the impact of design decisions and to validate existing methods or new concepts. Then open questions could be answered as knowledge base for further developments.
