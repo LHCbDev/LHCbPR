@@ -1,12 +1,12 @@
 <script type="text/javascript">
    google.load('visualization', '1.1', {packages: ['corechart', 'controls'], callback:drawChart});
-   var barChart;
+   var warning_ghosts = false;
    /**
-    * Insert "ghost" values from items of table input2 and which are
+    * Insert "ghost" values from items of table input2, if they are 
     * not available in table input1, into input1. The idea is to make
     * both tables comparable.
     *
-    * Attention: String of item (e.g. "Id: 1226, Average: ..." ist copied.")
+    * Attention: String in tooltips (e.g. "Id: 1226, Average: ...") are changing.
    */
    function missing_lines(input1, input2){
       input1.sort();
@@ -20,11 +20,15 @@
             }
          }
          if (candidate) {
-            var line = input2[l2];
+            var new_id = parseInt(input1[l2][4].match(/\d+/));
+            var line   = input2[l2].slice(0);
             line[1] = 0;
             line[2] = 0;
             line[3] = 0;
+            line[4] = line[4].replace(/Average:(.|\n)*/g,"GHOST");
+            line[4] = line[4].replace(/Id:.*/g,"Id: " + new_id);
             input1.splice(l2, 0, line);
+            warning_ghosts = true;
          }
       }
    }
@@ -59,6 +63,11 @@
       var valid  = validation(trends);
 
 	   var chart_area_div = document.getElementById("chart_area");
+      var barChart;
+
+      if(warning_ghosts) {
+         alert("WARNING: Ghosts are insert due to tables with differing entries!");
+      }
 
       if(valid == false) {
          for (var i = 0; i < trends.length; i++) {
