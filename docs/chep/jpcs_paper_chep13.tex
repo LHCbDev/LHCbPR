@@ -1,5 +1,6 @@
 \documentclass[a4paper]{jpconf}
 \usepackage{graphicx}
+\usepackage{textcomp}
 
 \begin{document}
 \title{Systematic profiling to monitor and specify the software refactoring process of the LHCb experiment}
@@ -17,7 +18,7 @@
 \ead{stefan.lohn@cern.ch}
 
 \begin{abstract}
-The LHCb collaboration develops and maintains large software frameworks, critical to the good performance of the experiments, that face challenges due to the increase of throughput requested from the Physics side that will not be matched by the computing resources, and by new computing architectures such as many-core, that cannot be currently fully used due to the limited amount of memory available per core. In the coming years, a considerable refactoring effort will therefore be needed to vectorize and parallelize the code, to minimize hotspots and to reduce the impact of bottlenecks. It is crucial to guide the refactoring with a profiling system that gives hints to parts for possible and necessary source-code re-engineering and which kind of optimization could lead to final success.
+The LHCb collaboration develops and maintains large software frameworks, critical to the good performance of the experiments, that face challenges due to the increase of throughput requested from the physics side that will not be matched by the computing resources, and by new computing architectures such as many-core, that cannot be currently fully used due to the limited amount of memory available per core. In the coming years, a considerable refactoring effort will therefore be needed to vectorize and parallelize the code, to minimize hotspots and to reduce the impact of bottlenecks. It is crucial to guide the refactoring with a profiling system that gives hints to parts for possible and necessary source-code re-engineering and which kind of optimization could lead to final success.
 \newline
 Software optimization is a sophisticated process where all parts, compiler, operating system, libraries and chosen hardware play a role in. Intended improvements can have different effects on different platforms. To obtain precise information of the general performance, to make profiles comparable, reproducible and to verify the progress of performance in the framework, it is important to produce profiles more systematically in terms of regular profiling based on representative use cases and to perform regression tests. Once a general execution, monitoring and analysis platform is available, software metrics can be derived from the collected profiling results to trace changes in performance back and to create summary reports on a regular basis with an alert system if modifications led to significant performance degradations.
 \end{abstract}
@@ -71,73 +72,74 @@ Hence the LHCb PR project has the following requirements.
 \end{enumerate}
 To fulfill the objectives and requirements, the LHCb PR project contains three important technical aspects. First, the PRConfig project was created to store the run configuration in a version control system and to collect further job information and final profiling results into a central SQL database. Second, Jenkins \cite{jenkins} a continuous integration system is used to configure, trigger and submit test jobs and finally Django \cite{django} to support the web application to quickly visualize and propagate results. 
 
-\begin{figure}{t}
-\includegraphics[scale=0.3]{figures/profiling_process.eps}
-\caption{\small \textit{The profiling procedure includes three stages. First, the test definition, triggering and submission. Second, the run execution, repetition and data collection by using data handlers to parse profiling reports and send core information to the database. And third, quick access to gathered profiling results by generating summary reports, using a web application for quick access to compare the general performance or to access detailed profile collected during the run.}}
+\begin{figure}
+\includegraphics[width=\textwidth, height=5.6cm]{figures/profiling_process.eps}
+\caption{\small \textit{The work-flow has three main parts. A) the test definition, triggering and job submission. B) the rob execution, repetition and data collection using data handlers. C) quick access to profiling results.}}
 \label{fig:profiling_process}
 \end{figure}
 
-\section{Work-flow and Implementation}
-\label{sec:workflow_and_implementation}
+\section{LHCb PR project}
+\label{sec:lhcbpr}
 
-The LHCb PR project provides support to conduct systematic profiling. The work-flow of a test execution is summarized in \mbox{figure \ref{fig:profiling_process}}, where Jenkins is used to configure, trigger and schedule test jobs before profiling. While execution, a profiler specific wrapper is downloaded and used to hide the profiler specific call for Jenkins and to setup the test environment for multiple executions. While execution, profiler information is gathered on a remote network file system for later detailed analysis. In the end, data handlers to parse reports and collect results are called, which are defined for distinct types of profiles and some additional job information like comments, files and classes of setups. Depending on the desired information, profiles can be filtered or combined with other available information. Then, results are hooked onto a SQL database. In the end the LHCb PR web analysis framework facilitates profile comparisons and helps detecting anomalies in performance.
+\subsection{Work-flow}
+\label{sec:workflow}
 
-\subsection{LHCb PR framework}
-\label{sec:lhcbpr_framework}
+The LHCb PR project provides support to conduct systematic profiling. The work-flow can technically be divided into three major parts, as in \mbox{figure \ref{fig:profiling_process}}, where Jenkins is used to configure, trigger and schedule test jobs before profiling (A). Before execution (B), a wrapper is downloaded and executed to hide the profiler specific setup. While execution, profiler information is gathered, profiles and log-files are stored on a distributed file system (AFS) for later detailed analysis. In the end, data handlers to parse reports and collect results are called, which are defined for distinct types of profiles and can provide additional job information like a comment, a profile class or a AFS path per job. Depending on the desired information, profiles can be filtered or combined with other available information in the data handler. Then, results are hooked onto a SQL database. In the end (C), the LHCb PR web analysis interface facilitates profile comparisons and helps detecting anomalies in performance.
 
-The core of the LHCb PR framework is a customized analysis interface based on Django. The backbone of Django is based on python to speed up development while keeping a certain amount of flexibility due to a variety of auxiliary modules available. Additionally, processing intensive tasks can be performed on the server-side while keeping the interface quick and smart.
+\subsection{LHCb PR web interface}
+\label{sec:lhcbpr_web_interface}
+
+The core of the LHCb PR framework is a web interface based on Django to analyze profiles. The backbone of Django is using python to speed up development while keeping a certain amount of flexibility due to a variety of auxiliary modules available. Additionally, processing intensive tasks can be performed on the server-side while keeping the interface quick and smart.
 \newline
-LHCb PR can ruffly be divided into two main aspects, navigation and visualization. Plotting graphs is current done by using visualization capabilities of the ROOT framework and its python interface pyRoot or using Google Charts. Different kinds of analysis are referring to different ways of visualization in which data attributes, as generic items for performance information, are shown. For instance, the Basic-Analysis shows the distribution of attributes, the Trend shows the progress of attributes cross versions or revisions and the Overview-Analysis about several attributes between a few versions or platforms. Attributes can be runtime, resident memory, possibly lost memory or even more complex software performance or quality metrics.
+The front-end can ruffly be divided into two main aspects, navigation and visualization. To navigate easily through data, results can directly accessed by their \textit{category}, a tuples of job description id, platform and host. To select categories, a generic selection menu allows to specify categories for comparison.  The generic menu is supplemented by a customized part, to specify profiling groups (different profiling information), attributes or filtering options, which are important to the specific visualization. Data access is also available on job level via a job table accessible through a table of different categories.
 \newline
-For a top-down analysis, the Trend has been added to observe changes cross revisions and versions to figure out progress in performance. Significant changes become immediately conspicuous, but requires single attributes, e.g. one of many algorithms, to be tracked. A better observation of several attributed is allowed by the Overview. Both show entries with their statistical variance, but to get precise information about the distribution around their average, the Basic-analysis is indispensable using ROOT histograms.
+The current visualization supports what is called a top-down analysis. Different analysis types are referring to different ways of visualization in which data \textit{attributes}, a generic items for performance information, are shown. Attributes can be runtime, resident memory, possibly lost memory or more complex metrics. The Trend-Analysis, that figures out the progress of attributes cross versions or revisions, has been added to observe changes in the general performance during the code evolution. Significant changes become immediately conspicuous, but requires single attributes, e.g. one of many algorithms, to be tracked. The Overview-Analysis is about to show several attributes between two versions, platforms or configurations. Both, Trend and Overview, show entries with their statistical variance. To get more precise information about the distribution of attributes around their average the Basic-Analysis can be used.
 \newline
-To navigate easily through data, results can directly accessed by their category, a tuples of job description id, platform and host. To select categories, a generic selection menu allows to specify categories for comparison.  The generic menu is amended by customized part to specify profiling groups (profiling information), attributes or filtering options important to the specific visualization. Data access is also available on job level via a job table accessible through a table of different test configurations or categories.
+Visualization is realized by ROOT histograms, where the python interface pyRoot simplifies the access to or by Google Charts that has demonstrated to be flexible and quick for implementation. The Basic-analysis is using ROOT histograms with the attributes dimension as x-axis and normalized about the amount of entries on the y-axis, e.g. see \mbox{figure \ref{fig:brunel_basic_libm}}. 
 
 \subsection{Job distribution and triggering}
 \label{sec:job_distribution}
 
-To facilitate regular profiling in a series of equal tests to permit statistic evaluations, Jenkins helps to manage the job distribution to test hosts. It makes the inclusion of further hosts simple and prevents interferences between multiple jobs running on the same machine by avoiding over-commitment. Test configurations can be prepared by creating parametrized jobs in the Jenkins interface. Test specific preparations, e.g. compiling packages (software modules) with specific compiler flags, can be added depending on the use case.
+To facilitate \textit{regular profiling} in a \textit{series of equal tests} to permit statistic evaluations, Jenkins helps to manage the job distribution to test hosts. The Test configurations, the composition of the job and the run configuration, can be prepared by creating generic parametrized jobs. Preprocessing, e.g. compiling packages with specific compiler flags or using different revisions of packages within specific a version, can be added. Jenkins organizes the inclusion of further hosts and it prevents interferences between multiple jobs running on the same machine by limiting job slots.
 \newline
-Despite configuring jobs, cron jobs in Jenkins can be used for triggering a profiling procedure within the release- or build cycle. This way, from triggering to execution and data collection, no human intervention is necessary, what simplifies data collection and opens the way to point out reliable and significant changes in the software profile.
-
-%\subsection{Execution and Profiling}
-%\label{sec:execution_and_profiling}
-
-%Commercial and open-source profilers becoming more and more usable. The open source community developed crucial tools like the valgrind tool suit. Other tools like google's tcmalloc can be used to elaborate processing time and memory consumption. Additional, recent hardware features give access to hardware counters of the PMU (performance monitoring unit), which can be read from proprietary software like intels VTune or open source projects like oprofile.
-%\newline
-%This paper is not going to evaluate the benefits and drawbacks of different tools, but wants to enable a profiling platform like LHCb PR to individually setup these tools on their specific way. For these purposes scripts are collected into a separate repository which can easily execute the test cases and stay flexible for an individual configuration. To improve the configuration of profiling runs and to focus the profiling onto main time consuming parts, integration of the profilers instrumentation methods are highly recommended.
+A cron-jobs like plugin in Jenkins can be used to induce a regular triggering event within the release- or build cycle. This way, from triggering to execution and data collection, no human intervention is necessary, what simplifies data collection and opens the way to point out reliable and significant changes in the software profile.
 
 \subsection{Data collection}
 \label{sec:data_collection}
 
-Data collection can be handled in three different ways, first one can segregate information from results to be stored in the database, second, files which contain performance information can be made available for downloading on the web-interface and third, bigger profiles can become available on remote storage. Segregating information from different profilers can be addressed by several parsers or data handler for each different profiling report. To maintain flexibility for many kinds of different profiling tasks, the post-processing of profiling must prepare parsable reports. The LHCbPR handler project attempts to collect these data. It further transfers information about the other, not parsed, profiling data for further examinations.
+Data collection is performed by \textit{data handlers} or bigger profiles are stored onto AFS. There are two different kinds of handlers to store data. First one can segregate information from reports to store results onto a database, and second, files which contain performance information can become available for downloading on the web-interface. To maintain flexibility for different profilers, the post-processing of a profiling job must prepare parsable reports. The LHCb PR Handler project hosts the various parsers to collect these data.
 
 \begin{figure}[t]
-\begin{minipage}[t]{17pc}
-\includegraphics[scale=0.50]{figures/brunel_basic_libm.eps}
-\caption{\small \textit{Runtime distribution of a Brunel version using different glibc's ([ms] per event) of the event\_loop attribute for different math libraries. (blue) Intel, (red) elder libm, (green) updated libm of a new glibc version.}}
+\begin{minipage}[t]{0.3\textwidth}
+\includegraphics[scale=0.33]{figures/brunel_trend_analysis.eps}
+\caption{\small \textit{Trend analysis (runtime [ms] \texttimes versions) of Brunel to monitor changes of specific attributes cross versions to observe the general performance.}}
+\label{fig:brunel_trend}
+\end{minipage}\hspace{1pc}
+\begin{minipage}[t]{0.3\textwidth}
+\includegraphics[scale=0.40]{figures/brunel_basic_libm.eps}
+\caption{\small \textit{Shows runtime distribution ([ms] per event) using different math libraries. (blue) Intel, (red) elder libm, (green) updated libm of a new glibc version.}}
 \label{fig:brunel_basic_libm}
 \end{minipage}\hspace{1pc}
-\begin{minipage}[t]{17pc}
-\includegraphics[scale=0.43]{figures/brunel_trend_analysis.eps}
-\caption{\small \textit{Trend analysis of Brunel to monitor changes cross versions.}}
-\label{fig:brunel_trend}
+\begin{minipage}[t]{0.35\textwidth}
+\includegraphics[width=1\textwidth, height=4cm]{figures/brunel_overview_analysis.eps}
+\caption{\small \textit{Overview analysis of Brunel to get a fast impression of attributes behavior to others and cross versions, platform or differing configurations (options).}}
+\label{fig:brunel_overview}
 \end{minipage}
 \end{figure}
 
 \subsection{Test cases}
 \label{sec:test_cases}
 
-Use cases are important to trace performance changes back to the evolving algorithms. Test cases shell base on default use cases for best approximations to the production usage. Still, the sophisticated computing environments can influence runs on a non-predictive non-deterministic way, which hampers conclusions from regression analysis. Currently, the highest priority is to find software related issues, that can be addressed or have to be taken into account for upcoming decisions in resource allocation.
+\textit{Use cases} are important to trace performance changes back to the evolving algorithms. \textit{Test cases} shell base on default use cases for best approximations to the production usage. Still, the sophisticated computing environments can influence runs on a non-predictive non-deterministic way, which hampers conclusions from regression analysis. Currently, the highest priority is to find software related issues, that can be addressed or have to be taken into account for upcoming decisions in resource allocation.
 \newline
-Default cases for Brunel have been quickly evaluated, defined and are running now on a regular basis after each successful build. LHCb PR has demonstrated its importance already by observing simple timing information obtained by the TimingAuditor. Significant changes become immediately clear by observing the trend information cross versions as shown exemplary in figure \ref{fig:brunel_trend}. After observing performance degradation further tests using the IntelAuditor have shown, that performance changes were once originated in external math libraries, as shown in Figure \ref{fig:brunel_basic_libm}. VTune\texttrademark can now be used for regular runs to visualize runtime spent in libraries and algorithms.
+A few default cases for Brunel have been quickly evaluated, defined and are running now on a regular basis after each successful build. LHCb PR has demonstrated its importance already by observing simple timing information obtained by the TimingAuditor. Significant changes become immediately clear by observing the trend information cross versions as shown exemplary in \mbox{figure \ref{fig:brunel_trend}}. After observing performance degradation, further tests can be defined to use more precise profilers, like the IntelAuditor, for more details. One real example shows the changes found in the external math library, as shown in Figure \ref{fig:brunel_basic_libm}. Such information is important to be available before a release is done. % To get regular information on time spend in all libraries, VTune\texttrademark can be used for regular runs.
 \newline
-Unfortunately the HLT framework Moore can not simply be reduced to a view common default cases, what makes it more difficult to trace back performance issues using a top-down analysis. The HLT brings further complications for the PR project in two main aspects:
+Unfortunately, the HLT framework Moore can not simply be reduced to a view common default cases, what makes it more difficult to trace back performance issues using a top-down analysis. The further complications are:
 \begin{enumerate}
- \item The computing environment at the HLT farms are highly sophisticated with processes cloned to run multiple processes on the same job, with events coming from the BufferManager.
+ \item The computing environment at the HLT farms are highly sophisticated with processes cloned to run multiple of them on a node and with events coming from the BufferManager.
  \item Single or a few default cases, as required, are not available because of constantly changing trigger configuration keys (TCKs), which define the algorithms involved.
 \end{enumerate}
-The first problem, as discussed, can not fully be addressed. First, more default cases can be used for a closer approximation and second, a standard configuration can be defined to make the analysis, as applied for Brunel, available. The second problem, can partially be addressed by not only splitting use cases, but also the software into parts for further investigations. This would also simplifies tracing back performance issues to source-code locations to help particular software development efforts. 
+The first problem can only be addressed if users agree to a representative standard configuration. Since this is currently not available, no enhancements can here be made. The second problem can partially be addressed by not only splitting use cases, but also the software into parts for further investigations. This also simplifies tracing back performance issues to source-code locations and to help particular software development efforts. Finally the Overview-Analysis was adapted to be able to compare different run configurations, different option files with the same application and version.
 
 \section{LHCb PR and beyond}
 \label{sec:lhcbpr_and_beyond}
@@ -145,9 +147,9 @@ The first problem, as discussed, can not fully be addressed. First, more default
 \subsection{Profiling accuracy}
 \label{sec:profiling accuracy}
 
-In the current state, the web-interface does not provide a resolution beyond algorithm level. More detailed information are currently only accessible via the collected profile information. The resolution of the web-interface is limited for two good reasons. First, developer shell be provided with profiles, but competing with the variety of visualization tools of highly sophisticated profilers is not feasable and second, a tremendous amount of data that would have to be collected and stored would go beyond the current capacity and scale of the project.
+In the current state, the web-interface does not provide a resolution beyond algorithm level. More detailed information are only accessible via the collected profile information. The resolution of the web-interface is limited for two good reasons. First, developer shell be provided with profiles, but competing with the variety of visualization tools of highly sophisticated profilers is not feasible and second, systematic profiling must not completely replacing the local- and temporary profiling of single developers, since limited use cases will always hide information about performance of algorithms made for spare situations, and since performance changes can be compensated within a top-down view on the account of a single smallest unit, here an algorithm.
 \newline
-Instead, stored data are more focused on regression analysis and hence to store results of a series of runs with the same test configuration. Visualizing the attributes distirbution allows more precise information than single runs permit. This is important for two reasons. First, recent hardware features can influence runtime, e.g. by frequency scaling and automated overclocking and second, new compiletime optimizations bring often olmost unobservable improvements. Both aspects can now precisely be analysed on their influence on performance, but needs also be turned off to reduce non-determinsitic influences on profile measurements.
+Another reason to limit the amount of performance data is, because of the already massive amount of collected data for regression analysis and hence, the expected amount of data for a series of runs with the same test configuration. Visualizing the regression analysis allows more precise information than a single run permits. But more precision leads to problems with unpredictable side effects of recent hardware features. They can influence runtime, e.g. by using frequency scaling or automated over-clocking. On the one side, these aspects can now precisely be analyzed, but needs on the other side also to be neutralized during regular profiling to detect software performance anomalies.
 
 \subsection{Complementary information}
 \label{sec:complementary_information}
@@ -160,19 +162,19 @@ Another upcoming task is that if once a test case is fully implemented to be ana
 \newline
 At the moment measurements like CPI, cache-misses, branch-misprediction and others are often mentioned, but can barely be correlated to real performance influences. Questions like how much exactly the call-stack depth influences runtime by occurring more cache-misses, and how does this influences current R\&D project like Gaudi-Hive by sharing cache among threads could then be emphasized by concrete numbers.
 
-\begin{figure}[t]
-\begin{minipage}[b]{0.33\textwidth}
-\includegraphics[scale=0.3]{figures/moore_basic_vect.eps}
-\caption{\small \textit{Comparing auto-vectorized library in Moore again unvectorized version.}}
-\label{fig:moore_basic}
-\end{minipage}\hspace{0.5cm}%
-\begin{minipage}[b]{0.60\textwidth}
-\centering
-\includegraphics[scale=0.50]{figures/moore_overview_memory.eps}
-\caption{\small \textit{For some application memory consumption is crucial. An overview of several memory information to observe differences between version.}}
-\label{fig:moore_overview}
-\end{minipage}
-\end{figure}
+% \begin{figure}[t]
+% \begin{minipage}[b]{0.33\textwidth}
+% \includegraphics[scale=0.3]{figures/moore_basic_vect.eps}
+% \caption{\small \textit{Comparing auto-vectorized library in Moore again unvectorized version.}}
+% \label{fig:moore_basic}
+% \end{minipage}\hspace{0.5cm}%
+% \begin{minipage}[b]{0.60\textwidth}
+% \centering
+% \includegraphics[scale=0.50]{figures/moore_overview_memory.eps}
+% \caption{\small \textit{For some application memory consumption is crucial. An overview of several memory information to observe differences between version.}}
+% \label{fig:moore_overview}
+% \end{minipage}
+% \end{figure}
 
 \section{Conclusions}
 \label{sec:conclusions}
