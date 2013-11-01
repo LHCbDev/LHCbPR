@@ -8,10 +8,7 @@ def get_queries(requestData, app_name):
                     'jobdes.options_id = opt.id', 'r.jobattribute_id = att.id', 
                     'rf.jobresults_ptr_id = r.id', 'j.platform_id = plat.id' , 'j.success = 1' ]
     
-    if requestData['atr'].split(',')[1] == 'Float':
-        from_statements.append('lhcbpr_resultfloat rf')
-    else:
-        from_statements.append('lhcbpr_resultint rf')
+    from_statements.append('lhcbpr_resultfloat rf')
     
     secondpart_query = ""
     use_host = False
@@ -37,7 +34,7 @@ def get_queries(requestData, app_name):
         where_statements.append('j.host_id = h.id')
         
     query_results = 'select '+' , '.join(select_statements)
-    query_results+=' ,apl.appversion as VERSION , ROUND(AVG(rf.data), 2) AS AVERAGE, ROUND(STDDEV(rf.data), 2) AS STDDEV, count(*) as ENTRIES from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
+    query_results+=' ,apl.appversion as VERSION , ROUND(AVG(rf.data), 4) AS AVERAGE, ROUND(STDDEV(rf.data), 4) AS STDDEV, count(*) as ENTRIES from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
     
     query_groups = 'select distinct '+' , '.join(select_statements)+' from '+' , '.join(from_statements)+' where '+' and '.join(where_statements)
               
@@ -65,7 +62,7 @@ def get_queries(requestData, app_name):
         
     #now we finished generating the filtering in the query attributes
     #we know finalize the queries
-    application_attribute= "  and att.id={0}".format(requestData['atr'].split(',')[0])
+    application_attribute= "  and att.name = \'{0}\'".format(requestData['atr'].split(',')[0])
     if versions[0] == "":
         application_attribute+= " and apl.appname='{0}'".format(app_name)
     query_results += application_attribute
@@ -73,7 +70,7 @@ def get_queries(requestData, app_name):
     
     #add the second part of the query which contains the filtering
     query_results += secondpart_query
-    query_results+=' GROUP BY '+' , '.join(group_statements)
-    query_groups += secondpart_query
+    query_results +=' GROUP BY '+' , '.join(group_statements)
+    query_groups  += secondpart_query
     
     return query_groups, query_results

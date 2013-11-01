@@ -42,25 +42,25 @@ def render(**kwargs):
         for k, v in groups.iteritems():
             if k != "":
                 atrGroups.append([k, v])
-    
-    
-    dataDict = { 'atrs' : json.dumps(atrs),
-                'atrGroups' : atrGroups,
-                #get the reversed dictionaries
-                'groups' : json.dumps(dict((v,k) for k, v in groups.iteritems())),
-                'types' : json.dumps(dict((v,k) for k, v in types.iteritems()))  
-               }
+
+    dataDict = {
+        'atrs'      : json.dumps(atrs),
+        'atrGroups' : atrGroups,
+        #get the reversed dictionaries
+        'groups'    : json.dumps(dict((v,k) for k, v in groups.iteritems())),
+        'types'     : json.dumps(dict((v,k) for k, v in types.iteritems()))  
+    }
       
     return dataDict
 
 def analyse(**kwargs):
     requestData = kwargs['requestData']
-    app_name = kwargs['app_name']
+    app_name    = kwargs['app_name']
     
     #if request.method == 'GET' and 'hosts' in request.GET and 'jobdes' in request.GET and 'platforms' in request.GET and 'atr' in request.GET:
     #fetch the right queries depending on user's choices no the request
     query_groups, query_results = get_queries(requestData, app_name)
-    
+
     #establish connection
     cursor = connection.cursor()
                 

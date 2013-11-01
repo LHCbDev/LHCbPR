@@ -1,0 +1,167 @@
+{% extends "analysis/base_analysis_template.html" %}
+
+{% block head %}
+{{ block.super }}
+   <script type="text/javascript" src="{{ STATIC_URL }}js/autocompleteBox.js"></script>
+   <script src="https://www.google.com/jsapi"></script>
+{% endblock head %}
+
+{% block script %}
+   {{ block.super }}
+
+   var groups  = {{ groups|safe }};
+
+   function prefillJobs() {
+      {% for j in jobs %}
+      jQuery('#jobs li label input').each(function () {
+         if( jQuery(this).val() == {{ j }} ){
+             jQuery(this).attr('checked', 'checked');
+         }
+      });
+      {% endfor %}
+   }
+
+   function getSelected(id){
+      var sdValues = [];
+      $('#' + id + ' li label :checked').each(
+         function () {
+            sdValues.push($(this).attr('value'));
+         }
+      );
+      return sdValues;
+   }
+
+   function checkRequestData(requestData){
+      var errors = {}
+
+      if (requestData["versions"] == "" || requestData["versions"].split(',').length > 2) {
+         errors["Version"] = "Please select at least one version.";
+      }
+      
+      if (requestData["options"] == ""|| requestData["options"].split(',').length > 2) {
+         errors["Option"] = "Please select at least one option.";
+      }
+      
+      return errors;
+   }
+
+   $(document).ready(function() {
+      $('#execute_query').hover(
+         function() { $(this).addClass('ui-state-hover'); },
+         function() { $(this).removeClass('ui-state-hover'); }
+      );
+
+      /* prefill the data for elements in the  */
+      prefillAll();
+      prefillJobs();
+      trigger();
+
+      $("#grps").click(function(){ showHide("groups","groups_list") });
+
+      $('#groupErase,button').hover(
+         function() { $(this).addClass('ui-state-hover'); },
+         function() { $(this).removeClass('ui-state-hover'); }
+      );
+
+      $('#groupErase').click(function(){
+         var groups = getSelected("groups_list");                    
+         if(groups.length == 0) return;
+
+         $('#groups_list').children('li').each(function () {
+            if($(':first-child:first-child', this).is(':checked')){
+               $(':first-child:first-child', this).removeAttr('checked'); 
+            }
+         });
+      });
+
+      $('#grps').combobox();
+
+      $("#JobsButton").click(function(){ showHide("JobsButton","jobs") });
+   });
+{% endblock script %}
+
+{% block stylecss %}
+   .ui-combobox {
+      position: relative;
+      display: inline-block;
+   }
+   .ui-combobox-toggle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      margin-left: -1px;
+      padding: 0;
+      /* adjust styles for IE 6/7 */
+      *height: 1.7em;
+      *top: 0.1em;
+   }
+   .ui-combobox-input {
+      margin: 0;
+      padding: 0.3em;
+   }
+{% endblock stylecss %}
+
+{% block helptext %} 
+The purpose of the overview analysis is to get a quick impression about how several attribute contibutes to the general resource consumption. Clicking on a column will lead to the basic distribution of the specific attribute with all jobs of the same job-description.
+{% endblock helptext %}
+
+{% block content %}
+   {% if atrGroups %}
+   <div id="atr_holder"class="ui-widget">
+      <table class="filter" style="margin-top: 1em;">
+         <tr><td colspan="2">
+            <label>Profiler group:</label>
+         </td></tr>
+         <tr><td colspan="2">
+            <select id="grps">
+               {% for group in atrGroups %}
+               <option value="{{ group.0 }}">{{ group.0 }}</option>
+               {% endfor %}
+            </select>
+         </td></tr>
+         <tr><td style="width:50px">
+            <label>Min. value:</label>
+         </td><td style="width:50px">
+            <input id="min" type="text" style="width:50px;" value="0">
+         </td></tr>
+         <tr><td style="width:50px">
+            <label>Max. value:</label>
+         </td><td style="width:50px">
+            <input id="max" type="text" style="width:50px;" value="0">
+         </td></tr>
+         <tr><td style="width:50px">
+            <label>Min. difference:</label>
+         </td><td style="width:50px">
+            <input id="dist" type="text" style="width:50px;" value="0">
+         </td></tr>
+         <tr><td style="width:50px">
+            <label>Sort desc. order:</label>
+         </td><td style="width:50px">
+            <input id="sort" type="checkbox" value="0">
+         </td></tr>
+         <tr><td style="width:50px">
+            <label>Log. scale:</label>
+         </td><td style="width:50px">
+            <input id="log" type="checkbox" value="0">
+         </td></tr>
+         <!--
+         <tr><td>
+            <a href="javascript:;" id="JobsButton" class="ui-state-default ui-corner-all filterButton"><span class="ui-icon ui-icon-minusthick"></span>Jobs</a>
+            <a href="javascript:;" id="JobsErase" class="ui-state-default ui-corner-all filterErase" title="clear checkbox"><span class="ui-icon ui-icon-closethick"></span></a>
+         </td></tr>
+         <tr><td>
+            <ul id="jobs" class="checklist">
+            {% for j in jobs %}
+               <li>
+                  <label>
+                     <input type="checkbox" value="{{ j }}">{{ j }}
+                  </label>
+               </li>
+            {% endfor %}
+         </ul>
+         </td></tr>
+         -->
+      </table>
+   </div>
+   {% endif %}
+{% endblock content %}

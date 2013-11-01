@@ -1,6 +1,7 @@
 import logging
+import urllib
 from django.db.models import Q
-from django.db import connection, transaction
+from django.db import connection, transaction, DatabaseError, IntegrityError
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
@@ -8,6 +9,7 @@ from django.template import RequestContext
 from django.conf import settings
 from django.contrib.auth.decorators import login_required as default_login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.files import File 
 
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults
 import json, subprocess, sys, re, copy, os
@@ -36,10 +38,66 @@ def index(request):
     """This view serves the home page of the application(lhcbPR), along 
     with the page it provides information for the user(if he is authenticated
     or not)"""
-    
+
+    query = "SELECT id, appname, link, description, TO_CHAR(date_insert, 'YYYY-MM-DD') AS date_insert FROM lhcbpr_public_links ORDER BY ROWNUM DESC" 
+    cursor = connection.cursor()
+    cursor.execute(query)
+    links = cursor.fetchall()
+
+    dataDict = {
+       'links': json.dumps(links)
+    }
+
     return render_to_response('lhcbPR/index.html',
-                  context_instance=RequestContext(request))
+       dataDict,
+       context_instance=RequestContext(request))
     
+@login_required
+def saveUrl(request):
+    '''Method to store links for application into lhcbpr database.'''
+    if request.method == 'GET':
+        requestData = request.GET
+    else:
+        requestData = request.POST
+    
+    app  = requestData['app']
+    url  = requestData['url']
+    desc = requestData['description']
+
+    url = urllib.unquote(url).decode('utf8')
+
+    #print "Info: ", app, " - ", desc, " - ", url
+    #
+    # Here is a security measure missing to avoid adding anything.
+    #
+
+    query = ""
+    if app != "" and url != "" and desc != "":
+        query = "INSERT INTO LHCBPR_PUBLIC_LINKS \
+           (APPNAME, LINK, DESCRIPTION) VALUES \
+           (\'{0}\', \'{1}\', \'{2}\')".format(app, url, desc)
+
+    #print "Query: ", query
+
+    cursor = connection.cursor()
+    cursor.execute(query)
+
+    try:
+        transaction.commit_unless_managed()
+    except DatabaseError, IntegrityError:
+        succ = False
+    else:
+        succ = True
+
+    dataDic = {
+        'app' : app,
+        'url' : url,
+        'dscp': desc, 
+        'succ': succ
+    }
+
+    return render_to_response('lhcbPR/success.html', dataDic, context_instance=RequestContext(request))
+
 @login_required
 def jobDescriptions(request, app_name):
     """From the url is takes the requested application(app_name) , example:
@@ -95,6 +153,223 @@ def jobDescriptions(request, app_name):
                   dataDict,
                   context_instance=RequestContext(request))
    
+@login_required 
+def joblistDescHome(request):
+   """List of available jobs and runns"""
+   return joblistDesc(request, "")
+
+@login_required 
+def joblistDesc(request, app_name):
+   """List of available jobs and runns"""
+   cnf_query = "SELECT DISTINCT \
+      LHCBPR_JOBDESCRIPTION.ID, \
+      LHCBPR_APPLICATION.APPNAME, \
+      LHCBPR_APPLICATION.APPVERSION, \
+      LHCBPR_PLATFORM.ID, \
+      LHCBPR_PLATFORM.CMTCONFIG, \
+      LHCBPR_OPTIONS.DESCRIPTION, \
+      LHCBPR_OPTIONS.CONTENT, \
+      LHCBPR_SETUPPROJECT.DESCRIPTION AS SETUP_DESC, \
+      LHCBPR_SETUPPROJECT.CONTENT AS CONTENT1, \
+      (SELECT max( \
+        extract(day from (LHCBPR_JOB.TIME_END-timestamp '1970-01-01 00:00:00 +00:00'))*86400+ \
+        extract(hour from (LHCBPR_JOB.TIME_END-timestamp '1970-01-01 00:00:00 +00:00'))*3600+ \
+        extract(minute from (LHCBPR_JOB.TIME_END-timestamp '1970-01-01 00:00:00 +00:00'))*60+ \
+        extract(second from (LHCBPR_JOB.TIME_END-timestamp '1970-01-01 00:00:00 +00:00'))) \
+        FROM LHCBPR_JOB WHERE lhcbpr_job.jobdescription_id = LHCBPR_JOBDESCRIPTION.ID) AS ENDTIME, \
+      CAST(SUM(LHCBPR_JOB.SUCCESS)/COUNT(*) AS FLOAT), \
+      COUNT(*) \
+      FROM LHCBPR_JOB \
+      INNER JOIN LHCBPR_PLATFORM \
+      ON LHCBPR_PLATFORM.ID = LHCBPR_JOB.PLATFORM_ID \
+      INNER JOIN LHCBPR_JOBDESCRIPTION \
+      ON LHCBPR_JOBDESCRIPTION.ID = LHCBPR_JOB.JOBDESCRIPTION_ID \
+      INNER JOIN LHCBPR_APPLICATION \
+      ON LHCBPR_APPLICATION.ID = LHCBPR_JOBDESCRIPTION.APPLICATION_ID \
+      INNER JOIN LHCBPR_OPTIONS \
+      ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID \
+      INNER JOIN LHCBPR_SETUPPROJECT \
+      ON LHCBPR_SETUPPROJECT.ID = NVL(LHCBPR_JOBDESCRIPTION.SETUP_PROJECT_ID, 1)"
+
+   query = ""
+   if not app_name == "All":
+      query = " WHERE LHCBPR_APPLICATION.APPNAME = \'{0}\'".format(app_name)
+
+   cnf_query += query
+
+   cnf_query += " GROUP BY LHCBPR_JOBDESCRIPTION.ID, \
+     LHCBPR_APPLICATION.APPNAME, \
+     LHCBPR_APPLICATION.APPVERSION, \
+     LHCBPR_PLATFORM.ID, \
+     LHCBPR_PLATFORM.CMTCONFIG, \
+     LHCBPR_OPTIONS.DESCRIPTION, \
+     LHCBPR_OPTIONS.CONTENT, \
+     LHCBPR_SETUPPROJECT.DESCRIPTION, \
+     LHCBPR_SETUPPROJECT.CONTENT"
+
+   cnf_query += " ORDER BY ENDTIME DESC"
+   # print "Joblist Query: ", cnf_query
+
+   cursor = connection.cursor()
+   cursor.execute(cnf_query)
+   description = [i[0] for i in cursor.description]
+   configurations = cursor.fetchall()
+
+   applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
+
+   return render_to_response('lhcbPR/joblistHome.html',
+                  { 'configs' : json.dumps(configurations),
+                    'active_tab' : app_name,
+                    'description' : description,
+                    'applications' : applicationList
+                  },
+                  context_instance=RequestContext(request))
+
+@login_required 
+def joblistInfo(request, app_name, desc_id, plat_id):
+   """Detailed information of jobs belonging to a certain job_description.id (configuration)."""
+   if not desc_id:
+      return HttpResponseNotFound("<h3>No existing jobs for job description or no job description given.</h3>")
+
+   job_query = "SELECT LHCBPR_JOB.ID AS ID, \
+      LHCBPR_APPLICATION.APPNAME AS Project, \
+      LHCBPR_APPLICATION.APPVERSION AS Version, \
+      LHCBPR_APPLICATION.ID AS APP_ID, \
+      LHCBPR_PLATFORM.CMTCONFIG AS Platform, \
+      LHCBPR_OPTIONS.DESCRIPTION AS Options, \
+      LHCBPR_OPTIONS.ID AS OPT_ID, \
+      TO_CHAR(LHCBPR_JOB.TIME_START, 'YYYY-MM-DD HH12:MI:SS AM') AS TIME_START, \
+      TO_CHAR(LHCBPR_JOB.TIME_END, 'YYYY-MM-DD HH12:MI:SS AM') AS TIME_END, \
+      LHCBPR_JOB.SUCCESS AS Stat \
+      FROM LHCBPR_JOB \
+      INNER JOIN LHCBPR_PLATFORM \
+      ON LHCBPR_PLATFORM.ID = LHCBPR_JOB.PLATFORM_ID \
+      INNER JOIN LHCBPR_JOBDESCRIPTION \
+      ON LHCBPR_JOBDESCRIPTION.ID = LHCBPR_JOB.JOBDESCRIPTION_ID \
+      INNER JOIN LHCBPR_APPLICATION \
+      ON LHCBPR_APPLICATION.ID = LHCBPR_JOBDESCRIPTION.APPLICATION_ID \
+      INNER JOIN LHCBPR_OPTIONS \
+      ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID"
+   
+   query  = " WHERE LHCBPR_JOBDESCRIPTION.ID = {0}".format(desc_id)
+   query += " AND LHCBPR_PLATFORM.ID = {0}".format(plat_id)
+
+   job_query += query
+   job_query += " ORDER BY LHCBPR_JOB.ID"
+
+   #print job_query
+
+   info_query = "SELECT LHCBPR_JOBRESULTS.JOB_ID, \
+      LHCBPR_JOBATTRIBUTE.NAME, \
+      LHCBPR_JOBATTRIBUTE.\"GROUP\", \
+      LHCBPR_JOBATTRIBUTE.DESCRIPTION, \
+      LHCBPR_RESULTSTRING.DATA \
+      FROM LHCBPR_RESULTSTRING \
+      INNER JOIN LHCBPR_JOBRESULTS \
+      ON LHCBPR_JOBRESULTS.ID = LHCBPR_RESULTSTRING.JOBRESULTS_PTR_ID \
+      INNER JOIN LHCBPR_JOBATTRIBUTE \
+      ON LHCBPR_JOBRESULTS.JOBATTRIBUTE_ID = LHCBPR_JOBATTRIBUTE.ID \
+      WHERE LHCBPR_JOBATTRIBUTE.\"GROUP\" = 'JobInfo' \
+      ORDER BY LHCBPR_JOBRESULTS.JOB_ID, \
+      LHCBPR_JOBATTRIBUTE.NAME"
+
+   #print info_query
+
+   file_query = "SELECT LHCBPR_JOBRESULTS.JOB_ID, \
+     LHCBPR_JOBATTRIBUTE.NAME, \
+     LHCBPR_RESULTFILE.\"FILE\" \
+     FROM LHCBPR_JOBRESULTS \
+     INNER JOIN LHCBPR_JOBATTRIBUTE \
+     ON LHCBPR_JOBRESULTS.JOBATTRIBUTE_ID = LHCBPR_JOBATTRIBUTE.ID \
+     INNER JOIN LHCBPR_RESULTFILE \
+     ON LHCBPR_JOBRESULTS.ID = LHCBPR_RESULTFILE.JOBRESULTS_PTR_ID \
+     ORDER BY LHCBPR_JOBRESULTS.JOB_ID"
+
+   #print file_query
+
+   group_query = "SELECT DISTINCT LHCBPR_JOBRESULTS.JOB_ID, \
+     LHCBPR_JOBATTRIBUTE.\"GROUP\" \
+     FROM LHCBPR_JOBRESULTS \
+     INNER JOIN LHCBPR_JOBATTRIBUTE \
+     ON LHCBPR_JOBRESULTS.JOBATTRIBUTE_ID = LHCBPR_JOBATTRIBUTE.ID \
+     INNER JOIN LHCBPR_RESULTFLOAT \
+     ON LHCBPR_RESULTFLOAT.JOBRESULTS_PTR_ID = LHCBPR_JOBRESULTS.ID \
+     ORDER BY LHCBPR_JOBRESULTS.JOB_ID"
+
+   #print group_query
+
+   cursor = connection.cursor()
+   cursor.execute(job_query)
+   description = [i[0] for i in cursor.description]
+   jobs = cursor.fetchall()
+
+   cursor = connection.cursor()
+   cursor.execute(info_query)
+   description = [i[0] for i in cursor.description]
+   infos = cursor.fetchall()
+
+   cursor = connection.cursor()
+   cursor.execute(file_query)
+   description = [i[0] for i in cursor.description]
+   files = cursor.fetchall()
+
+   cursor = connection.cursor()
+   cursor.execute(group_query)
+   description = [i[0] for i in cursor.description]
+   groups = cursor.fetchall()
+ 
+   atr_groups = []
+   for k, v in enumerate(groups):
+      if v[0] != "":
+         atr_groups.append([v[0], v[1]])
+
+   applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
+
+   return render_to_response('lhcbPR/joblistInfo.html',
+                  {
+                    'jobs'        : json.dumps(jobs),
+                    'infos'       : json.dumps(infos),
+                    'files'       : json.dumps(files),
+                    'groups'      : json.dumps(groups),
+                    'application' : app_name,
+                    'active_tab'  : app_name,
+                    'applications' : applicationList,
+                    'description' : description
+                  },
+                  context_instance=RequestContext(request))
+
+@login_required 
+def jobFileView(request):
+    """Returns file for download."""
+    if request.method == 'GET':
+        requestData = request.GET
+    else:
+        requestData = request.POST
+
+    if requestData['file'] == "":
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'No file given.' }))
+
+    data_store = "/afs/cern.ch/lhcb/software/webapps/LHCbPR/data/files/"
+    data_file  = requestData['file']
+
+    reco  = re.compile('\d+')
+    names = reco.findall(data_file)
+
+    reco  = re.compile('[0-9a-zA-Z.-]+$')
+    name  = reco.findall(data_file)
+
+    filename = "lhcbpr-%s-%s-%s" % (names[0], names[1], name[0])
+
+    data_file  = data_store + data_file
+
+    if not os.path.isfile(data_file):
+        return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'File not readable.' }))
+
+    fsock = open(data_file, 'r')
+    response = HttpResponse(fsock, mimetype='text/html')
+    response['Content-Disposition'] = "attachment; filename=%s" % (filename)
+    return response
+
 @login_required 
 def jobDescriptionsHome(request):
     """Serves the jobDescriptions home page with the available applications"""
@@ -174,7 +449,7 @@ def analysis_render(request, analysis_type, app_name):
         requestData = request.GET
     else:
         requestData = request.POST
-    
+
     module = 'analysis.{0}'.format(analysis_type)
     try:
         #try to import the module by each name eg basic, timing etc
@@ -185,7 +460,7 @@ def analysis_render(request, analysis_type, app_name):
     else:   
         #if the module is imported properly call the render function and take the data which
         #the analysis wants to use
-        user_data = mod.render(request=request, requestData = requestData, app_name = app_name)
+        user_data = mod.render(request=request, requestData=requestData, app_name=app_name)
         
         #check if the user provided a custom template(different than the render.html)
         if 'template' in user_data:
@@ -217,7 +492,7 @@ Attention:
 </pre> 
                     """
         
-        #then check if the user has provided(through the analysis module) any options, versions objects etc
+        #then check if the user has provided (through the analysis module) any options, versions objects etc
         #if not, use the default ones           
         if not 'options' in user_data:
             user_data['options'] = Options.objects.filter(jobdescriptions__jobs__success=True,jobdescriptions__application__appName=app_name).distinct().order_by('description')
@@ -245,20 +520,21 @@ Attention:
             html_form = formBuilder(user_data['form'])
             del(user_data['form'])
             user_data['html_form'] = html_form
-        
+
         applicationsList = Job.objects.filter(success=True).values_list('jobDescription__application__appName',flat=True).distinct().order_by('jobDescription__application__appName')
+
         dataDict = {
                     'applications' : applicationsList,
                     'active_tab' : app_name,
                     'analysis_type' : analysis_type,
                     'bookmark' : json.dumps(requestData), 
-                    
                     'title' : title,
                     'help' : help,
                     }
         #include user's data
         if user_data:
             dataDict.update(user_data)
+
         return render_to_response(template, 
                   dataDict,
                   context_instance=RequestContext(request))
@@ -617,6 +893,19 @@ def script(request):
     script += '#python LHCbPRHandlers/sendToDB.py -s name_of_zip'
     
     return HttpResponse(script, mimetype="text/plain")
+
+@login_required
+def getFiles(request, filename):
+    django_file = ""
+    try:
+        file = open(filename)
+        django_file = File(file) 
+    except IOError:
+        print "File: ", filename, "can not be opened."
+
+    t = loader.get_template('myapp/template.html')
+    c = Context({'file':django_file})
+    return HttpResponse(t.render(c)) 
 
 @csrf_exempt
 def get_content(request):

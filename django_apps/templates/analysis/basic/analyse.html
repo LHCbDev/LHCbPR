@@ -1,47 +1,43 @@
 <script type="text/javascript">
-		$(document).ready(function() {	
-			var results ={{ results|safe }};
+$(document).ready(function() {	
+   var results ={{ results|safe }};
+   if({{ histogram|safe }}){
+      bins = {{ bins|safe }};
+      $('<pre>')
+         .html(JSON.stringify(bins, null, '  '))
+         .appendTo('#yo');
 
-			if({{ histogram|safe }}){
-				bins = {{ bins|safe }};
-                $('<pre>')
-                    .html(JSON.stringify(bins, null, '  '))
-                    .appendTo('#yo')
+      if({{ separately_hist|safe }}){
+         $.each(results, function(index, result){
+            var histUrl = result.histogram;
+            delete result.histogram;
+            $('<pre>')
+               .html(JSON.stringify(result, null, '  '))
+               .appendTo('#yo');
+            $('<img>')
+               .attr('src', histUrl + "?"+new Date().getTime() )
+               .appendTo('#yo');
+            $('<hr>').appendTo('#yo');
+         });
+      } else {
+         var histUrl = results[0].histogramImposed;
+         $('<img>')
+            .attr('src', histUrl + "?"+new Date().getTime() )
+            .appendTo('#yo');
 
-				if({{ separately_hist|safe }}){
-					$.each(results, function(index, result){
-						var histUrl = result.histogram;
-						delete result.histogram;
-                        $('<pre>')
-                            .html(JSON.stringify(result, null, '  '))
-                            .appendTo('#yo')
-						$('<img>')
-                            .attr('src', histUrl + "?"+new Date().getTime() )
-						    .appendTo('#yo');
-						$('<hr>')
-                            .appendTo('#yo');
-					});
-				}
-				else{
-					var histUrl = results[0].histogramImposed;
-                    $('<img>')
-                            .attr('src', histUrl + "?"+new Date().getTime() )
-						    .appendTo('#yo');
-
-					$.each(results, function(index, result){
-						delete result.histogramImposed;
-                        $('<pre>')
-                            .html(JSON.stringify(result, null, '  '))
-                            .appendTo('#yo')
-					});
-				}
-			}
-			else{
-                $('<pre>')
-                    .html(JSON.stringify(results, null, '  '))
-                    .appendTo('#yo')
-			}
-		});
+         $.each(results, function(index, result){
+            delete result.histogramImposed;
+            $('<pre>')
+               .html(JSON.stringify(result, null, '  '))
+               .appendTo('#yo');
+         });
+      }
+   } else {
+      $('<pre>')
+         .html(JSON.stringify(results, null, '  '))
+         .appendTo('#yo')
+   }
+});
 </script>
 <div id="yo">
 </div>

@@ -1,0 +1,272 @@
+{% extends "lhcbPR/base_template.html" %}
+
+{% block title %} Job List {% endblock title %}
+
+{% block head %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load('visualization', '1.2', {packages: ['table']});
+
+var job_data;
+var job_data_view;
+
+function drawVisualization() {
+   // Create and populate the data table.
+	var jobs = {{ jobs|safe }};
+
+   // Convert string to boolean for visualization purposes
+   for (var i=0; i<jobs.length; i++) {
+      var bool_elem = jobs[i].pop();
+      jobs[i].push(Boolean(bool_elem));
+   }
+
+   job_data = new google.visualization.DataTable();
+   job_data.addColumn('number', 'Id');
+   job_data.addColumn('string', 'Project');
+   job_data.addColumn('string', 'Version');
+   job_data.addColumn('number', 'AppId');
+   job_data.addColumn('string', "Platform");
+   job_data.addColumn('string', "Options");
+   job_data.addColumn('number', 'OptId');
+   job_data.addColumn('string', "Start");
+   job_data.addColumn('string', "End");
+   job_data.addColumn('boolean', "S");
+   job_data.addRows(jobs);
+   job_data.sort([{column: 0, desc: true }]);
+   //job_data.setProperty(0, 0, 'style', 'width:40px');
+   //job_data.setProperty(0, 7, 'style', 'width:100px');
+   //job_data.setProperty(0, 8, 'style', 'width:100px');
+   //job_data.setProperty(0, 9, 'style', 'width:30px');
+   job_data_view = new google.visualization.DataView(job_data);
+   job_data_view.setColumns([0,7,8,9]);
+
+   // Create and draw the visualization.
+   job_visualization = new google.visualization.Table(document.getElementById('left'));
+
+   var cnfStyle = {
+      oddTableRow : 'google-table-row-odd',
+      headerCell  : 'google-table-head',
+   }
+
+   job_visualization.draw(job_data_view, {
+      allowHtml: true,
+      width  : 600,
+      height : 670,
+      page   : 'enable',
+      pageSize: 16,
+      pagingSymbols: {prev: 'prev', next: 'next'},
+      pagingButtonsConfiguration: 'auto',
+      //chartArea: {
+            //left: 250,
+            //width: "60%"
+      //},
+      alternatingRowStyle: true,
+      cssClassNames: cnfStyle
+   });
+
+   showInfo();
+
+   google.visualization.events.addListener(job_visualization, 'select', handleJobs);
+}
+
+function showInfo() {
+   $("#job_info").hide(); 
+   $("#job_links").hide(); 
+
+   $("#job_info_head").empty();
+   $("#job_info_head").append($("<label>").html("<b>Job description: </b>"));
+   $("#job_info_head").append($("<hr>"));
+   if (job_data.getNumberOfRows() > 0) {
+      var app = job_data.getValue(0, 1);
+      var ver = job_data.getValue(0, 2);
+      var plt = job_data.getValue(0, 4);
+      var opt = job_data.getValue(0, 5);
+      var appl_name  = app + " vers. " + ver;
+      table_content = "<table>";
+      table_content += "<tr><td style='height:15px;'>Project: </td>"
+      table_content += "<td style='height:15px;'>" + appl_name + "</td></tr>";
+      table_content += "<tr><td style='height:15px;'>Platform: </td>";
+      table_content += "<td style='height:15px;'>" + plt + "</td></tr>";
+      table_content += "<tr><td style='height:15px;'>Option: </td>";
+      table_content += "<td style='height:15px;'>" + opt + "</td></tr>";
+      table_content += "</table>";
+      $("#job_info_head").append(table_content);
+   }
+}
+
+// Handler to set configuration info
+function handleJobs()
+{
+   var selection = job_visualization.getSelection();
+   var succs     = job_data.getValue(selection[0].row, 9);
+   if (succs == "0") {
+      alert("Not successfull finalized dataset");
+      return;
+   }
+   var job_id    = job_data.getValue(selection[0].row, 0);
+   var job_ids   = "";
+   var r;
+   for (r=0; r<job_data.getNumberOfRows(); r++) {
+      if (job_data.getValue(r, 9) == 1) {
+         job_ids += job_data.getValue(r, 0);
+         job_ids += ",";
+      }
+   }
+   if (job_ids.length>0)
+      job_ids = job_ids.substring(0, job_ids.length - 1);
+   var app_id = job_data.getValue(selection[0].row, 3);
+   var opt_id = job_data.getValue(selection[0].row, 6);
+   $("#job_info").show(); 
+   $("#job_info").empty();
+   $("#job_info").append($("<label>").html("<b>Job information: </b>"));
+   $("#job_info").append($("<hr>"));
+   $("#job_info").append($("<p>"));
+   $("#job_info").append($("<label>").html("<u>Results</u>"));
+   $("#job_info").append($("<p>"));
+   var infos = {{ infos|safe }};
+   var content = "<table>";
+   for (var i in infos) {
+      if (job_id == infos[i][0]) {
+         content += "<tr><td>" + infos[i][1] + ":</td>";
+         content += "<td> &nbsp; &nbsp; &nbsp; </td>";
+         content += "<td>" + infos[i][4] + "</td></tr>";
+      }
+   }
+   content += "</table>";
+   $("#job_info").append(content);
+   $("#job_info").append($("<p>"));
+   $("#job_info").append($("<label>").html("<u>Files</u>"));
+   $("#job_info").append($("<p>"));
+   var files = {{ files|safe }};
+   for (var f in files) {
+      if (job_id == files[f][0]) {
+         $("#job_info").append($("<a>",
+            { 'href': '{{ ROOT_URL }}jobFileView?file=' + files[f][2],
+              'html': files[f][1] }
+         ));
+         $("#job_info").append($("<br>"));
+      }
+   }
+   $("#job_links").show(); 
+   $("#job_links").empty();
+   $("#job_links").append($("<label>").html("<b>Links: </b>"));
+   $("#job_links").append($("<hr>"));
+   var groups = {{ groups|safe }};
+   for (var g in groups) {
+      if (job_id == groups[g][0]) {
+         $("#job_links").append($("<a>",
+            { 
+               'href': '{{ ROOT_URL }}analyse/overview/{{ application }}' +
+                  '?grps=' + groups[g][1] +
+                  '&jobs=' + job_ids + 
+                  '&options=' + opt_id +
+                  '&versions=' + app_id +
+                  '&trigger=true',
+               'html': groups[g][1] + ' '
+            }
+         ));
+      }
+   }
+}
+
+google.setOnLoadCallback(drawVisualization);
+</script>
+{% endblock head %}
+
+{% block script %}
+
+$(document).ready(function () {
+	$("#jobListMenu").attr('checked', 'checked').button("refresh");
+	$('#tabs').tabs({ selected : -1 });
+	$('#tabs').tabs('select', '#{{ active_tab }}tab');
+   $('#tabs').tabs("disable");
+});
+
+{% endblock script %}
+
+{% block stylecss %}
+
+#main {
+    width: 1200px;
+    height: 700px;
+}
+#header {
+    width: 1200px;
+    height: 10px;
+}
+#left {
+    width: 600px;
+    height: 670px;
+    float:left;
+}
+#right {
+    height: 670px;
+    overflow: hidden;
+}
+#footer {
+    width : 1200px;
+    height: 20px;
+}
+.info-box-head {
+    width : 550px;
+    height: 100px;
+}
+.info-box-info {
+    width : 550px;
+    height: 300px;
+}
+.info-box-links {
+    width : 550px;
+    height: 50px;
+}
+.google-table-row-odd {
+   background-color: #eef3f6;
+}
+.google-table-row {
+   background-color: #6ca6cd;
+}
+.google-table-head {
+   background-color: #6ca6cd;
+   font-size: 10px;
+   height: 15px;
+}
+.google-table td {
+   font-size: 10px;
+   height: 30px;
+}
+
+{% endblock stylecss %}
+
+{% block helptext %} {% endblock helptext %}
+
+{% block pagebody %}
+
+<div id="tabs">
+   <ul>
+		<li><a id="AlltabButton" href="#Alltab">All</a></li>
+		{% for app in applications %}
+		<li><a id="{{ app }}tabButton" href="#{{ app }}tab">{{ app }}</a></li>
+		{% endfor %}
+   </ul>
+   <div id="{{ active_tab }}tab">
+   <div id="main">
+      <div id="left" class="google-table"></div>
+      <div id="right" class="google-table">
+         <table>
+         <tr><td>
+            <div id="job_info_head" class="info-box-head info-box information"> 
+         </td></tr>
+         <tr><td>
+            <div id="job_info" class="info-box-info info-box information">
+         </td></tr>
+         <tr><td>
+            <div id="job_links" class="info-box-links info-box information">
+         </td></tr>
+         </table>
+      </div>
+      <div id="cleaner"> 
+   </div>
+   <div id="footer"></div>
+</div>
+
+{% endblock pagebody %}

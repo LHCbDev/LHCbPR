@@ -2,34 +2,206 @@
 
 {% block title %} Home {% endblock title %}
 
-{% block head %} {% endblock head %}
+{% block head %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript"> 
+google.load('visualization', '1.2', {packages: ['controls']});
+/*
+ * Draw table in link list dialog.
+*/
+function drawVisualization() {
+   /* Get links from Django */
+   var link_array = {{ links|safe }};
 
-{% block script %} 
+   /* Prepare data table. */
+   data = new google.visualization.DataTable();
+   data.addColumn('number', 'Id');
+   data.addColumn('string', 'Application');
+   data.addColumn('string', 'Link');
+   data.addColumn('string', 'Description');
+   data.addColumn('string', 'Date');
+   data.addRows(link_array);
+   data.setProperty(0, 2, 'style', 'width:300px');
+   data_view = new google.visualization.DataView(data);
+   data_view.setColumns([1, 3, 4]);
 
+   /* Define table style as in JobsList.*/
+   var cnfStyle = {
+      oddTableRow : 'google-table-row-odd',
+      headerCell  : 'google-table-head'
+   }
+
+   /* Add category filter for applications. */
+   var appPicker = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'link-dialog-app-picker',
+      'options': {
+         'filterColumnLabel': 'Application',
+         'ui': {
+            'allowTyping'  : false,
+            'allowMultiple': false
+         }
+      }
+   });
+
+   /* Add category filter for insert date. */
+   var datePicker = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'link-dialog-date-picker',
+      'options': {
+         'filterColumnLabel': 'Date',
+         'ui': {
+            'allowTyping'  : false,
+            'allowMultiple': false
+         }
+      }
+   });
+
+   /* Add tabel for link data. */
+   var table = new google.visualization.ChartWrapper({
+      'chartType'  : 'Table',
+      'containerId': 'link-dialog-table',
+      'options'    : {
+         'allowHtml' : true,
+         'page'      : 'enable',
+         'pageSize'  : 10,
+         'pagingSymbols': {prev: 'prev', next: 'next'}, 
+         'pargingButtonsConfiguration': 'auto'
+      },
+      'alternatingRowStyle': true,
+      'cssClassNames'      : cnfStyle
+   });
+
+   /* Create dashboard and combine filters. */
+   new google.visualization.Dashboard(document.getElementById('link-dialog')).
+      bind([appPicker, datePicker], [table]).
+      draw(data_view);
+
+   /* Handler in wrapper can first be added, when ready. */
+   google.visualization.events.addListener(table, 'ready', function(){
+      google.visualization.events.addListener(table.getChart(), 'select', function() {
+         var selection = table.getChart().getSelection();
+         if ( selection[0].row > -1 ) {
+            location.href = link_array[selection[0].row][2];
+         }
+      });
+   });
+}
+
+google.setOnLoadCallback(drawVisualization);
+</script>
+{% endblock head %}
+
+{% block script %}
+/*
+ * Initialization of document. Prepare list of links (bookmarks).
+*/
 $(document).ready(function () {
 	$("#homeMenu").attr('checked', 'checked').button("refresh");
+
+   /* Get links from Django */
+   var link_array = {{ links|safe }};
+
+   /*
+    * On page (in div d4), a list of 10 links shell be shown.
+    * First add ul to d4, then walk through each link in array.
+    *
+    * link_array is organized in:
+    * elem[1] - App.name;  elem[3] - Description;
+    * elem[2] - Link;      elem[4] - Date added;
+   */
+   $('#d4').append('<ul id="ulli"></ul>');
+   $.each(link_array, function(key, elem) {
+      $("<li></li>").append($("<a></a>", {
+         text: elem[1] + " - " + elem[3] + " - " + elem[4],
+         href: elem[2]
+      })).appendTo('#ulli');
+   });
+
+   /* Limit shown items to 10. */
+   var displayAmt = 10;
+   $('#d4 li').slice(displayAmt).hide();
+   
+   /* Add link to open dialog to show all bookmarks. */
+   $('#d4').append('<a id="ali" href="#" class="right">all</a>');
+
+   /* Add open dialog event. */
+   $("#ali").click(function(){
+      $("#link-dialog").dialog({
+         width:  550,
+         height: 600,
+         buttons: {
+            OK: function(){
+               $(this).dialog("destroy");
+            }
+         }
+      });
+   });
 });
 {% endblock script %}
 
 
-{% block stylecss %} {% endblock stylecss %}
+{% block stylecss %}
+.right {float:right;}
 
-{% block helptext %} {% endblock helptext %}
+margin-bottom: 20px;
+
+.google-table-row-odd {
+    background-color: #eef3f6;
+}
+.google-table-row {
+    background-color: #6ca6cd;
+}
+.google-table-head {
+    background-color: #6ca6cd;
+    font-size: 9px;
+}
+{% endblock stylecss %}
+
+{% block helptext %} This help block is used to describe what you can find and what you can do on the page it appears.{% endblock helptext %}
 
 {% block pagebody %}
-<h2 id="demoHeaders" class="demoHeaders">LHCb PR
-		</h2>
-		<div id="yo" class="fakewindowcontain" style="height : 200px">
-			<p>LHCb Performance and Regression(PR) is a service designed to record important measures about releases of the
-version of the LHCb software. LHCb applications , such as Gauss, Brunel, Moore etc,  receive input in the form of configuration files 
-and produce, as an output, various information.
-LHCbPR is not intended to actually run the jobs(maybe a future feature), but instead to manage and track the bulk of information produced by them.
-</p><p>
-The LHCb Performance and Regression is a framework that allows LHCb software developer to push qualitative information about
-a run of their code(results, performance measures) to a central database, from which an analysis can be performed across
-version, configs(platforms) etc.
-</p>
+<!--
+ * This div is used as a JQuery dialog.
+ * Google chart is used to add a table.
+ * App and Date picker r used as controler.
+-->
+<div id="link-dialog" title="Links collected" style="display: none; width: 525px">
+<table>
+<tr>
+<td><div id="link-dialog-app-picker"></div></td>
+<td><div id="link-dialog-date-picker"></div><td>
+<tr>
+<td colspan=2><div id="link-dialog-table" style="width: 525px;"></div></td>
+</table>
+</div>
 
-			<div class="ui-widget-overlay"></div>
-		</div><!-- /fakewindowscontain-->
+<h2 id="demoHeaders" class="demoHeaders">LHCb PR</h2>
+<div>
+   <div id="d1" class="info-box information" style="height: 200px; width: 550px;">
+      <h3 id="demoHeaders" class="demoHeaders">About LHCb PR</h3>
+      LHCb Performance and Regression(PR) is a service designed to record important measures about releases of the version of the LHCb software. LHCb applications , such as Gauss, Brunel, Moore etc,  receive input in the form of configuration files and produce, as an output, various information. LHCbPR is not intended to actually run the jobs(maybe a future feature), but instead to manage and track the bulk of information produced by them.
+      <br>
+      The LHCb Performance and Regression is a framework that allows LHCb software developer to push qualitative information about a run of their code(results, performance measures) to a central database, from which an analysis can be performed across version, configs(platforms) etc.
+   </div>
+   <div id="d2" class="info-box information" style="width: 550px;">
+      <h3 id="demoHeaders" class="demoHeaders">Information</h3>
+      <table>
+         <tr>
+         <td><b>June '13:</b></td><td>Creating tag 1.0.0 from deployed master branch.</td>
+         <tr>
+      </table>
+   </div>
+   <div id="d3" class="info-box information" style="width: 550px;">
+      <h3 id="demoHeaders" class="demoHeaders">Documentation</h3>
+      <ul>
+         <li><label><a href="{{ STATIC_URL }}docs/lhcbpr.pdf">Documentation for Development</a></label></li>
+         <li><label><a href="https://twiki.cern.ch/twiki/bin/view/LHCb/LHCbPR">Description of general idea and structure in Twiki</a></label></li>
+         <li><label><a href="http://indico.cern.ch/getFile.py/access?contribId=3&resId=0&materialId=slides&confId=247333">Presentation about Performance and Regression platform</a></label></li>
+      </ul>
+   </div>
+   <div id="d4" class="info-box information" style="width: 550px;">
+      <h3 id="demoHeaders" class="demoHeaders">Recent Links</h3>
+   <div>
+</div>
 {% endblock pagebody %}
