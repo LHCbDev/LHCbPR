@@ -5,7 +5,7 @@
 rm /tmp/mytemp_log
 
 #Setup the enviroment to use LHCbDirac
-. /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/SetupProject.sh LHCbDirac -q
+. /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/SetupProject.sh LHCbDirac pytools oracle -q
 
 #also add to the pythonpath a local copy of Django we have in the AFS web directory we have
 #and IMPORTANT, add the afs pytools path, in order to have access to cx_Oracle module needed to connect to the Oracle database. 
