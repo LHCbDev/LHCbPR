@@ -1,7 +1,6 @@
-import logging
-import urllib
-from django.db.models import Q
+import json, subprocess, sys, re, copy, os, logging, urllib
 from django.db import connection, transaction, DatabaseError, IntegrityError
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt    
@@ -12,11 +11,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.files import File 
 
 from lhcbPR.models import HandlerResult, Host, JobDescription, Requested_platform, Platform, Application, Options, SetupProject, Handler, JobHandler, Job, JobResults
-import json, subprocess, sys, re, copy, os
-from pprint import pformat
-from exceptions import AttributeError
-from random import choice
 from tools.viewTools import handle_uploaded_file, makeQuery, formBuilder, getSplitted, jobdescription
+from pprint import pformat
+from random import choice
 
 #get the loggers
 logger = logging.getLogger('views_logger')
@@ -155,18 +152,20 @@ def jobDescriptions(request, app_name):
    
 @login_required 
 def joblistDescHome(request):
-   """List of available jobs and runns"""
-   return joblistDesc(request, "")
+    """List of available jobs and runns"""
+    return joblistDesc(request, "")
 
 @login_required 
 def joblistDesc(request, app_name):
-   """List of available jobs and runns"""
-   cnf_query = "SELECT DISTINCT \
+    """List of available jobs and runns"""
+    cnf_query = "SELECT DISTINCT \
       LHCBPR_JOBDESCRIPTION.ID, \
       LHCBPR_APPLICATION.APPNAME, \
       LHCBPR_APPLICATION.APPVERSION, \
       LHCBPR_PLATFORM.ID, \
       LHCBPR_PLATFORM.CMTCONFIG, \
+      LHCBPR_HOST.ID, \
+      LHCBPR_HOST.HOSTNAME, \
       LHCBPR_OPTIONS.DESCRIPTION, \
       LHCBPR_OPTIONS.CONTENT, \
       LHCBPR_SETUPPROJECT.DESCRIPTION AS SETUP_DESC, \
@@ -182,6 +181,8 @@ def joblistDesc(request, app_name):
       FROM LHCBPR_JOB \
       INNER JOIN LHCBPR_PLATFORM \
       ON LHCBPR_PLATFORM.ID = LHCBPR_JOB.PLATFORM_ID \
+      INNER JOIN LHCBPR_HOST \
+      ON LHCBPR_HOST.ID = LHCBPR_JOB.HOST_ID \
       INNER JOIN LHCBPR_JOBDESCRIPTION \
       ON LHCBPR_JOBDESCRIPTION.ID = LHCBPR_JOB.JOBDESCRIPTION_ID \
       INNER JOIN LHCBPR_APPLICATION \
@@ -191,33 +192,35 @@ def joblistDesc(request, app_name):
       INNER JOIN LHCBPR_SETUPPROJECT \
       ON LHCBPR_SETUPPROJECT.ID = NVL(LHCBPR_JOBDESCRIPTION.SETUP_PROJECT_ID, 1)"
 
-   query = ""
-   if not app_name == "All":
-      query = " WHERE LHCBPR_APPLICATION.APPNAME = \'{0}\'".format(app_name)
+    query = ""
+    if not app_name == "All":
+        query = " WHERE LHCBPR_APPLICATION.APPNAME = \'{0}\'".format(app_name)
 
-   cnf_query += query
+    cnf_query += query
 
-   cnf_query += " GROUP BY LHCBPR_JOBDESCRIPTION.ID, \
+    cnf_query += " GROUP BY LHCBPR_JOBDESCRIPTION.ID, \
      LHCBPR_APPLICATION.APPNAME, \
      LHCBPR_APPLICATION.APPVERSION, \
      LHCBPR_PLATFORM.ID, \
      LHCBPR_PLATFORM.CMTCONFIG, \
+     LHCBPR_HOST.ID, \
+     LHCBPR_HOST.HOSTNAME, \
      LHCBPR_OPTIONS.DESCRIPTION, \
      LHCBPR_OPTIONS.CONTENT, \
      LHCBPR_SETUPPROJECT.DESCRIPTION, \
      LHCBPR_SETUPPROJECT.CONTENT"
 
-   cnf_query += " ORDER BY ENDTIME DESC"
+    cnf_query += " ORDER BY ENDTIME DESC"
    # print "Joblist Query: ", cnf_query
 
-   cursor = connection.cursor()
-   cursor.execute(cnf_query)
-   description = [i[0] for i in cursor.description]
-   configurations = cursor.fetchall()
+    cursor = connection.cursor()
+    cursor.execute(cnf_query)
+    description = [i[0] for i in cursor.description]
+    configurations = cursor.fetchall()
 
-   applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
+    applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
 
-   return render_to_response('lhcbPR/joblistHome.html',
+    return render_to_response('lhcbPR/joblistHome.html',
                   { 'configs' : json.dumps(configurations),
                     'active_tab' : app_name,
                     'description' : description,
@@ -226,16 +229,17 @@ def joblistDesc(request, app_name):
                   context_instance=RequestContext(request))
 
 @login_required 
-def joblistInfo(request, app_name, desc_id, plat_id):
-   """Detailed information of jobs belonging to a certain job_description.id (configuration)."""
-   if not desc_id:
-      return HttpResponseNotFound("<h3>No existing jobs for job description or no job description given.</h3>")
+def joblistInfo(request, app_name, desc_id, plat_id, host_id):
+    """Detailed information of jobs belonging to a certain job_description.id (configuration)."""
+    if not desc_id:
+        return HttpResponseNotFound("<h3>No existing jobs for job description or no job description given.</h3>")
 
-   job_query = "SELECT LHCBPR_JOB.ID AS ID, \
+    job_query = "SELECT LHCBPR_JOB.ID AS ID, \
       LHCBPR_APPLICATION.APPNAME AS Project, \
       LHCBPR_APPLICATION.APPVERSION AS Version, \
       LHCBPR_APPLICATION.ID AS APP_ID, \
       LHCBPR_PLATFORM.CMTCONFIG AS Platform, \
+      LHCBPR_HOST.HOSTNAME AS Hostname, \
       LHCBPR_OPTIONS.DESCRIPTION AS Options, \
       LHCBPR_OPTIONS.ID AS OPT_ID, \
       TO_CHAR(LHCBPR_JOB.TIME_START, 'YYYY-MM-DD HH12:MI:SS AM') AS TIME_START, \
@@ -244,6 +248,8 @@ def joblistInfo(request, app_name, desc_id, plat_id):
       FROM LHCBPR_JOB \
       INNER JOIN LHCBPR_PLATFORM \
       ON LHCBPR_PLATFORM.ID = LHCBPR_JOB.PLATFORM_ID \
+      INNER JOIN LHCBPR_HOST \
+      ON LHCBPR_HOST.ID = LHCBPR_JOB.HOST_ID \
       INNER JOIN LHCBPR_JOBDESCRIPTION \
       ON LHCBPR_JOBDESCRIPTION.ID = LHCBPR_JOB.JOBDESCRIPTION_ID \
       INNER JOIN LHCBPR_APPLICATION \
@@ -251,15 +257,16 @@ def joblistInfo(request, app_name, desc_id, plat_id):
       INNER JOIN LHCBPR_OPTIONS \
       ON LHCBPR_OPTIONS.ID = LHCBPR_JOBDESCRIPTION.OPTIONS_ID"
    
-   query  = " WHERE LHCBPR_JOBDESCRIPTION.ID = {0}".format(desc_id)
-   query += " AND LHCBPR_PLATFORM.ID = {0}".format(plat_id)
+    query  = " WHERE LHCBPR_JOBDESCRIPTION.ID = {0}".format(desc_id)
+    query += " AND LHCBPR_PLATFORM.ID = {0}".format(plat_id)
+    query += " AND LHCBPR_HOST.ID = {0}".format(host_id)
 
-   job_query += query
-   job_query += " ORDER BY LHCBPR_JOB.ID"
+    job_query += query
+    job_query += " ORDER BY LHCBPR_JOB.ID"
 
    #print job_query
 
-   info_query = "SELECT LHCBPR_JOBRESULTS.JOB_ID, \
+    info_query = "SELECT LHCBPR_JOBRESULTS.JOB_ID, \
       LHCBPR_JOBATTRIBUTE.NAME, \
       LHCBPR_JOBATTRIBUTE.\"GROUP\", \
       LHCBPR_JOBATTRIBUTE.DESCRIPTION, \
@@ -275,7 +282,7 @@ def joblistInfo(request, app_name, desc_id, plat_id):
 
    #print info_query
 
-   file_query = "SELECT LHCBPR_JOBRESULTS.JOB_ID, \
+    file_query = "SELECT LHCBPR_JOBRESULTS.JOB_ID, \
      LHCBPR_JOBATTRIBUTE.NAME, \
      LHCBPR_RESULTFILE.\"FILE\" \
      FROM LHCBPR_JOBRESULTS \
@@ -287,7 +294,7 @@ def joblistInfo(request, app_name, desc_id, plat_id):
 
    #print file_query
 
-   group_query = "SELECT DISTINCT LHCBPR_JOBRESULTS.JOB_ID, \
+    group_query = "SELECT DISTINCT LHCBPR_JOBRESULTS.JOB_ID, \
      LHCBPR_JOBATTRIBUTE.\"GROUP\" \
      FROM LHCBPR_JOBRESULTS \
      INNER JOIN LHCBPR_JOBATTRIBUTE \
@@ -298,34 +305,36 @@ def joblistInfo(request, app_name, desc_id, plat_id):
 
    #print group_query
 
-   cursor = connection.cursor()
-   cursor.execute(job_query)
-   description = [i[0] for i in cursor.description]
-   jobs = cursor.fetchall()
+    cursor = connection.cursor()
+    cursor.execute(job_query)
+    description = [i[0] for i in cursor.description]
+    jobs = cursor.fetchall()
 
-   cursor = connection.cursor()
-   cursor.execute(info_query)
-   description = [i[0] for i in cursor.description]
-   infos = cursor.fetchall()
+    cursor = connection.cursor()
+    cursor.execute(info_query)
+    description = [i[0] for i in cursor.description]
+    infos = cursor.fetchall()
 
-   cursor = connection.cursor()
-   cursor.execute(file_query)
-   description = [i[0] for i in cursor.description]
-   files = cursor.fetchall()
+    cursor = connection.cursor()
+    cursor.execute(file_query)
+    description = [i[0] for i in cursor.description]
+    files = cursor.fetchall()
 
-   cursor = connection.cursor()
-   cursor.execute(group_query)
-   description = [i[0] for i in cursor.description]
-   groups = cursor.fetchall()
+    cursor = connection.cursor()
+    cursor.execute(group_query)
+    description = [i[0] for i in cursor.description]
+    groups = cursor.fetchall()
+
+    print jobs
  
-   atr_groups = []
-   for k, v in enumerate(groups):
-      if v[0] != "":
-         atr_groups.append([v[0], v[1]])
+    atr_groups = []
+    for k, v in enumerate(groups):
+        if v[0] != "":
+            atr_groups.append([v[0], v[1]])
 
-   applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
+    applicationList = Application.objects.values_list('appName',flat=True).distinct().order_by('appName')
 
-   return render_to_response('lhcbPR/joblistInfo.html',
+    return render_to_response('lhcbPR/joblistInfo.html',
                   {
                     'jobs'        : json.dumps(jobs),
                     'infos'       : json.dumps(infos),
@@ -586,7 +595,7 @@ def analysis_function(request, analysis_type, app_name):
                 template = 'analysis/default_analyse.html'
                 #in case of default template  return str representation of data
                 if not 'str' in user_data:
-                 user_data['str'] = pformat(user_data)
+                    user_data['str'] = pformat(user_data)
             
             
         dataDict = {}
@@ -615,12 +624,12 @@ def getFilters(request):
         
         final_query = Q()
         for q in querylist:
-           final_query &= q 
+            final_query &= q 
         
         jobDesTemp = JobDescription.objects.filter(final_query)
         Qplatform = None
         if request.GET['platforms']:
-           Qplatform = makeQuery('cmtconfig__id__exact', request.GET['platforms'].split(','), Q.OR)
+            Qplatform = makeQuery('cmtconfig__id__exact', request.GET['platforms'].split(','), Q.OR)
         
         paginator = Paginator(jobDesTemp,results_per_page)
         requested_page = request.GET['page']
@@ -969,9 +978,9 @@ def new_job_description(request):
     try:
         result = jobdescription(dataDict)
     except Exception, e:
-         #TODO look up for the logger cause they do not work from times to times damn 
-         logger.exception(e)
-         return HttpResponse('{0} {1}'.format(Exception, e))
-         #return HttpResponse( json.dumps({ 'error' : True, 'errorMessage': '{0}'.format(e) }) )
+        #TODO look up for the logger cause they do not work from time to time 
+        logger.exception(e)
+        return HttpResponse('{0} {1}'.format(Exception, e))
+        #return HttpResponse( json.dumps({ 'error' : True, 'errorMessage': '{0}'.format(e) }) )
     else:
         return HttpResponse(json.dumps(result))
