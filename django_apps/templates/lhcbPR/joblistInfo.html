@@ -26,6 +26,7 @@ function drawVisualization() {
    job_data.addColumn('string', 'Version');
    job_data.addColumn('number', 'AppId');
    job_data.addColumn('string', "Platform");
+   job_data.addColumn('string', "Hostname");
    job_data.addColumn('string', "Options");
    job_data.addColumn('number', 'OptId');
    job_data.addColumn('string', "Start");
@@ -38,7 +39,7 @@ function drawVisualization() {
    //job_data.setProperty(0, 8, 'style', 'width:100px');
    //job_data.setProperty(0, 9, 'style', 'width:30px');
    job_data_view = new google.visualization.DataView(job_data);
-   job_data_view.setColumns([0,7,8,9]);
+   job_data_view.setColumns([0,8,9,10]);
 
    // Create and draw the visualization.
    job_visualization = new google.visualization.Table(document.getElementById('left'));
@@ -80,7 +81,8 @@ function showInfo() {
       var app = job_data.getValue(0, 1);
       var ver = job_data.getValue(0, 2);
       var plt = job_data.getValue(0, 4);
-      var opt = job_data.getValue(0, 5);
+      var hst = job_data.getValue(0, 5);
+      var opt = job_data.getValue(0, 6);
       var appl_name  = app + " vers. " + ver;
       table_content = "<table>";
       table_content += "<tr><td style='height:15px;'>Project: </td>"
@@ -89,6 +91,8 @@ function showInfo() {
       table_content += "<td style='height:15px;'>" + plt + "</td></tr>";
       table_content += "<tr><td style='height:15px;'>Option: </td>";
       table_content += "<td style='height:15px;'>" + opt + "</td></tr>";
+      table_content += "<tr><td style='height:15px;'>Hostname: </td>";
+      table_content += "<td style='height:15px;'>" + hst + "</td></tr>";
       table_content += "</table>";
       $("#job_info_head").append(table_content);
    }
@@ -98,7 +102,7 @@ function showInfo() {
 function handleJobs()
 {
    var selection = job_visualization.getSelection();
-   var succs     = job_data.getValue(selection[0].row, 9);
+   var succs     = job_data.getValue(selection[0].row, 10);
    if (succs == "0") {
       alert("Not successfull finalized dataset");
       return;
@@ -107,7 +111,7 @@ function handleJobs()
    var job_ids   = "";
    var r;
    for (r=0; r<job_data.getNumberOfRows(); r++) {
-      if (job_data.getValue(r, 9) == 1) {
+      if (job_data.getValue(r, 10) == 1) {
          job_ids += job_data.getValue(r, 0);
          job_ids += ",";
       }
@@ -115,7 +119,7 @@ function handleJobs()
    if (job_ids.length>0)
       job_ids = job_ids.substring(0, job_ids.length - 1);
    var app_id = job_data.getValue(selection[0].row, 3);
-   var opt_id = job_data.getValue(selection[0].row, 6);
+   var opt_id = job_data.getValue(selection[0].row, 7);
    $("#job_info").show(); 
    $("#job_info").empty();
    $("#job_info").append($("<label>").html("<b>Job information: </b>"));

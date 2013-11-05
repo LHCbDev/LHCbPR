@@ -18,7 +18,7 @@ function drawVisualization() {
    // Create and populate the data table.
 	var cnfs = {{ configs|safe }};
    for (var i = 0; i<cnfs.length; i++) { 
-      cnfs[i][9] = new Date(cnfs[i][9]*1000);
+      cnfs[i][11] = new Date(cnfs[i][11]*1000);
    }
    cnf_data = new google.visualization.DataTable();
    cnf_data.addColumn('number', 'Id');
@@ -26,6 +26,8 @@ function drawVisualization() {
    cnf_data.addColumn('string', 'Version');
    cnf_data.addColumn('number', 'PlatformID');
    cnf_data.addColumn('string', 'Platform');
+   cnf_data.addColumn('number', 'HostID');
+   cnf_data.addColumn('string', 'Hostname');
    cnf_data.addColumn('string', 'Option Name');
    cnf_data.addColumn('string', 'Option');
    cnf_data.addColumn('string', 'Setup Name');
@@ -42,12 +44,12 @@ function drawVisualization() {
    formatter.addRange(0   , 0.33, 'black', 'red');
    formatter.addRange(0.33, 0.66, 'black', 'orange');
    formatter.addRange(0.66, 2.00, 'black', 'green');
-   formatter.format(cnf_data, 10);
+   formatter.format(cnf_data, 12);
    var num_formatter = new google.visualization.TableNumberFormat({pattern:'#.##%'});
-   num_formatter.format(cnf_data, 10);
+   num_formatter.format(cnf_data, 12);
 
    cnf_view = new google.visualization.DataView(cnf_data);
-   cnf_view.setColumns([0, 1, 2, 4, 5, 7, 9, 11, 10]);
+   cnf_view.setColumns([0, 1, 2, 4, 6, 7, 9, 11, 13, 12]);
 
    var cnfStyle = {
       oddTableRow : 'google-table-row-odd',
@@ -115,7 +117,7 @@ function drawVisualization() {
       'chartType'  : 'Table',
       'containerId': 'left-table',
       'options'    : {
-         'width'     : 750,
+         'width'     : 820,
          'height'    : 600,
          'chartArea': {top: 0, right: 0, bottom: 0},
          'allowHtml' : true,
@@ -172,7 +174,8 @@ function drawVisualization() {
          var description_id = cnf_data.getValue(index, 0);
          var app_name       = cnf_data.getValue(index, 1);
          var platform_id    = cnf_data.getValue(index, 3);
-         location.href = "{{ ROOT_URL }}joblistInfo/" + app_name + "/" + description_id + "/" + platform_id + "/";
+         var host_id        = cnf_data.getValue(index, 5);
+         location.href = "{{ ROOT_URL }}joblistInfo/" + app_name + "/" + description_id + "/" + platform_id + "/" + host_id;
       });
    });
 }
@@ -215,7 +218,7 @@ $(document).ready(function () {
     height: 10px;
 }
 #left {
-    width: 750px;
+    width: 850px;
     height: 670px;
     float:left;
 }
@@ -272,7 +275,7 @@ $(document).ready(function () {
                   <td><div id="left-setup-picker"></div></td>
                </table>
             </td><tr>
-               <td><div id="left-table" style="width: 750px;"></div></td>
+               <td><div id="left-table" style="width: 850px;"></div></td>
          </table>
       </div>
       <div id="right" class="google-table"></div>
