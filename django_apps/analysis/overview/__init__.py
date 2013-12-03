@@ -15,6 +15,34 @@ class GroupDict(dict):
          self[key] = []
       return dict.__getitem__(self, key)
 
+def missing_lines(input1, input2):
+   print "missing line"
+   ghosts = False 
+   input1.sort()
+   input2.sort()
+   for l2,c2 in enumerate(input2):
+      candidate = input2[l2][0]
+      for l1,c1 in enumerate(input1):
+         if input1[l1][0] == candidate:
+            candidate = ""
+            break;
+      if candidate:
+         #print input1[l2][4]
+         m=re.match(r"Id: (\d+)", input1[l2][4])
+         if m:
+            new_id=m.group(0)
+         line = input2[l2]
+         line[1] = 0
+         line[2] = 0
+         line[3] = 0
+         line[4] = re.sub("Average:(.|\n)*", "GHOST", line[4])
+         line[4] = re.sub("Id:.*", "Id: " + new_id, line[4])
+         input1.insert(l2, line)
+         ghosts = True
+          
+   print "return missing line"
+   return ghosts
+
 def render(**kwargs):
    app_name = kwargs['app_name']
    request  = kwargs['requestData']
@@ -146,8 +174,6 @@ def analyse(**kwargs):
          for k in entry_avg.keys():
              # Bug occurs with this key, probably import to DB failed
              # values (id) and others already in DB missing! 
-             if k == "Hlt2CharmHadD2HHHKsDD":
-                continue
              db_temp.append([ \
                '{0}'.format(k), \
                float(entry_avg[k]), \
@@ -166,6 +192,7 @@ def analyse(**kwargs):
                float(entry_avg[k]-entry_sdv[k]), \
                'Average: {0}\nStddev.: +-{1}'.format(entry_avg[k], entry_sdv[k])
             ])
+
          sort_column = 0
          if sorting == "true":
             sort_column = 1
@@ -181,8 +208,24 @@ def analyse(**kwargs):
       dataDict['sort']         = sort_column
       dataDict['log']          = logscale
       dataDict['axis']         = axis
+      dataDict['ghost']        = False
+      dataDict['length']       = True
 
       trends.append(dataDict)
+ 
+   print "Start validation ..."
+   if len(trends) > 1:
+      length = len(trends[0]['datatable']);
+      print length
+      for idx in range(1, len(trends)):
+         length = len(trends[0]['datatable']);
+         length_n = len(trends[idx]['datatable']);
+         print length_n
+         trends[idx-1]['ghost'] = missing_lines(trends[idx-1]['datatable'], trends[idx]['datatable']);
+         trends[idx]['ghost']   = missing_lines(trends[idx]['datatable'], trends[idx-1]['datatable']);
+         if length != len(trends[idx]['datatable']):
+            print "war nix"
+            trends[idx]['length'] = False;
 
    return { 'trends': json.dumps(trends) }
 
