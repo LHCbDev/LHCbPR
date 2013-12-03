@@ -1,5 +1,5 @@
 <script type="text/javascript">
-   google.load('visualization', '1.1', {packages: ['corechart', 'controls'], callback:drawChart});
+   google.load('visualization', '1', {packages: ['corechart', 'controls'], callback:drawChart});
    var warning_ghosts = false;
    /**
     * Insert "ghost" values from items of table input2, if they are 
@@ -59,10 +59,16 @@
     * for each group a tends-datatable is passed from django.
    */
    function drawChart() {
-	   var trends = {{ trends|safe }};
-      var valid  = validation(trends);
+      var trends = {{ trends|safe }};
+      var valid  = true;
+      //var valid  = validation(trends);
+      warning_ghost = false
+      for (var i = 0; i < trends.length; i++) {
+         valid &= trends[i]['length'];
+         warning_ghost |= trends[i]['ghost'];
+      }
 
-	   var chart_area_div = document.getElementById("chart_area");
+      var chart_area_div = document.getElementById("chart_area");
       var barChart;
 
       if(warning_ghosts) {
@@ -128,7 +134,7 @@
 		      chart_area_div.appendChild(line);
          }
       } else {
-			var trend_div = document.createElement("div");
+         var trend_div = document.createElement("div");
 
          // Value set to filter lines out with a difference below.
          var diff_min = trends[0]['dist'];
@@ -138,6 +144,7 @@
 			trend_div.style.height = 500;
 			chart_area_div.appendChild(trend_div);
          // Create new data table from trend information.
+         //var start2 = new Date().getTime();
          var data = new google.visualization.DataTable();
          data.addColumn('string', 'Unit');
          for (var r = 0; r < trends[0]['datatable'].length; r++) {
@@ -175,6 +182,8 @@
                data.addRow(new_trend);
             }
          }
+         //var end2 = new Date().getTime();
+         //var time2 = end2 - start2;
          if ( trends[0]['sort'] == 1 ) {
             data.sort([{column: trends[0]['sort'], desc: true}]);
          } else {
@@ -189,6 +198,7 @@
             [{column: 1, minValue: trends[0]['min'], maxValue: max_value}]
          ));
          data_rows = 25*view.getNumberOfRows();
+         //alert(time2 + " " + view.getNumberOfRows());
          barChart = new google.visualization.BarChart(document.getElementById("trend")).
             draw(view, {
                title    : "Overview",
