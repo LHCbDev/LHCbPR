@@ -56,10 +56,12 @@ def render(**kwargs):
 def analyse(**kwargs):
     requestData = kwargs['requestData']
     app_name    = kwargs['app_name']
+
+    axis = "unknown unit"
     
     #if request.method == 'GET' and 'hosts' in request.GET and 'jobdes' in request.GET and 'platforms' in request.GET and 'atr' in request.GET:
     #fetch the right queries depending on user's choices no the request
-    query_groups, query_results = get_queries(requestData, app_name)
+    query_results = get_queries(requestData, app_name)
 
     #establish connection
     cursor = connection.cursor()
@@ -73,6 +75,8 @@ def analyse(**kwargs):
     result = cursor.fetchone()
     while not result == None:
         group = tuple(result[:-4])
+        if result[-3] != None and axis == "unknown unit":
+            axis  = result[2]
         groups[group].append(tuple(result[-4:]))
         
         result = cursor.fetchone()
@@ -83,11 +87,11 @@ def analyse(**kwargs):
         datatable_temp = []
         for res in values:
             # -4(version), -3(average value), -2(std), -1 entries
-            error = float(res[-2]) /  math.sqrt( float(res[-1]) ) 
+            error = float(res[-2])/ math.sqrt( float(res[-1]) ) 
             version = res[-4]
-            down_value = float(res[-3]) - float(res[-2])
             down_error = float(res[-3]) - error
             up_error = float(res[-3]) + error
+            down_value = float(res[-3]) - float(res[-2])
             up_value = float(res[-3]) + float(res[-2])
             
             datatable_temp.append([ '{0}({1})'.format(version,res[-1]), down_value, down_error, up_error, up_value, 'Average: {0}, -+{1}'.format(res[-3],res[-2]) ])
@@ -108,9 +112,10 @@ def analyse(**kwargs):
         else:
             datatable = datatable_temp2
         
-        dataDict['description'] = dict(zip([col[0] for col in cursor.description[:-4]], g))
-        dataDict['platform'] = dataDict['description']['PLATFORM']
-        dataDict['datatable'] = datatable
+        dataDict['description']  = dict(zip([col[0] for col in cursor.description[:-4]], g))
+        dataDict['platform']     = dataDict['description']['PLATFORM']
+        dataDict['datatable']    = datatable
+      	dataDict['axis']         = axis
         
         trends.append(dataDict)
         
