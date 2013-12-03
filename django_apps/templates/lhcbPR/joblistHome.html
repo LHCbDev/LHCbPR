@@ -5,7 +5,7 @@
 {% block head %}
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-google.load('visualization', '1.2', {packages: ['controls']});
+google.load('visualization', '1', {packages: ['controls']});
 /*
  * Var for configuration data, DataTable & DataView.
 */ 
@@ -16,7 +16,8 @@ var cnf_view;
 */
 function drawVisualization() {
    // Create and populate the data table.
-	var cnfs = {{ configs|safe }};
+   //console.profile();
+   var cnfs = {{ configs|safe }};
    for (var i = 0; i<cnfs.length; i++) { 
       cnfs[i][11] = new Date(cnfs[i][11]*1000);
    }
@@ -45,7 +46,7 @@ function drawVisualization() {
    formatter.addRange(0.33, 0.66, 'black', 'orange');
    formatter.addRange(0.66, 2.00, 'black', 'green');
    formatter.format(cnf_data, 12);
-   var num_formatter = new google.visualization.TableNumberFormat({pattern:'#.##%'});
+   var num_formatter = new google.visualization.NumberFormat({pattern:'#.##%'});
    num_formatter.format(cnf_data, 12);
 
    cnf_view = new google.visualization.DataView(cnf_data);
@@ -121,14 +122,16 @@ function drawVisualization() {
          'height'    : 600,
          'chartArea': {top: 0, right: 0, bottom: 0},
          'allowHtml' : true,
-         'page'      : 'enable',
+         'page'      : true,
          'pageSize'  : 14,
-         'pagingSymbols': {prev: '<', next: '>'}, 
+         'pagingSymbols': {prev: 'prev <', next: '> next'}, 
          'pargingButtonsConfiguration': 'auto',
          'alternatingRowStyle': true,
          'cssClassNames'      : cnfStyle
       }
    });
+
+   //console.profileEnd();
 
    /* Create dashboard and combine filters. */
    new google.visualization.Dashboard(document.getElementById('left')).
@@ -258,30 +261,32 @@ $(document).ready(function () {
 
 <div id="tabs">
    <ul>
-		<li><a id="AlltabButton" href="#Alltab">All</a></li>
-		{% for app in applications %}
-		<li><a id="{{ app }}tabButton" href="#{{ app }}tab">{{ app }}</a></li>
-		{% endfor %}
+      <li><a id="AlltabButton" href="#Alltab">All</a></li>
+      {% for app in applications %}
+         <li><a id="{{ app }}tabButton" href="#{{ app }}tab">{{ app }}</a></li>
+      {% endfor %}
    </ul>
    <div id="{{ active_tab }}tab">
-   <div id="main">
-      <div id="left" class="google-table">
-         <table>
-            <tr><td>
-               <table>
-                  <td><div id="left-version-picker"></div></td>
-                  <td><div id="left-platform-picker"></div></td>
-                  <td><div id="left-option-picker"></div></td>
-                  <td><div id="left-setup-picker"></div></td>
-               </table>
-            </td><tr>
-               <td><div id="left-table" style="width: 850px;"></div></td>
-         </table>
+      <div id="main">
+         <div id="left" class="google-table">
+            <table>
+               <tr><td>
+                  <table>
+                     <td><div id="left-version-picker"></div></td>
+                     <td><div id="left-platform-picker"></div></td>
+                     <td><div id="left-option-picker"></div></td>
+                     <td><div id="left-setup-picker"></div></td>
+                  </table>
+               </td></tr>
+               <tr><td>
+                  <div id="left-table" style="width: 850px;"></div>
+               </td></tr>
+            </table>
+         </div>
+         <div id="right" class="google-table"></div>
+         <div id="cleaner"></div> 
       </div>
-      <div id="right" class="google-table"></div>
-      <div id="cleaner"> 
-   </div>
-   <div id="footer"></div>
+      <div id="footer"></div>
    </div>
 </div>
 
