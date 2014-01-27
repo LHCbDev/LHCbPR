@@ -62,7 +62,7 @@ def makeTreeMap(node_name, finalnodes, lastparent, node_data, node_childs):
         for child in node_childs[node_name]:
             makeTreeMap(child, finalnodes, lastparent, node_data, node_childs)
     else:
-          return
+        return
 
 def analyse(**kwargs):
     #return {}
