@@ -39,7 +39,7 @@ Online and Offline applications are built on top of Gaudi. Moore is the implemen
 \subsection{Computing environment}
 \label{sec:computing_environment}
 
-The LHCb computing environment consists of computing resources of the Worldwide LHC Computing Grid (WLCG), of Cloud Infrastructure and of the HLT farm located at the experiment. Additional, virtualization is used and just recently volunteer computing has been added using Boinc. Some 100k CPUs are involved in the data processing. 
+The LHCb computing environment consists of computing resources of the Worldwide LHC Computing Grid (WLCG), of Cloud Infrastructure and of the HLT farm located at the experiment. In addition virtualization is used and just recently volunteer computing has been added using Boinc. Some 100k CPUs are involved in the data processing. 
 %35 GB/s of recorded data have to be processed by 1500 computing nodes of the Event Filtering Farm (EFF) of the HLT to be reduced to 70 MB/s \cite{lhcb_hlt_opt}.
 
 \subsection{Integrated Profiling}
@@ -102,7 +102,7 @@ A cron-jobs like plugin in Jenkins can be used to schedule the triggering of pro
 \subsection{Data collection}
 \label{sec:data_collection}
 
-Data collection is performed by \textit{data handlers}, which are defined for distinct types of profile reports or which can provide additional information like a comment, a profile class or an AFS path per job. There are two different kinds of routines to transfer collected information. One to save numbers or strings to be stored onto the database and a second to upload files which contain further performance information and could later become available from within the interface. The post-processing of a profiling job must prepare parsable reports for the data handlers. The LHCb PR Handler project contains the various data handlers to parse and collect the data.
+Data collection is performed by \textit{data handlers}, which are defined for distinct types of profile reports or which can provide additional information like a comment, a profile class or an AFS path per job. There are two different kinds of routines to transfer collected information. One to save numbers or strings to be stored in the database and a second to upload files which contain further performance information and could later become available from within the interface. The post-processing of a profiling job must prepare parsable reports for the data handlers. The LHCb PR Handler project contains the various data handlers to parse and collect the data.
 
 \begin{figure}[t]
 \begin{minipage}[t]{0.34\textwidth}
@@ -125,9 +125,9 @@ Data collection is performed by \textit{data handlers}, which are defined for di
 \subsection{Test cases}
 \label{sec:test_cases}
 
-Use cases are important to trace performance changes back to the evolving algorithms. \textit{Test cases} are based on \textit{default use cases}, and try to be a best approximation to the production usage. Still, the sophisticated computing environments can influence test runs on a non-predictive non-deterministic way, which hampers conclusions from regression analysis. Currently, the highest priority is to find software related issues, that can be addressed or have to be taken into account for upcoming decisions in resource allocation.
+Use cases are important to trace performance changes back to the evolving algorithms. \textit{Test cases} are based on \textit{default use cases}, and try to be a best approximation to the production usage. Still, the sophisticated computing environments can influence test runs in a non-predictive non-deterministic way, which hampers conclusions from regression analysis. Currently, the highest priority is to find software related issues, that can be addressed or have to be taken into account for upcoming decisions in resource allocation.
 
-A few default cases for Brunel have been quickly evaluated, defined and are running now on a regular basis after each successful nightly build. LHCb PR has demonstrated its importance already by observing simple timing information obtained by the TimingAuditor. The Overview-Analysis gives a general idea on how single algorithms runtime falls into account, like shown in figure \ref{fig:brunel_overview}. For time consuming algorithms, significant changes become immediately clear by observing the trend information cross versions as shown exemplary in \mbox{figure \ref{fig:brunel_trend}}. After observing performance degradation, further tests can be defined to use more precise profilers, like the IntelAuditor, for more details. One real example shows the changes found in the external math library, as shown in figure \ref{fig:brunel_basic_libm}. Such information needs to be extracted before a release is done.
+A few default cases for Brunel have been quickly evaluated, defined and are running now on a regular basis after each successful nightly build. LHCb PR has demonstrated its importance already by observing simple timing information obtained by the TimingAuditor. The Overview-Analysis gives a general idea of how a single algorithm contributes to the overall runtime in comparison to the others, like shown in figure \ref{fig:brunel_overview}. For time consuming algorithms, significant changes become immediately clear by observing the trend information cross versions as demonstrated in \mbox{figure \ref{fig:brunel_trend}}. After observing performance degradation, further tests can be defined to use more precise profilers, like the IntelAuditor, for more details. One real example shows the changes found in the external math library, as shown in figure \ref{fig:brunel_basic_libm}. Such information needs to be extracted before a release is done.
 
 Unfortunately the HLT framework (Moore) can not simply be reduced to a few common default cases, what makes it more difficult to trace back performance issues using a top-down analysis.
 
