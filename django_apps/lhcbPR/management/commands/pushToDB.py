@@ -31,9 +31,12 @@ def pushNewResults():
     
     from DIRAC.Resources.Storage.StorageElement import StorageElement    
     statSE = StorageElement(diracStorageElementName)
+    print diracStorageElementFolder
     
     dirDict = statSE.listDirectory(diracStorageElementFolder)
-    
+
+    print dirDict   
+ 
     for zipResult in dirDict['Value']['Successful'][diracStorageElementFolder]['Files']:
         fileName, fileExtension = os.path.splitext(zipResult)
         
