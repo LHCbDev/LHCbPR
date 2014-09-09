@@ -28,6 +28,7 @@ Put your abstract here.
 
 \begin{status}
 \entry{Draft}{1}{February 6, 2013}{First version}
+\entry{Draft}{2}{September 4, 2014}{Update by B.Couturier}
 \end{status}
 
 \tableofcontents
@@ -480,7 +481,7 @@ This will download the Django source and place inside the LHCbPR/devel directory
 The LHCbPR is deployed with Django framework so you need a copy of it in order to 
 run the service locally.
 
-After that you need tou setup the enviroment in order to use the cx\_Oracle module from afs:
+After that you need to setup the environment in order to use the cx\_Oracle module from afs:
 
 {\bf Note}: the script works on {\bf bash} not in tcsh/csh etc.
 \vspace{2 mm}
@@ -529,7 +530,7 @@ And once you have the myconf.py file {\bf everything's ready} in order to start 
 \vspace{2 mm}
 
 Do not forget to run the {\bf source LHCbPR/devel/setuptools} everytime you change {\bf shell}(eg: work the project in a new terminal) 
-in order to setup the enviroment with the needed tools(without this script the runserver command will crash).
+in order to setup the environment with the needed tools(without this script the runserver command will crash).
 
 \subsection{Writing a new analysis module}
 
@@ -537,7 +538,7 @@ in order to setup the enviroment with the needed tools(without this script the r
 
 \subsubsection{Initialization}
 
-Once you have downloaded a local copy of LHCbPR project from git and set up the enviroment you are ready to start deploying your new analysis module.
+Once you have downloaded a local copy of LHCbPR project from git and set up the environment you are ready to start deploying your new analysis module.
 First create a {\bf new folder} with the name of your new module under to {\bf LHCbPR/django\_apps/analysis} directory. Let's assume your new analysis module will be called {\bf hello\_analysis} , then create a folder :
 
 \vspace{2 mm}
@@ -554,7 +555,7 @@ Then create an \_\_init\_\_.py under your new created directory(your analysis co
 
 \vspace{4 mm}
 
-Each analysis module must have two basic {\bf templates} in the templates directory:
+Each analysis module must have two basic {\bf templates} in the django\_apps/templates/hello\_analysis/ directory:
  \begin{itemize}
 \item
 {\bf render.html}
@@ -562,8 +563,8 @@ Each analysis module must have two basic {\bf templates} in the templates direct
 {\bf analyse.html}
 \end{itemize}
 
-The {\bf render.html} is the one that will be used to diplay the contents of your analysis page
-and the {\bf analyse.html} is the template that will be used to diplay the actual analysis results(this template is loaded inside the render.html automatically), 
+The {\bf render.html} is the one that will be used to display the overall page, including the left side menu that allows for selection of versions, platforms etc
+{\bf analyse.html} is the template that will be used to display the actual analysis results (this template is loaded inside the render.html automatically), 
 create them in the templates' directory under a directory having the name of the analysis(same we did with the module) :
 
 \vspace{2 mm}
@@ -577,7 +578,7 @@ create them in the templates' directory under a directory having the name of the
 \vspace{2 mm}
 
 
-{\bf vim LHCbPR LHCbPR/django\_apps/templates/hello\_analysis/analyse.html} (this is not mandatory for the beggining)
+{\bf vim LHCbPR LHCbPR/django\_apps/templates/hello\_analysis/analyse.html} (this is not mandatory for the beginning)
  \vspace{2 mm}
 
 The render.html template has to follow a skeleton structure. The skeleton is available at:
@@ -586,7 +587,7 @@ The render.html template has to follow a skeleton structure. The skeleton is ava
 
 {\bf vim LHCbPR/django\_apps/templates/analysis/skeleton\_analysis.html     (1)}
 
-Note, to copy the skeleton to you render.html use: {\bf cp (1) $\rightarrow$ (2)}	
+Note, to copy the skeleton to your render.html use: {\bf cp (1) $\rightarrow$ (2)}	
 
 \vspace{2 mm}
 
@@ -595,7 +596,7 @@ The above skeleton can be extended or use as is. Instructions on how to use or e
 \vspace{2 mm}
 
 The {\bf docstring} of the \_\_init\_\_.py file(your module's docstring) will automatically be used as {\bf helptext}(help div in the template) in your new analysis page.
-In case you dont provide a docstring then the helptext will be "This module is not documented yet". In case you want to hardcode the helptext inside your render.html template
+In case you don't provide a docstring then the helptext will be "This module is not documented yet". In case you want to hardcode the helptext inside your render.html template
 then follow the instructions in the skeleton\_analysis.html.
 
 The {\bf title} of your analysis page will automatically be the selected application followed by the name of your module, so in our case of hello\_analysis module and GAUSS application,
@@ -657,7 +658,7 @@ for example:
 def render(**kwargs):
     myvariable = "test_string"
 
-    return { 'myvarialbe' : myvariable }
+    return { 'myvariable' : myvariable }
 \end{verbatim}
 
 \vspace{2 mm}
@@ -731,9 +732,12 @@ requestData = kwargs['requestData']
 myrequest = kwargs['request']
 \end{verbatim}
 
+\vspace{4 mm}
+Note that you can specify which template will be chosen for displaying the page explicitly, by adding its path (relative to the templates directory) to the returned map with the key 'template'.
+
 \subsubsection{analyse(**kwargs)}
 
-This function will automatically  be called when you press the "Retreive results" button from your analysis page 
+This function will automatically  be called when you press the "Retrieve results" button from your analysis page 
 and here you need to implement what shown as results of the analysis.  
 Same as the render function you can access the same data from the kwargs as shown exactly above(app\_name, requestData and request). 
 Once you click the "Retreive results" button the page will automatically make an {\bf ajax request} to your analyse(**kwargs) sending the 
