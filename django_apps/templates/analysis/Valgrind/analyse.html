@@ -3,23 +3,20 @@
 <h1>Memcheck Statistics</h1>
 {% for appinfo in results %}
 <h2> {{appinfo.application}} {{appinfo.version}} {{appinfo.options}}</h2>
-
-      
       {% for j in appinfo.jobs %}
-JobID:{{ j.id }}
-Start:{{j.time_start}} 
-End:{{j.time_end}}
     <table border="0.1" style="width:100%">
+       <tr> <td>JobID</td><td>{{ j.id }}</td></tr>
+       <tr> <td>Start</td><td>{{ j.time_start }}</td></tr>
+       <tr> <td>End</td><td>{{ j.time_end }}</td></tr>
+
 	{%  for jr in j.jobresults %}
         <tr>
-	<td> {{ jr.name }}</td>
-	<td>
+	<td>{{ jr.name }}</td>
 	{% if jr.type == "File" %}
-	<a href="{{ ROOT_URL }}jobFileView?file={{jr.value}}"> {{jr.value}}</a>
+	<td><a href="{{ ROOT_URL }}jobFileView?file={{jr.value}}"> {{jr.value}}</a></td>
 	{% else %}
-	{{ jr.value }}
+	<td>{{ jr.value }}</td>
 	{% endif %}
-	</td>
 	</tr>
          {% endfor %}
      </table>
