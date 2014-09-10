@@ -31,23 +31,28 @@ def pushNewResults():
     
     from DIRAC.Resources.Storage.StorageElement import StorageElement    
     statSE = StorageElement(diracStorageElementName)
-    print diracStorageElementFolder
-    
     dirDict = statSE.listDirectory(diracStorageElementFolder)
-
-    print dirDict   
- 
+    
     for zipResult in dirDict['Value']['Successful'][diracStorageElementFolder]['Files']:
         fileName, fileExtension = os.path.splitext(zipResult)
         
         #get the File, copy the file to the current local directory
-        statSE.getFile(os.path.join(diracStorageElementFolder, zipResult))
+        res = statSE.getFile(os.path.join(diracStorageElementFolder, zipResult))
+        if not res['OK'] or ( res['OK'] and len(res['Value']['Failed']) > 0):
+            logger.errot("Failed download of " + zipResult)
+            continue
         
         results_list = AddedResults.objects.filter(identifier__exact=fileName)
+
+        res = True
         if not results_list:
-            logger.info('New zip: {0}, founded in results directory, calling pushZip command...'.format(zipResult))
-            pushZip.pushThis(os.path.join(temp_save_path, zipResult))
-        
+            logger.info('New zip: {0}, found in results directory, calling pushZip command...'.format(zipResult))
+            res = pushZip.pushThis(os.path.join(temp_save_path, zipResult ))
+            
+        if not res:
+            logger.error("Error pushing results, not removing")
+            continue
+
         #remove it from the upload_test folder
         statSE.removeFile(os.path.join(diracStorageElementFolder, zipResult))
         #put the file into the added folder
