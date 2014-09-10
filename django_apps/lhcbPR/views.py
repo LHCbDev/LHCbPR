@@ -885,7 +885,7 @@ def script(request):
     script = '#!/bin/bash\n'
     script += '#this script produced by: {0} machine\n\n'.format(settings.HOSTNAME)
     script += '#attention, in order to use this script you must make sure you have\n'
-    script += '#runned LbLogin and lhcb-proxy-init to get a proxy\n'
+    script += '#run LbLogin and lhcb-proxy-init to get a proxy\n'
     script += 'proxy=`lhcb-proxy-info`\nOUT=$?\nif [ ! $OUT -eq 0 ];then\n'
     script += '   echo "lhcb-proxy invalid, please make sure you used the command: lhcb-proxy-init, aborting..."\n'
     script += '   exit 1\nfi\n\n'
@@ -895,16 +895,23 @@ def script(request):
     script += '#PLATFORMS="'+','.join(platforms)+'"\n\n'
     script += '. SetupProject.sh {0} {1} {2}\n\n'.format(application, version, setup_project)
     script += 'START=`date +"%Y-%m-%d,%T"`\n'
+    script += 'echo $START > start.txt\n'
     script += 'gaudirun.py {0} 2>&1 > run.log\n'.format(options)
-    script += 'END=`date +"%Y-%m-%d,%T"`\n\n'
+    script += 'RETCODE=$?\n'
+    script += 'END=`date +"%Y-%m-%d,%T"`\n'
+    script += 'echo $END > end.txt\n\n'
     script += '#also setup the enviroment to use LHCbDirac StorageElement to send the result to the database\n'
+    script += 'if [ "$RETCODE" = "0" ] ; then\n'
+    script += '('
     script += '. SetupProject.sh LHCbDirac\n\n'
     script += '#the next command, downloads the LHCbPRHandlers, unzips the file, removes the zip file(overrides previous folder/files, if any)\n'
     script += "python -c \"import os,urllib,zipfile;urllib.urlretrieve('http://lhcbproject.web.cern.ch/lhcbproject/GIT/dist/LHCbPRHandlers/LHCbPRHandlers.zip','LHCbPRHandlers.zip');unzipper=zipfile.ZipFile('LHCbPRHandlers.zip');unzipper.extractall();os.remove('LHCbPRHandlers.zip')\"\n\n"
     script += '#the collectRunResults has by default the -a argument which automatically sends the data\n'
     script += '#to the database, if you want to do it manually remove -a argument and uncomment the sendToDB script\n'
     script += 'python LHCbPRHandlers/collectRunResults.py -s ${START} -e ${END} -p `hostname` -c ${CMTCONFIG} -j ${JOB_DESCRIPTION_ID} -l ${HANDLERS} -a\n'
-    script += '#python LHCbPRHandlers/sendToDB.py -s name_of_zip'
+    script += '#python LHCbPRHandlers/sendToDB.py -s name_of_zip\n'
+    script += ')\n'
+    script += 'fi\n'
     
     return HttpResponse(script, mimetype="text/plain")
 
