@@ -1,11 +1,10 @@
 """
 
-Brunel report
+Memcheck report
 
 """
 
-
-title = 'Brunel Report'
+title = 'Memcheck Report'
 
 import json
 from django.db import connection
@@ -81,8 +80,6 @@ def getMemcheckInfo(app, optionId):
     Returns the information from the Brunel jobs for an application
     '''
     appInfo = {}
-
-
     
     # Looking up options info
     opt = Options.objects.get(pk=optionId)
@@ -97,9 +94,8 @@ def getMemcheckInfo(app, optionId):
         jinfo['time_start'] = j.time_start 
         jinfo['time_end'] = j.time_end
         jres = []
-        for jr in JobResults.objects.filter(job=j):
-            if jr.jobAttribute.group != "Valgrind":
-                continue
+
+        for jr in JobResults.objects.filter(job=j,jobAttribute__group="Valgrind"):
             jrestmp = {}
             jrestmp['name'] = jr.jobAttribute.name
             jrestmp['type'] = jr.jobAttribute.type
@@ -112,6 +108,7 @@ def getMemcheckInfo(app, optionId):
                 rf = ResultFile.objects.get(pk=jr.id)
                 jrestmp['value'] =  rf.file
             jres.append(jrestmp)
+
         jinfo['jobresults'] = jres
         alljobs.append(jinfo)
       
@@ -119,5 +116,4 @@ def getMemcheckInfo(app, optionId):
     appInfo['version'] = app.appVersion
     appInfo['application'] = app.appName
     appInfo['options'] = opt.description
-    #print "<", appInfo, ">"
     return appInfo
