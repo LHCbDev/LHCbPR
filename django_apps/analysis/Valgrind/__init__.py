@@ -37,9 +37,18 @@ def render(**kwargs):
     if not apps:
         return Http404     
 
-    # returning our custom template
-    # Without the options version
-    return { 'template':'analysis/Valgrind/render.html'}
+    mygroup = 'Valgrind'
+    options = Options.objects.filter(jobdescriptions__application__appName=app_name,
+                                     jobdescriptions__jobs__jobresults__jobAttribute__group=mygroup,
+                                     jobdescriptions__jobs__success=True,).distinct()
+        
+    versions_temp = Application.objects.filter(jobdescriptions__jobs__success=True, appName=app_name,
+                                               jobdescriptions__jobs__jobresults__jobAttribute__group=mygroup).distinct()
+
+    #versions = sorted(versions_temp, key = lambda ver : getSplitted(ver.appVersion), reverse = True)
+    versions = versions_temp
+    #return { 'template':'analysis/Valgrind/render.html'}
+    return {'options':options, 'versions':versions}
 
 
 def analyse(**kwargs):
@@ -113,5 +122,5 @@ def getMemcheckInfo(app, optionId):
     appInfo['version'] = app.appVersion
     appInfo['application'] = app.appName
     appInfo['options'] = opt.description
-    print "<", appInfo, ">"
+    #print "<", appInfo, ">"
     return appInfo
