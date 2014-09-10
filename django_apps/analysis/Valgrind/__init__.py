@@ -13,6 +13,7 @@ from django.http import Http404
 from lhcbPR.models import  Application, JobDescription, Job
 from lhcbPR.models import Options, JobResults, JobAttribute, ResultFloat, ResultFile
 from django.db.models import Q
+from tools.viewTools import getSplitted
 
 #
 # Projects for which to display this analysis
@@ -40,14 +41,10 @@ def render(**kwargs):
     mygroup = 'Valgrind'
     options = Options.objects.filter(jobdescriptions__application__appName=app_name,
                                      jobdescriptions__jobs__jobresults__jobAttribute__group=mygroup,
-                                     jobdescriptions__jobs__success=True,).distinct()
-        
+                                     jobdescriptions__jobs__success=True,).distinct().order_by('description')
     versions_temp = Application.objects.filter(jobdescriptions__jobs__success=True, appName=app_name,
                                                jobdescriptions__jobs__jobresults__jobAttribute__group=mygroup).distinct()
-
-    #versions = sorted(versions_temp, key = lambda ver : getSplitted(ver.appVersion), reverse = True)
-    versions = versions_temp
-    #return { 'template':'analysis/Valgrind/render.html'}
+    versions = sorted(versions_temp, key = lambda ver : getSplitted(ver.appVersion), reverse = True)
     return {'options':options, 'versions':versions}
 
 
