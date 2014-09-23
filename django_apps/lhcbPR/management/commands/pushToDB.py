@@ -24,17 +24,20 @@ def pushNewResults():
     #cd to temp folder to temporary save the zip files
     os.chdir(temp_save_path) 
     
-    logger.info('Checking results directory for new added zip files...')
-    
+    logger.warning('Checking results directory for new added zip files...')
+
     from DIRAC.Core.Base.Script import initialize
+    #from DIRAC import gLogger
+    #gLogger.setLevel("DEBUG")
     initialize(ignoreErrors = True, enableCommandLine = False)
     
     from DIRAC.Resources.Storage.StorageElement import StorageElement    
     statSE = StorageElement(diracStorageElementName)
-    print diracStorageElementFolder
+    #print diracStorageElementFolder
     
+    print "Before listDirectory"
     dirDict = statSE.listDirectory(diracStorageElementFolder)
-
+    print "After listDirectory"
     print dirDict   
  
     for zipResult in dirDict['Value']['Successful'][diracStorageElementFolder]['Files']:
