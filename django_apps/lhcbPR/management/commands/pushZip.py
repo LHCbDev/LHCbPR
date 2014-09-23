@@ -12,6 +12,7 @@ logger = logging.getLogger('push_logger')
 log = ''
 
 def pushThis(zipFile):
+    retstat = False
     DataDict = {}
     try:
         head, tail = os.path.split(zipFile)
@@ -21,23 +22,23 @@ def pushThis(zipFile):
         DataDict = json.loads(unzipper.read('json_results'))
     except ValueError, e:
         logger.exception("{0} exception occurred ".format(log))
-        return
+        return retstat
     except IOError,e:
         logger.exception("{0} exception occurred ".format(log))
-        return
+        return retstat
     except IndexError, e:
         logger.exception("{0} exception occurred ".format(log))
-        return 
+        return retstat
     except Exception, e:
         logger.exception("{0} exception occurred ".format(log))
-        return
+        return retstat
     
     try:
         results_unique_id, created = AddedResults.objects.get_or_create(identifier=DataDict['results_id'])
         if not created:
             log+= 'Results zip file {0} already added, aborting...'.format(results_unique_id.identifier)
             logger.warning(log)
-            return
+            return retstat
         
         log+= " [ 'job_description_id' : {0} ] ".format(DataDict['id_jobDescription'])
         log+= " [ 'host' : '{0}' ]".format(DataDict['HOST']['hostname'])
@@ -59,7 +60,7 @@ def pushThis(zipFile):
         if not attributelist:
             log+= " No collected results were found in the json_results file, perhaps all handlers failed! Aborting saving job..."
             logger.error(log)
-            return
+            return retstat
         
         myjob, created = Job.objects.get_or_create(
                                          host = myhost,
@@ -115,11 +116,11 @@ def pushThis(zipFile):
      
         log+="[ 'job_id' : {0} ]".format(myjob.id)
         logger.info(log+' Zip folder with new job results added successfully\n')
-        return
+        return True
     
     except Exception,e:
         logger.exception(log+' exception occurred!')
-        return
+        return False
         #sys.exit(1)
 
 class Command(BaseCommand):
