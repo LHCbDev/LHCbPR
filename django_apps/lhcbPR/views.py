@@ -373,7 +373,18 @@ def jobFileView(request):
     name  = reco.findall(data_file)
 
     filename = "lhcbpr-%s-%s-%s" % (names[0], names[1], name[0])
-
+    # Horrible hack that will have to be sorted out at a later stage
+    # kcachegrind only loads files starting with callgrind.out!!!!!!
+    # An urgent fix is needed, hence this, but we need more metadata
+    # to call the files appropriately...
+    if "callgrind" in filename:
+        upfilename = name[0]
+        m = re.match(".*\.(\d+)", upfilename)
+        suffix = ""
+        if m != None:
+            suffix = "-" + m.group(1)
+        filename = "callgrind.out.%s-%s" % (names[0], names[1]) + suffix
+        
     data_file  = data_store + data_file
 
     if not os.path.isfile(data_file):
