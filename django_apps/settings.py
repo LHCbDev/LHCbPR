@@ -30,8 +30,8 @@ DATABASES = {
         'NAME': myconf.dbname,                      # Or path to database file if using sqlite3.
         'USER': myconf.dbuser,                      # Not used with sqlite3.
         'PASSWORD': myconf.dbpass,                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '1521',                      # Set to empty string for default. Not used with sqlite3.
     }
 
 }
@@ -61,8 +61,8 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-#MEDIA_ROOT = os.path.join(PROJECT_PATH, 'static/files/')
-MEDIA_ROOT = '/afs/cern.ch/lhcb/software/webapps/LHCbPR/data/files/'
+MEDIA_ROOT = os.path.join(PROJECT_PATH, 'static/files/')
+# MEDIA_ROOT = '/afs/cern.ch/lhcb/software/webapps/LHCbPR/data/files/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -82,7 +82,7 @@ STATIC_URL = ROOT_URL+'static/'
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = ROOT_URL+'no_static/admin/'
+ADMIN_MEDIA_PREFIX = ROOT_URL+'static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -93,21 +93,21 @@ STATICFILES_DIRS = (
 )
 
 #custom LOGOUT_URL, LOGIN_URL
-LOGIN_URL = ROOT_URL+'login'
-LOGOUT_URL = ROOT_URL+'logout'
+LOGIN_URL = '/login'
+# LOGOUT_URL = ROOT_URL+'logout'
 
-LOGIN_REDIRECT_URL = ROOT_URL
-SHIB_SSO_ADMIN = True
-SHIB_SSO_CREATE_ACTIVE = True
-SHIB_SSO_CREATE_STAFF = False
-SHIB_SSO_CREATE_SUPERUSER = False
-SHIB_LOGIN_PATH = '/Shibboleth.sso/?target='
-SHIB_LOGOUT_URL = 'https://login.cern.ch/adfs/ls/?wa=wsignout1.0&returnurl='
-META_EMAIL = 'ADFS_EMAIL'
-META_FIRSTNAME = 'ADFS_FIRSTNAME'
-META_GROUP = 'ADFS_GROUP'
-META_LASTNAME = 'ADFS_LASTNAME'
-META_USERNAME = 'ADFS_LOGIN'
+# LOGIN_REDIRECT_URL = ROOT_URL
+# SHIB_SSO_ADMIN = False
+# SHIB_SSO_CREATE_ACTIVE = True
+# SHIB_SSO_CREATE_STAFF = False
+# SHIB_SSO_CREATE_SUPERUSER = False
+# SHIB_LOGIN_PATH = '/Shibboleth.sso/?target='
+# SHIB_LOGOUT_URL = 'https://login.cern.ch/adfs/ls/?wa=wsignout1.0&returnurl='
+# META_EMAIL = 'ADFS_EMAIL'
+# META_FIRSTNAME = 'ADFS_FIRSTNAME'
+# META_GROUP = 'ADFS_GROUP'
+# META_LASTNAME = 'ADFS_LASTNAME'
+# META_USERNAME = 'ADFS_LOGIN'
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -132,18 +132,19 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'shibsso.middleware.ShibSSOMiddleware',
+    # 'shibsso.middleware.ShibSSOMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
-        'shibsso.backends.ShibSSOBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 ROOT_URLCONF = 'django_apps.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_PATH, 'templates')
+    os.path.join(PROJECT_PATH, 'templates'),
+    "apps"
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -157,7 +158,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'shibsso',
+    # 'shibsso',
     'lhcbPR',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -221,7 +222,12 @@ LOGGING = {
             'filename' : os.path.join(PROJECT_PATH, 'static/logs/analysis.log'),
             'maxBytes' : 40000,
             'backupCount' : 5
-        }
+        },
+        'console':{
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },        
     },
     'loggers': {
         'django.request': {
@@ -238,7 +244,7 @@ LOGGING = {
             'level' : 'INFO'              
         },
         'push_logger' : {
-            'handlers' : ['push_handler'],
+            'handlers' : ['push_handler', 'console'],
             'level' : 'INFO'                
         },
         'check_logger' : {
@@ -250,6 +256,7 @@ LOGGING = {
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'lhcbPR.context_processors.base_variables',
+    'django.core.context_processors.static'
 )
 
 #soon to be moved from here

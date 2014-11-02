@@ -53,6 +53,7 @@ def pushThis(zipFile):
                                                    cpu_info=hostDict['cpu_info'],
                                                    memoryinfo=hostDict['memoryinfo'])
         
+        logger.warning(log)
         myjobDescription = JobDescription.objects.get(pk=DataDict['id_jobDescription'])
         
         attributelist = DataDict['JobAttributes']

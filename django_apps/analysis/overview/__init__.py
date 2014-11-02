@@ -69,6 +69,7 @@ def render(**kwargs):
    atrs     = []
    groups   = {}
    types    = {}
+   atr_groups = []
    for i, at in enumerate(atrs_temp):
       #if type in types
       if not at[2] in types:

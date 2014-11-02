@@ -36,10 +36,11 @@ def index(request):
     with the page it provides information for the user(if he is authenticated
     or not)"""
 
-    query = "SELECT id, appname, link, description, TO_CHAR(date_insert, 'YYYY-MM-DD') AS date_insert FROM lhcbpr_public_links ORDER BY date_insert DESC, ROWNUM DESC" 
-    cursor = connection.cursor()
-    cursor.execute(query)
-    links = cursor.fetchall()
+    # query = "SELECT id, appname, link, description, TO_CHAR(date_insert, 'YYYY-MM-DD') AS date_insert FROM lhcbpr_public_links ORDER BY date_insert DESC, ROWNUM DESC" 
+    # cursor = connection.cursor()
+    # cursor.execute(query)
+    # links = cursor.fetchall()
+    links = []
 
     dataDict = {
        'links': json.dumps(links)
@@ -363,7 +364,7 @@ def jobFileView(request):
     if requestData['file'] == "":
         return HttpResponse(json.dumps({ 'error' : True, 'errorMessage' : 'No file given.' }))
 
-    data_store = "/afs/cern.ch/lhcb/software/webapps/LHCbPR/data/files/"
+    data_store = settings.MEDIA_ROOT
     data_file  = requestData['file']
 
     reco  = re.compile('\d+')

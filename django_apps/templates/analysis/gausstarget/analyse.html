@@ -1,0 +1,12 @@
+<ul>
+{% for item in results %}
+<h2>{{item.app_version}}</h2>
+<table>
+{% for file in item.files %}
+<tr>
+    <td><img src="/static/files/{{file}}"/></td>
+</tr>
+{% endfor %}
+</table>
+<hr/>
+{% endfor %}
