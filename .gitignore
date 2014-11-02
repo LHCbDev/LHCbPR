@@ -1,3 +1,6 @@
-django_apps
 venv
 *.sublime-*
+django_apps/static/files/*
+django_apps/static/zipfiles/*
+*.log
+myconf.py
