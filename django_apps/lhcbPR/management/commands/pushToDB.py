@@ -19,14 +19,16 @@ diracStorageElementFolder = 'uploaded'
 addedDiracStorageFolder = 'added'
 
 temp_save_path = os.path.join(settings.PROJECT_PATH, 'static/temp_zipfiles')
-local_zip_path = os.path.join(settings.PROJECT_PATH, 'static/zipfiles')
+local_zip_path = os.path.abspath(os.path.join(settings.PROJECT_PATH, '..', 'zips'))
 
 
 def pushNewResultsLocal():
+    print local_zip_path    
     for file in os.listdir(local_zip_path):
         if file.endswith(".zip"):
-            logger.info('New zip: {0}, found in results directory, calling pushZip command...'.format(file))
-            pushZip.pushThis(file)
+            abs_file_path = os.path.abspath(os.path.join(local_zip_path, file)) 
+            logger.info('New zip: {0}, found in results directory, calling pushZip command...'.format(abs_file_path))
+            pushZip.pushThis(abs_file_path)
 
 
 def pushNewResults():

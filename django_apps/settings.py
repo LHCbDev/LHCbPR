@@ -30,8 +30,8 @@ DATABASES = {
         'NAME': myconf.dbname,                      # Or path to database file if using sqlite3.
         'USER': myconf.dbuser,                      # Not used with sqlite3.
         'PASSWORD': myconf.dbpass,                  # Not used with sqlite3.
-        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '1521',                      # Set to empty string for default. Not used with sqlite3.
+        'HOST': myconf.dbhost,                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': myconf.dbport,                      # Set to empty string for default. Not used with sqlite3.
     }
 
 }

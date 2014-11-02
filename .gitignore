@@ -1,6 +1,8 @@
 venv
 *.sublime-*
+*.log
+zips
 django_apps/static/files/*
 django_apps/static/zipfiles/*
-*.log
+
 myconf.py
